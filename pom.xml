@@ -1,0 +1,94 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cn.new12308.services</groupId>
+	<artifactId>account-center-api</artifactId>
+	<version>${publish.version}</version>
+	<name>account-center-api</name>
+
+	<properties>
+		<publish.version>1.0.0-SNAPSHOT</publish.version>
+		<sdk.version>1.0.0-SNAPSHOT</sdk.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<packaging.type>jar</packaging.type>
+	</properties>
+
+	<build>
+		<finalName>account-center-api</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<distributionManagement>
+				<repository>
+					<id>snapshots</id>
+					<url>http://192.168.1.38:8081/nexus/content/repositories/snapshots</url>
+				</repository>
+			</distributionManagement>
+		</profile>
+
+		<profile>
+			<id>test</id>
+			<distributionManagement>
+				<repository>
+					<id>snapshots</id>
+					<url>http://192.168.1.38:8081/nexus/content/repositories/snapshots</url>
+				</repository>
+			</distributionManagement>
+		</profile>
+		
+		<profile>
+			<id>uat</id>
+			<distributionManagement>
+				<repository>
+					<id>releases</id>
+					<url>http://192.168.1.38:8081/nexus/content/repositories/releases</url>
+				</repository>
+			</distributionManagement>
+			<properties>
+				<publish.version>1.0.0</publish.version>
+				<sdk.version>1.0.0</sdk.version>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>online</id>
+			<distributionManagement>
+				<repository>
+					<id>releases</id>
+					<url>http://192.168.1.38:8081/nexus/content/repositories/releases</url>
+				</repository>
+			</distributionManagement>
+			<properties>
+				<publish.version>1.0.0</publish.version>
+				<sdk.version>1.0.0</sdk.version>
+			</properties>
+		</profile>
+
+	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>cn.new12308.lib</groupId>
+			<artifactId>common-sdk</artifactId>
+			<version>${sdk.version}</version>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+</project>
