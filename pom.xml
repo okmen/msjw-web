@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>cn.new12308.server</groupId>
+	<groupId>cn.chudaojeji.server</groupId>
 	<artifactId>web</artifactId>
 	<version>${publish.version}</version>
 	<name>web</name>
@@ -10,7 +10,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<packaging.type>war</packaging.type>
 		<spring.version>3.2.11.RELEASE</spring.version>
-		<choumei.services.groupId>cn.new12308.services</choumei.services.groupId>
+		<choumei.services.groupId>cn.chudaokeji.services</choumei.services.groupId>
 	</properties>
 
 	<build>
@@ -356,7 +356,7 @@
 
 
 		<dependency>
-			<groupId>cn.new12308.lib</groupId>
+			<groupId>cn.chudaokeji.lib</groupId>
 			<artifactId>common-sdk</artifactId>
 			<version>${common.sdk.version}</version>
 		</dependency>
@@ -368,11 +368,6 @@
 			<version>${cn.services.version}</version>
 		</dependency>
 		
-		<dependency>
-			<groupId>${choumei.services.groupId}</groupId>
-			<artifactId>exception-center-api</artifactId>
-			<version>${cn.services.version}</version>
-		</dependency>
 		
 		<dependency>
 			<groupId>log4j</groupId>

@@ -16,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.servlet.ModelAndView;
 
-import cn.exception.common.ModuleEnum;
-import cn.exception.service.IExceptionService;
 import cn.sdk.util.DESUtils;
 import cn.sdk.util.Distance;
 import cn.sdk.util.StringUtil;
@@ -33,9 +31,6 @@ public class BaseAction {
     protected final static double DEFAULT_LNG = 114.066102;
     protected final static double DEFAULT_LAT = 22.546843;
 
-    @Autowired
-    @Qualifier("exceptionService")
-    protected IExceptionService exceptionService;
 
     @Resource(name = "env")
     protected int environment;
@@ -129,7 +124,6 @@ public class BaseAction {
                 }
                 logger.debug(sb.toString());
             } catch (Exception e) {
-                exceptionService.addError(ModuleEnum.EXCEPTION, "打印参数异常", e);
             }
         }
 
