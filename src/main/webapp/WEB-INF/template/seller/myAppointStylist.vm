@@ -1,0 +1,34 @@
+[
+	#foreach($stylistAppointBean in $stylistAppointBeanList)
+	{
+		#set($stylistBean = $!{stylistMap.get(${stylistAppointBean.id})})
+    	"stylist":{
+    		"stylistId":$!{stylistBean.stylistId},
+    		"name":"$!{bilin.encodeJson($!{stylistBean.stylistName})}",
+    		"img" : "$!{stylistBean.stylistImg}",
+    		"phone": "$!{stylistBean.mobilephone}",
+    		"grade":"$!{gradeMap.get(${stylistBean.grade})}"
+    	},
+		#set($salonBean = $!{salonMap.get(${stylistAppointBean.id})})
+		"salon":{
+    		"salonId":$!{salonBean.salonid},
+    		"name":"$!{bilin.encodeJson($!{salonBean.salonname})}",
+    		"addr":"$!{salonBean.addr}",
+    		"area":"$!{areaMap.get(${stylistAppointBean.id})}",
+    		"distance":"$!{distanceMap.get(${stylistAppointBean.id})}",
+    		"tel":"$!{salonBean.tel}"
+    	},
+    	"appointment":{
+    		"appointmentId":$!{stylistAppointBean.id},
+    		"date":"$!{stylistAppointBean.appointTime}",
+    		"serviceItem":"$!{stylistAppointBean.serviceItem}"
+    	}
+    }
+	#if(${velocityCount} == ${stylistAppointBeanList.size()})
+
+	#else
+		,
+	#end
+	#end
+    
+]

@@ -1,0 +1,50 @@
+{
+    "version": "$!{p.version}",
+    "code": "$!{p.code}",
+    "message": "$!{p.message}",
+    "debug": "$!{p.debug}",
+    "response": {
+        "recommendEnable": "$!{recommendEnable}",
+        "beautyId": "$!{beautyId}",
+        "groups":
+        [
+            {
+                "groupName": "预约半永久项目",
+                "groupType": "SPM",
+                "items":
+                [
+                    #set($i = 0)
+                    #foreach($beautyItem in $!{beautyItems})
+                    #if($beautyItem.type == 1)
+                        #set($i = $i + 1)
+                        #if($i != 1),#end
+                    {
+                        "itemId": "$!{beautyItem.itemId}",
+                        "itemLevel" : $!{beautyItem.level},
+                        "itemName": "$!{beautyItem.name}"
+                    }
+                    #end
+                    #end
+                ]
+            },
+            {
+                "groupName": "预约快时尚项目",
+                "groupType": "FFA",
+                "items":
+                [
+                    #set($i = 0)
+                    #foreach($beautyItem in $!{beautyItems})
+                    #if($beautyItem.type == 2)
+                        #set($i = $i + 1)
+                        #if($i != 1),#end
+                    {
+                        "itemId": "$!{beautyItem.itemId}",
+                        "itemName": "$!{beautyItem.name}"
+                    }
+                    #end
+                    #end
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,159 @@
+{
+    "name" : "$!{bilin.encodeJson($!{item.name})}",
+    "desc" : "$!{bilin.encodeJson($!{item.detail})}",
+    "imgs" : 
+    #if($item.images)
+    $!{item.images}
+    #else
+    []
+    #end
+    ,
+    "price" : $!{item.vipPrice},
+    "priceOri" : $!{item.price},
+    "bookingNum" : $!{bookingNum},
+    "position" : "$!{position}",
+    "type" : $!{item.type},
+    "notices" : [
+    #if($registerNotices)
+        #set($flag="")
+        #foreach($notice in $registerNotices)
+        $flag
+        {
+            "title" : "$!{bilin.encodeJson($!{notice.title})}",
+            "content" : "$!{bilin.encodeJson($!{notice.content})}"
+        }
+        #set($flag=",")
+        #end
+    #end
+    ] 
+    ,
+    "introductions" : [
+    #if($introductions)
+        #set($flag="")
+        #foreach($introduction in $introductions)
+        $flag
+        {
+            "title" : "$!{bilin.encodeJson($!{introduction.title})}",
+            "content" : "$!{bilin.encodeJson($!{introduction.content})}",
+            "imgs" : $!{introduction.images}
+        }
+        #set($flag=",")        
+        #end
+    #end
+    ],
+    "profile" : [
+    #if($itemProfile)
+        #set($flag="")
+        #foreach($profile in $itemProfile)
+        $flag
+        [
+            "$!{bilin.encodeJson($!{profile.title})}",
+            "$!{bilin.encodeJson($!{profile.content})}"
+        ]
+        #set($flag=",")
+        #end
+    #end
+    ],
+    "bookingProcedure" : [
+    #if($bookingProcedure)
+        #set($flag="")
+        #foreach($step in $bookingProcedure)
+        $flag
+        {
+            "title" : "$!{bilin.encodeJson($!{step.title})}",
+            "content" : "$!{bilin.encodeJson($!{step.content})}",
+            "imgs" : $!{step.images}
+        }
+        #set($flag=",")
+        #end
+    #end
+    ],
+    "beautyProcedure" : [
+    #if($beautyProcedure)
+        #set($flag="")
+        #foreach($step in $beautyProcedure)
+        $flag
+        {
+            "title" : "$!{bilin.encodeJson($!{step.title})}",
+            "content" : "$!{bilin.encodeJson($!{step.content})}",
+            "imgs" : $!{step.images}
+        }
+        #set($flag=",")
+        #end
+    #end
+    ],
+    "beautyProcedureName" : "$!{bilin.encodeJson($!{item.beautyWorkflowName})}",
+    "consult" : "$!{consult}",
+    "beautyPhoneFormat" : "$!{beautyPhoneFormat}",
+    "bookingPrice" : $!{bookingPrice},
+    "banner" : 
+    #if($banner)
+        {
+            "bannerId" : $!{banner.bannerId},
+            "img" : "$!{banner.image}",
+            "eventType" : $!{banner.behavior},
+            "url" : "$!{bilin.encodeJson($!{banner.url})}"
+        }
+    #else
+        null
+    #end,
+    "equipments" : [
+    #if($equipments)
+        #set($flag="")
+        #foreach($equipment in $equipments)
+        $flag
+        {
+            "title" : "$!{bilin.encodeJson($!{equipment.title})}",
+            "content" : "$!{bilin.encodeJson($!{equipment.content})}",
+            "imgs" : $!{equipment.images}
+        }
+        #set($flag=",")
+        #end
+    #end
+    ],
+    "norms" : [
+    #if($norms)
+        #set($flag="")
+        #foreach($norm in $norms)
+        $flag
+        {
+            "normId" : $!{norm.id},
+            "img" : "$!{norm.imgUrl}",
+            "norm" : "$!{bilin.encodeJson($!{norm.norm})}",
+            "price" : $!{norm.vipPrice},
+            "priceOri" : $!{norm.price}
+        }
+        #set($flag=",")
+        #end
+    #end
+    ],
+    "itemPriceUrl" : "$!{itemPriceUrl}",
+    "share" : 
+    #if($itemShareInfo)
+    {
+        "icon" : "$!{itemShareInfo.icon}",
+        "title" : "$!{bilin.encodeJson($!{itemShareInfo.title})}",
+        "content" : "$!{bilin.encodeJson($!{itemShareInfo.content})}",
+        "url" : "$!{itemShareInfo.url}"
+    }
+    #else
+    null
+    #end
+    ,
+    "equipmentCover" : "$!{item.equipmentCover}",
+    "equipmentSlogan" : "$!{bilin.encodeJson($!{item.equipmentSlogan})}",
+    "equipmentShare" : 
+    #if($item.type == 2)
+    {
+        "icon" : "$!{equipmentShareInfo.icon}",
+        "title" : "$!{equipmentShareInfo.title}",
+        "content" : "$!{equipmentShareInfo.content}",
+        "url" : "$!{equipmentShareInfo.url}"
+    }
+    #else
+    null
+    #end
+}
+
+
+

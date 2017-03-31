@@ -1,0 +1,21 @@
+{
+	"version":"$!{version}",
+	"code":"$!{code}",
+	"message":"$!{message}",
+	"response":{
+		"data":[
+			#set($flag = "")
+			#foreach ($data in ${response.data})        
+			$!flag{
+			    "fileName":"${data.fileName}",
+				"uptoken":"${data.uptoken}",
+				"maxFileSize":"${data.maxFileSize}"
+			}  
+			#set($flag = ",")
+			#end
+		]
+	}
+}
+
+
+

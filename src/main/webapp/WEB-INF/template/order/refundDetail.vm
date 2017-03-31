@@ -1,0 +1,29 @@
+{
+    "priceAll":"$!{priceAll}",
+    "orderSn":"$!{orderSn}",
+    "addTime":"$!{addTime}",
+    "optTime":"$!{optTime}",
+    "status":"$!{status}",
+    "bookingSn":"$!{bookingSn}",
+    "route":"$!{route}",
+    "message":{
+    	"one": {
+    		"title": "$!{messageOne.title}",
+    		"desc": "$!{messageOne.desc}",
+    		"remark": "$!{messageOne.remark}"
+    	}
+    	#if($!{messageTwo.title})
+    	,"two": {
+    		"title": "$!{messageTwo.title}",
+    		"desc": "$!{messageTwo.desc}"
+    	}
+    	#end
+    	#if($!{messageThree.title})
+    	,"three": {
+    		"title": "$!{messageThree.title}",
+    		"desc": "$!{messageThree.desc}",
+    		"tips": "$!{messageThree.tips}"
+    	}
+    	#end
+	}
+}

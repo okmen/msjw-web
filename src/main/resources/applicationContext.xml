@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+	default-autowire="byName" default-lazy-init="false">
+
+	<!-- 设置使用注解的类所在的包 -->
+	<context:component-scan base-package="cn.web" />
+
+	<bean id="permissionFilter" class="cn.web.front.filter.PermissionFilter">
+		<property name="noAccessToken" value="${no.access.token}" />
+	</bean>
+
+	<!-- velocity模板引擎 -->
+	<bean id="velocityConfigurer"
+		class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<property name="resourceLoaderPath">
+			<value>WEB-INF/template</value>
+		</property>
+		<property name="velocityProperties">
+			<props>
+				<prop key="input.encoding">UTF-8</prop>
+				<prop key="output.encoding">UTF-8</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- 解析velocity -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		<property name="contentType" value="text/html;charset=UTF-8" />
+		<property name="exposeSpringMacroHelpers" value="true" /><!--是否使用spring对宏定义的支持 -->
+		<property name="suffix" value=".vm" />
+		<property name="toolboxConfigLocation" value="WEB-INF/velocity-toolbox.xml" /><!--toolbox配置文件路径 -->
+		<property name="cache" value="true" /><!--是否缓存模板 -->
+	</bean>
+
+	<bean id="env" class="java.lang.String">
+		<constructor-arg value="${cn.choumei.env}"></constructor-arg>
+	</bean>
+
+	<bean id="sharedThreadPool" class="cn.sdk.thread.BilinThreadPool" />
+
+</beans> 

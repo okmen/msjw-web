@@ -1,0 +1,15 @@
+{
+    "version": "$!{p.version}",
+    "code": $!{p.code},
+    "message": "$!{p.message}",
+    "debug": "$!{p.debug}",
+    "response": {
+        "appid": "$!{p.response.appId}",
+        "partnerid": "$!{p.response.partnerId}",
+        "prepayid": "$!{p.response.prepayId}",
+        "nonce": "$!{p.response.nonce}",
+        "timestamp": "$!{p.response.timestamp}",
+        "package": "$!{p.response.packoge}",
+        "sign": "$!{p.response.sign}"
+    }
+}

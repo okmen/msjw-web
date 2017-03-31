@@ -1,0 +1,72 @@
+{
+	"salon":{
+		"salonId":$!{salonBean.salonid},
+		"name":"$!{bilin.encodeJson($!{salonBean.salonname})}",
+		"img":[
+    		#foreach($salonImgMap in $salonImgList)
+            {
+            	"img":"$!{salonImgMap.img}",
+            	"thumbimg":"$!{salonImgMap.thumbimg}"
+            }
+			#if(${velocityCount} == ${salonImgList.size()})
+
+			#else
+				,
+			#end
+			#end
+		],
+		"addr":"$!{salonBean.addr}",
+		"lati":$!{salonBean.addrlati},
+		"lng":$!{salonBean.addrlong},
+		"tel":"$!{salonBean.tel}",
+		"stars":"$!{salonStar}",
+		"commentNum":$!{salonBean.commentnum},
+		"verySatisfy":$!{salonBean.satisfyOne},
+		"satisfy":$!{salonBean.satisfyTwo},
+		"unsatisfy":$!{salonBean.satisfyThree},
+		"satisfaction":"$!{satisfaction}",
+		"collected" : $!{collected},
+		"branchNum" : $!{branchNum},
+		"teamImg":[
+    		#foreach($teamImgMap in $teamImgList)
+            {
+            	"img":"$!{teamImgMap.img}",
+            	"thumbimg":"$!{teamImgMap.thumbimg}"
+            }
+			#if(${velocityCount} == ${teamImgList.size()})
+
+			#else
+				,
+			#end
+			#end
+		]		
+	},
+	"item":[
+		#foreach($typeName in ${typeList})
+        {
+        	"type":"$!typeName",
+        	"list":[
+				#foreach($itemBean in ${itemMap.get($typeName)})
+                {
+                	"itemId":$!{itemBean.itemid},
+                	"name":"$!{bilin.encodeJson($!{itemBean.itemname})}",
+					"price":$math.toInteger(${itemBean.minPrice}),
+					"priceOri":$math.toInteger(${itemBean.minPriceOri}),
+					"priceGroup":$math.toInteger(${itemBean.minPriceGroup})
+                }
+    			#if(${velocityCount} == ${itemMap.get($typeName).size()})
+    
+    			#else
+    				,
+    			#end
+    			#end
+			]
+        }
+		#if(${velocityCount} == ${itemMap.size()})
+
+		#else
+			,
+		#end
+		#end
+	]
+}

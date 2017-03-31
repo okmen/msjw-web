@@ -1,0 +1,7 @@
+{
+    "h5URL":"$!{h5URL}",
+    "wechatTitle":"$!{wechatTitle}",
+    "wechatContent":"$!{wechatContent}",
+    "imgURL":"$!{imgURL}",
+	"bannerURL":"$!{bannerURL}"
+}

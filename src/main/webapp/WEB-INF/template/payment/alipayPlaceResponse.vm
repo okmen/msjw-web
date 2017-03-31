@@ -1,0 +1,25 @@
+{
+    "version": "$!{p.version}",
+    "code": $!{p.code},
+    "message": "$!{p.message}",
+    "debug": "$!{p.debug}",
+    "response": {
+        "package": "$!{p.response.packoge}",
+        "wapPay": {
+            "service": "$!{wapPay.service}",
+            "partner": "$!{wapPay.partner}",
+            "_input_charset": "utf-8",
+            "sign_type": "$!{wapPay.sign_type}",
+            "sign": "$!{wapPay.sign}",
+            "notify_url": "$!{wapPay.notify_url}",
+            "return_url": "$!{wapPay.return_url}",
+            "out_trade_no": "$!{wapPay.out_trade_no}",
+            "subject": "$!{wapPay.subject}",
+            "total_fee": "$!{wapPay.total_fee}",
+            "seller_id": "$!{wapPay.seller_id}",
+            "payment_type": "$!{wapPay.payment_type}",
+            "body": "$!{wapPay.body}",
+            "it_b_pay": "$!{wapPay.it_b_pay}"
+        }
+    }
+}

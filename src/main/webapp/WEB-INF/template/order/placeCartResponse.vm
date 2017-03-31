@@ -1,0 +1,67 @@
+{
+    "version": "$!{p.version}",
+    "code": "$!{p.code}",
+    "message": "$!{p.message}",
+    "debug": "$!{p.debug}",
+    "response": {
+        "shopcartSn": "$!{cartItems.get(0).cartItem.shopCartSN}",
+        "totalQuantity": "$!{totalQuantity}",
+        "userBalance": "$!{userBalance}",
+        "totalAmount": "$!{totalAmount}",
+        "payableAmount": "$!{payableAmount}",
+        "thirdpayAmount": "$!{thirdpayAmount}",
+        "salons": [
+			#foreach($salon in $!{salons.values()})
+			#if($velocityCount != 1),#end
+            {
+                "salonId": "$!{salon.salonid}",
+                "salonName": "$!{salon.salonname}",
+                "totalQuantity": "$!{salon.totalQuantity}",
+                "totalAmount": "$!{salon.totalAmount}",
+                "items": [
+                	#set($itemIndex = 0)
+					#foreach($cartItem in $!{cartItems})
+						#if($cartItem.salon.salonid == $salon.salonid)
+							#set($itemIndex = $itemIndex + 1)
+							#if($itemIndex != 1),#end
+		                    {	
+		                        "cartItemId": "$!{cartItem.cartItem.id}",
+		                        "itemId": "$!{cartItem.item.itemid}",
+		                        "itemName": "$!{cartItem.item.itemname}",
+		                        "normsId": "$!{cartItem.cartItem.salonNormsId}",
+		                        "normsDescription": "$!{cartItem.cartItem.salonNormsName}",
+		                        "price": "$!{cartItem.itemPriceFormat.price}",
+		                        "discountPrice": "$!{cartItem.itemPrice}",
+		                        "quantity": "$!{cartItem.cartItem.nums}"
+		                        #if(${cartItem.buyLimits} && $!{cartItem.buyLimits.size()} >= 1)
+			                        ,"buyLimits": [
+			                        #foreach($buyLimit in $!{cartItem.buyLimits})
+										#if($velocityCount != 1),#end
+										"$!{buyLimit}"
+									#end
+							        ]
+						        #end
+						        #if("$!{cartItem.item.useLimit}" != "")
+						        ,"useLimit": "$!{cartItem.item.useLimit}"
+						        #end
+		                    }
+						#end
+					#end
+                ]
+            }
+			#end
+        ]
+		#foreach($cartItem in $!{cartItems})
+		#if($!{cartItem.voucher})
+        ,"voucher": {
+            "vId": "$!{cartItem.voucher.vId}",
+            "name": "$!{cartItem.voucher.vcTitle}",
+            "amount": "$!{cartItem.voucher.vUseMoney}",
+            "usableAmount": "$!{cartItem.voucher.usableAmount}",
+            "appliedItemId": "$!{cartItem.voucher.appliedItemId}",
+            "appliedItemName": "$!{cartItem.voucher.appliedItemName}"
+        }
+		#end
+		#end
+    }
+}

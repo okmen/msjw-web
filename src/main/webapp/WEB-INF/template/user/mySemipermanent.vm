@@ -1,0 +1,21 @@
+{
+    "items":[
+        #foreach ($item in $!{retList}) 
+        {
+            "bookingTime":"$!{item.bookingTime}",
+			"bookingMoney":$!{item.bookingMoney},
+			"bookingSn":"$!{item.bookingSn}",
+            "orderSn":"$!{item.orderSn}",
+			"itemName":"$!{item.itemName}",
+			"salonName":"$!{item.salonName}",
+            "beAgendOrder":"$!{item.beAgendOrder}",
+            "salonUrl":"$!{item.salonUrl}"
+		}
+		#if(${velocityCount} == ${retList.size()})
+
+		#else
+			,
+		#end
+		#end
+	]
+}

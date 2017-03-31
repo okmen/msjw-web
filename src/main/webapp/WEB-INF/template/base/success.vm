@@ -1,0 +1,5 @@
+{
+    "version": "$!{version}",
+    "code": 0,
+    "message": "$!{message}"
+}

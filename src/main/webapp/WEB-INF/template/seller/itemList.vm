@@ -1,0 +1,26 @@
+#if($items)
+[
+#set($flag="")
+#foreach($item in $items)
+$!{flag}
+{
+    "itemName" : "$!{bilin.encodeJson($!{item.itemName})}",
+    "itemId" : $!{item.itemId},
+    "area" : "$!{item.area}",
+    "dist" : "$!{item.dist}",
+    "price" : $!{item.price},
+    "priceOri" : $!{item.priceOri},
+    "priceGroup" : $!{item.priceGroup},
+    "salonId" : $!{item.salonId},
+    "salonName" : "$!{bilin.encodeJson($!{item.salonName})}",
+    "itemLogo" : {
+        "img" : "$!{item.img}",
+        "thumb" : "$!{item.thumb}"
+    }
+}
+#set($flag=",")
+#end
+]
+#else
+[]
+#end

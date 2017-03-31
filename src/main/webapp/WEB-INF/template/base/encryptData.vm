@@ -1,0 +1,11 @@
+{
+  "isEncrypt":"$!{isEncrypt}",
+  
+  #if(${isEncrypt})
+	"data": "$!{bilin.encodeJson( $!{AES.encrypt( "#parse($!{innerViewPath})",$secretKeySpec )} )}"
+  #else
+	"data": #parse($!{innerViewPath})
+  #end
+	
+  
+}

@@ -1,0 +1,25 @@
+{
+    "items":[
+        #foreach ($item in $!{retList}) 
+        {
+            "itemName":"$!{item.itemName}",
+			"orderSn":"$!{item.orderSn}",
+			"payTime":"$!{item.payTime}",
+			"money":$!{item.money},
+            "salonName":"$!{item.salonName}",
+			"imgUrl":"$!{item.imgUrl}",
+			"type":"$!{item.type}",
+			"itemId":"$!{item.itemId}",
+			"salonId":"$!{item.salonId}",
+			"status":$!{item.status},
+			"bookingSn": "$!{item.bookingSn}",
+			"beAgendOrder":"$!{item.beAgendOrder}"
+		}
+		#if(${velocityCount} == ${retList.size()})
+
+		#else
+			,
+		#end
+		#end
+	]
+}

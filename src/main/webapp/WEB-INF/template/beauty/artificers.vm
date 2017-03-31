@@ -1,0 +1,29 @@
+{
+	"popArtificer":[
+			#set($flag = "")
+			#foreach ($popArtificer in ${popArtificers})        
+			$!flag{
+				"name":"$!{bilin.encodeJson($!{popArtificer.name})}",
+				"img":"$!{popArtificer.img}",
+				"position":"$!{popArtificer.position}",
+				"artificerId":$!{popArtificer.artificerId},
+				"expertGrade":$!{popArtificer.expertGrade}
+			}  
+			#set($flag = ",")
+			#end
+		],
+		
+	"artificer":[
+			#set($flag = "")
+			#foreach ($artificer in ${artificers})        
+			$!flag{
+			    "name":"$!{bilin.encodeJson($!{artificer.name})}",
+				"img":"$!{artificer.img}",
+				"position":"$!{artificer.position}",
+				"artificerId":$!{artificer.artificerId},
+				"expertGrade":$!{artificer.expertGrade}
+			}  
+			#set($flag = ",")
+			#end
+		]
+}

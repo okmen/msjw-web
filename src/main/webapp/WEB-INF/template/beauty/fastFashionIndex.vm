@@ -1,0 +1,26 @@
+{
+	"items":[
+		#set($flag = "")
+		#foreach ($ffItem in ${ffItems})        
+		$!flag{
+		    "name":"$!{bilin.encodeJson($!{ffItem.name})}",
+			"icon":"$!{ffItem.icon}",
+			"desc":"$!{bilin.encodeJson($!{ffItem.desc})}",
+			"itemId":$!{ffItem.itemId},
+			"bookingNum":$!{ffItem.bookingNum}
+		}  
+		#set($flag = ",")
+		#end
+	],
+	"banner":
+	#if($banner)
+	{
+		"eventType":$!{banner.eventType},
+		"img":"$!{banner.img}",
+		"url":"$!{bilin.encodeJson($!{banner.url})}"
+	}
+	#else
+    null
+    #end
+}
+

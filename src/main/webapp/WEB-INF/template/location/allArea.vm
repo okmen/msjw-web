@@ -1,0 +1,31 @@
+{
+	"version":"$!{version}",
+    "code":"$!{code}",
+    "message":"$!{message}",
+    "response":
+    #if(!$townInfos)
+        null
+    #else
+        [
+            #set($flag = "")
+            #foreach ($townInfo in ${townInfos})        
+            $!flag{
+                "tId":${townInfo.tId},
+                "tName":"$!{townInfo.tName}",
+                "areaInfo":[
+                #set($flag2 = "")
+                #foreach ($areaInfo in ${townInfo.areaInfo})
+                $!flag2{
+                    "areaId": $!{areaInfo.areaId},
+                    "areaName": "$!{areaInfo.areaName}"
+                }
+                #set($flag2 = ",")
+                #end
+                ]
+                
+            }  
+            #set($flag = ",")
+            #end
+        ]
+    #end
+}

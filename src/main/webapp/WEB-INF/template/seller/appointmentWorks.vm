@@ -1,0 +1,17 @@
+[
+	#foreach($stylistAppointBean in $stylistAppointBeanList)
+	{
+        "appointmentId":$!{stylistAppointBean.id},
+        "serviceItem":"$!{stylistAppointBean.serviceItem}",
+        "addTime":"$!{stylistAppointBean.addTime}",
+        "appointDate":"$!{stylistAppointBean.appointTime}",
+        "mobilephone":"$!{mobileMap.get(${stylistAppointBean.id})}",
+        "contacted":$!{stylistAppointBean.contacted}
+    }
+	#if(${velocityCount} == ${stylistAppointBeanList.size()})
+
+	#else
+		,
+	#end
+	#end
+]

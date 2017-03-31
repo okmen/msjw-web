@@ -1,0 +1,24 @@
+{
+	"totalnum":$!{totalNum},
+	"salons":[
+		#foreach($salon in $salonList)
+        {
+        	"salonId":$!{salon.salonid},
+        	"name":"$!{bilin.encodeJson($!{salon.salonname})}",
+			"img":"$!{imgMap.get(${salon.salonid})}",
+			"stars":"$!{starMap.get(${salon.salonid})}",
+			"commentNum":$!{salon.commentnum},
+			#set($satisfation = $!{salon.satisfyOne}+$!{salon.satisfyTwo})
+			"satisfy":$satisfation,
+			"satisfaction":"$!{satisfactionMap.get(${salon.salonid})}",
+			"dist":"$!{distanceMap.get(${salon.salonid})}",
+			"areaName":"$!{areaMap.get(${salon.zone})}"
+        }
+		#if(${velocityCount} == ${salonList.size()})
+
+		#else
+			,
+		#end
+		#end
+	]
+}

@@ -1,0 +1,18 @@
+{
+    "activity":$!{activity},
+	"code":"$!{code}",
+	"isActivated":$!{isActivated},
+	"salonName":"$!{salonName}",
+	"money": $!{money},
+    "img": "$!{img}",
+    "nickname": "$!{nickname}",
+    "mobilephone": "$!{mobilephone}",
+    "ticketnum":$!{ticketnum},
+    "notcommentnum":$!{notcommentnum},
+    "notpaynum": $!{notpaynum},
+    "refundnum": $!{refundnum},
+    "growth": $!{growth},
+    "voucherNum": $!{voucherNum},
+    "evaluateGift": $!{evaluateGift},
+	"activityTime":"$!{activityTime}"
+}

@@ -1,0 +1,19 @@
+[
+#if($stylists)
+#set($flag="")
+#foreach($stylist in $stylists)
+$!{flag}
+{
+    "stylistId" : $!{stylist.id},
+    "name" : "$!{bilin.encodeJson($!{stylist.name})}",
+    "img" : "$!{stylist.img}",
+    "job" : "$!{stylist.job}",
+    "grade":"$!{gradeMap.get(${stylist.grade})}",
+    "salonname" : "$!{bilin.encodeJson($!{stylist.salonname})}",
+    "areaName" : "$!{stylist.areaName}",
+    "distance" : "$!{stylist.distance}"
+}
+#set($flag=",")
+#end
+#end
+]

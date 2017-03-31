@@ -1,0 +1,16 @@
+{
+    "version": "$!{p.version}",
+    "code": $!{p.code},
+    "message": "$!{p.message}",
+    "debug": "$!{p.debug}",
+    "response": {
+        "version": "$!{p.response.version}",
+        "merchOrderId": "$!{p.response.merchOrderId}",
+        "merchantId": "$!{p.response.merchantId}",
+        "amount": "$!{p.response.amount}",
+        "tradeTime": "$!{p.response.tradeTime}",
+        "orderId": "$!{p.response.orderId}",
+        "payUrl": "$!{p.response.payUrl}",
+        "sign": "$!{p.response.sign}"
+    }
+}

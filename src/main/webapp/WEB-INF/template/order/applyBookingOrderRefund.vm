@@ -1,0 +1,9 @@
+{
+    "orderSn":"$!{orderSn}",
+    "itemName":"$!{itemName}",
+    "money":"$!{money}",
+    "imgUrl":"$!{imgUrl}",
+    "salonName":"$!{salonName}",
+    "status":"$!{status}",
+    "bookingSn":"$!{bookingSn}"
+}

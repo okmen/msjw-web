@@ -1,0 +1,15 @@
+{
+    "accessToken": "$!{tokens.accessToken}",
+	"refreshToken": "$!{tokens.refreshToken}",
+	"userId": "$!{user.userId}",
+	"nickname": "$!{user.nickname}",
+	"img": "$!{user.img}",
+	"mobilephone": "$!{user.mobilePhone}",
+	"username": "$!{user.username}",
+	"sex": "$!{user.sex}",
+	"hairType": "$!{user.hairType}",
+	"area": "$!{user.area}",
+	"birthday": "$!{user.birthday}",
+	"money": "$!{user.balance}",
+	"growth": "$!{user.growth}"
+}

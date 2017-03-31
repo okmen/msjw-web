@@ -1,0 +1,8 @@
+{
+	"itemId":$!{item.itemId},
+    "name" : "$!{bilin.encodeJson($!{item.name})}",
+    "contentUrl" : "$!{bilin.encodeJson($!{item.contentUrl})}"
+}
+
+
+

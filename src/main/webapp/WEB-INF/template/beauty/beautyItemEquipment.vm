@@ -1,0 +1,26 @@
+{
+    "contents" :
+    [
+    #if($equipments)
+        #set($flag="")
+        #foreach($equipment in $equipments)
+        $flag
+        {
+            "title" : "$!{bilin.encodeJson($!{equipment.title})}",
+            "content" : "$!{bilin.encodeJson($!{equipment.content})}",
+            "imgs" : $!{equipment.images}
+        }
+        #set($flag=",")
+        #end
+    #end
+    ]
+    ,
+    "equipmentSlogan" : "$!{bilin.encodeJson($!{item.equipmentSlogan})}"
+    ,
+    "share" : {
+        "icon" : "$!{shareInfo.icon}",
+        "title" : "$!{bilin.encodeJson($!{shareInfo.title})}",
+        "content" : "$!{bilin.encodeJson($!{shareInfo.content})}",
+        "url" : "$!{shareInfo.url}"
+    }
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1.0,user-scalable=no" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+        <title>微信安全支付</title>
+        <script type="text/javascript">
+            function onBridgeReady() {
+                WeixinJSBridge.invoke('getBrandWCPayRequest', {
+                    "appId":"$!{p.response.appId}",
+                    "timeStamp":"$!{p.response.timestamp}",
+                    "nonceStr":"$!{p.response.nonce}",
+                    "package":"$!{p.response.packoge}",
+                    "signType":"MD5",
+                    "paySign":"$!{p.response.sign}"
+                },
+                function(res) {
+                    if (res.err_msg == "get_brand_wcpay_request:ok") {
+                        window.location.href = "$!{successUrl}";
+                    } else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+                        alert("用户取消支付");
+                        history.go( - 1);
+                    } else {
+                        alert("支付失败");
+                        history.go( - 1);
+                    }
+                });
+            }
+
+            if ($!{p.code} != 0) {
+            	alert("支付失败\r\n[$!{p.code}]$!{p.message}");
+            } else {
+	            if (typeof WeixinJSBridge == "undefined") {
+	                if (document.addEventListener) {
+	                    document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+	                } else if (document.attachEvent) {
+	                    document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+	                    document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+	                }
+	            } else {
+	                onBridgeReady();
+	            }
+            }
+        </script>
+    </head>
+    
+    <body>
+    </body>
+
+</html>

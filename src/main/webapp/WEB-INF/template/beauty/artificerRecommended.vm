@@ -1,0 +1,17 @@
+{
+            "artificers":[
+                #foreach ($map in ${artificers}) 
+                {
+                    "name":"$!{map.name}",
+                    "img":"$!{map.img}",
+                    "position":"$!{map.position}",
+                    "artificerId":"$!{map.artificerId}",
+					"expertGrade":"$!{map.expertGrade}"
+    			}
+    			#if(${velocityCount} == ${artificers.size()})
+    			#else
+    				,
+    			#end
+    			#end
+    		]
+}

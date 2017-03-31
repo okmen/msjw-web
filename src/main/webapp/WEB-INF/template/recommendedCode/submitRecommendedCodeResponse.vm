@@ -1,0 +1,15 @@
+{
+    "version": "$!{p.version}",
+    "code": "$!{p.code}",
+    "message": "$!{p.message}",
+    "debug": "$!{p.debug}",
+    "response": {
+        "company": {
+            "id": "$!{company.companyId}",
+            "name": "$!{company.companyName}",
+            "url": "$!{company.companyUrl}",
+            "icon": "$!{company.companyIcon}",
+            "status": "$!{company.status}"
+        }
+    }
+}

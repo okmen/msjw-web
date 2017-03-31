@@ -1,0 +1,10 @@
+{
+    "version": "$!{p.version}",
+    "code": "$!{p.code}",
+    "message": "$!{p.message}",
+    "debug": "$!{p.debug}",
+    "response": {
+        "message": "$!{message}",
+        "type": "$!{type}"
+    }
+}

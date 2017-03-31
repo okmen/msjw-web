@@ -1,0 +1,17 @@
+{
+            "laiseeList":[
+                #foreach ($map in ${laiseeBeanList}) 
+                {
+                    "imgURL":"$!{map.imgURL}",
+                    "nickName":"$!{map.nickName}",
+                    "value":"$!{map.value}",
+                    "getTime":"$!{map.getTime}",
+					"laiseeComment":"$!{map.laiseeComment}"
+    			}
+    			#if(${velocityCount} == ${laiseeBeanList.size()})
+    			#else
+    				,
+    			#end
+    			#end
+    		]
+}

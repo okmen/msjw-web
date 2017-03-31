@@ -1,0 +1,5 @@
+{
+    "openId": "$!{openId}",
+	"nickname": "$!{nickname}",
+	"headimgurl": "$!{headimgurl}"
+}

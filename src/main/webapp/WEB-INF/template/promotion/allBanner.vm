@@ -1,0 +1,98 @@
+{
+	"hairstyle":[
+		#foreach($hairStyle in $hairStyleList)
+        {
+			"title":"$!{hairStyle.name}",
+        	"img":"$!{hairStyle.image}",
+			"eventType":$!{hairStyle.behavior},
+			"url":"$!{bilin.encodeJson($!{hairStyle.url})}"
+        }
+		#if(${velocityCount} == ${hairStyleList.size()})
+
+		#else
+			,
+		#end
+		#end
+	]
+	
+	#if(${spmBannerList})
+	,
+	"SPM":
+	{
+		"banners":[
+    		#foreach($spmBanner in $spmBannerList)
+            {
+				"title":"$!{spmBanner.name}",
+        		"img":"$!{spmBanner.image}",
+        		"eventType":$!{spmBanner.behavior},
+        		"url":"$!{bilin.encodeJson($!{spmBanner.url})}"
+    		}
+    		#if(${velocityCount} == ${spmBannerList.size()})
+    
+    		#else
+    			,
+    		#end
+    		#end
+		],
+		"desc":"$!{bilin.encodeJson($!{spmBannerList.get(0).introduce})}"
+	}
+	#else
+		
+	#end
+	
+	#if(${bdfBannerList})
+	,
+	"BDF":
+	{
+		"banners":[
+    		#foreach($bdfBanner in $bdfBannerList)
+            {
+				"title":"$!{bdfBanner.name}",
+        		"img":"$!{bdfBanner.image}",
+        		"eventType":$!{bdfBanner.behavior},
+        		"url":"$!{bilin.encodeJson($!{bdfBanner.url})}"
+    		}
+    		#if(${velocityCount} == ${bdfBannerList.size()})
+    
+    		#else
+    			,
+    		#end
+    		#end
+		],
+		"desc":"$!{bilin.encodeJson($!{bdfBannerList.get(0).introduce})}",
+		"price":"$!{bdfBannerList.get(0).price}",
+		"priceOri":"$!{bdfBannerList.get(0).priceOri}",
+		"itemId":${BDFItemId}
+	}
+	#else
+		
+	#end
+	
+	#if(${sgzBannerList})
+	,
+	"SGZ":
+	{
+		"banners":[
+    		#foreach($sgzBanner in $sgzBannerList)
+            {
+				"title":"$!{sgzBanner.name}",
+        		"img":"$!{sgzBanner.image}",
+        		"eventType":$!{sgzBanner.behavior},
+        		"url":"$!{bilin.encodeJson($!{sgzBanner.url})}"
+    		}
+    		#if(${velocityCount} == ${sgzBannerList.size()})
+    
+    		#else
+    			,
+    		#end
+    		#end
+		],
+		"desc":"$!{bilin.encodeJson($!{sgzBannerList.get(0).introduce})}",
+		"price":"$!{sgzBannerList.get(0).price}",
+		"priceOri":"$!{sgzBannerList.get(0).priceOri}",
+		"itemId":${SGZItemId}
+	}
+	#else
+		
+	#end
+}

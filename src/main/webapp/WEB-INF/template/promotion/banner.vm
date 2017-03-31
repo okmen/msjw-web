@@ -1,0 +1,49 @@
+{
+	"posters":[
+		#foreach($poster in $posters)
+        {
+        	"bannerId":$!{poster.bannerId},
+        	"img":"$!{poster.image}",
+			"eventType":$!{poster.behavior},
+			"url":"$!{bilin.encodeJson($!{poster.url})}"
+        }
+		#if(${velocityCount} == ${posters.size()})
+
+		#else
+			,
+		#end
+		#end
+	],
+	"SPMBanner":
+	#if(${spmBanner})
+		{
+		"img":"$!{spmBanner.image}",
+		"eventType":$!{spmBanner.behavior},
+		"url":"$!{bilin.encodeJson($!{spmBanner.url})}"
+		}
+	#else
+		null
+	#end
+	,
+	"FFABanner":
+	#if(${ffaBanner})
+		{
+		"img":"$!{ffaBanner.image}",
+		"eventType":$!{ffaBanner.behavior},
+		"url":"$!{bilin.encodeJson($!{ffaBanner.url})}"
+		}
+	#else
+		null
+	#end
+	,
+	"expertBanner":
+	#if(${expertBanner})
+		{
+		"img":"$!{expertBanner.image}",
+		"eventType":$!{expertBanner.behavior},
+		"url":"$!{bilin.encodeJson($!{expertBanner.url})}"
+		}
+	#else
+		null
+	#end
+}

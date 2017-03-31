@@ -1,0 +1,41 @@
+#if($stylist)
+{
+    "stylist" : {
+        "name" : "$!{bilin.encodeJson($!{stylist.name})}",
+        "img" : "$!{stylist.img}",
+        "job" : "$!{stylist.job}",
+        "grade":"$!{gradeMap.get(${stylist.grade})}",
+        "signature" : "$!{bilin.encodeJson($!{stylist.signature})}",
+        "likenum" : $!{stylist.likenum},
+        "collected" : $!{collected},
+        "desc" : "$!{bilin.encodeJson($!{stylist.desc})}",
+        "appointedNum" : $!{stylist.appointedNum},
+        "commentNum" : $!{stylist.commentNum},
+        "satisfaction" : "$!{stylist.satisfaction}"
+    },
+    "salon" : {
+        "salonId" : $!{salon.id},
+        "name" : "$!{bilin.encodeJson($!{salon.name})}",
+        "area" : "$!{salon.area}",
+        "addr" : "$!{bilin.encodeJson($!{salon.addr})}",
+        "lng" : $!{salon.long},
+        "lati" : $!{salon.lati},
+        "dist" : "$!{salon.dist}",
+        "imgs" : [
+        #if($salon.imgs)
+        #set($flag="")
+        #foreach($img in $salon.imgs)
+        $!flag
+        {
+            "img" : "$!{img.img}",
+            "thumbimg" : "$!{img.thumb}"
+        }
+        #set($flag=",")
+        #end
+        #end
+        ]
+    }
+}
+#else
+{}
+#end

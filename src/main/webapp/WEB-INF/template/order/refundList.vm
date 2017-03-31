@@ -1,0 +1,24 @@
+{
+    "items":[
+	    #foreach ($map in ${refunds}) 
+	    {
+	        "orderSn":"$!{map.orderSn}",
+	        "limitTime":"$!{map.limitTime}",
+	        "ticketNo":"$!{map.ticketNo}",
+	        "itemId":"$!{map.itemId}",
+			"itemName":"$!{map.itemName}",
+	        "money":"$!{map.money}",
+	        "imgUrl":"$!{map.imgUrl}",
+	        "salonName":"$!{map.salonName}",
+			"status":"$!{map.status}",
+	        "payTime":"$!{map.payTime}",
+			"beAgendOrder":"$!{map.beAgendOrder}",
+	        "bookingSn":"$!{map.bookingSn}"
+		}
+		#if(${velocityCount} == ${refunds.size()})
+		#else
+			,
+		#end
+		#end
+	]
+}

@@ -1,0 +1,66 @@
+{
+	"name" : "$!{bilin.encodeJson($!{artificer.name})}",
+	"img" : "$!{pageImage}",
+	"position" : "$!{position}",
+	"signature" : "$!{bilin.encodeJson($!{artificer.introduce})}",
+	"artificerId" : "$!{artificer.artificerId}",
+	"likeNum" : $!{artificer.likeNum},
+	"liked" : $!{liked},
+	"serviceTimes" : $!{serviceTimes},
+	"nation" : "$!{artificer.country}",
+	"nationImg" : "$!{nationImg}",
+	"beautyCenterPhone" : "$!{beautyCenterPhone}",
+	"beautyPhoneFormat":"$!{beautyPhoneFormat}",
+	"experience" : "$!{bilin.encodeJson($!{artificer.experience})}",
+    "attachments" : [
+    #if($attachments)
+        #set($flag="")
+        #foreach($attachment in $attachments)
+        $flag
+        {
+            "title" : "$!{bilin.encodeJson($!{attachment.title})}",
+            "content" : "$!{bilin.encodeJson($!{attachment.content})}"
+        }
+        #set($flag=",")
+        #end
+    #end
+    ],
+	"works":[
+    	#foreach($work in $works)
+        {
+            "workId" : $!{work.id},
+            "desc" : "$!{bilin.encodeJson($!{work.desc})}",
+            "time" : "$!{work.time}",
+            "images" : [
+                #foreach($image in $work.images)
+                {
+                    "image" : {
+                        "url" : "$!{image.url}",
+                        "width" : $!{image.width},
+                        "height" : $!{image.height}
+                    },
+                    "thumb" : {
+                        "url" : "$!{image.url}?imageView/0/w/200",
+                        "width" : 200,
+                        "height" : 200
+                    } 
+                }
+                #if(${velocityCount} == ${work.images.size()})
+
+            	#else
+            		,
+            	#end
+            	#end
+            ]
+        }
+		#if(${velocityCount} == ${works.size()})
+
+    	#else
+    		,
+    	#end
+    	#end
+    ]
+}
+
+
+

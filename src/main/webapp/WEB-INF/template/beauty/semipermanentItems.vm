@@ -1,0 +1,46 @@
+{
+	"banner":
+	#if($banner)
+	{
+		"eventType":$!{banner.eventType},
+		"img":"$!{banner.img}",
+		"url":"$!{bilin.encodeJson($!{banner.url})}"
+	}
+	#else
+    null
+    #end
+	,
+	"popArtificer":[
+			#set($flag = "")
+			#foreach ($popArtificer in ${popArtificers})        
+			$!flag{
+			    "itemId":$!{popArtificer.itemId},
+				"name":"$!{bilin.encodeJson($!{popArtificer.name})}",
+				"icon":"$!{popArtificer.icon}",
+				"price":"$!{popArtificer.price}",
+				"priceOri":"$!{popArtificer.priceOri}",
+				"expertGrade":$!{popArtificer.expertGrade},
+				"desc":"$!{bilin.encodeJson($!{popArtificer.desc})}",
+				"detailUrl":"$!{bilin.encodeJson($!{popArtificer.detailUrl})}"
+			}  
+			#set($flag = ",")
+			#end
+		],
+		
+	"artificer":[
+			#set($flag = "")
+			#foreach ($artificer in ${artificers})        
+			$!flag{
+			    "itemId":$!{artificer.itemId},
+				"name":"$!{bilin.encodeJson($!{artificer.name})}",
+				"icon":"$!{artificer.icon}",
+				"price":"$!{artificer.price}",
+				"priceOri":"$!{artificer.priceOri}",
+				"expertGrade":$!{artificer.expertGrade},
+				"desc":"$!{bilin.encodeJson($!{artificer.desc})}",
+				"detailUrl":"$!{bilin.encodeJson($!{artificer.detailUrl})}"
+			}  
+			#set($flag = ",")
+			#end
+		]
+}

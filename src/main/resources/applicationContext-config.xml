@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+	default-autowire="byName" default-lazy-init="false">
+
+	<context:property-placeholder location="classpath:config.properties"
+		ignore-unresolvable="true" />
+
+	<!-- <bean id="payecoSetting" class="cn.web.front.setting.PayecoSetting">
+		<property name="merchantId" value="${payeco.merchant.id}" />
+		<property name="privateKey" value="${payeco.private.key}" />
+		<property name="publicKey" value="${payeco.public.key}" />
+		<property name="payecoUrl" value="${payeco.payeco.url}" />
+		<property name="notifyUrl" value="${payeco.notify.url}" />
+		<property name="successUrl" value="${payeco.success.url}" />
+	</bean>
+
+	<bean id="wechatSetting" class="cn.web.front.setting.WechatSetting">
+		<property name="payMerchantId" value="${wechat.pay.merchant.id}" />
+		<property name="payAppId" value="${wechat.pay.app.id}" />
+		<property name="payAppKey" value="${wechat.pay.app.key}" />
+		<property name="payAppSecret" value="${wechat.pay.app.secret}" />
+		<property name="payPartnerId" value="${wechat.pay.partner.id}" />
+		<property name="payPartnerKey" value="${wechat.pay.partner.key}" />
+		<property name="payTokenUrl" value="${wechat.pay.token.url}" />
+		<property name="payPrepayUrl" value="${wechat.pay.prepay.url}" />
+		<property name="payNotifyUrl" value="${wechat.pay.notify.url}" />
+		<property name="payQueryUrl" value="${wechat.pay.query.url}" />
+		<property name="oauth2Url" value="${wechat.oauth2.url}" />
+		<property name="unifiedOrderUrl" value="${wechat.unified.order.url}" />
+		<property name="h5MerchantId" value="${wechat.h5.merchant.id}" />
+		<property name="h5RedirectUrl" value="${wechat.h5.redirect.url}" />
+		<property name="h5AppId" value="${wechat.h5.app.id}" />
+		<property name="h5AppSecret" value="${wechat.h5.app.secret}" />
+		<property name="h5TokenUrl" value="${wechat.h5.token.url}" />
+		<property name="h5PartnerKey" value="${wechat.h5.partner.key}" />
+		<property name="h5SuccessUrl" value="${wechat.h5.success.url}" />
+		<property name="h5QueryUrl" value="${wechat.h5.query.url}" />
+		<property name="h5RedirectDomain" value="${wechat.h5.redirectDomain.url}" />
+		<property name="redPackVcsn" value="${wechat.h5.redPackVcsn}" />
+		<property name="h5RedPackCert" value="${wechat.h5.h5RedPackCert}" />
+		<property name="payRedPackCert" value="${wechat.pay.payRedPackCert}" />
+		<property name="h5BookingSuccessTemplateId" value="${wechat.h5.booking.success.template.id}"></property>
+	</bean>
+
+	<bean id="alipaySetting" class="cn.web.front.setting.AlipaySetting">
+		<property name="partnerId" value="${alipay.partner.id}" />
+		<property name="partnerKey" value="${alipay.partner.key}" />
+		<property name="privateKey" value="${alipay.private.key}" />
+		<property name="notifyUrl" value="${alipay.notify.url}" />
+		<property name="gatewayUrl" value="${alipay.gateway.url}" />
+		<property name="publicKey" value="${alipay.public.key}" />
+		<property name="successUrl" value="${alipay.success.url}" />
+	</bean>
+
+	<bean id="choumeiSetting" class="cn.web.front.setting.ChoumeiSetting">
+		<property name="orderUrl" value="${choumei.order.url}" />
+		<property name="voucherRedeemCodeKey" value="${voucher.redeem.code.key}" />
+		<property name="mUrl" value="${choumei.m.url}" />
+		<property name="cmwebUrl" value="${choumei.cmweb.url}" />
+	</bean> -->
+
+</beans> 

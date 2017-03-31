@@ -1,0 +1,23 @@
+[
+#set($flag="")
+#foreach($normKV in $normMap.entrySet())
+$flag
+{
+    "name" : "$!{normKV.key}",
+    "list" : [
+    #set($flag2="")
+    #foreach($norm in $normKV.value)
+    $flag2
+    {
+        "times" : $!{norm.times},
+        "size" : $!{norm.size},
+        "price" : $!{norm.vipPrice},
+        "priceOri" : $!{norm.price}
+    }
+    #set($flag2=",")
+    #end
+    ]
+}
+#set($flag=",")
+#end 
+]

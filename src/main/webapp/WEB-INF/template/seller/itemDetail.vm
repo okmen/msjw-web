@@ -1,0 +1,176 @@
+{
+	"item" : {
+        "itemId" : $!{item.id},
+        "name" : "$!{bilin.encodeJson($!{item.name})}",
+        "type" : $!{item.type},
+        "specType" : $!{item.specType},
+        "price" : $!{item.price},
+        "priceOri" : $!{item.priceOri},
+        "priceGroup" : $!{item.priceGroup},
+        "maxPrice" : $!{item.maxPrice},
+        "maxPriceOri" : $!{item.maxPriceOri},
+        "maxPriceGroup" : $!{item.maxPriceGroup},
+        "sold" : $!{item.sold},
+        "desc" : "$!{bilin.encodeJson($!{item.desc})}",
+        "commentNum" : $!{item.commentNum},
+        "verySatisfy" : $!{item.verySatisfy},
+        "satisfy" : $!{item.satisfy},
+        "unsatisfy" : $!{item.unsatisfy},
+        "satisfaction" : "$!{item.satisfaction}",
+        "promiseUrl" : "$!{item.promiseUrl}",
+        "expTime" : "$!{item.expTime}",
+        "dayInnage" : ${item.dayInnage},
+        "useLimit" : "$!{item.useLimit}",
+        "collected" : $!{collected},
+        "logo" : "$!{item.logo}",
+        "isDown" : $!{item.isDown},
+        "limits" : 
+        #if($limits)
+        [
+            #set($flag = "")
+            #foreach($limit in $limits)
+            $!{flag}
+            "$!{limit}"
+            #set($flag = ",")
+            #end
+        ]
+        #else
+        []
+        #end
+        
+	},
+	"salon" : {
+        "salonId" : $!{salon.id},
+        "name" : "$!{bilin.encodeJson($!{salon.name})}",
+        "logo" : "$!{salon.logo}",
+        "stars" : $!{salon.stars},
+        "addr" : "$!{salon.addr}",
+        "lati" : $!{salon.lati},
+        "lng" : $!{salon.long},
+        "dist" : "$!{salon.dist}",
+        "commentNum" : $!{salon.commentNum},
+        "verySatisfy" : $!{salon.verySatisfy},
+        "satisfy" : $!{salon.satisfy},
+        "unsatisfy" : $!{salon.unsatisfy},
+        "satisfaction" : "$!{salon.satisfaction}"
+	}
+	#if($comment)
+	,
+	"comment" : 
+	{
+        "nickname" : "$!{bilin.encodeJson($!{comment.name})}",
+        "img" : "$!{comment.img}",
+        "phone" : "$!{comment.mobilephone}",
+        "level" : $!{comment.level},
+        "time" : "$!{comment.time}",
+        "satisfy" : "$!{comment.satisfy}",
+        "content" : "$!{bilin.encodeJson($!{comment.content})}",
+        "reply" : "$!{comment.reply}",
+        "commentImg" :
+        #if($comment.commentImg)
+        [
+        #set($flag="")
+        #foreach($img in $comment.commentImg)
+        $flag
+        {
+            "img" : "$!{img.img}",
+            "thumbimg" : "$!{img.thumbimg}"
+        }
+        #set($flag=",")
+        #end
+        ]
+        #else
+        []
+        #end 
+	}
+    #end
+    #if($format) 
+    ,
+    "format" :
+    {
+        #if($format.norms)
+        "norms" : 
+        {
+            #set($flag = "")
+            #foreach($norm in $format.norms.entrySet())
+            $!flag
+            "$!norm.key" : {
+               "normsId": $!{norm.value.normsId},
+               "price": $!{norm.value.price},
+               "priceOri": $!{norm.value.priceOri},
+               "priceGroup": $!{norm.value.priceGroup}
+            }
+            #set($flag = ",")
+            #end 
+        }
+        ,
+        #end
+        "formatTypes" :
+        #if($format.formatTypes)
+        [
+            #set($flag = "")
+            #foreach($formatType in $format.formatTypes)
+            $!flag
+            {
+                "name": "$!{formatType.name}",
+                "formatTypeId": $!{formatType.id},
+                "detail" : 
+                #if($formatType.formatElems)
+                [
+                    #set($flag2 = "")
+                    #foreach($formatElem in $formatType.formatElems)
+                    $!flag2{
+                        "formatId" : ${formatElem.id},
+                        "name" : "$!{formatElem.name}"
+                    }
+                    #set($flag2 = ",")
+                    #end
+                ]
+                #else
+                []
+                #end
+            }
+            #set($flag = ",")
+            #end 
+        ]
+        #else
+        []
+        #end
+    }
+    #end
+    ,
+    "stylists" : 
+    #if($stylists)
+    [
+        #set($flag = "")
+        #foreach($stylist in $stylists)
+        $!flag
+        {
+            "stylistId" : ${stylist.id},
+            "img" : "${stylist.img}"
+        }
+        #set($flag = ",")
+        #end
+    ]
+    #else
+    []
+    #end
+    ,
+    "addedServices" : 
+    #if($addedServices)
+    [
+        #set($flag = "")
+        #foreach($service in $addedServices)
+        $!flag
+        {
+            "name" : "$!{service.name}",
+            "logo" : "$!{service.logo}",
+            "detail" : "$!{service.detail}"
+        }
+        #set($flag = ",")
+        #end
+    ]
+    #else
+    []
+    #end
+}

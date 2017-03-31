@@ -1,0 +1,44 @@
+{
+    "orderSn":"$!{orderSn}",
+	"bookingDate":"$!{bookingDate}",
+	"bookingItemNames":"$!{bookingItemNames}",
+	"bookerName": "$!{bookerName}",
+    "beautyName": "$!{beautyName}",
+    "beautyAddress": "$!{beautyAddress}",
+    "payableAmount": $!{payableAmount},
+    "paiedTime":"$!{paiedTime}",
+    "recommendedCode":"$!{recommendedCode}",
+    "status": "$!{status}",
+    "h5Url":"$!{h5Url}",
+    "completeTime":"$!{completeTime}",
+    "askRefundTime": "$!{askRefundTime}",
+	"giftEndTime": "$!{giftEndTime}",
+	"giftStartTime": "$!{giftStartTime}",
+    "refundTime": "$!{refundTime}",
+	"refundMoney":$!{refundMoney},
+	"beautyId":$!{beautyId},
+	"itemType":"$!{itemType}",
+	"isGift":"$!{isGift}",
+	#if(${inviteUrl})
+       "inviteUrl":"$!{bilin.encodeJson($!{inviteUrl})}",
+	#end
+	#if(${substitutor})
+       "substitutor":$!{substitutor},
+	#end
+	#if(${managerUid})
+       "managerUid":$!{managerUid},
+	#end
+	#if(${beAgendOrder})
+       "beAgendOrder":"$!{beAgendOrder}",
+	#end
+	#if(${isPaySuccess})
+       "isPaySuccess":"$!{isPaySuccess}",
+	#end
+	#if(${bookingSn})
+       "bookingSn":"$!{bookingSn}",
+	#end
+	#if(${bookerPhone})
+       "bookerPhone":$!{bookerPhone},
+    #end
+	"present":"$!{present}"
+}

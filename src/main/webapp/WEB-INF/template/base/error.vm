@@ -1,0 +1,6 @@
+{
+    "version":"$!{version}",
+    "code":"$!{code}",
+    "message":"$!{message}",
+    "debug":"$!{debug}"
+}

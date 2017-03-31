@@ -1,0 +1,21 @@
+{
+	"share" : {
+        "icon" : "$!{shareInfo.icon}",
+        "title" : "$!{bilin.encodeJson($!{shareInfo.title})}",
+        "content" : "$!{bilin.encodeJson($!{shareInfo.content})}",
+        "url" : "$!{shareInfo.url}"
+    },
+	"centerInfo":[
+		#set($flag = "")
+		#foreach ($detail in ${details})        
+		$!flag{
+	    	"title":"$!{bilin.encodeJson($!{detail.title})}",
+			"imgs":$!{detail.images},
+			"content":"$!{bilin.encodeJson($!{detail.content})}"
+		}  
+		#set($flag = ",")
+		#end
+	],
+	"phone":"$!{phone}"
+
+}

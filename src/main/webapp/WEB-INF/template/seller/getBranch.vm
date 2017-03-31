@@ -1,0 +1,26 @@
+{
+    
+    "totalnum":$!{totalnum},
+    "salons":[
+        #foreach ($map in ${listObj}) 
+        {
+            "salonId":$!{map.id},
+            "name":"$!{bilin.encodeJson($!{map.name})}",
+            "img":"$!{map.img}",
+            "stars":$!{map.stars},
+            "commentNum":$!{map.commentNum},
+            "satisfy":$!{map.satisfy},
+            "satisfaction":"$!{map.satisfaction}",
+            "dist":"$!{map.dist}",
+            "areaName":"$!{map.area}"
+		}
+		#if(${velocityCount} == ${listObj.size()})
+
+		#else
+			,
+		#end
+		#end
+
+	]
+			
+}

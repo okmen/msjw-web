@@ -1,0 +1,8 @@
+{
+	"code":"$!{code}",
+	"message":"$!{message}",
+	"response":{
+		"img":"${response.imgUrl}",
+		"thumbimg":"${response.thumbnailUrl}"
+	}
+}

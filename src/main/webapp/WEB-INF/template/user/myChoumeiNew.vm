@@ -1,0 +1,16 @@
+{
+    "nickname": "$!{nickname}",
+    "headUrl": "$!{headUrl}",
+    "money":$!{money},
+    "unEvaluatedNum":$!{unEvaluatedNum},
+    "unUseNum": $!{unUseNum},
+    "evaluateGift": $!{evaluateGift},
+	"activityTime":"$!{activityTime}",
+	"isActivated":$!{isActivated},
+	"activity":$!{activity},
+	"salonName":"$!{salonName}",
+	"beAgent":"$!{beAgent}",
+	"mySubstitutorNum":$!{mySubstitutorNum},
+	"code":"$!{code}",
+	"growth": $!{growth}
+}

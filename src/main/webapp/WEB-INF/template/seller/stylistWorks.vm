@@ -1,0 +1,40 @@
+#if($works)
+[
+#set($flag="")
+#foreach($work in $works)
+$!{flag}
+{
+    "workId" : $!{work.id},
+    "desc" : "$!{bilin.encodeJson($!{work.desc})}",
+    "time" : "$!{work.time}",
+    "images" : 
+    #if($work.images) 
+    [
+        #set($flag2="")
+        #foreach($image in $work.images)
+        $!{flag2}
+        {
+            "image" : {
+                "url" : "$!{image.url}",
+                "width" : $!{image.width},
+                "height" : $!{image.height}
+            },
+            "thumb" : {
+                "url" : "$!{image.url}?imageView/0/w/200",
+                "width" : 200,
+                "height" : 200
+            } 
+        }
+        #set($flag2=",")
+        #end
+    ]
+    #else
+    []
+    #end
+}
+#set($flag=",")
+#end
+]
+#else
+[]
+#end

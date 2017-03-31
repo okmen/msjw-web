@@ -1,0 +1,25 @@
+{
+    "salons":[
+        #foreach ($salon in $!{mySalonList}) 
+        {
+            "salonId":$!{salon.salonid},
+            "name":"$!{salon.salonname}",
+            "img":"$!{imgMap.get(${salon.salonid})}",
+            "stars":$!{starMap.get(${salon.salonid})},
+            "commentNum":$!{salon.commentnum},
+			#set($satisfation = $!{salon.satisfyOne}+$!{salon.satisfyTwo})
+			"satisfy":$satisfation,
+            "satisfaction":"$!{satisfactionMap.get(${salon.salonid})}",
+			"dist":"$!{distanceMap.get(${salon.salonid})}",
+			"areaName":"$!{areaMap.get(${salon.zone})}"
+		}
+		#if(${velocityCount} == ${mySalonList.size()})
+
+		#else
+			,
+		#end
+		#end
+	],
+	"itemNum":$!{itemNum},
+	"salonNum":$!{salonNum}
+}

@@ -1,0 +1,22 @@
+{
+    "version": "$!{p.version}",
+    "code": "$!{p.code}",
+    "message": "$!{p.message}",
+    "debug": "$!{p.debug}",
+    "response": [
+            #foreach($calendar in $!{calendars})
+            #if($velocityCount != 1),#end
+            {
+                "displayDate": "$!{calendar.value0}",
+                "bookingDate": "$!{calendar.value1}",
+                "bookingWeek": "$!{calendar.value2}",
+                "isFull":
+                    #if($calendar.value3)
+                       "Y"
+                    #else
+                       "N"
+                    #end
+            }
+            #end
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "version": "$!{p.version}",
+    "code": $!{p.code},
+    "message": "$!{p.message}",
+    "debug": "$!{p.debug}",
+    "response": [
+        #foreach($v in $!{vouchers})
+        #if($velocityCount != 1),#end { "code":"$!{v.redeemCode}" , "title":"$!{v.vcTitle}" }
+        #end
+    ]
+}

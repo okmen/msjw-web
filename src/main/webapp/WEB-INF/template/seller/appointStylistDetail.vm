@@ -1,0 +1,25 @@
+{
+	"stylist":{
+		"stylistId":$!{stylistBean.stylistId},
+		"name":"$!{bilin.encodeJson($!{stylistBean.stylistName})}",
+		"job":"$!{bilin.encodeJson($!{stylistBean.job})}",
+		"grade":"$!{gradeMap.get(${stylistBean.grade})}",
+		"phone":"$!{stylistBean.mobilephone}",
+		"img":"$!{stylistBean.stylistImg}"
+	},
+	"salon":{
+		"salonId":$!{salonBean.salonid},
+		"name":"$!{bilin.encodeJson($!{salonBean.salonname})}",
+		"addr":"$!{salonBean.addr}",
+		"lati" : $!{salonBean.addrlati},
+        "lng" : $!{salonBean.addrlong},
+		"area":"$!{area}",
+		"distance":"$!{distance}",
+		"tel":"$!{salonBean.tel}"
+	},
+	"appointment":{
+		"appointmentId":$!{stylistAppointBean.id},
+		"date":"$!{stylistAppointBean.appointTime}",
+		"serviceItem":"$!{stylistAppointBean.serviceItem}"
+	}
+}

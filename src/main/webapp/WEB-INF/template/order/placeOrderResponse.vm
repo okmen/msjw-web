@@ -1,0 +1,39 @@
+{
+    "version": "$!{p.version}",
+    "code": $!{p.code},
+    "message": "$!{p.message}",
+    "debug": "$!{p.debug}",
+    "response": {
+        "orderSn": "$!{order.orderSN}",
+        "itemId": "$!{item.itemid}",
+        "itemName": "$!{item.itemname}",
+        "normsId": "$!{normsId}",
+        "normsDescription": "$!{normsDescription}",
+        "salonId": "$!{salon.salonid}",
+        "salonName": "$!{salon.salonname}",
+        "quantity": "$!{order.num}",
+        "userBalance": "$!{userBalance}",
+        "totalAmount": "$!{order.priceAll}",
+        "payableAmount": "$!{order.actuallyPay}",
+        "thirdpayAmount": "$!{thirdpayAmount}"
+        #if($buyLimits && $!{buyLimits.size()} >= 1)
+	        ,"buyLimits": [
+	        #foreach($buyLimit in $!{buyLimits})
+				#if($velocityCount != 1),#end
+				"$!{buyLimit}"
+			#end
+	        ]
+        #end
+        #if("$!{useLimit}" != "")
+        ,"useLimit": "$!{useLimit}"
+        #end
+        #if($voucher)
+        ,"voucher": {
+            "vId": "$!{voucher.vId}",
+            "name": "$!{voucher.vcTitle}",
+            "amount": "$!{voucher.vUseMoney}",
+            "usableAmount": "$!{voucherUsableAmount}"
+        }
+        #end
+    }
+}
