@@ -367,6 +367,11 @@
 			<artifactId>account-center-api</artifactId>
 			<version>${cn.services.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>${choumei.services.groupId}</groupId>
+			<artifactId>illegal-center-api</artifactId>
+			<version>${cn.services.version}</version>
+		</dependency>
 		
 		
 		<dependency>
