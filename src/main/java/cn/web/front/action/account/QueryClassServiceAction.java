@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.alibaba.fastjson.JSON;
 
 import cn.account.bean.vo.queryclassservice.CertificationProgressQueryVo;
+import cn.account.bean.vo.queryclassservice.DriverLicenseBusinessVo;
 import cn.account.bean.vo.queryclassservice.IdentityVerificationAuditApartFromVo;
 import cn.account.bean.vo.queryclassservice.IdentityVerificationAuditVo;
 import cn.account.bean.vo.queryclassservice.MakeAnAppointmentVo;
+import cn.account.bean.vo.queryclassservice.MotorVehicleBusinessVo;
 import cn.sdk.bean.BaseBean;
 import cn.web.front.support.BaseAction;
 /**
@@ -29,6 +31,99 @@ import cn.web.front.support.BaseAction;
 @RequestMapping(value="/user/queryClassService")
 @SuppressWarnings(value="all")
 public class QueryClassServiceAction extends BaseAction{
+	/**
+	 * 用户中心-查询类服务-业务办理进度查询-驾驶证业务
+	 * @param identityCard 身份证号
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * URL
+	 * http://localhost:8080/web/user/queryClassService/getDriverLicenseBusiness.html?identityCard=431225199223343344X
+	 */
+    @RequestMapping(value="getDriverLicenseBusiness",method=RequestMethod.GET)
+    public void getDriverLicenseBusiness(@RequestParam("identityCard") String identityCard,
+    		HttpServletRequest request,HttpServletResponse response) throws IOException{
+    	BaseBean baseBean = new BaseBean();
+    	baseBean.setCode("0000");
+    	baseBean.setMsg("");
+    	
+    	List<DriverLicenseBusinessVo> driverLicenseBusinessVos = new ArrayList<DriverLicenseBusinessVo>();
+    	DriverLicenseBusinessVo driverLicenseBusinessVo1 = new DriverLicenseBusinessVo();
+    	driverLicenseBusinessVo1.setUserName("小明1");
+    	driverLicenseBusinessVo1.setIdentityCard("45644444332222");
+    	driverLicenseBusinessVo1.setGradeNumber("粤B88668");
+    	driverLicenseBusinessVo1.setGradeType("蓝牌");
+    	driverLicenseBusinessVo1.setReceptionTime("2017-04-08 14:12:09");
+    	driverLicenseBusinessVo1.setVehicleNumber("车辆号码");
+    	driverLicenseBusinessVo1.setBusinessName("换领驾驶证");
+    	driverLicenseBusinessVo1.setHandleTheState("待初审");
+    	
+    	DriverLicenseBusinessVo driverLicenseBusinessVo2 = new DriverLicenseBusinessVo();
+    	driverLicenseBusinessVo2.setUserName("小明2");
+    	driverLicenseBusinessVo2.setIdentityCard("42344444332222");
+    	driverLicenseBusinessVo2.setGradeNumber("粤B8888");
+    	driverLicenseBusinessVo2.setGradeType("蓝牌");
+    	driverLicenseBusinessVo2.setReceptionTime("2017-04-08 14:12:09");
+    	driverLicenseBusinessVo2.setVehicleNumber("车辆号码");
+    	driverLicenseBusinessVo2.setBusinessName("补领驾驶证");
+    	driverLicenseBusinessVo2.setHandleTheState("已制证");
+    	
+    	driverLicenseBusinessVos.add(driverLicenseBusinessVo1);
+    	driverLicenseBusinessVos.add(driverLicenseBusinessVo2);
+    	
+    	baseBean.setData(driverLicenseBusinessVos);
+    	renderJSON(baseBean);
+    	logger.info(JSON.toJSONString(baseBean));
+    }
+	
+	
+	/**
+	 * 用户中心-查询类服务-业务办理进度查询-机动车业务
+	 * @param identityCard 身份证号
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * URL
+	 * http://localhost:8080/web/user/queryClassService/getMotorVehicleBusiness.html?identityCard=431225199223343344X
+	 */
+    @RequestMapping(value="getMotorVehicleBusiness",method=RequestMethod.GET)
+    public void getMotorVehicleBusiness(@RequestParam("identityCard") String identityCard,
+    		HttpServletRequest request,HttpServletResponse response) throws IOException{
+    	BaseBean baseBean = new BaseBean();
+    	baseBean.setCode("0000");
+    	baseBean.setMsg("");
+    	
+    	List<MotorVehicleBusinessVo> makeAnAppointmentVos = new ArrayList<MotorVehicleBusinessVo>();
+    	MotorVehicleBusinessVo makeAnAppointmentVo1 = new MotorVehicleBusinessVo();
+    	makeAnAppointmentVo1.setUserName("小明1");
+    	makeAnAppointmentVo1.setIdentityCard("45644444332222");
+    	makeAnAppointmentVo1.setApplicationTime("2017-04-08 14:12:09");
+    	makeAnAppointmentVo1.setGradeNumber("蓝牌");
+    	makeAnAppointmentVo1.setGradeType("蓝牌");
+    	makeAnAppointmentVo1.setReceptionTime("2017-04-08 14:12:09");
+    	makeAnAppointmentVo1.setVehicleNumber("车辆号码");
+    	makeAnAppointmentVo1.setBusinessName("换领机动车行驶证");
+    	makeAnAppointmentVo1.setHandleTheState("待初审");
+    	
+    	MotorVehicleBusinessVo makeAnAppointmentVo2 = new MotorVehicleBusinessVo();
+    	makeAnAppointmentVo2.setUserName("小明2");
+    	makeAnAppointmentVo2.setIdentityCard("42344444332222");
+    	makeAnAppointmentVo2.setApplicationTime("2017-04-08 14:12:09");
+    	makeAnAppointmentVo2.setGradeNumber("蓝牌");
+    	makeAnAppointmentVo2.setGradeType("蓝牌");
+    	makeAnAppointmentVo2.setReceptionTime("2017-04-08 14:12:09");
+    	makeAnAppointmentVo2.setVehicleNumber("车辆号码");
+    	makeAnAppointmentVo2.setBusinessName("补领机动车行驶证");
+    	makeAnAppointmentVo2.setHandleTheState("已制证");
+    	
+    	makeAnAppointmentVos.add(makeAnAppointmentVo1);
+    	makeAnAppointmentVos.add(makeAnAppointmentVo2);
+    	
+    	baseBean.setData(makeAnAppointmentVos);
+    	renderJSON(baseBean);
+    	logger.info(JSON.toJSONString(baseBean));
+    }
+	
 	/**
 	 * 用户中心-查询类服务-预约查询-机动车业务/驾驶证业务
 	 * @param businessType 业务类型 	1-机动车业务、2-驾驶证业务
