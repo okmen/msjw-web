@@ -101,7 +101,7 @@
 				<env>dev</env>
 				<publish.version>1.0.0</publish.version>
 				<dubbo.registry.url><![CDATA[192.168.1.120:2181]]></dubbo.registry.url>
-				<dubbo.consumer.timeout><![CDATA[5000]]></dubbo.consumer.timeout>
+				<dubbo.consumer.timeout><![CDATA[10000]]></dubbo.consumer.timeout>
 				<dubbo.consumer.payment.timeout><![CDATA[15000]]></dubbo.consumer.payment.timeout>
 				<dubbo.consumer.retries><![CDATA[0]]></dubbo.consumer.retries>
 
@@ -130,7 +130,7 @@
 				<env>test</env>
 				<publish.version>1.0.0</publish.version>
 				<dubbo.registry.url><![CDATA[test-zookeeper.choumei.me:2181]]></dubbo.registry.url>
-				<dubbo.consumer.timeout><![CDATA[5000]]></dubbo.consumer.timeout>
+				<dubbo.consumer.timeout><![CDATA[10000]]></dubbo.consumer.timeout>
 				<dubbo.consumer.payment.timeout><![CDATA[15000]]></dubbo.consumer.payment.timeout>
 				<dubbo.consumer.retries><![CDATA[0]]></dubbo.consumer.retries>
 
@@ -160,7 +160,7 @@
 				<env>online</env>
 				<publish.version>1.0.0</publish.version>
 				<dubbo.registry.url><![CDATA[zookeeper.choumei.cn:2181]]></dubbo.registry.url>
-				<dubbo.consumer.timeout><![CDATA[5000]]></dubbo.consumer.timeout>
+				<dubbo.consumer.timeout><![CDATA[10000]]></dubbo.consumer.timeout>
 				<dubbo.consumer.payment.timeout><![CDATA[15000]]></dubbo.consumer.payment.timeout>
 				<dubbo.consumer.retries><![CDATA[0]]></dubbo.consumer.retries>
 
@@ -365,6 +365,13 @@
 		<dependency>
 			<groupId>${choumei.services.groupId}</groupId>
 			<artifactId>account-center-api</artifactId>
+			<version>${cn.services.version}</version>
+		</dependency>
+		
+		<!-- 便民服务 -->
+		<dependency>
+			<groupId>${choumei.services.groupId}</groupId>
+			<artifactId>convenience-center-api</artifactId>
 			<version>${cn.services.version}</version>
 		</dependency>
 

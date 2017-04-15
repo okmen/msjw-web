@@ -10,6 +10,8 @@ import cn.account.service.IAccountService;
 import javax.servlet.*;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
@@ -36,6 +38,12 @@ public class PermissionFilter extends HttpServlet implements Filter {
     @Override
     public void doFilter(ServletRequest arg0, ServletResponse arg1, FilterChain arg2) throws IOException, ServletException {
 
+    	HttpServletResponse response = (HttpServletResponse) arg1;
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "x-requested-with,content-type");
+        
         final HttpServletRequest request = (HttpServletRequest) arg0;
 
         if (logger.isInfoEnabled()) {
