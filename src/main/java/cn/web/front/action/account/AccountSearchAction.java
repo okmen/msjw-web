@@ -53,26 +53,26 @@ public class AccountSearchAction extends BaseAction {
 		try {
 			List<InformationSheetVo> informationSheetVos = new ArrayList<InformationSheetVo>();
 			sourceOfCertification = "C";
-//			Map<String, Object> map = accountService.queryMachineInformationSheet(applyType,identityCard,sourceOfCertification);
-//			String code = (String) map.get("code");
-//			String msg = (String) map.get("msg");
-//			if("0000".equals(code)){
-//				informationSheetVos = (List<InformationSheetVo>) map.get("data");
-//				baseBean.setData(informationSheetVos);
-//				baseBean.setCode("0000");
-//		    	baseBean.setMsg("");
-//			}else{
-//				baseBean.setData("");
-//				baseBean.setCode("0001");
-//		    	baseBean.setMsg(msg);
-//			}
+			Map<String, Object> map = accountService.queryMachineInformationSheet(applyType,identityCard,sourceOfCertification);
+			String code = (String) map.get("code");
+			String msg = (String) map.get("msg");
+			if("0000".equals(code)){
+				informationSheetVos = (List<InformationSheetVo>) map.get("data");
+				baseBean.setData(informationSheetVos);
+				baseBean.setCode("0000");
+		    	baseBean.setMsg("");
+			}else{
+				baseBean.setData("");
+				baseBean.setCode("0001");
+		    	baseBean.setMsg(msg);
+			}
 		} catch (Exception e) {
-//			baseBean.setCode("0009");
-//        	baseBean.setMsg(e.getMessage());
-//        	baseBean.setData("");
+			baseBean.setCode("0009");
+        	baseBean.setMsg(e.getMessage());
+        	baseBean.setData("");
 		}
 		renderJSON(baseBean);
-//		logger.info(JSON.toJSONString(baseBean));
+		logger.info(JSON.toJSONString(baseBean));
 	}
 	
 	
