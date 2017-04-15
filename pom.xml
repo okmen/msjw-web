@@ -381,11 +381,11 @@
 			<version>${cn.services.version}</version>
 		</dependency>
 
-		<!-- <dependency>
+		<dependency>
 			<groupId>${choumei.services.groupId}</groupId>
 			<artifactId>microclass-center-api</artifactId>
 			<version>${cn.services.version}</version>
-		</dependency> -->
+		</dependency>
 
 		
 		

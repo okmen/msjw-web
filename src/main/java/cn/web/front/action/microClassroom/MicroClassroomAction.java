@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,11 +15,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.fastjson.JSONObject;
 
-import cn.account.bean.studyclassroom.Answeroptions;
+import cn.account.bean.studyclassroom.UserKey;
+import cn.account.service.IAccountService;
+import cn.microclass.bean.studyclassroom.Answeroptions;
+import cn.microclass.bean.studyclassroom.Study;
+import cn.microclass.bean.studyclassroom.StudyRecord;
+import cn.microclass.service.IMicroclassServer;
+/*import cn.account.bean.studyclassroom.Answeroptions;
 import cn.account.bean.studyclassroom.Study;
-import cn.account.bean.studyclassroom.StudyRecord;
+import cn.account.bean.studyclassroom.StudyRecord;*/
 import cn.sdk.bean.BaseBean;
 import cn.web.front.support.BaseAction;
+import io.netty.handler.codec.http.HttpRequest;
 
 
 
@@ -28,6 +38,9 @@ import cn.web.front.support.BaseAction;
  */
 @Controller
 public class MicroClassroomAction extends BaseAction {
+	@Autowired
+	private IMicroclassServer iMicroclassServer;
+	
 	
 	/**
 	 * 微课堂须知页面
@@ -67,10 +80,10 @@ public class MicroClassroomAction extends BaseAction {
 		 study.setIdentityCard("431022199612260078");
 		 study.setScoreStartDate("2013-07-10");
 		 study.setScoreEndDate("2014-07-10");
-		 study.setIntegral(2);
+		 study.setIntegral("2");
 		 record.setAnsLogarithm(5);  //答题对数
 		 record.setAnswerDate("2017-08-01"); //答题时间
-		 record.setIsComplete(1);//是否完成
+		 record.setIsComplete("未完成");//是否完成
 		 recordList.add(record);
 		 study.setStudyRecord(recordList);
 		 list.add(study);
@@ -78,9 +91,6 @@ public class MicroClassroomAction extends BaseAction {
 		 baseBean.setMsg("取题成功");
 		 baseBean.setData(list);
 		 renderJSON(baseBean);
-		 
-		 
-		 
 	 }
 	 /**
 	  * 微课堂随机取题
@@ -91,15 +101,14 @@ public class MicroClassroomAction extends BaseAction {
 	 @RequestMapping(value = "Classroom/Study.html")
 	 public void studySubject(){
 		 try {
-			 
 			 Study study=new  Study();
 			 List<Study>list=new ArrayList<>();
 			 List<Answeroptions>answerList=new ArrayList<>();
 			 BaseBean baseBean = new BaseBean();
-			 study.setSubjectId(1);
+			 study.setSubjectId("1");
 			 study.setSubjectName("这个标志是什么意思?");
 			 study.setSubjecttype(1);
-			 study.setTestQuestionsType(2);
+			 study.setTestQuestionsType("2");
 			 study.setSubjectImg("http://web/test.jpg");
 			 Answeroptions answer=new  Answeroptions();
 			 answer.setAnswerId("A");
@@ -178,14 +187,123 @@ public class MicroClassroomAction extends BaseAction {
 		 study.setAnswerCorrect(15);
 		 study.setAnswerDate("2017-09-08");
 		 study.setAnswerTime("29");
-		 study.setIntegral(5);
+		 study.setIntegral("5");
 		 list.add(study);
 		 base.setMsg("答题结束");
 		 base.setCode("0000");
 		 base.setData(list);
 		renderJSON(base);
 	 }
+	 
+	 
+	 
+	 /***
+	  * 随机取题目接口
+	  */
+	 @RequestMapping(value="Classroom/xfanswerJk.html")
+	 public void xfanswerJk(){
+		 BaseBean base=new BaseBean();
+		 System.out.println("进入消分学习方法");
+		 Study st =new Study();	
+		 st.setMobilephone("17708404197");
+		 st.setIdentityCard("431022199612250036");
+		 List<BaseBean>list= iMicroclassServer.xfStudyAnswer(st);
+		 for(BaseBean b:list){
+			 System.out.println("b="+b.getData());
+			 base.setCode(b.getCode());
+			 base.setData(b.getData());
+			 base.setMsg(b.getMsg());
+		 }
+		 //String kais=(String) base.getData();
+		 renderJSON(base);	 
+	 }
+	 
+	 /**
+	  * 消分学习查询信息接口
+	  */
+	 @RequestMapping(value="Classroom/xfcx.html")
+	 public void xfcx(HttpServletRequest request){
+		 BaseBean base=new BaseBean();
+		 Study  s=new Study();
+			s.setInterfaceId("exam003");
+			s.setIdentityCard("431022199612250036");
+			s.setMobilephone("17708404197");
+			s.setIpAddress("123.56.180.216");
+			s.setUserSource("C");
+			List<BaseBean>list= iMicroclassServer.xfStudyQuery(s);
+			for(BaseBean b:list){
+				base.setCode(b.getCode());
+				base.setMsg(b.getMsg());
+				base.setData(b.getData());
+			}
+		 renderJSON(base);	 
+	 }
+	 
+	 /**
+	  * 非机动人 查询
+	  * @param request
+	  */
+	 @RequestMapping(value="Classroom/xrStudyQuery.html")
+	 public void xrStudyQuery(HttpServletRequest request){
+		 BaseBean base=new BaseBean();
+		 Study  s=new Study();
+		 s.setInterfaceId("DDC3003");
+			s.setIdentityCard("431022199612250036");
+			s.setMobilephone("17708404197");
+			s.setServiceType("AQ");
+			s.setIpAddress("123.56.180.216");
+			s.setUserSource("C");
+			List<BaseBean>list=iMicroclassServer.xrStudyQuery(s);
+			for(BaseBean b:list){
+				base.setCode(b.getCode());
+				base.setMsg(b.getMsg());
+				base.setData(b.getData());
+			}
+			renderJSON(base);
+	 }
+	 /**
+	  * 非机动车人学习随机取题
+	  * @param request
+	  */
+	 @RequestMapping(value="Classroom/xrStudyAnswer.html")
+	 public void xrStudyAnswer(HttpServletRequest request){
+		 BaseBean base=new BaseBean();
+		 Study  s=new Study();
+			s.setInterfaceId("DDC3001");
+			s.setIdentityCard("431022199612250036");
+			s.setMobilephone("17708404197");
+			s.setServiceType("AQ");
+			s.setIpAddress("123.56.180.216");
+			s.setUserSource("C");
+			List<BaseBean>list=iMicroclassServer.xrStudyAnswer(s);
+			for(BaseBean b:list){
+				base.setCode(b.getCode());
+				base.setMsg(b.getMsg());
+				base.setData(b.getData());
+			}
+			renderJSON(base);
+		 
+	 }
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	public IMicroclassServer getiMicroclassServer() {
+		return iMicroclassServer;
+	}
+	public void setiMicroclassServer(IMicroclassServer iMicroclassServer) {
+		this.iMicroclassServer = iMicroclassServer;
+	}
 
+	 
+	 
+	 
 	 
 	
 }
