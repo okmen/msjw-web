@@ -78,44 +78,36 @@ public class AccountAction extends BaseAction {
     
     /**
 	 * 登录
-	 * @param loginName
-	 * @param password
+	 * @param loginName 手机号或身份证
+	 * @param password 密码
 	 * @param request
 	 * @param response
-	 * @throws IOException
-	 * URL
-	 * http://localhost:8080/web/user/login.html?loginName=13666666666&password=123456
+     * @throws Exception
+     * http://localhost:8080/web/user/login.html?loginName=622822198502074110&password=168321
+     * http://localhost:8080/web/user/login.html?loginName=440301199002101119&password=631312
 	 */
-    @RequestMapping(value="login",method=RequestMethod.POST)
+    @RequestMapping(value="login")
     public void login(@RequestParam("loginName") String loginName,@RequestParam("password") String password,
-    		HttpServletRequest request,HttpServletResponse response) throws IOException{
-    
+    		HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
-    	baseBean.setCode("0000");
-    	baseBean.setMsg("");
-    	
-    	AuthenticationBasicInformationVo authenticationBasicInformation = new AuthenticationBasicInformationVo();
-    	authenticationBasicInformation.setMobilephone("13666666666");
-    	authenticationBasicInformation.setMyAvatar("http://gaoboy.com/tpl/polo/Public/images/my_wechat_qrcode.jpg");
-    	authenticationBasicInformation.setIdentityCard("431225199122222112");
-    	authenticationBasicInformation.setMyNumberPlate("粤B868686");
-    	authenticationBasicInformation.setTrueName("张小龙");
-    	
-    	
-    	IdentityVerificationAuditResultsVo identityVerificationAuditResults = new IdentityVerificationAuditResultsVo();
-    	identityVerificationAuditResults.setAuthenticationType(1);
-    	identityVerificationAuditResults.setStatus(3);
-    	identityVerificationAuditResults.setRetirementResult("身份证正面不清晰");
-    	identityVerificationAuditResults.setReviewDate("2017-1-3 19:00:01");
-    	
-    	LoginReturnBeanVo loginReturnBean = new LoginReturnBeanVo();
-    	loginReturnBean.setAuthenticationBasicInformation(authenticationBasicInformation);
-    	loginReturnBean.setIdentityVerificationAuditResults(identityVerificationAuditResults);
-    	
-    	baseBean.setData(loginReturnBean);
-    	
-    	renderJSON(baseBean);
-    	
+    	try {
+        	
+        	LoginReturnBeanVo loginReturnBeanVo = accountService.login(loginName,password,"C");
+        	if(null != loginReturnBeanVo && "0000".equals(loginReturnBeanVo.getCode())){
+        		baseBean.setCode("0000");
+            	baseBean.setMsg("");
+            	baseBean.setData(loginReturnBeanVo);
+        	}else{
+        		baseBean.setCode("0001");
+            	baseBean.setMsg(loginReturnBeanVo.getMsg());
+            	baseBean.setData("");
+        	}
+        	renderJSON(baseBean);
+		} catch (Exception e) {
+			baseBean.setCode("0009");
+        	baseBean.setMsg(e.getMessage());
+			renderJSON(baseBean);
+		}
     	logger.info(JSON.toJSONString(baseBean));
     }
     
