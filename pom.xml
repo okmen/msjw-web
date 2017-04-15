@@ -5,14 +5,12 @@
 	<artifactId>web</artifactId>
 	<version>${publish.version}</version>
 	<name>web</name>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<packaging.type>war</packaging.type>
 		<spring.version>3.2.11.RELEASE</spring.version>
 		<choumei.services.groupId>cn.chudaokeji.services</choumei.services.groupId>
 	</properties>
-
 	<build>
 		<finalName>web</finalName>
 		<resources>
@@ -53,7 +51,6 @@
 					<includeTestSourceDirectory>true</includeTestSourceDirectory>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
@@ -90,7 +87,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
 	<profiles>
 		<profile>
 			<id>dev</id>
@@ -104,26 +100,19 @@
 				<dubbo.consumer.timeout><![CDATA[10000]]></dubbo.consumer.timeout>
 				<dubbo.consumer.payment.timeout><![CDATA[15000]]></dubbo.consumer.payment.timeout>
 				<dubbo.consumer.retries><![CDATA[0]]></dubbo.consumer.retries>
-
 				<cn.services.version>1.0.0-SNAPSHOT</cn.services.version>
 				<common.sdk.version>1.0.0-SNAPSHOT</common.sdk.version>
-
 				<redis.web.configstr><![CDATA[web1:192.168.1.121:6379,web2:192.168.1.121:6379]]></redis.web.configstr>
-
-
 				<log4j.socket.host><![CDATA[dev-logserver.choumei.me]]></log4j.socket.host>
 				<log4j.socket.port><![CDATA[10099]]></log4j.socket.port>
-
 				<log4j.rootLogger><![CDATA[info,socket,web,std]]></log4j.rootLogger>
 				<log4j.choumeiLevel><![CDATA[debug]]></log4j.choumeiLevel>
 				<log4j.file.dir><![CDATA[/workspace/ws-logs/]]></log4j.file.dir>
 				<no.access.token>1</no.access.token>
-
 				<!-- 0代表内网，1代表线上 -->
 				<cn.choumei.env>0</cn.choumei.env>
 			</properties>
 		</profile>
-
 		<profile>
 			<id>test</id>
 			<properties>
@@ -133,27 +122,19 @@
 				<dubbo.consumer.timeout><![CDATA[10000]]></dubbo.consumer.timeout>
 				<dubbo.consumer.payment.timeout><![CDATA[15000]]></dubbo.consumer.payment.timeout>
 				<dubbo.consumer.retries><![CDATA[0]]></dubbo.consumer.retries>
-
 				<cn.services.version>1.0.0-SNAPSHOT</cn.services.version>
 				<common.sdk.version>1.0.0-SNAPSHOT</common.sdk.version>
-
 				<redis.web.configstr><![CDATA[web1:test-redis1.choumei.me:6379,web2:test-redis1.choumei.me:6379]]></redis.web.configstr>
-
-
 				<log4j.socket.host><![CDATA[test-logserver.choumei.me]]></log4j.socket.host>
 				<log4j.socket.port><![CDATA[10099]]></log4j.socket.port>
-
 				<log4j.rootLogger><![CDATA[info,socket,web]]></log4j.rootLogger>
 				<log4j.choumeiLevel><![CDATA[debug]]></log4j.choumeiLevel>
 				<log4j.file.dir><![CDATA[/workspace/ws-logs/]]></log4j.file.dir>
 				<no.access.token>0</no.access.token>
-
 				<!-- 0代表内网，1代表线上 -->
 				<cn.choumei.env>0</cn.choumei.env>
-
 			</properties>
 		</profile>
-
 		<profile>
 			<id>online</id>
 			<properties>
@@ -163,27 +144,20 @@
 				<dubbo.consumer.timeout><![CDATA[10000]]></dubbo.consumer.timeout>
 				<dubbo.consumer.payment.timeout><![CDATA[15000]]></dubbo.consumer.payment.timeout>
 				<dubbo.consumer.retries><![CDATA[0]]></dubbo.consumer.retries>
-
 				<cn.services.version>1.0.0</cn.services.version>
 				<common.sdk.version>1.0.0</common.sdk.version>
-
 				<redis.web.configstr><![CDATA[web1:redis2.choumei.cn:6379,web2:redis2.choumei.cn:6379]]></redis.web.configstr>
-
 				<log4j.socket.host><![CDATA[logserver.choumei.cn]]></log4j.socket.host>
 				<log4j.socket.port><![CDATA[10099]]></log4j.socket.port>
-
 				<log4j.rootLogger><![CDATA[warn,socket,web]]></log4j.rootLogger>
 				<log4j.choumeiLevel><![CDATA[info]]></log4j.choumeiLevel>
 				<log4j.file.dir><![CDATA[/workspace/ws-logs/]]></log4j.file.dir>
 				<no.access.token>0</no.access.token>
-
 				<!-- 0代表内网，1代表线上 -->
 				<cn.choumei.env>1</cn.choumei.env>
-
 			</properties>
 		</profile>
 	</profiles>
-
 	<dependencies>
 		<!-- 单元测试相关包 -->
 		<dependency>
@@ -215,7 +189,6 @@
 			<version>0.9.1</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
@@ -345,7 +318,6 @@
 			<artifactId>velocity-tools</artifactId>
 			<version>2.0</version>
 		</dependency>
-
 		<!-- rocketmq -->
 		<dependency>
 			<groupId>com.alibaba.rocketmq</groupId>
@@ -353,15 +325,11 @@
 			<version>3.2.3</version>
 		</dependency>
 		<!-- choumei services -->
-
-
 		<dependency>
 			<groupId>cn.chudaokeji.lib</groupId>
 			<artifactId>common-sdk</artifactId>
 			<version>${common.sdk.version}</version>
 		</dependency>
-
-
 		<dependency>
 			<groupId>${choumei.services.groupId}</groupId>
 			<artifactId>account-center-api</artifactId>
@@ -374,19 +342,17 @@
 			<artifactId>convenience-center-api</artifactId>
 			<version>${cn.services.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>${choumei.services.groupId}</groupId>
 			<artifactId>illegal-center-api</artifactId>
 			<version>${cn.services.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>${choumei.services.groupId}</groupId>
 			<artifactId>microclass-center-api</artifactId>
 			<version>${cn.services.version}</version>
 		</dependency>
-
+		
 		
 		
 		<dependency>
@@ -432,7 +398,6 @@
 		
 	</dependencies>
 	<packaging>war</packaging>
-
 	<reporting>
 		<plugins>
 			<plugin>

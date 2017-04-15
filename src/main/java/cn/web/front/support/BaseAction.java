@@ -1,6 +1,7 @@
 package cn.web.front.support;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -111,4 +112,12 @@ public class BaseAction extends cn.web.front.common.BaseAction {
         return !"WECHAT".equals(deviceType);
     }
 
+    protected void outString(HttpServletResponse response,String str){
+    	try {
+    		PrintWriter out = response.getWriter();
+        	out.print(str);
+		} catch (Exception e) {
+			logger.error("写字符串异常");
+		}
+    }
 }
