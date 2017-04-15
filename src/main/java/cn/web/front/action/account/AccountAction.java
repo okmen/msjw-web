@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
-
+import com.alibaba.fastjson.JSONObject;
 import cn.account.bean.UserBind;
 import cn.account.bean.vo.AuthenticationBasicInformationVo;
+import cn.account.bean.vo.BindCarVo;
 import cn.account.bean.vo.IdentityVerificationAuditResultsVo;
 import cn.account.bean.vo.LoginReturnBeanVo;
+import cn.account.bean.vo.UserBasicVo;
 import cn.account.service.IAccountService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.ResultCode;
@@ -122,7 +124,7 @@ public class AccountAction extends BaseAction {
     public void deleteVehicle(@RequestParam("identityCard") String identityCard,
     		@RequestParam("openId") String openId,@RequestParam("unionId") String unionId) {
     	
-
+    	
     	UserBind userBind = new UserBind();
     	userBind.setIdCard(identityCard);
     	userBind.setOpenId(openId);
@@ -162,15 +164,33 @@ public class AccountAction extends BaseAction {
     		,@RequestParam("identityCard") String identityCard,@RequestParam("mobilephone") String mobilephone) {
     	
     	
-    	
-    	
-    	
-    	BaseBean basebean = new  BaseBean();
-    	basebean.setCode("0000");
-    	basebean.setMsg("");   	
-    	renderJSON(basebean);
-    	logger.info(JSON.toJSONString(basebean));
-    
+    	BindCarVo bindCarVo = new BindCarVo();
+    	bindCarVo.setBindType(bindType);
+    	bindCarVo.setLicensePlateType(licensePlateNumber);
+    	bindCarVo.setFrameNumber(frameNumber);
+    	bindCarVo.setUserIdCard(identityCard);
+    	bindCarVo.setUserSource("C");
+    	bindCarVo.setLicensePlateType(plateType);
+    	bindCarVo.setProvinceAbbreviation("粤");
+    	bindCarVo.setLicensePlateNumber(licensePlateNumber);
+    	bindCarVo.setOwnerName(ownerName);
+    	bindCarVo.setBindType(bindType);
+    	bindCarVo.setInputIP("127.0.0.1");
+    	try {
+    		BaseBean basebean = new  BaseBean();
+    		JSONObject json = accountService.addVehicle(bindCarVo);
+			System.out.println(json);
+			String code =json.getString("CODE");
+			if(!"0000".equals(code)){
+				code="500";
+			}
+	    	basebean.setCode(code);
+	    	basebean.setMsg(json.getString("MSG"));   	
+	    	renderJSON(basebean);
+	    	logger.info(JSON.toJSONString(basebean));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
     
     
@@ -188,13 +208,27 @@ public class AccountAction extends BaseAction {
     		,@RequestParam("mailingAddress") String mailingAddress,@RequestParam("idCardImgPositive") String idCardImgPositive
     		,@RequestParam("idCardImgNegative") String idCardImgNegative,@RequestParam("IdCardImgHandHeld") String IdCardImgHandHeld) {
     	
-    	
-    	
-    	
-    	
+    	UserBasicVo userBasicVo =new UserBasicVo();
+    	userBasicVo.setIdentityCard(identityCard);
+    	userBasicVo.setMailingAddress(mailingAddress);
+    	userBasicVo.setIdCardImgPositive(idCardImgPositive);
+    	userBasicVo.setIdCardImgHandHeld(IdCardImgHandHeld);
+    	userBasicVo.setUserSource("C");
+    	userBasicVo.setIdCardValidityDate("2018-04-15");
     	BaseBean basebean = new  BaseBean();
-    	basebean.setCode("0000");
-    	basebean.setMsg("");   	
+    	try {
+    	
+			JSONObject json = accountService.updateUser(userBasicVo);
+			System.out.println(json);
+			String code =json.getString("CODE");
+			if(!"0000".equals(code)){
+				code="500";
+			}
+	    	basebean.setCode(code);
+	    	basebean.setMsg(json.getString("MSG"));   		
+		} catch (Exception e) {	
+			e.printStackTrace();
+		}   	
     	renderJSON(basebean);
     	logger.info(JSON.toJSONString(basebean));
     
@@ -212,13 +246,24 @@ public class AccountAction extends BaseAction {
     public void updateMobile(@RequestParam("oldMobile") String oldMobile,@RequestParam("validateCode") String validateCode
     		,@RequestParam("newMobile") String newMobile) {
     	
-    	
-    	
-    	
-    	
+    	UserBasicVo userBasicVo =new UserBasicVo();
+    	userBasicVo.setIdentityCard("360924199006071671");
+    	userBasicVo.setOldMobile(oldMobile);
+    	userBasicVo.setNewMobile(newMobile);
+    	userBasicVo.setUserSource("C");
     	BaseBean basebean = new  BaseBean();
-    	basebean.setCode("0000");
-    	basebean.setMsg("");   	
+    	try {
+			JSONObject json = accountService.updateUser(userBasicVo);
+			System.out.println(json);
+			String code =json.getString("CODE");
+			if(!"0000".equals(code)){
+				code="500";
+			}
+	    	basebean.setCode(code);
+	    	basebean.setMsg(json.getString("MSG"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}  	
     	renderJSON(basebean);
     	logger.info(JSON.toJSONString(basebean));
     
@@ -233,11 +278,26 @@ public class AccountAction extends BaseAction {
     */
     @RequestMapping(value = "updatePwd",method = RequestMethod.POST)
     public void updatePwd(@RequestParam("oldPwd") String oldPwd,@RequestParam("newPwd") String newPwd) {
+    	UserBasicVo userBasicVo =new UserBasicVo();
+    	userBasicVo.setIdentityCard("360924199006071671");
+    	userBasicVo.setOldPwd(oldPwd);
+    	userBasicVo.setNewPwd(newPwd);
+    	userBasicVo.setUserSource("C");
     	BaseBean basebean = new  BaseBean();
-    	basebean.setCode("0000");
-    	basebean.setMsg("");   	
+    	try {
+			JSONObject json = accountService.updateUser(userBasicVo);
+			System.out.println(json);
+			String code =json.getString("CODE");
+			if(!"0000".equals(code)){
+				code="500";
+			}
+	    	basebean.setCode(code);
+	    	basebean.setMsg(json.getString("MSG"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}  	
     	renderJSON(basebean);
-    	logger.info(JSON.toJSONString(basebean));
+    	logger.info(JSON.toJSONString(basebean));	
     
     }
 
@@ -263,16 +323,24 @@ public class AccountAction extends BaseAction {
     		,@RequestParam("mobilephone") String mobilephone,@RequestParam("locationAddress") String locationAddress) {
     	
     	
+       	BaseBean basebean = new  BaseBean();
+    	try {
+			JSONObject json = accountService.readilyShoot(illegalTime, illegalSections, imgOne, situationStatement, whistleblower, identityCard, mobilephone);
+			System.out.println(json);
+			String code =json.getString("CODE");
+			if(!"0000".equals(code)){
+				code="500";
+			}
+	    	basebean.setCode(code);
+	    	basebean.setMsg(json.getString("MSG"));
     	
-    	
-    	
-    	BaseBean basebean = new  BaseBean();
-    	basebean.setCode("0000");
-    	basebean.setMsg("");   	
-    	Map<String, Object> modelMap = new HashMap<String, Object>();
-     	modelMap.put("recordNumber", "000000000");
-     	modelMap.put("queryPassword", "123456");
-     	basebean.setData(modelMap);
+    	} catch (Exception e) {
+			e.printStackTrace();
+		}
+//    	Map<String, Object> modelMap = new HashMap<String, Object>();
+//     	modelMap.put("recordNumber", "000000000");
+//     	modelMap.put("queryPassword", "123456");
+//     	basebean.setData(modelMap);
     	renderJSON(basebean);
     	logger.info(JSON.toJSONString(basebean));
     

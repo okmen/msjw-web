@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import cn.account.bean.vo.RegisterVo;
 import cn.account.service.IAccountService;
 import cn.sdk.bean.BaseBean;
 import cn.web.front.support.BaseAction;
@@ -54,17 +55,32 @@ public class RegisterAction extends BaseAction{
 	    		,@RequestParam("validateCode") String validateCode,@RequestParam("isDriverLicense") int isDriverLicense
 	    		,@RequestParam("driverLicenseIssuedAddress") String driverLicenseIssuedAddress,@RequestParam("idCardImgPositive") String idCardImgPositive
 	    		,@RequestParam("idCardImgNegative") String idCardImgNegative,@RequestParam("idCardImgHandHeld") String idCardImgHandHeld) {
+
+		 RegisterVo registerVo =new RegisterVo();
+		 registerVo.setLicensePlateType(licensePlateType);
+		 registerVo.setProvinceAbbreviation(provinceAbbreviation);
+		 registerVo.setLicensePlateNumber(licensePlateNumber);
+		 registerVo.setLinkAddress(linkAddress);
+		 registerVo.setMobilephone(mobilephone);
+		 registerVo.setDriverLicenseIssuedAddress(driverLicenseIssuedAddress);
+		 registerVo.setDriverLicenseIssuedAddress(driverLicenseIssuedAddress);
+		 registerVo.setIdCardImgPositive(idCardImgPositive);
+		 registerVo.setIdCardImgHandHeld(idCardImgHandHeld);
+		 registerVo.setUserIdCard(identityCard);
+		 
+			BaseBean basebean = new  BaseBean();
 		 try {
-			// JSONObject json =	accountService.iAmTheOwner(licensePlateType, provinceAbbreviation, licensePlateNumber, identityCard, linkAddress, mobilephone, driverLicenseIssuedAddress, idCardImgPositive, idCardImgHandHeld);
-			// System.out.println(json);
+			 JSONObject json =	accountService.iAmTheOwner(registerVo);
+			 System.out.println(json);
+				String code =json.getString("CODE");
+				if(!"0000".equals(code)){
+					code="500";
+				}
+		    	basebean.setCode(code);
+		    	basebean.setMsg(json.getString("MSG"));
 		 } catch (Exception e) {
 			e.printStackTrace();
-		}
-	
-
-		 	BaseBean basebean = new  BaseBean();
-	    	basebean.setCode("0000");
-	    	basebean.setMsg("");   	
+		} 	
 	    	renderJSON(basebean);
 	    	logger.info(JSON.toJSONString(basebean));
 	    
@@ -94,16 +110,22 @@ public class RegisterAction extends BaseAction{
 	    		,@RequestParam("validateCode") String validateCode,@RequestParam("driverLicenseIssuedAddress") String driverLicenseIssuedAddress
 	    		,@RequestParam("idCardImgPositive") String idCardImgPositive,@RequestParam("idCardImgNegative") String idCardImgNegative
 	    		,@RequestParam("idCardImgHandHeld") String idCardImgHandHeld) {
-	 		 try {
+	 		
+	 		BaseBean basebean = new  BaseBean();
+	 		try {
 				 JSONObject json =	accountService.iamALongtimeUser(licensePlateType, provinceAbbreviation, licensePlateNumber, ownerName, ownerIdCard, userIdCard, linkAddress, mobilephone, driverLicenseIssuedAddress, idCardImgPositive, idCardImgHandHeld);
 				 System.out.println(json);
-			 } catch (Exception e) {
+				 String code =json.getString("CODE");
+					if(!"0000".equals(code)){
+						code="500";
+					}
+			    	basebean.setCode(code);
+			    	basebean.setMsg(json.getString("MSG"));
+	 		
+	 		} catch (Exception e) {
 				e.printStackTrace();
 			}
-	    	
-	    	BaseBean basebean = new  BaseBean();
-	    	basebean.setCode("0000");
-	    	basebean.setMsg("");   	
+	    	  	
 	    	renderJSON(basebean);
 	    	logger.info(JSON.toJSONString(basebean));
 	    
@@ -127,18 +149,20 @@ public class RegisterAction extends BaseAction{
 	    		,@RequestParam("driverLicenseIssuedAddress") String driverLicenseIssuedAddress,@RequestParam("imgOne") String idCardImgPositive
 	    		,@RequestParam("idCardImgNegative") String idCardImgNegative,@RequestParam("idCardImgHandHeld") String idCardImgHandHeld) {
 	    	
-	    	
+	 		BaseBean basebean = new  BaseBean();
 	 		 try {
 				 JSONObject json =	accountService.haveDriverLicenseNotCar(identityCard, linkAddress, mobilephone, driverLicenseIssuedAddress, idCardImgPositive, idCardImgHandHeld);
 				 System.out.println(json);
-			 } catch (Exception e) {
+				 String code =json.getString("CODE");
+					if(!"0000".equals(code)){
+						code="500";
+					}
+			    	basebean.setCode(code);
+			    	basebean.setMsg(json.getString("MSG"));
+	 		 } catch (Exception e) {
 				e.printStackTrace();
 			}
-	    	
-	    	
-	    	BaseBean basebean = new  BaseBean();
-	    	basebean.setCode("0000");
-	    	basebean.setMsg("");   	
+	    	  	
 	    	renderJSON(basebean);
 	    	logger.info(JSON.toJSONString(basebean));
 	    
@@ -159,17 +183,22 @@ public class RegisterAction extends BaseAction{
 	    		@RequestParam("mobilephone") String mobilephone,@RequestParam("validateCode") String validateCode
 	    		,@RequestParam("idCardImgPositive") String idCardImgPositive,@RequestParam("idCardImgNegative") String idCardImgNegative
 	    		,@RequestParam("idCardImgHandHeld") String idCardImgHandHeld) {
-	 		 try {
+	 		BaseBean basebean = new  BaseBean();
+	 		try {
 				 JSONObject json =	accountService.isPedestrianNotDriver(identityCard, mobilephone, idCardImgPositive, idCardImgHandHeld);
 				 System.out.println(json);
-			 } catch (Exception e) {
+				 String code =json.getString("CODE");
+					if(!"0000".equals(code)){
+						code="500";
+					}
+			    	basebean.setCode(code);
+			    	basebean.setMsg(json.getString("MSG"));
+	 		 
+	 		 } catch (Exception e) {
 				e.printStackTrace();
 			}
 	    	
-	    	
-	    	BaseBean basebean = new  BaseBean();
-	    	basebean.setCode("0000");
-	    	basebean.setMsg("");   	
+  	
 	    	renderJSON(basebean);
 	    	logger.info(JSON.toJSONString(basebean));
 	    
