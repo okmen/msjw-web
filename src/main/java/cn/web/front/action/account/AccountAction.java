@@ -18,10 +18,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
 
+import cn.account.bean.UserBind;
 import cn.account.bean.vo.AuthenticationBasicInformationVo;
 import cn.account.bean.vo.IdentityVerificationAuditResultsVo;
 import cn.account.bean.vo.LoginReturnBeanVo;
-import cn.account.bean.vo.MotorVehicleInformationSheetVo;
 import cn.account.service.IAccountService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.ResultCode;
@@ -122,11 +122,21 @@ public class AccountAction extends BaseAction {
     public void deleteVehicle(@RequestParam("identityCard") String identityCard,
     		@RequestParam("openId") String openId,@RequestParam("unionId") String unionId) {
     	
+
+    	UserBind userBind = new UserBind();
+    	userBind.setIdCard(identityCard);
+    	userBind.setOpenId(openId);
     	
-    	
-    	BaseBean basebean = new  BaseBean();
-    	basebean.setCode("0000");
-    	basebean.setMsg("");   	    
+    	 BaseBean basebean = new  BaseBean();
+    		int re = 0;
+            re = accountService.unbindVehicle(userBind); 
+        	if(re==1){
+        		basebean.setCode("0000");
+            	basebean.setMsg("");
+        	}else{
+        		basebean.setCode("500");
+            	basebean.setMsg("解绑出错");
+        	}    
     	renderJSON(basebean);
     	logger.info(JSON.toJSONString(basebean));
     
@@ -223,8 +233,6 @@ public class AccountAction extends BaseAction {
     */
     @RequestMapping(value = "updatePwd",method = RequestMethod.POST)
     public void updatePwd(@RequestParam("oldPwd") String oldPwd,@RequestParam("newPwd") String newPwd) {
-    	
-
     	BaseBean basebean = new  BaseBean();
     	basebean.setCode("0000");
     	basebean.setMsg("");   	
@@ -238,9 +246,9 @@ public class AccountAction extends BaseAction {
      * 随手拍举报-星级用户/普通用户
      * @param illegalTime 违法时间
      * @param illegalSections 违法路段
-     * @param idCardImgPositive 身份证正面
-     * @param idCardImgNegative 身份证反面
-     * @param IdCardImgHandHeld 手持身份证
+     * @param imgOne 证据材料图片1
+     * @param imgTwo 证据材料图片2
+     * @param imgThree 证据材料图片3
      * @param situationStatement 情况说明
      * @param whistleblower 举报人
      * @param identityCard 身份证
@@ -249,8 +257,8 @@ public class AccountAction extends BaseAction {
      */
     @RequestMapping(value = "readilyShoot",method = RequestMethod.POST)
     public void readilyShoot(@RequestParam("illegalTime") String illegalTime,@RequestParam("illegalSections") String illegalSections    		
-    		,@RequestParam("idCardImgPositive") String idCardImgPositive,@RequestParam("idCardImgNegative") String idCardImgNegative
-    		,@RequestParam("IdCardImgHandHeld") String IdCardImgHandHeld,@RequestParam("situationStatement") String situationStatement
+    		,@RequestParam("imgOne") String imgOne,@RequestParam("imgTwo") String imgTwo
+    		,@RequestParam("imgThree") String imgThree,@RequestParam("situationStatement") String situationStatement
     		,@RequestParam("whistleblower") String whistleblower,@RequestParam("identityCard") String identityCard
     		,@RequestParam("mobilephone") String mobilephone,@RequestParam("locationAddress") String locationAddress) {
     	
