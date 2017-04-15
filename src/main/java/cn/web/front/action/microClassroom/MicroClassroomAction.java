@@ -9,14 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.alibaba.dubbo.common.json.JSON;
-import com.alibaba.fastjson.JSONObject;
 
-import cn.account.bean.studyclassroom.UserKey;
-import cn.account.service.IAccountService;
 import cn.microclass.bean.studyclassroom.Answeroptions;
 import cn.microclass.bean.studyclassroom.Study;
 import cn.microclass.bean.studyclassroom.StudyRecord;
@@ -26,9 +21,6 @@ import cn.account.bean.studyclassroom.Study;
 import cn.account.bean.studyclassroom.StudyRecord;*/
 import cn.sdk.bean.BaseBean;
 import cn.web.front.support.BaseAction;
-import io.netty.handler.codec.http.HttpRequest;
-
-
 
 /**
  * 微课堂
@@ -83,7 +75,10 @@ public class MicroClassroomAction extends BaseAction {
 		 study.setIntegral("2");
 		 record.setAnsLogarithm(5);  //答题对数
 		 record.setAnswerDate("2017-08-01"); //答题时间
-		 record.setIsComplete("未完成");//是否完成
+		 /**
+		  * 无法编译
+		  */
+//		 record.setIsComplete("未完成");//是否完成
 		 recordList.add(record);
 		 study.setStudyRecord(recordList);
 		 list.add(study);
