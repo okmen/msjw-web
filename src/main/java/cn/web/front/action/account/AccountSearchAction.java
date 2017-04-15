@@ -3,18 +3,17 @@ package cn.web.front.action.account;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 
@@ -23,8 +22,7 @@ import cn.account.bean.vo.BindTheVehicleVo;
 import cn.account.bean.vo.DriverLicenseInformationSheetVo;
 import cn.account.bean.vo.DrivingLicenseVo;
 import cn.account.bean.vo.ElectronicDriverLicenseVo;
-import cn.account.bean.vo.IdentityVerificationAuditResultsVo;
-import cn.account.bean.vo.LoginReturnBeanVo;
+import cn.account.bean.vo.InformationSheetVo;
 import cn.account.bean.vo.MotorVehicleInformationSheetVo;
 import cn.account.bean.vo.MyDriverLicenseVo;
 import cn.account.service.IAccountService;
@@ -46,17 +44,28 @@ public class AccountSearchAction extends BaseAction {
 	 * 查询我的证明(机动车信息单、驾驶人信息单、无车证明、驾驶人安全事故信用表) 进度查询4个公用一个接口，传一个类型
 	 * @param identityCard 身份证
 	 * @param sourceOfCertification 认证来源
-	 * @param type 
+	 * @param applyType 
+	 * http://localhost:8080/web/user/search/queryMachineInformationSheet.html?identityCard=622822198502074110&sourceOfCertification=C&applyType=1
 	 */
-	public void queryMachineInformationSheet(@RequestParam("identityCard")String identityCard,@RequestParam("sourceOfCertification")String sourceOfCertification,String type){
+	@RequestMapping(value="queryMachineInformationSheet",method=RequestMethod.GET)
+	public void queryMachineInformationSheet(@RequestParam("identityCard")String identityCard,@RequestParam("sourceOfCertification")String sourceOfCertification,String applyType){
 		BaseBean baseBean = new BaseBean();
-		baseBean.setCode("0000");
-    	baseBean.setMsg("");
 		try {
-			MotorVehicleInformationSheetVo motorVehicleInformationSheetVo = new MotorVehicleInformationSheetVo();
+			List<InformationSheetVo> informationSheetVos = new ArrayList<InformationSheetVo>();
 			sourceOfCertification = "C";
-			motorVehicleInformationSheetVo = accountService.getMotorVehicleInformationSheet(identityCard, sourceOfCertification);
-			baseBean.setData(motorVehicleInformationSheetVo);
+			Map<String, Object> map = accountService.queryMachineInformationSheet(applyType,identityCard,sourceOfCertification);
+			String code = (String) map.get("code");
+			String msg = (String) map.get("msg");
+			if("0000".equals(code)){
+				informationSheetVos = (List<InformationSheetVo>) map.get("data");
+				baseBean.setData(informationSheetVos);
+				baseBean.setCode("0000");
+		    	baseBean.setMsg("");
+			}else{
+				baseBean.setData("");
+				baseBean.setCode("0001");
+		    	baseBean.setMsg(msg);
+			}
 		} catch (Exception e) {
 			baseBean.setCode("0009");
         	baseBean.setMsg(e.getMessage());
