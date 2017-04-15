@@ -367,6 +367,13 @@
 			<artifactId>account-center-api</artifactId>
 			<version>${cn.services.version}</version>
 		</dependency>
+		
+		<!-- 便民服务 -->
+		<dependency>
+			<groupId>${choumei.services.groupId}</groupId>
+			<artifactId>convenience-center-api</artifactId>
+			<version>${cn.services.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>${choumei.services.groupId}</groupId>
