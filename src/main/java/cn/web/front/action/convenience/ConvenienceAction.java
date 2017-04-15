@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import cn.convenience.bean.ConvenienceBean;
 import cn.convenience.service.IConvenienceService;
@@ -421,7 +423,7 @@ public class ConvenienceAction extends BaseAction{
 			out.print(JSONObject.fromObject(jsonMap));
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("安全隐患Action异常:"+e);
+			logger.error("交通拥堵Action异常:"+e);
 			
 			jsonMap.put("code", "1010");
 			jsonMap.put("msg", "服务器繁忙！");
@@ -552,7 +554,13 @@ public class ConvenienceAction extends BaseAction{
 	 * @throws
 	 */
 	@RequestMapping(value="/oneKeyDodgen.html")
-	public void oneKeyDodgen(HttpServletRequest request,HttpServletResponse response){
+	public void oneKeyDodgen(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(value="abbreviation",required=false) String abbreviation,
+			@RequestParam(value="numberPlate",required=false) String numberPlate,
+			@RequestParam(value="carType",required=false) String carType,
+			@RequestParam(value="doodgenAddress",required=false) String doodgenAddress,
+			@RequestParam(value="identityCard",required=false) String identityCard
+			){
 		PrintWriter out=null;
 		HashMap<String,Object> jsonMap = new HashMap<String, Object>();
 		try {
@@ -562,12 +570,12 @@ public class ConvenienceAction extends BaseAction{
 			out = response.getWriter();
 			
 			ConvenienceBean bean = new ConvenienceBean();
-			String abbreviation = request.getParameter("abbreviation");   //车牌简称
-			String numberPlate = request.getParameter("numberPlate");   //车牌号码
-			String carType = request.getParameter("carType");   //汽车种类
-			String doodgenAddress = request.getParameter("doodgenAddress");   //挪车地址
-			String identityCard = request.getParameter("identityCard");   //身份证号
-			
+		/*	String abbreviation1 = request.getParameter("abbreviation");   //车牌简称
+			String numberPlate1 = request.getParameter("numberPlate");   //车牌号码
+			String carType1 = request.getParameter("carType");   //汽车种类
+			String doodgenAddress1 = request.getParameter("doodgenAddress");   //挪车地址
+			String identityCard1 = request.getParameter("identityCard");   //身份证号
+			*/
 			//验证参数车牌简称
 			if (StringUtil.isBlank(abbreviation) || StringUtil.isBlank(numberPlate)) {
 				jsonMap.put("code", "1001");
@@ -612,7 +620,7 @@ public class ConvenienceAction extends BaseAction{
 			out.print(JSONObject.fromObject(jsonMap));
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("秩序混乱Action异常:"+e);
+			logger.error("一键挪车Action异常:"+e);
 			
 			jsonMap.put("code", "1010");
 			jsonMap.put("msg", "服务器繁忙！");
