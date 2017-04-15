@@ -9,8 +9,10 @@
 	<!-- 引入服务接口 --><!-- 本地调试通过添加 url="dubbo://127.0.0.1:20880/"> -->
 	
 	
-	<dubbo:reference id="accountService"  interface="cn.account.service.IAccountService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" /> 
+	<dubbo:reference id="accountService" url="dubbo://127.0.0.1:30100/" interface="cn.account.service.IAccountService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" /> 
 	
+	<!-- 便民服务 -->
+	<dubbo:reference id="convenienceService"  interface="cn.convenience.service.IConvenienceService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
 	<!-- <dubbo:reference id="exceptionService" url="dubbo://127.0.0.1:30000/" interface="cn.exception.service.IExceptionService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
 	<dubbo:reference id="accountService" url="dubbo://127.0.0.1:30100/" interface="cn.account.service.IAccountService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  -->
     
