@@ -44,7 +44,7 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
 	 * @param sourceOfCertification 认证来源
 	 * http://localhost:8080/web/user/search/getMotorVehicleInformationSheet.html?identityCard=622822198502074110&sourceOfCertification=C
 	 */
-	@RequestMapping(value="getMotorVehicleInformationSheet",method=RequestMethod.GET)
+	@RequestMapping(value="getMotorVehicleInformationSheet")
 	public void getMotorVehicleInformationSheet(@RequestParam("identityCard")String identityCard,@RequestParam("sourceOfCertification")String sourceOfCertification){
 		BaseBean baseBean = new BaseBean();
 		baseBean.setCode("0000");
@@ -68,7 +68,7 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
 	 * @param mobilephone 认证来源
 	 * http://localhost:8080/web/user/search/getDriverLicenseInformationSheet.html?identityCard=622822198502074110&sourceOfCertification=C
 	 */
-	@RequestMapping(value="getDriverLicenseInformationSheet",method=RequestMethod.GET)
+	@RequestMapping(value="getDriverLicenseInformationSheet")
 	public void getDriverLicenseInformationSheet(@RequestParam("identityCard")String identityCard,@RequestParam("sourceOfCertification")String sourceOfCertification){
 		BaseBean baseBean = new BaseBean();
 		baseBean.setCode("0000");

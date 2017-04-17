@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -18,13 +20,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+
 import cn.account.bean.UserBind;
-import cn.account.bean.vo.AuthenticationBasicInformationVo;
 import cn.account.bean.vo.BindCarVo;
-import cn.account.bean.vo.IdentityVerificationAuditResultsVo;
 import cn.account.bean.vo.LoginReturnBeanVo;
 import cn.account.bean.vo.UserBasicVo;
 import cn.account.service.IAccountService;
+import cn.message.service.IMobileMessageService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.ResultCode;
 import cn.sdk.util.StringUtil;
@@ -44,6 +46,10 @@ public class AccountAction extends BaseAction {
     @Autowired
     @Qualifier("accountService")
     private IAccountService accountService;
+    
+    @Autowired
+    @Qualifier("mobileMessageService")
+    private IMobileMessageService mobileMessageService;
 
     @RequestMapping(value = "get-wechat-userInfo-by-id")
     public ModelAndView getWechatUserInfoById(HttpServletRequest request) {
@@ -86,15 +92,33 @@ public class AccountAction extends BaseAction {
 	 * @param response
      * @throws Exception
      * http://localhost:8080/web/user/login.html?loginName=622822198502074110&password=168321
-     * http://localhost:8080/web/user/login.html?loginName=440301199002101119&password=631312
+     * http://localhost:8080/web/user/login.html?loginName=440301199002101119&password=631312&openId=000000xxx&loginClient=weixin
 	 */
     @RequestMapping(value="login")
-    public void login(@RequestParam("loginName") String loginName,@RequestParam("password") String password,
-    		HttpServletRequest request,HttpServletResponse response) throws Exception{
+    public void login(String loginName,String password,String openId,String loginClient,HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
     	try {
-        	
-        	LoginReturnBeanVo loginReturnBeanVo = accountService.login(loginName,password,"C");
+        	if(StringUtils.isBlank(loginName)){
+        		baseBean.setMsg("loginName 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        	}
+        	if(StringUtils.isBlank(password)){
+        		baseBean.setMsg("password 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        	}
+        	if(StringUtils.isBlank(openId)){
+        		baseBean.setMsg("openId 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        	}
+        	if(StringUtils.isBlank(loginClient)){
+        		baseBean.setMsg("loginClient 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        	}
+        	LoginReturnBeanVo loginReturnBeanVo = accountService.login(loginName,password,"C",openId,loginClient);
         	if(null != loginReturnBeanVo && "0000".equals(loginReturnBeanVo.getCode())){
         		baseBean.setCode("0000");
             	baseBean.setMsg("");
@@ -112,8 +136,93 @@ public class AccountAction extends BaseAction {
 		}
     	logger.info(JSON.toJSONString(baseBean));
     }
-    
-    
+    /**
+     * 发送短信验证码
+     * @param mobilephone 用户手机号
+     * @param request
+     * @param response
+     * http://localhost:8080/web/user/sendSMSVerificatioCode.html?mobilephone=13652311206
+     */
+    @RequestMapping("sendSMSVerificatioCode")
+    public void sendSMSVerificatioCode(String mobilephone,HttpServletRequest request,HttpServletResponse response){
+    	BaseBean baseBean = new BaseBean();
+    	try {
+    		if(StringUtils.isBlank(mobilephone)){
+        		baseBean.setMsg("mobilephone 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        	}
+    		//生成验证码，六位数
+    		String valideteCode = StringUtil.createValidateCode();
+    		String msgContent = "短信验证码："+valideteCode+"，您正在使用深圳交警微信“随手拍举报”业务，有效时间为5分钟。";
+    		boolean flag = mobileMessageService.sendMessage(mobilephone, msgContent);
+    		if(flag){
+    			accountService.sendSMSVerificatioCode(mobilephone,valideteCode);
+    			baseBean.setCode("0000");
+            	baseBean.setMsg("");
+            	baseBean.setData("发送成功");
+    		}else{
+    			baseBean.setCode("0001");
+            	baseBean.setMsg("");
+            	baseBean.setData("发送失败");
+    		}
+		} catch (Exception e) {
+			baseBean.setCode("0001");
+        	baseBean.setMsg(e.getMessage());
+        	baseBean.setData("发送失败");
+        	logger.error(e.getMessage());
+		}
+    	renderJSON(baseBean);
+    	logger.info(JSON.toJSONString(baseBean));
+    }
+    /**
+     * 验证验证码是否正确
+     * @param mobilephone 手机号
+     * @param validateCode 用户输入的验证码
+     * @param request
+     * @param response
+     * http://localhost:8080/web/user/verificatioCode.html?mobilephone=13652311206&validateCode=1221
+     */
+    @RequestMapping("verificatioCode")
+    public void verificatioCode(String mobilephone,String validateCode,HttpServletRequest request,HttpServletResponse response){
+    	BaseBean baseBean = new BaseBean();
+    	try {
+        	if(StringUtils.isBlank(mobilephone)){
+        		baseBean.setMsg("mobilephone 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        	}
+        	if(StringUtils.isBlank(validateCode)){
+        		baseBean.setMsg("validateCode 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        	}
+        	// 0-验证成功，1-验证失败，2-验证码失效
+    		int result = accountService.verificatioCode(mobilephone, validateCode);
+    		if(0 == result){
+    			baseBean.setCode("0000");
+            	baseBean.setMsg("");
+            	baseBean.setData("验证通过");
+    		}
+			if(1 == result){
+				baseBean.setCode("0001");
+	        	baseBean.setMsg("");
+	        	baseBean.setData("验证码错误");		
+			 }
+			if(2 == result){
+				baseBean.setCode("0002");
+	        	baseBean.setMsg("");
+	        	baseBean.setData("验证码失效");
+			}
+		} catch (Exception e) {
+			baseBean.setCode("0001");
+        	baseBean.setMsg(e.getMessage());
+        	baseBean.setData("验证失败");
+        	logger.error(e.getMessage());
+		}
+    	renderJSON(baseBean);
+    	logger.info(JSON.toJSONString(baseBean));
+    }
     /**
      * 用户中心-解绑微信
      * @param identityCard 身份证号码

@@ -18,7 +18,6 @@
 				<includes>
 					<include>consumer.xml</include>
 					<include>applicationContext.xml</include>
-					<include>applicationContext-redis.xml</include>
 					<include>applicationContext-config.xml</include>
 					<include>**/*.properties</include>
 				</includes>
@@ -102,7 +101,6 @@
 				<dubbo.consumer.retries><![CDATA[0]]></dubbo.consumer.retries>
 				<cn.services.version>1.0.0-SNAPSHOT</cn.services.version>
 				<common.sdk.version>1.0.0-SNAPSHOT</common.sdk.version>
-				<redis.web.configstr><![CDATA[web1:192.168.1.121:6379,web2:192.168.1.121:6379]]></redis.web.configstr>
 				<log4j.socket.host><![CDATA[dev-logserver.choumei.me]]></log4j.socket.host>
 				<log4j.socket.port><![CDATA[10099]]></log4j.socket.port>
 				<log4j.rootLogger><![CDATA[info,socket,web,std]]></log4j.rootLogger>
@@ -353,6 +351,11 @@
 			<version>${cn.services.version}</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>${choumei.services.groupId}</groupId>
+			<artifactId>message-center-api</artifactId>
+			<version>${cn.services.version}</version>
+		</dependency>
 		
 		
 		<dependency>
