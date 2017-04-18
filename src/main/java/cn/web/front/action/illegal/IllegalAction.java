@@ -1,10 +1,13 @@
 package cn.web.front.action.illegal;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +18,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import cn.account.service.IAccountService;
+import cn.illegal.bean.AppealInfoBack;
 import cn.illegal.bean.AppealInfoBean;
+import cn.illegal.bean.CarInfoBean;
+import cn.illegal.bean.CustInfoBean;
 import cn.illegal.bean.IllegalBusiness;
 import cn.illegal.bean.IllegalInfoBean;
+import cn.illegal.bean.IllegalInfoClaim;
 import cn.illegal.bean.IllegalInfoSheet;
 import cn.illegal.bean.IllegalProcessPointBean;
 import cn.illegal.bean.MessageBean;
 import cn.illegal.bean.ReservationDay;
+import cn.illegal.bean.SubcribeBean;
 import cn.illegal.service.IIllegalService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.ResultCode;
@@ -103,6 +111,8 @@ public class IllegalAction extends BaseAction {
     }
     
     
+      
+    
    /**
     * 根据车牌号获取违章信息
     * @param licensePlateNo  车牌号
@@ -144,8 +154,8 @@ public class IllegalAction extends BaseAction {
     */
    @RequestMapping(value = "queryInfoByDrivingLicenceNo")
    public void queryInfoByDrivingLicenceNo(String drivingLicenceNo,String recordNo){
-	   List<IllegalInfoBean> list=new ArrayList<IllegalInfoBean>();
-	   IllegalInfoBean bean=new IllegalInfoBean();
+	   List<IllegalInfoBean> list=illegalService.queryInfoByDrivingLicenceNo(drivingLicenceNo, recordNo);
+	   /*IllegalInfoBean bean=new IllegalInfoBean();
 	   bean.setBillNo("000000000001");
 	   bean.setCarOwner("李四");
 	   bean.setDealType("05");
@@ -158,26 +168,31 @@ public class IllegalAction extends BaseAction {
 	   bean.setPunishAmount(200);
 	   bean.setPunishScore(3);
 	
-	   list.add(bean);
+	   list.add(bean);*/
 	   
 	   BaseBean base=new BaseBean();
 	   base.setCode("0000");
-	   base.setMsg("成功！");
+	   base.setMsg("车辆当前无未处理的违法");
+	   if(list!=null&&list.size()>0){
+		   base.setMsg("查询成功！");
+	   }	
 	   base.setData(list);
 	   renderJSON(base);
    } 
     
    
     /**
-     * 违章在线确认
+     * 打单前查询
      * @param licensePlateNo 车牌号
      * @param licensePlateType 车辆类型
      * @param mobilephone 手机号码
      */
     @RequestMapping(value = "illegalOnlineConfirm")
     public void illegalOnlineConfirm(String licensePlateNo,String licensePlateType,String mobilephone){
- 	   List<IllegalInfoBean> list=new ArrayList<IllegalInfoBean>();
- 	   IllegalInfoBean bean=new IllegalInfoBean();
+    	
+    	
+ 	   List<IllegalInfoClaim> list=illegalService.trafficIllegalClaimBefore(licensePlateNo, licensePlateType, mobilephone);
+ 	   /*IllegalInfoBean bean=new IllegalInfoBean();
 	   bean.setBillNo("000000000001");
 	   bean.setCarOwner("李四");
 	   bean.setDealType("05");
@@ -190,7 +205,7 @@ public class IllegalAction extends BaseAction {
 	   bean.setPunishAmount(200);
 	   bean.setPunishScore(3);
 	
-	   list.add(bean);
+	   list.add(bean);*/
  	   BaseBean base=new BaseBean();
  	   base.setCode("0000");
  	   base.setMsg("成功！");
@@ -204,8 +219,8 @@ public class IllegalAction extends BaseAction {
      */
     @RequestMapping(value = "trafficIllegalClaim")
     public void trafficIllegalClaim(String illegalNo){	   
-       IllegalInfoSheet bean=new IllegalInfoSheet();
-	   bean.setBillNo("000000000001");
+       IllegalInfoSheet bean=illegalService.trafficIllegalClaim(illegalNo);
+	   /*bean.setBillNo("000000000001");
 	   bean.setCarOwner("李四");
 	   bean.setDealType("05");
 	   bean.setIllegalAddress("深南大道");
@@ -220,7 +235,7 @@ public class IllegalAction extends BaseAction {
 	   bean.setDealPolice("小明");
 	   bean.setTotalScore(6);
 	   bean.setWaitingDealNum(1);
-	   bean.setReturnMsg("打单成功");
+	   bean.setReturnMsg("打单成功");*/
 	   
  	   BaseBean base=new BaseBean();
  	   base.setCode("0000");
@@ -231,53 +246,55 @@ public class IllegalAction extends BaseAction {
     
      
     /**
-     * 跳转支付页面
+     * 缴款后查询（规费编号查询）
      */
     @RequestMapping(value = "toPayPage")
-    public void toPayPage(){
- 	   Map<String,String> map=new HashMap<String,String>();
-       map.put("redirectUrl", "http://szjjapi.chudaokeji.com/yywfcl/services/yywfcl?WSDL ");
- 	   
- 	   BaseBean base=new BaseBean();
- 	   base.setCode("0000");
- 	   base.setMsg("成功！");
- 	   base.setData(map);
- 	   renderJSON(base);
+    public void toPayPage(String billNo,String  licensePlateNo,String mobilephone,HttpServletRequest req, HttpServletResponse resp){     
+       String url=illegalService.toPayPage(billNo,licensePlateNo,mobilephone);
+       try {
+	    	if(StringUtil.isEmpty(url)){
+	    	BaseBean base=new BaseBean();
+	    	base.setCode("0001");
+	    	base.setMsg("跳转页面失败！");
+	    	renderJSON(base);
+	    	}else{
+	    		resp.sendRedirect(url);
+	    	}  		
+	   	} catch (IOException e) {
+	   		e.printStackTrace();
+	   	} 
     } 
     
     
     /**
-     * 违章缴款信息查询
+     * 缴款前查询
      * @param billNo 违章编号
      * @param licensePlateNo 车牌号
      * @param mobilephone 手机号码
      */
     @RequestMapping(value = "toQueryPunishmentPage")
-    public void toQueryPunishmentPage(String billNo,String  licensePlateNo,String mobilephone){
- 	   List<IllegalInfoBean> list=new ArrayList<IllegalInfoBean>();
- 	   IllegalInfoBean bean=new IllegalInfoBean();
-	   bean.setBillNo("000000000001");
-	   bean.setCarOwner("李四");
-	   bean.setDealType("05");
-	   bean.setIllegalAddress("深南大道");
-	   bean.setIllegalDesc("闯红灯");
-	   bean.setIllegalTime("2015-10-10 09:09:00");
-	   bean.setIllegalUnit("南山交警队");
-	   bean.setLicensePlateNo("粤A00001");
-	   bean.setLicensePlateType("06");
-	   bean.setPunishAmount(200);
-	   bean.setPunishScore(3);
-	
-	   list.add(bean);
- 	   
- 	   BaseBean base=new BaseBean();
- 	   base.setCode("0000");
- 	   base.setMsg("成功！");
- 	   base.setData(list);
- 	   renderJSON(base);
+    public void toQueryPunishmentPage(String billNo,String  licensePlateNo,String mobilephone,HttpServletRequest req, HttpServletResponse resp){
+ 	   String url=illegalService.toQueryPunishmentPage(billNo,licensePlateNo,mobilephone);//"4403010922403405","粤B8A3N2","18601174358");
+ 	try {
+ 		if(StringUtil.isEmpty(url)){
+	    	BaseBean base=new BaseBean();
+	    	base.setCode("0001");
+	    	base.setMsg("跳转页面失败！");
+	    	renderJSON(base);
+	    	}else{
+	    		resp.sendRedirect(url);
+	    	} 
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} 
+
     } 
     
     
+    /**
+     * 获取所以违法处理点
+     */
     @RequestMapping(value = "getIllegalProcessingPoint")
     public void getIllegalProcessingPoint(){  	
        List<IllegalProcessPointBean> bean=illegalService.getIllegalProcessingPoint();
@@ -288,6 +305,10 @@ public class IllegalAction extends BaseAction {
   	   renderJSON(base);
     }
     
+    /**
+     * 获取某站点的预约排期
+     * @param 站点Id
+     */
     @RequestMapping(value = "toGetSubscribeSorts")
     public void toGetSubscribeSorts(String cldbmid){
     	 List<ReservationDay> bean=illegalService.toGetSubscribeSorts(cldbmid);
@@ -305,8 +326,10 @@ public class IllegalAction extends BaseAction {
      * @param mobilephone
      */
     @RequestMapping(value = "toChangeSubscribe")
-    public void toChangeSubscribe(String billNo,String  licensePlateNo,String mobilephone){
-    	
+    public void toChangeSubscribe(String snm,String cldbmid,String cczb_id,CustInfoBean custInfo,CarInfoBean carInfo,String sourceType){
+       CarInfoBean carinfo=new CarInfoBean("粤B6F7M1",  "2", "9094");
+ 	   CustInfoBean custinfo=new CustInfoBean("王玉璞", "622822198502074110", "01", "18601174358",  "622822198502074110");
+ 	   illegalService.toChangeSubscribe("CgQxRtU5pO", "440319000000", "140053", custinfo, carinfo, "003");
        MessageBean  bean=new MessageBean();
        bean.setBusinessType("01");
        bean.setSubscribeNo("000000000123");
@@ -328,15 +351,16 @@ public class IllegalAction extends BaseAction {
      */
     @RequestMapping(value = "toCancelSubscribe")
     public void toCancleSubscribe(String subscribeNo){
-       MessageBean  bean=new MessageBean();
+       /*MessageBean  bean=new MessageBean();
        bean.setBusinessType("01");
        bean.setSubscribeNo("000000000123");
-       bean.setReminder("预约成功");
-       
+       bean.setReminder("预约成功");*/
+       String ss=illegalService.toCancleSubscribe(subscribeNo);
+    	
  	   BaseBean base=new BaseBean();
  	   base.setCode("0000");
- 	   base.setMsg("成功！");
- 	   base.setData(bean);
+ 	   base.setMsg(ss);
+ 	   //base.setData(bean);
  	   renderJSON(base);
     } 
     
@@ -347,22 +371,23 @@ public class IllegalAction extends BaseAction {
      * @param mobilephone
      */
     @RequestMapping(value = "toQuerySubscribe")
-    public void toQuerySubscribe(String billNo,String  licensePlateNo,String mobilephone){
- 	   List<IllegalInfoBean> list=new ArrayList<IllegalInfoBean>();
- 	   IllegalInfoBean bean=new IllegalInfoBean();
+    public void toQuerySubscribe(String licensePlateType,String  licensePlateNo,String mobilephone){
+ 	   List<SubcribeBean> list=illegalService.querySubscribe(licensePlateNo, licensePlateType, mobilephone);
+ 	   /*IllegalInfoBean bean=new IllegalInfoBean();
 	   bean.setBillNo("000000000001");
 	   bean.setCarOwner("李四");
-	   bean.setDealType("05");
+	   bean.setIsNeedClaim("0");
 	   bean.setIllegalAddress("深南大道");
 	   bean.setIllegalDesc("闯红灯");
 	   bean.setIllegalTime("2015-10-10 09:09:00");
 	   bean.setIllegalUnit("南山交警队");
 	   bean.setLicensePlateNo("粤A00001");
 	   bean.setLicensePlateType("06");
-	   bean.setPunishAmount(200);
+	   bean.setPunishAmt(200);
 	   bean.setPunishScore(3);
 	
-	   list.add(bean);
+	   list.add(bean);*/
+ 	   
  	   BaseBean base=new BaseBean();
  	   base.setCode("0000");
  	   base.setMsg("成功！");
@@ -376,14 +401,20 @@ public class IllegalAction extends BaseAction {
      */
     @RequestMapping(value = "trafficIllegalAppeal")
     public void trafficIllegalAppeal(AppealInfoBean info){
-       String i=illegalService.getMsg("小明么？");
+      /* String i=illegalService.getMsg("小明么？");
        MessageBean  bean=new MessageBean();
        bean.setBusinessType("03");
        bean.setSubscribeNo("000000000123");
-       bean.setReminder("申诉成功");
+       bean.setReminder("申诉成功");*/
+    	
+       AppealInfoBean bean=new AppealInfoBean(info.getBillNo(), info.getLicensePlateNo(),info.getLicensePlateType(), info.getIllegalTime(), info.getIllegalAddress(),
+    		info.getIllegalDesc(), info.getAgency(), info.getClaimant(),
+    		info.getClaimantAddress(), info.getClaimantPhone(), info.getAppealType(), info.getAppealContent(),
+    		info.getMaterialPicture());
+ 	   String code=illegalService.trafficIllegalAppeal(bean, "622822198502074110", "", "C");
 	   
  	   BaseBean base=new BaseBean();
- 	   base.setCode("0000_"+i);
+ 	   base.setCode(code);
  	   base.setMsg("成功！");
  	   base.setData(bean);
  	   renderJSON(base);
@@ -395,8 +426,8 @@ public class IllegalAction extends BaseAction {
      * @param identityCard 身份证
      */
     @RequestMapping(value = "trafficIllegalAppealFeedback")
-    public void trafficIllegalAppealFeedback(String identityCard){
-       AppealInfoBean bean =new AppealInfoBean();
+    public void trafficIllegalAppealFeedback(String identityCard,String sourceType){
+       /*AppealInfoBean bean =new AppealInfoBean();
        bean.setBillNo("000000000001");
  	   bean.setIllegalAddress("深南大道");
  	   bean.setIllegalDesc("闯红灯");
@@ -406,11 +437,12 @@ public class IllegalAction extends BaseAction {
  	   bean.setAppealContent("处罚有误");
  	   bean.setClaimant("薛申");
  	   bean.setClaimantAddress("平洲三路");
- 	   bean.setClaimantPhone("13898028923");
+ 	   bean.setClaimantPhone("13898028923");*/
+       AppealInfoBack back= illegalService.trafficIllegalAppealFeedback(identityCard, sourceType);
  	   BaseBean base=new BaseBean();
  	   base.setCode("0000");
  	   base.setMsg("成功！");
- 	   base.setData(bean);
+ 	   base.setData(back);
  	   renderJSON(base);
     }
 }
