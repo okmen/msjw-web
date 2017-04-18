@@ -2,9 +2,8 @@ package cn.web.front.action.illegal;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
-import cn.account.service.IAccountService;
 import cn.illegal.bean.AppealInfoBack;
 import cn.illegal.bean.AppealInfoBean;
 import cn.illegal.bean.CarInfoBean;
@@ -32,7 +28,6 @@ import cn.illegal.bean.ReservationDay;
 import cn.illegal.bean.SubcribeBean;
 import cn.illegal.service.IIllegalService;
 import cn.sdk.bean.BaseBean;
-import cn.sdk.exception.ResultCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
 
@@ -120,8 +115,24 @@ public class IllegalAction extends BaseAction {
     * @param vehicleIdentifyNoLast4 车架号后四位
     */
    @RequestMapping(value = "queryInfoByLicensePlateNo") 
-   public void queryInfoByLicensePlateNo(String licensePlateNo,String licensePlateType,String vehicleIdentifyNoLast4){
-	   List<IllegalInfoBean> list=illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType, vehicleIdentifyNoLast4);
+   public void queryInfoByLicensePlateNo(String licensePlateNo,String licensePlateType,String vehicleIdentifyNoLast4){  
+	   BaseBean base=new BaseBean();
+	 
+	   try {
+		   List<IllegalInfoBean> list= illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType, vehicleIdentifyNoLast4);
+		   base.setCode("0000");
+		   if(list!=null){
+			   base.setData(list);
+			   base.setMsg("成功");
+		   }else{
+			   base.setMsg("当前车辆无未处理违法");
+		   }		   
+		} catch (Exception e) {
+			base.setCode("0001");
+			base.setMsg("查询失败！");
+			e.printStackTrace();
+		}
+
 	   
 	   /*IllegalInfoBean bean=new IllegalInfoBean();
 	   bean.setBillNo("000000000001");
@@ -137,13 +148,7 @@ public class IllegalAction extends BaseAction {
 	   bean.setPunishScore(3);
 	
 	   list.add(bean);*/
-	   BaseBean base=new BaseBean();
-	   base.setCode("0000");
-	   base.setMsg("车辆当前无未处理的违法");
-	   if(list!=null&&list.size()>0){
-		   base.setMsg("查询成功！");
-	   }	   
-	   base.setData(list);
+	 
 	   renderJSON(base);
    }
       
@@ -330,15 +335,15 @@ public class IllegalAction extends BaseAction {
        CarInfoBean carinfo=new CarInfoBean("粤B6F7M1",  "2", "9094");
  	   CustInfoBean custinfo=new CustInfoBean("王玉璞", "622822198502074110", "01", "18601174358",  "622822198502074110");
  	   illegalService.toChangeSubscribe("CgQxRtU5pO", "440319000000", "140053", custinfo, carinfo, "003");
-       MessageBean  bean=new MessageBean();
+      /* MessageBean  bean=new MessageBean();
        bean.setBusinessType("01");
        bean.setSubscribeNo("000000000123");
-       bean.setReminder("预约成功");
+       bean.setReminder("预约成功");*/
        
  	   BaseBean base=new BaseBean();
  	   base.setCode("0000");
  	   base.setMsg("成功！");
- 	   base.setData(bean);
+ 	   //base.setData(bean);
  	   renderJSON(base);
     } 
     
