@@ -1,14 +1,19 @@
 package cn.web.front.action.wechat;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -20,13 +25,12 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 
 import cn.account.service.IAccountService;
+import cn.message.bean.WechatPostMessageModel;
+import cn.message.bean.message.request.IMessage;
+import cn.message.service.IMobileMessageService;
+import cn.message.service.IWechatService;
 import cn.sdk.exception.ResultCode;
 import cn.sdk.util.StringUtil;
-import cn.web.front.action.wechat.service.WechatService;
-import cn.web.front.action.wechat.util.AccessTokenFactory;
-import cn.web.front.action.wechat.util.Constants;
-import cn.web.front.action.wechat.util.SHA1;
-import cn.web.front.action.wechat.util.WebService4Wechat;
 import cn.web.front.support.BaseAction;
 
 @Controller
@@ -34,8 +38,12 @@ import cn.web.front.support.BaseAction;
 @SuppressWarnings(value = "all")
 public class WechatAction extends BaseAction {
 	@Autowired
-	@Qualifier("accountService")
-	private IAccountService accountService;
+	@Qualifier("mobileMessageService")
+	private IMobileMessageService mobileMessageService;
+	
+	@Autowired
+	@Qualifier("wechatService")
+	private IWechatService wechatService;
 
 	@RequestMapping(value = "/doGet.html", method = RequestMethod.GET)
 	public void getway(
@@ -45,13 +53,13 @@ public class WechatAction extends BaseAction {
 		String nonce = request.getParameter("nonce");
 		String echostr = request.getParameter("echostr");
 		try {
-			PrintWriter out = response.getWriter();
-			if(WechatService.check(signature,timestamp,nonce)) {
-				out.print(echostr);
+			boolean bool = wechatService.checkServer(signature, timestamp, nonce);
+			if(bool) {
+				outString(response, echostr);
 			}else{
-				out.print("");
+				outString(response,"");
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			logger.error("微信请求验证服务器异常",e);
 		}
 	}
@@ -60,9 +68,18 @@ public class WechatAction extends BaseAction {
 	public void message(HttpServletRequest request, HttpServletResponse response){
 		try {
 			request.setCharacterEncoding("utf-8");
-			logger.info("post message");
-			String mesasge = WechatService.processRequest(request);
-			outString(response, mesasge);
+			//获取post
+			Map<String, String> requestMap = parseXml(request);
+			String fromUserName = requestMap.get("FromUserName");
+	        String toUserName = requestMap.get("ToUserName");
+	        String msgType = requestMap.get("MsgType");
+	        String event = requestMap.get("Event"); 
+			IMessage mesasge = wechatService.processPostMessage(new WechatPostMessageModel(fromUserName, toUserName, msgType, event));
+			if(null != mesasge){
+				outString(response, mesasge.toXml());
+			} else{
+				outString(response, "");
+			}
 		} catch (IOException e) { 
 			logger.error("接收微信post消息异常",e);
 		}
@@ -71,23 +88,56 @@ public class WechatAction extends BaseAction {
 	@RequestMapping(value = "/createMenu.html", method = RequestMethod.GET) 
 	public void createMenu(HttpServletRequest request, HttpServletResponse response){
 		try {
-			WebService4Wechat.createMenu(AccessTokenFactory.getToken());
+			String json = wechatService.createMenu();
+			outString(response, json);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			outString(response, "error");
 		}
-	
 	}
 	
 	@RequestMapping(value = "/test.html", method = RequestMethod.GET) 
 	public void test(HttpServletRequest request, HttpServletResponse response){
 		try {
 			outString(response, "ok");
-			//response.sendRedirect("http://zsc.tunnel.qydev.com/&openId=aaaaaaaaaaaa");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
 	
+	/**
+	 * 解析微信端主动发送过来的消息
+	 * @param request
+	 * @return
+	 */
+	private Map<String, String> parseXml(HttpServletRequest request){
+		InputStream inputStream = null;
+		// 将解析结果存储在HashMap中
+        Map<String, String> map = new HashMap<String, String>();
+		try {
+	        // 从request中取得输入流
+	        inputStream = request.getInputStream();
+	        // 读取输入流
+	        SAXReader reader = new SAXReader();
+	        Document document = reader.read(inputStream);
+	        // 得到xml根元素
+	        Element root = document.getRootElement();
+	        // 得到根元素的所有子节点
+	        List<Element> elementList = root.elements();
+	        // 遍历所有子节点
+	        for (Element e : elementList)
+	            map.put(e.getName(), e.getText());
+		} catch (Exception e) {
+			logger.info("解析message消息异常",e);
+		}finally{
+			// 释放资源
+	        try {
+				inputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	        inputStream = null;
+		}
+        return map;
 	}
 }
