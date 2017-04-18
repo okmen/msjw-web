@@ -24,6 +24,7 @@ import com.alibaba.fastjson.JSONObject;
 import cn.account.bean.UserBind;
 import cn.account.bean.vo.BindCarVo;
 import cn.account.bean.vo.LoginReturnBeanVo;
+import cn.account.bean.vo.ReadilyShootVo;
 import cn.account.bean.vo.UserBasicVo;
 import cn.account.service.IAccountService;
 import cn.message.service.IMobileMessageService;
@@ -230,6 +231,7 @@ public class AccountAction extends BaseAction {
     	renderJSON(baseBean);
     	logger.info(JSON.toJSONString(baseBean));
     }
+    
     /**
      * 用户中心-解绑微信
      * @param identityCard 身份证号码
@@ -237,13 +239,31 @@ public class AccountAction extends BaseAction {
      * @param unionId 支付宝unionId
      */
     @RequestMapping(value = "deleteVehicle",method = RequestMethod.POST)
-    public void deleteVehicle(@RequestParam("identityCard") String identityCard,
-    		@RequestParam("openId") String openId,@RequestParam("unionId") String unionId) {
+    public void deleteVehicle( String identityCard,String userSource,
+    		 String openId, String unionId) {
     	
-    	
+    	String code="0000";
+ 		StringBuffer sb = new StringBuffer("下列参数有问题：");
     	UserBind userBind = new UserBind();
-    	userBind.setIdCard(identityCard);
+    	
     	userBind.setOpenId(openId);
+    	if(StringUtil.isBlank(identityCard)){
+ 			code="500";
+ 			sb.append("身份证号码为空  ");
+ 		}else{
+ 			userBind.setIdCard(identityCard);
+ 		}
+    	
+    	if(StringUtil.isBlank(userSource)){
+ 			code="500";
+ 			sb.append("用户来源为空  ");
+ 		}else{
+ 			if("C".equals(userSource)){
+ 				userBind.setOpenId(openId);
+ 			}else if("Z".equals(userSource)){
+ 				userBind.setUnionId(unionId);
+ 			}
+ 		}
     	
     	 BaseBean basebean = new  BaseBean();
     		int re = 0;
@@ -274,39 +294,79 @@ public class AccountAction extends BaseAction {
      * @param mobilephone 手机号
      */
     @RequestMapping(value = "addVehicle",method = RequestMethod.POST)
-    public void addVehicle(@RequestParam("bindType") int bindType,@RequestParam("vehicleType") String vehicleType,
-    		@RequestParam("plateType") String plateType,@RequestParam("licensePlateNumber") String licensePlateNumber
-    		,@RequestParam("frameNumber") String frameNumber,@RequestParam("ownerName") String ownerName
-    		,@RequestParam("identityCard") String identityCard,@RequestParam("mobilephone") String mobilephone) {
-    	
-    	
+    public void addVehicle( int bindType, String vehicleType, String plateType, String licensePlateNumber
+    		, String frameNumber, String ownerName, String identityCard, String mobilephone) {
+    	String code="0000";
+ 		StringBuffer sb = new StringBuffer("下列参数有问题：");   	
     	BindCarVo bindCarVo = new BindCarVo();
-    	bindCarVo.setBindType(bindType);
-    	bindCarVo.setLicensePlateType(licensePlateNumber);
-    	bindCarVo.setFrameNumber(frameNumber);
-    	bindCarVo.setUserIdCard(identityCard);
-    	bindCarVo.setUserSource("C");
-    	bindCarVo.setLicensePlateType(plateType);
-    	bindCarVo.setProvinceAbbreviation("粤");
-    	bindCarVo.setLicensePlateNumber(licensePlateNumber);
-    	bindCarVo.setOwnerName(ownerName);
-    	bindCarVo.setBindType(bindType);
-    	bindCarVo.setInputIP("127.0.0.1");
+    	
+    	if(bindType<0){
+ 			code="500";
+ 			sb.append("绑定类型错误  ");
+ 		}else{
+ 			bindCarVo.setBindType(bindType);
+ 		}
+    	
+    	if(StringUtil.isBlank(licensePlateNumber)){
+ 			code="500";
+ 			sb.append("车牌号码为空  ");
+ 		}else{
+ 			bindCarVo.setLicensePlateType(licensePlateNumber);
+ 		}
+    	
+    	if(StringUtil.isBlank(frameNumber)){
+ 			code="500";
+ 			sb.append("车架号码为空  ");
+ 		}else{
+ 			bindCarVo.setFrameNumber(frameNumber);
+ 		}
+
+    	if(StringUtil.isBlank(identityCard)){
+ 			code="500";
+ 			sb.append("身份证号为空  ");
+ 		}else{
+ 			bindCarVo.setUserIdCard(identityCard);
+ 		}
+    	
+    	if(StringUtil.isBlank(plateType)){
+ 			code="500";
+ 			sb.append("号牌种类为空  ");
+ 		}else{
+ 			bindCarVo.setLicensePlateType(plateType);
+ 		}
+    	
+    	if(StringUtil.isBlank(ownerName)){
+ 			code="500";
+ 			sb.append("车主姓名为空  ");
+ 		}else{
+ 			bindCarVo.setOwnerName(ownerName);
+ 		}
+    	BaseBean basebean = new  BaseBean();
     	try {
-    		BaseBean basebean = new  BaseBean();
-    		JSONObject json = accountService.addVehicle(bindCarVo);
-			System.out.println(json);
-			String code =json.getString("CODE");
-			if(!"0000".equals(code)){
-				code="500";
-			}
-	    	basebean.setCode(code);
-	    	basebean.setMsg(json.getString("MSG"));   	
-	    	renderJSON(basebean);
-	    	logger.info(JSON.toJSONString(basebean));
+    		
+    		if("0000".equals(code)){//参数校验通过
+    			bindCarVo.setUserSource("C");
+            	bindCarVo.setProvinceAbbreviation("粤");
+            	bindCarVo.setInputIP("127.0.0.1");
+        		
+        		JSONObject json = accountService.addVehicle(bindCarVo);
+    			System.out.println(json);
+    			code =json.getString("CODE");
+    			if(!"0000".equals(code)){
+    				code="500";
+    			}
+    	    	basebean.setCode(code);
+    	    	basebean.setMsg(json.getString("MSG"));   
+    		}else{
+    			basebean.setMsg(sb.toString());
+    		}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+   
+    	renderJSON(basebean);
+    	logger.info(JSON.toJSONString(basebean));
+    
     }
     
     
@@ -320,28 +380,66 @@ public class AccountAction extends BaseAction {
      * @param IdCardImgHandHeld 手持身份证
      */
     @RequestMapping(value = "updateUser",method = RequestMethod.POST)
-    public void updateUser(@RequestParam("tureName") String tureName,@RequestParam("identityCard") String identityCard
-    		,@RequestParam("mailingAddress") String mailingAddress,@RequestParam("idCardImgPositive") String idCardImgPositive
-    		,@RequestParam("idCardImgNegative") String idCardImgNegative,@RequestParam("IdCardImgHandHeld") String IdCardImgHandHeld) {
-    	
+    public void updateUser( String tureName, String identityCard, String mailingAddress, String idCardImgPositive
+    		, String idCardImgNegative,String idCardImgHandHeld) {
+    	String code="0000";
+ 		StringBuffer sb = new StringBuffer("下列参数有问题：");
     	UserBasicVo userBasicVo =new UserBasicVo();
-    	userBasicVo.setIdentityCard(identityCard);
-    	userBasicVo.setMailingAddress(mailingAddress);
-    	userBasicVo.setIdCardImgPositive(idCardImgPositive);
-    	userBasicVo.setIdCardImgHandHeld(IdCardImgHandHeld);
-    	userBasicVo.setUserSource("C");
-    	userBasicVo.setIdCardValidityDate("2018-04-15");
+    	if(StringUtil.isBlank(identityCard)){
+ 			code="500";
+ 			sb.append("身份证为空  ");
+ 		}else{
+ 			userBasicVo.setIdentityCard(identityCard);;
+ 		}
+    	if(StringUtil.isBlank(mailingAddress)){
+ 			code="500";
+ 			sb.append("通讯地址为空  ");
+ 		}else{
+ 			userBasicVo.setMailingAddress(mailingAddress);
+ 		}
+    	if(StringUtil.isBlank(mailingAddress)){
+ 			code="500";
+ 			sb.append("通讯地址为空  ");
+ 		}else{
+ 			userBasicVo.setMailingAddress(mailingAddress);
+ 		}
+    	if(StringUtil.isBlank(idCardImgPositive)){
+ 			code="500";
+ 			sb.append("身份证正面为空  ");
+ 		}else{
+ 			userBasicVo.setIdCardImgPositive(idCardImgPositive);
+ 		}
+ 		
+ 		if(StringUtil.isBlank(idCardImgNegative)){
+ 			code="500";
+ 			sb.append("身份证反面为空 ");
+ 		}
+ 		
+ 		if(StringUtil.isBlank(idCardImgHandHeld)){
+ 			code="500";
+ 			sb.append("手持身份证为空  ");
+ 		}else{
+ 			userBasicVo.setIdCardImgHandHeld(idCardImgHandHeld);
+ 		}
+
+    
     	BaseBean basebean = new  BaseBean();
-    	try {
-    	
-			JSONObject json = accountService.updateUser(userBasicVo);
-			System.out.println(json);
-			String code =json.getString("CODE");
-			if(!"0000".equals(code)){
-				code="500";
-			}
-	    	basebean.setCode(code);
-	    	basebean.setMsg(json.getString("MSG"));   		
+    	try {  	
+    		if("0000".equals(code)){//参数校验通过
+    			userBasicVo.setUserSource("C");
+            	userBasicVo.setIdCardValidityDate("2018-04-15");
+            	userBasicVo.setNickname(tureName);
+    			JSONObject json = accountService.updateUser(userBasicVo);   			
+    			System.out.println(json);
+    			code =json.getString("CODE");
+    			if(!"0000".equals(code)){
+    				code="500";
+    			}
+    	    	basebean.setCode(code);
+    	    	basebean.setMsg(json.getString("MSG"));
+    		}else{
+    			basebean.setMsg(sb.toString());
+    		}  		
 		} catch (Exception e) {	
 			e.printStackTrace();
 		}   	
@@ -359,24 +457,53 @@ public class AccountAction extends BaseAction {
      * @param newMobile 新手机号
      */
     @RequestMapping(value = "updateMobile",method = RequestMethod.POST)
-    public void updateMobile(@RequestParam("oldMobile") String oldMobile,@RequestParam("validateCode") String validateCode
-    		,@RequestParam("newMobile") String newMobile) {
+    public void updateMobile( String oldMobile, String validateCode
+    		,String newMobile,String identityCard) {
     	
+    	String code="0000";
+ 		StringBuffer sb = new StringBuffer("下列参数有问题：");
     	UserBasicVo userBasicVo =new UserBasicVo();
-    	userBasicVo.setIdentityCard("360924199006071671");
-    	userBasicVo.setOldMobile(oldMobile);
-    	userBasicVo.setNewMobile(newMobile);
-    	userBasicVo.setUserSource("C");
+    	if(StringUtil.isBlank(identityCard)){
+ 			code="500";
+ 			sb.append("身份证为空  ");
+ 		}else{
+ 			userBasicVo.setIdentityCard(identityCard);;
+ 		}
+    	
+    	if(StringUtil.isBlank(oldMobile)){
+ 			code="500";
+ 			sb.append("旧手机号为空  ");
+ 		}else{
+ 			userBasicVo.setOldMobile(oldMobile);
+ 		}
+    	if(StringUtil.isBlank(newMobile)){
+ 			code="500";
+ 			sb.append("新手机号为空  ");
+ 		}else{
+ 			userBasicVo.setNewMobile(newMobile);
+ 		}
+    	if(StringUtil.isBlank(newMobile)){
+ 			code="500";
+ 			sb.append("验证码为空  ");
+ 		}
+    	
     	BaseBean basebean = new  BaseBean();
     	try {
-			JSONObject json = accountService.updateUser(userBasicVo);
-			System.out.println(json);
-			String code =json.getString("CODE");
-			if(!"0000".equals(code)){
-				code="500";
-			}
-	    	basebean.setCode(code);
-	    	basebean.setMsg(json.getString("MSG"));
+    		if("0000".equals(code)){//参数校验通过
+    			userBasicVo.setIdentityCard("360924199006071671");
+            	userBasicVo.setUserSource("C");
+    			JSONObject json = accountService.updateUser(userBasicVo);
+    			System.out.println(json);
+    			code =json.getString("CODE");
+    			if(!"0000".equals(code)){
+    				code="500";
+    			}
+    	    	basebean.setCode(code);
+    	    	basebean.setMsg(json.getString("MSG"));
+    		}else{
+    			basebean.setMsg(sb.toString());
+    		}
+    		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}  	
@@ -393,22 +520,48 @@ public class AccountAction extends BaseAction {
     * @param newPwd
     */
     @RequestMapping(value = "updatePwd",method = RequestMethod.POST)
-    public void updatePwd(@RequestParam("oldPwd") String oldPwd,@RequestParam("newPwd") String newPwd) {
+    public void updatePwd( String oldPwd, String newPwd,String identityCard) {
+    	String code="0000";
+ 		StringBuffer sb = new StringBuffer("下列参数有问题：");
+    	
     	UserBasicVo userBasicVo =new UserBasicVo();
-    	userBasicVo.setIdentityCard("360924199006071671");
-    	userBasicVo.setOldPwd(oldPwd);
-    	userBasicVo.setNewPwd(newPwd);
-    	userBasicVo.setUserSource("C");
+    	if(StringUtil.isBlank(identityCard)){
+ 			code="500";
+ 			sb.append("身份证为空  ");
+ 		}else{
+ 			userBasicVo.setIdentityCard(identityCard);;
+ 		}
+    	if(StringUtil.isBlank(oldPwd)){
+ 			code="500";
+ 			sb.append("旧密码为空  ");
+ 		}else{
+ 			userBasicVo.setOldPwd(oldPwd);
+ 		}
+    	if(StringUtil.isBlank(newPwd)){
+ 			code="500";
+ 			sb.append("新密码为空  ");
+ 		}else{
+ 			userBasicVo.setNewPwd(newPwd);
+ 		}
+    	
+    	
+    	
     	BaseBean basebean = new  BaseBean();
     	try {
-			JSONObject json = accountService.updateUser(userBasicVo);
-			System.out.println(json);
-			String code =json.getString("CODE");
-			if(!"0000".equals(code)){
-				code="500";
-			}
-	    	basebean.setCode(code);
-	    	basebean.setMsg(json.getString("MSG"));
+    		if("0000".equals(code)){//参数校验通过
+    			userBasicVo.setUserSource("C");
+            	userBasicVo.setIdentityCard("360924199006071671");
+    			JSONObject json = accountService.updateUser(userBasicVo);
+    			System.out.println(json);
+    			code =json.getString("CODE");
+    			if(!"0000".equals(code)){
+    				code="500";
+    			}
+    	    	basebean.setCode(code);
+    	    	basebean.setMsg(json.getString("MSG"));
+    		}else{
+    			basebean.setMsg(sb.toString());
+    		}   		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}  	
@@ -432,31 +585,94 @@ public class AccountAction extends BaseAction {
      * @param locationAddress 定位地址
      */
     @RequestMapping(value = "readilyShoot",method = RequestMethod.POST)
-    public void readilyShoot(@RequestParam("illegalTime") String illegalTime,@RequestParam("illegalSections") String illegalSections    		
-    		,@RequestParam("imgOne") String imgOne,@RequestParam("imgTwo") String imgTwo
-    		,@RequestParam("imgThree") String imgThree,@RequestParam("situationStatement") String situationStatement
-    		,@RequestParam("whistleblower") String whistleblower,@RequestParam("identityCard") String identityCard
-    		,@RequestParam("mobilephone") String mobilephone,@RequestParam("locationAddress") String locationAddress) {
+    public void readilyShoot( String illegalTime, String illegalSections, String imgOne, String imgTwo
+    		, String imgThree, String situationStatement, String whistleblower,String identityCard
+    		, String mobilephone,String locationAddress) {
+    	String code="0000";
+ 		StringBuffer sb = new StringBuffer("下列参数有问题：");
+    	ReadilyShootVo readilyShootVo = new ReadilyShootVo();
+    	if(StringUtil.isBlank(identityCard)){
+ 			code="500";
+ 			sb.append("身份证为空  ");
+ 		}else{
+ 			readilyShootVo.setUserIdCard(identityCard);
+ 		}	
+    	if(StringUtil.isBlank(illegalTime)){
+ 			code="500";
+ 			sb.append("违法时间为空  ");
+ 		}else{
+ 			readilyShootVo.setIllegalTime(illegalTime);
+ 		}
+    	if(StringUtil.isBlank(illegalSections)){
+ 			code="500";
+ 			sb.append("违法路段为空  ");
+ 		}else{
+ 			readilyShootVo.setIllegalSections(illegalSections);;
+ 		}
+    	if(StringUtil.isBlank(situationStatement)){
+ 			code="500";
+ 			sb.append("违法内容为空  ");
+ 		}else{
+ 			readilyShootVo.setSituationStatement(situationStatement);;
+ 		}
+    	if(StringUtil.isBlank(mobilephone)){
+ 			code="500";
+ 			sb.append("手机号码为空  ");
+ 		}else{
+ 			readilyShootVo.setMobilephone(mobilephone);
+ 		}
+    	if(StringUtil.isBlank(whistleblower)){
+ 			code="500";
+ 			sb.append("举报人为空  ");
+ 		}else{
+ 			readilyShootVo.setWhistleblower(whistleblower);;
+ 		}
+    	if(StringUtil.isBlank(imgOne)){
+ 			code="500";
+ 			sb.append("证据材料图片1为空  ");
+ 		}else{
+ 			readilyShootVo.setImages(imgOne);;
+ 		}
+    	if(StringUtil.isBlank(imgTwo)){
+ 			code="500";
+ 			sb.append("证据材料图片2为空  ");
+ 		}else{
+ 			//readilyShootVo.setWhistleblower(whistleblower);;
+ 		}
+    	if(StringUtil.isBlank(imgThree)){
+ 			code="500";
+ 			sb.append("证据材料图片3为空  ");
+ 		}else{
+ 			//readilyShootVo.setWhistleblower(whistleblower);;
+ 		}
+    	//if(imgOne)
     	
     	
        	BaseBean basebean = new  BaseBean();
     	try {
-			JSONObject json = accountService.readilyShoot(illegalTime, illegalSections, imgOne, situationStatement, whistleblower, identityCard, mobilephone);
-			System.out.println(json);
-			String code =json.getString("CODE");
-			if(!"0000".equals(code)){
-				code="500";
-			}
-	    	basebean.setCode(code);
-	    	basebean.setMsg(json.getString("MSG"));
+    		 if("0000".equals(code)){//参数校验通过
+    			 JSONObject json = accountService.readilyShoot(readilyShootVo);
+    				System.out.println(json);
+    				 code =json.getString("CODE");
+    				if(!"0000".equals(code)){
+    					code="500";
+    				}else{
+    					Map<String, Object> modelMap = new HashMap<String, Object>();
+    			     	modelMap.put("recordNumber", "000000000");
+    			     	modelMap.put("queryPassword", "123456");
+    			     	basebean.setData(modelMap);
+    				}
+    		    	basebean.setCode(code);
+    		    	basebean.setMsg(json.getString("MSG"));
+    		 }else{
+    			 basebean.setMsg(sb.toString());
+    		 }
+			
     	
     	} catch (Exception e) {
 			e.printStackTrace();
 		}
-//    	Map<String, Object> modelMap = new HashMap<String, Object>();
-//     	modelMap.put("recordNumber", "000000000");
-//     	modelMap.put("queryPassword", "123456");
-//     	basebean.setData(modelMap);
+    
     	renderJSON(basebean);
     	logger.info(JSON.toJSONString(basebean));
     

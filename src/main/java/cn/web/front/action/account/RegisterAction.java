@@ -15,6 +15,8 @@ import com.alibaba.fastjson.JSONObject;
 import cn.account.bean.vo.RegisterVo;
 import cn.account.service.IAccountService;
 import cn.sdk.bean.BaseBean;
+import cn.sdk.util.Base64;
+import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
 
 /**
@@ -49,35 +51,114 @@ public class RegisterAction extends BaseAction{
 	  * @param idCardImgHandHeld 手持身份证
 	  */
 	 @RequestMapping(value = "iAmTheOwner",method=RequestMethod.POST)
-	    public void iAmTheOwner(@RequestParam("licensePlateType") String licensePlateType,@RequestParam("provinceAbbreviation") String provinceAbbreviation,
-	    		@RequestParam("licensePlateNumber") String licensePlateNumber,@RequestParam("identityCard") String identityCard
-	    		,@RequestParam("linkAddress") String linkAddress,@RequestParam("mobilephone") String mobilephone
-	    		,@RequestParam("validateCode") String validateCode,@RequestParam("isDriverLicense") int isDriverLicense
-	    		,@RequestParam("driverLicenseIssuedAddress") String driverLicenseIssuedAddress,@RequestParam("idCardImgPositive") String idCardImgPositive
-	    		,@RequestParam("idCardImgNegative") String idCardImgNegative,@RequestParam("idCardImgHandHeld") String idCardImgHandHeld) {
+	    public void iAmTheOwner( String licensePlateType, String provinceAbbreviation, String licensePlateNumber, String identityCard
+	    		, String linkAddress, String mobilephone,String validateCode, int isDriverLicense
+	    		, String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgNegative, String idCardImgHandHeld) {
+		 	String code="0000";
+	 		StringBuffer sb = new StringBuffer("下列参数有问题：");
+	 		RegisterVo registerVo =new RegisterVo();
+	 		if(StringUtil.isBlank(identityCard)){
+	 			code="500";
+	 			sb.append("身份证为空  ");
+	 		}else{
+	 			 registerVo.setUserIdCard(identityCard);
+	 		}		
+	 		if(StringUtil.isBlank(linkAddress)){
+	 			code="500";
+	 			sb.append("联系地址为空  ");
+	 		}else{
+	 			registerVo.setLinkAddress(linkAddress);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(mobilephone)){
+	 			code="500";
+	 			sb.append("手机号码为空  ");
+	 		}else{
+	 			 registerVo.setMobilephone(mobilephone);
+	 		}
+	 		
+	 		if(isDriverLicense<0){
+	 			code="500";
+	 			sb.append("是否有驾驶证错误  ");
+	 		}else{
+	 			 registerVo.setMobilephone(mobilephone);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(validateCode)){
+	 			code="500";
+	 			sb.append("验证码为空  ");
+	 		}
+	 		
+	 		if(StringUtil.isBlank(driverLicenseIssuedAddress)){
+	 			code="500";
+	 			sb.append("驾驶证核发地为空  ");
+	 		}else{
+	 			 registerVo.setDriverLicenseIssuedAddress(driverLicenseIssuedAddress);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(idCardImgPositive)){
+	 			code="500";
+	 			sb.append("身份证正面为空  ");
+	 		}else{
+	 			 registerVo.setIdCardImgPositive(idCardImgPositive);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(idCardImgNegative)){
+	 			code="500";
+	 			sb.append("身份证反面为空 ");
+	 		}
+	 		
+	 		if(StringUtil.isBlank(idCardImgHandHeld)){
+	 			code="500";
+	 			sb.append("手持身份证为空  ");
+	 		}else{
+	 			registerVo.setIdCardImgHandHeld(idCardImgHandHeld);
+	 		}
+	 		
+	 		
+	 		if(StringUtil.isBlank(licensePlateType)){
+	 			code="500";
+	 			sb.append("车牌类型为空  ");
+	 		}else{
+	 			 registerVo.setLicensePlateType(licensePlateType);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(provinceAbbreviation)){
+	 			code="500";
+	 			sb.append("省简称为空  ");
+	 		}else{
+	 			registerVo.setProvinceAbbreviation(provinceAbbreviation);
+	 		}
+	 		
+	 		
+	 		if(StringUtil.isBlank(licensePlateNumber)){
+	 			code="500";
+	 			sb.append("车牌号码为空  ");
+	 		}else{
+	 			 registerVo.setLicensePlateNumber(licensePlateNumber);
+	 		}
 
-		 RegisterVo registerVo =new RegisterVo();
-		 registerVo.setLicensePlateType(licensePlateType);
-		 registerVo.setProvinceAbbreviation(provinceAbbreviation);
-		 registerVo.setLicensePlateNumber(licensePlateNumber);
-		 registerVo.setLinkAddress(linkAddress);
-		 registerVo.setMobilephone(mobilephone);
-		 registerVo.setDriverLicenseIssuedAddress(driverLicenseIssuedAddress);
-		 registerVo.setDriverLicenseIssuedAddress(driverLicenseIssuedAddress);
-		 registerVo.setIdCardImgPositive(idCardImgPositive);
-		 registerVo.setIdCardImgHandHeld(idCardImgHandHeld);
-		 registerVo.setUserIdCard(identityCard);
+	 		
 		 
 			BaseBean basebean = new  BaseBean();
 		 try {
-			 JSONObject json =	accountService.iAmTheOwner(registerVo);
-			 System.out.println(json);
-				String code =json.getString("CODE");
-				if(!"0000".equals(code)){
-					code="500";
-				}
-		    	basebean.setCode(code);
-		    	basebean.setMsg(json.getString("MSG"));
+			 if("0000".equals(code)){//参数校验通过
+				 registerVo.setCallAccount("WX02_TEST");
+				 registerVo.setCertifiedType("1");
+				 registerVo.setCertifiedRole("1");
+				// registerVo
+				 JSONObject json =	accountService.iAmTheOwner(registerVo);	
+				 System.out.println(json);
+					 code =json.getString("CODE");
+					if(!"0000".equals(code)){
+						code="500";
+					}
+			    	basebean.setCode(code);
+			    	basebean.setMsg(json.getString("MSG")); 
+			 }else{
+				 basebean.setMsg(sb.toString());
+			 }
+			
 		 } catch (Exception e) {
 			e.printStackTrace();
 		} 	
@@ -103,25 +184,117 @@ public class RegisterAction extends BaseAction{
 	 	 * @param idCardImgHandHeld 手持身份证
 	 	 */
 	 	@RequestMapping(value = "iamALongtimeUser",method = RequestMethod.POST)
-	    public void iamALongtimeUser(@RequestParam("licensePlateType") String licensePlateType,@RequestParam("provinceAbbreviation") String provinceAbbreviation,
-	    		@RequestParam("licensePlateNumber") String licensePlateNumber,@RequestParam("ownerName") String ownerName
-	    		,@RequestParam("ownerIdCard") String ownerIdCard,@RequestParam("userIdCard") String userIdCard
-	    		,@RequestParam("linkAddress") String linkAddress,@RequestParam("mobilephone") String mobilephone
-	    		,@RequestParam("validateCode") String validateCode,@RequestParam("driverLicenseIssuedAddress") String driverLicenseIssuedAddress
-	    		,@RequestParam("idCardImgPositive") String idCardImgPositive,@RequestParam("idCardImgNegative") String idCardImgNegative
-	    		,@RequestParam("idCardImgHandHeld") String idCardImgHandHeld) {
+	    public void iamALongtimeUser( String licensePlateType, String provinceAbbreviation, String licensePlateNumber,String ownerName
+	    		,String ownerIdCard, String userIdCard, String linkAddress, String mobilephone, String validateCode
+	    		,String driverLicenseIssuedAddress,String idCardImgPositive, String idCardImgHandHeld,String idCardImgNegative
+	    		,String ownerIdCardImgPositive, String ownerIdCardImgHandHeld) {
+	 		String code="0000";
+	 		StringBuffer sb = new StringBuffer("下列参数有问题：");
+	 		RegisterVo registerVo =new RegisterVo();
+	 		if(StringUtil.isBlank(userIdCard)){
+	 			code="500";
+	 			sb.append("使用人身份证为空  ");
+	 		}else{
+	 			 registerVo.setUserIdCard(userIdCard);
+	 		}
+	 		if(StringUtil.isBlank(ownerIdCard)){
+	 			code="500";
+	 			sb.append("车主身份证为空  ");
+	 		}else{
+	 			registerVo.setOwnerIdCard(ownerIdCard);
+	 		}
 	 		
+	 		if(StringUtil.isBlank(linkAddress)){
+	 			code="500";
+	 			sb.append("联系地址为空  ");
+	 		}else{
+	 			registerVo.setLinkAddress(linkAddress);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(mobilephone)){
+	 			code="500";
+	 			sb.append("手机号码为空  ");
+	 		}else{
+	 			 registerVo.setMobilephone(mobilephone);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(validateCode)){
+	 			code="500";
+	 			sb.append("验证码为空  ");
+	 		}
+	 		
+	 		if(StringUtil.isBlank(driverLicenseIssuedAddress)){
+	 			code="500";
+	 			sb.append("驾驶证核发地为空  ");
+	 		}else{
+	 			 registerVo.setDriverLicenseIssuedAddress(driverLicenseIssuedAddress);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(idCardImgPositive)){
+	 			code="500";
+	 			sb.append("身份证正面为空  ");
+	 		}else{
+	 			 registerVo.setIdCardImgPositive(idCardImgPositive);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(idCardImgNegative)){
+	 			code="500";
+	 			sb.append("身份证反面为空 ");
+	 		}
+	 		
+	 		if(StringUtil.isBlank(idCardImgHandHeld)){
+	 			code="500";
+	 			sb.append("手持身份证为空  ");
+	 		}else{
+	 			registerVo.setIdCardImgHandHeld(idCardImgHandHeld);
+	 		}
+	 		
+	 		
+	 		if(StringUtil.isBlank(licensePlateType)){
+	 			code="500";
+	 			sb.append("车牌类型为空  ");
+	 		}else{
+	 			 registerVo.setLicensePlateType(licensePlateType);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(provinceAbbreviation)){
+	 			code="500";
+	 			sb.append("省简称为空  ");
+	 		}else{
+	 			registerVo.setProvinceAbbreviation(provinceAbbreviation);
+	 		}
+	 		
+	 		
+	 		if(StringUtil.isBlank(licensePlateNumber)){
+	 			code="500";
+	 			sb.append("车牌号码为空  ");
+	 		}else{
+	 			 registerVo.setLicensePlateNumber(licensePlateNumber);
+	 		}
+
+	 		if(StringUtil.isBlank(ownerName)){
+	 			code="500";
+	 			sb.append("车主姓名为空  ");
+	 		}else{
+	 			 registerVo.setOwnerIdName(ownerName);
+				 registerVo.setOwnerName(ownerName);
+	 		}
+	 		
+
 	 		BaseBean basebean = new  BaseBean();
 	 		try {
-				 JSONObject json =	accountService.iamALongtimeUser(licensePlateType, provinceAbbreviation, licensePlateNumber, ownerName, ownerIdCard, userIdCard, linkAddress, mobilephone, driverLicenseIssuedAddress, idCardImgPositive, idCardImgHandHeld);
+	 			if("0000".equals(code)){//参数校验通过
+				 JSONObject json =	accountService.iamALongtimeUser(registerVo);
 				 System.out.println(json);
-				 String code =json.getString("CODE");
+				  code =json.getString("CODE");
 					if(!"0000".equals(code)){
 						code="500";
 					}
 			    	basebean.setCode(code);
 			    	basebean.setMsg(json.getString("MSG"));
-	 		
+	 			}else{
+	 				basebean.setMsg(sb.toString());
+	 			}
 	 		} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -144,21 +317,88 @@ public class RegisterAction extends BaseAction{
 	 	 * @param idCardImgHandHeld 手持身份证
 	 	 */
 	 	@RequestMapping(value = "haveDriverLicenseNotCar",method = RequestMethod.POST)
-	    public void haveDriverLicenseNotCar(@RequestParam("identityCard") String identityCard,@RequestParam("linkAddress") String linkAddress,
-	    		@RequestParam("mobilephone") String mobilephone,@RequestParam("validateCode") String validateCode
-	    		,@RequestParam("driverLicenseIssuedAddress") String driverLicenseIssuedAddress,@RequestParam("imgOne") String idCardImgPositive
-	    		,@RequestParam("idCardImgNegative") String idCardImgNegative,@RequestParam("idCardImgHandHeld") String idCardImgHandHeld) {
-	    	
+	    public void haveDriverLicenseNotCar( String identityCard, String linkAddress, String mobilephone, String validateCode
+	    		,String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgNegative, String idCardImgHandHeld) {
+	 	
+	 		
+	 		String code="0000";
+	 		StringBuffer sb = new StringBuffer("下列参数有问题：");
+	 		RegisterVo registerVo =new RegisterVo();
+	 		if(StringUtil.isBlank(identityCard)){
+	 			code="500";
+	 			sb.append("身份证为空  ");
+	 		}else{
+	 			 registerVo.setUserIdCard(identityCard);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(linkAddress)){
+	 			code="500";
+	 			sb.append("联系地址为空  ");
+	 		}else{
+	 			registerVo.setLinkAddress(linkAddress);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(mobilephone)){
+	 			code="500";
+	 			sb.append("手机号码为空  ");
+	 		}else{
+	 			 registerVo.setMobilephone(mobilephone);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(validateCode)){
+	 			code="500";
+	 			sb.append("验证码为空  ");
+	 		}
+	 		
+	 		if(StringUtil.isBlank(driverLicenseIssuedAddress)){
+	 			code="500";
+	 			sb.append("驾驶证核发地为空  ");
+	 		}else{
+	 			 registerVo.setDriverLicenseIssuedAddress(driverLicenseIssuedAddress);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(idCardImgPositive)){
+	 			code="500";
+	 			sb.append("身份证正面为空  ");
+	 		}else{
+	 			 registerVo.setIdCardImgPositive(idCardImgPositive);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(idCardImgNegative)){
+	 			code="500";
+	 			sb.append("身份证反面为空 ");
+	 		}
+	 		
+	 		if(StringUtil.isBlank(idCardImgHandHeld)){
+	 			code="500";
+	 			sb.append("手持身份证为空  ");
+	 		}else{
+	 			registerVo.setIdCardImgHandHeld(idCardImgHandHeld);
+	 		}
+ 
+		   System.out.println(sb.toString());
+
 	 		BaseBean basebean = new  BaseBean();
 	 		 try {
-				 JSONObject json =	accountService.haveDriverLicenseNotCar(identityCard, linkAddress, mobilephone, driverLicenseIssuedAddress, idCardImgPositive, idCardImgHandHeld);
-				 System.out.println(json);
-				 String code =json.getString("CODE");
-					if(!"0000".equals(code)){
-						code="500";
-					}
-			    	basebean.setCode(code);
-			    	basebean.setMsg(json.getString("MSG"));
+	 			 
+	 			if("0000".equals(code)){//参数校验通过
+	 				registerVo.setCertifiedType("3");
+	 				 registerVo.setCallAccount("WX02_TEST");
+					 registerVo.setCertifiedRole("1");
+					 registerVo.setCertifiedSource("C");
+	 				JSONObject json =	accountService.haveDriverLicenseNotCar(registerVo);
+					 System.out.println(json);
+					  code =json.getString("CODE");
+						if(!"0000".equals(code)){
+							code="500";
+						}
+				    	basebean.setCode(code);
+				    	basebean.setMsg(json.getString("MSG"));
+	 				
+	 			}else{
+	 				basebean.setMsg(sb.toString());
+	 			}
+				 
 	 		 } catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -166,6 +406,18 @@ public class RegisterAction extends BaseAction{
 	    	renderJSON(basebean);
 	    	logger.info(JSON.toJSONString(basebean));
 	    
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
 	    }
 	 
 	 	
@@ -179,26 +431,73 @@ public class RegisterAction extends BaseAction{
 	 	 * @param idCardImgHandHeld 手持身份证
 	 	 */
 	 	@RequestMapping(value = "isPedestrianNotDriver",method = RequestMethod.POST)
-	    public void isPedestrianNotDriver(@RequestParam("identityCard") String identityCard,
-	    		@RequestParam("mobilephone") String mobilephone,@RequestParam("validateCode") String validateCode
-	    		,@RequestParam("idCardImgPositive") String idCardImgPositive,@RequestParam("idCardImgNegative") String idCardImgNegative
-	    		,@RequestParam("idCardImgHandHeld") String idCardImgHandHeld) {
+	    public void isPedestrianNotDriver( String identityCard, String mobilephone, String validateCode
+	    		, String idCardImgPositive, String idCardImgNegative, String idCardImgHandHeld) {
+	 		String code="0000";
+	 		StringBuffer sb = new StringBuffer("下列参数有问题：");
+	 		RegisterVo registerVo =new RegisterVo();
+	 		if(StringUtil.isBlank(identityCard)){
+	 			code="500";
+	 			sb.append("身份证为空  ");
+	 		}else{
+	 			 registerVo.setUserIdCard(identityCard);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(mobilephone)){
+	 			code="500";
+	 			sb.append("手机号码为空  ");
+	 		}else{
+	 			 registerVo.setMobilephone(mobilephone);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(validateCode)){
+	 			code="500";
+	 			sb.append("验证码为空  ");
+	 		}
+	 		
+	 		if(StringUtil.isBlank(idCardImgPositive)){
+	 			code="500";
+	 			sb.append("身份证正面为空  ");
+	 		}else{
+	 			 registerVo.setIdCardImgPositive(idCardImgPositive);
+	 		}
+	 		
+	 		if(StringUtil.isBlank(idCardImgNegative)){
+	 			code="500";
+	 			sb.append("身份证反面为空 ");
+	 		}
+	 		
+	 		if(StringUtil.isBlank(idCardImgHandHeld)){
+	 			code="500";
+	 			sb.append("手持身份证为空  ");
+	 		}else{
+	 			registerVo.setIdCardImgHandHeld(idCardImgHandHeld);
+	 		}
+ 
+		   System.out.println(sb.toString());
 	 		BaseBean basebean = new  BaseBean();
 	 		try {
-				 JSONObject json =	accountService.isPedestrianNotDriver(identityCard, mobilephone, idCardImgPositive, idCardImgHandHeld);
-				 System.out.println(json);
-				 String code =json.getString("CODE");
-					if(!"0000".equals(code)){
-						code="500";
-					}
-			    	basebean.setCode(code);
-			    	basebean.setMsg(json.getString("MSG"));
+	 			if("0000".equals(code)){
+	 				registerVo.setCertifiedSource("C");
+	 				registerVo.setCertifiedType("4");
+	 				JSONObject json =	accountService.isPedestrianNotDriver(registerVo);
+					 System.out.println(json);
+					 code =json.getString("CODE");
+						if(!"0000".equals(code)){
+							code="500";
+						}
+				    	basebean.setCode(code);
+				    	basebean.setMsg(json.getString("MSG"));
+	 			}else{
+	 				basebean.setMsg(sb.toString());
+	 			}
+				 
 	 		 
 	 		 } catch (Exception e) {
 				e.printStackTrace();
 			}
 	    	
-  	
+	 		System.out.println(basebean.getMsg());
 	    	renderJSON(basebean);
 	    	logger.info(JSON.toJSONString(basebean));
 	    
