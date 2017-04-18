@@ -102,21 +102,25 @@ public class AccountAction extends BaseAction {
         		baseBean.setMsg("loginName 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
         	if(StringUtils.isBlank(password)){
         		baseBean.setMsg("password 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
         	if(StringUtils.isBlank(openId)){
         		baseBean.setMsg("openId 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
         	if(StringUtils.isBlank(loginClient)){
         		baseBean.setMsg("loginClient 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
         	LoginReturnBeanVo loginReturnBeanVo = accountService.login(loginName,password,"C",openId,loginClient);
         	if(null != loginReturnBeanVo && "0000".equals(loginReturnBeanVo.getCode())){
@@ -151,6 +155,7 @@ public class AccountAction extends BaseAction {
         		baseBean.setMsg("mobilephone 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
     		//生成验证码，六位数
     		String valideteCode = StringUtil.createValidateCode();
@@ -191,11 +196,13 @@ public class AccountAction extends BaseAction {
         		baseBean.setMsg("mobilephone 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
         	if(StringUtils.isBlank(validateCode)){
         		baseBean.setMsg("validateCode 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
         	// 0-验证成功，1-验证失败，2-验证码失效
     		int result = accountService.verificatioCode(mobilephone, validateCode);
@@ -212,7 +219,7 @@ public class AccountAction extends BaseAction {
 			if(2 == result){
 				baseBean.setCode("0002");
 	        	baseBean.setMsg("");
-	        	baseBean.setData("验证码失效");
+	        	baseBean.setData("验证码失效,请重新获取");
 			}
 		} catch (Exception e) {
 			baseBean.setCode("0001");

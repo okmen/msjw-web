@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -45,11 +46,23 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
 	 * http://localhost:8080/web/user/search/getMotorVehicleInformationSheet.html?identityCard=622822198502074110&sourceOfCertification=C
 	 */
 	@RequestMapping(value="getMotorVehicleInformationSheet")
-	public void getMotorVehicleInformationSheet(@RequestParam("identityCard")String identityCard,@RequestParam("sourceOfCertification")String sourceOfCertification){
+	public void getMotorVehicleInformationSheet(String identityCard,String sourceOfCertification){
 		BaseBean baseBean = new BaseBean();
-		baseBean.setCode("0000");
-    	baseBean.setMsg("");
 		try {
+			if(StringUtils.isBlank(identityCard)){
+        		baseBean.setMsg("identityCard 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			baseBean.setCode("0000");
+	    	baseBean.setMsg("");
 			MotorVehicleInformationSheetVo motorVehicleInformationSheetVo = new MotorVehicleInformationSheetVo();
 			motorVehicleInformationSheetVo = accountService.getMotorVehicleInformationSheet(identityCard, sourceOfCertification);
 			baseBean.setData(motorVehicleInformationSheetVo);
@@ -69,11 +82,23 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
 	 * http://localhost:8080/web/user/search/getDriverLicenseInformationSheet.html?identityCard=622822198502074110&sourceOfCertification=C
 	 */
 	@RequestMapping(value="getDriverLicenseInformationSheet")
-	public void getDriverLicenseInformationSheet(@RequestParam("identityCard")String identityCard,@RequestParam("sourceOfCertification")String sourceOfCertification){
+	public void getDriverLicenseInformationSheet(String identityCard,String sourceOfCertification){
 		BaseBean baseBean = new BaseBean();
-		baseBean.setCode("0000");
-    	baseBean.setMsg("");
 		try {
+			if(StringUtils.isBlank(identityCard)){
+        		baseBean.setMsg("identityCard 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			baseBean.setCode("0000");
+	    	baseBean.setMsg("");
 			DriverLicenseInformationSheetVo driverLicenseInformationSheetVo = new DriverLicenseInformationSheetVo();
 			sourceOfCertification = "C";
 			AuthenticationBasicInformationVo authenticationBasicInformationVo = accountService.authenticationBasicInformationQuery(identityCard, sourceOfCertification);
@@ -97,12 +122,36 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
 	 * http://localhost:8080/web/user/proofOfInformationDocuments/commitDriverLicenseInformationSheet.html?userName=杨明畅&identityCard=440301199002101119&mobilephone=18603017278&sourceOfCertification=C
 	 */
     @RequestMapping(value="commitDriverLicenseInformationSheet")
-    public void commitDriverLicenseInformationSheet(@RequestParam("userName") String userName,@RequestParam("identityCard") String identityCard,@RequestParam("mobilephone") String mobilephone,
+    public void commitDriverLicenseInformationSheet(String userName,String identityCard,String mobilephone,
     		String sourceOfCertification,HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
-    	baseBean.setData("");
-    	String applyType = "1";
     	try {
+    		if(StringUtils.isBlank(userName)){
+        		baseBean.setMsg("userName 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(identityCard)){
+        		baseBean.setMsg("identityCard 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(mobilephone)){
+        		baseBean.setMsg("mobilephone 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			baseBean.setData("");
+	    	String applyType = "1";
     		Map<String, String> map = accountService.commitDriverLicenseInformationSheet(applyType,userName, identityCard, mobilephone, sourceOfCertification);
         	if(null != map){
         		String code = map.get("code");
@@ -129,11 +178,36 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
 	 * http://localhost:8080/web/user/proofOfInformationDocuments/commitCertificateOfAbsence.html?userName=杨明畅&identityCard=440301199002101119&mobilephone=18603017278&sourceOfCertification=C
 	 */
     @RequestMapping(value="commitCertificateOfAbsence")
-    public void commitCertificateOfAbsence(@RequestParam("userName") String userName,@RequestParam("identityCard") String identityCard,@RequestParam("mobilephone") String mobilephone,
+    public void commitCertificateOfAbsence(String userName,String identityCard,String mobilephone,
     		String sourceOfCertification,HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
     	baseBean.setData("");
     	try {
+    		if(StringUtils.isBlank(userName)){
+        		baseBean.setMsg("userName 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(identityCard)){
+        		baseBean.setMsg("identityCard 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(mobilephone)){
+        		baseBean.setMsg("mobilephone 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			
     		String applyType = "3";
     		Map<String, String> map = accountService.commitDriverLicenseInformationSheet(applyType,userName, identityCard, mobilephone, sourceOfCertification);
         	if(null != map){
@@ -161,11 +235,36 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
 	 * http://localhost:8080/web/user/proofOfInformationDocuments/commitDriverSafetyAccident.html?userName=杨明畅&identityCard=440301199002101119&mobilephone=18603017278&sourceOfCertification=C
 	 */
     @RequestMapping(value="commitDriverSafetyAccident")
-    public void commitDriverSafetyAccident(@RequestParam("userName") String userName,@RequestParam("identityCard") String identityCard,@RequestParam("mobilephone") String mobilephone,
+    public void commitDriverSafetyAccident(String userName,String identityCard,String mobilephone,
     		String sourceOfCertification,HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
     	baseBean.setData("");
     	try {
+    		if(StringUtils.isBlank(userName)){
+        		baseBean.setMsg("userName 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(identityCard)){
+        		baseBean.setMsg("identityCard 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(mobilephone)){
+        		baseBean.setMsg("mobilephone 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			
     		String applyType = "4";
     		Map<String, String> map = accountService.commitDriverLicenseInformationSheet(applyType,userName, identityCard, mobilephone, sourceOfCertification);
         	if(null != map){
@@ -197,11 +296,36 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
      * http://localhost:8080/web/user/proofOfInformationDocuments/commitMotorVehicleInformationSheet.html?userName=杨明畅&identityCard=440301199002101119&mobilephone=18603017278&sourceOfCertification=C&provinceAbbreviation=粤&numberPlateNumber=B701NR&plateType=02
      */
     @RequestMapping(value="commitMotorVehicleInformationSheet")
-    public void commitMotorVehicleInformationSheet(@RequestParam("userName") String userName,@RequestParam("identityCard") String identityCard,@RequestParam("mobilephone") String mobilephone,
+    public void commitMotorVehicleInformationSheet(String userName,String identityCard,String mobilephone,
     		String provinceAbbreviation,String sourceOfCertification,String numberPlateNumber,String plateType,HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
     	baseBean.setData("");
     	try {
+    		if(StringUtils.isBlank(userName)){
+        		baseBean.setMsg("userName 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(identityCard)){
+        		baseBean.setMsg("identityCard 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(mobilephone)){
+        		baseBean.setMsg("mobilephone 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+			
     		Map<String, String> map = accountService.commitMotorVehicleInformationSheet(userName, identityCard, mobilephone, provinceAbbreviation, numberPlateNumber, plateType, sourceOfCertification);
         	if(null != map){
         		String code = map.get("code");

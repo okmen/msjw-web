@@ -45,7 +45,7 @@ public class AccountSearchAction extends BaseAction {
 	 * @param identityCard 身份证
 	 * @param sourceOfCertification 认证来源
 	 * @param applyType 
-	 * http://localhost:8080/web/user/search/queryMachineInformationSheet.html?identityCard=622822198502074110&sourceOfCertification=C&applyType=1
+	 * http://localhost:8080/web/user/search/queryMachineInformationSheet.html?identityCard=440301199002101119&sourceOfCertification=C&applyType=1
 	 */
 	@RequestMapping(value="queryMachineInformationSheet")
 	public void queryMachineInformationSheet(String identityCard,String sourceOfCertification,String applyType){
@@ -55,16 +55,19 @@ public class AccountSearchAction extends BaseAction {
         		baseBean.setMsg("identityCard 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
 			if(StringUtils.isBlank(sourceOfCertification)){
         		baseBean.setMsg("sourceOfCertification 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
 			if(StringUtils.isBlank(applyType)){
         		baseBean.setMsg("applyType 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
 			List<InformationSheetVo> informationSheetVos = new ArrayList<InformationSheetVo>();
 			sourceOfCertification = "C";
@@ -95,7 +98,7 @@ public class AccountSearchAction extends BaseAction {
 	 * 获取  机动车信息单 
 	 * @param identityCard 身份证
 	 * @param sourceOfCertification 认证来源
-	 * http://localhost:8080/web/user/search/getMotorVehicleInformationSheet.html?identityCard=622822198502074110&sourceOfCertification=C
+	 * http://localhost:8080/web/user/search/getMotorVehicleInformationSheet.html?identityCard=440301199002101119&sourceOfCertification=C
 	 */
 	@RequestMapping(value="getMotorVehicleInformationSheet")
 	public void getMotorVehicleInformationSheet(String identityCard,String sourceOfCertification){
@@ -105,11 +108,13 @@ public class AccountSearchAction extends BaseAction {
         		baseBean.setMsg("identityCard 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
 			if(StringUtils.isBlank(sourceOfCertification)){
         		baseBean.setMsg("sourceOfCertification 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
 			baseBean.setCode("0000");
 	    	baseBean.setMsg("");
@@ -130,7 +135,7 @@ public class AccountSearchAction extends BaseAction {
 	 * 获取	驾驶证信息单/无车证明/驾驶人安全事故信用表
 	 * @param identityCard 身份证
 	 * @param mobilephone 认证来源
-	 * http://localhost:8080/web/user/search/getDriverLicenseInformationSheet.html?identityCard=622822198502074110&sourceOfCertification=C
+	 * http://localhost:8080/web/user/search/getDriverLicenseInformationSheet.html?identityCard=440301199002101119&sourceOfCertification=C
 	 */
 	@RequestMapping(value="getDriverLicenseInformationSheet")
 	public void getDriverLicenseInformationSheet(String identityCard,String sourceOfCertification){
@@ -140,11 +145,13 @@ public class AccountSearchAction extends BaseAction {
         		baseBean.setMsg("identityCard 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
 			if(StringUtils.isBlank(sourceOfCertification)){
         		baseBean.setMsg("sourceOfCertification 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
 			baseBean.setCode("0000");
 	    	baseBean.setMsg("");
@@ -167,7 +174,7 @@ public class AccountSearchAction extends BaseAction {
 	 * @param request
 	 * @param response
 	 * @throws Exception
-	 * http://localhost:8080/web/user/search/getElectronicDriverLicense.html?driverLicenseNumber=622822198502074110&userName=王玉璞&mobileNumber=15920071829
+	 * http://localhost:8080/web/user/search/getElectronicDriverLicense.html?driverLicenseNumber=440301199002101119&userName=王玉璞&mobileNumber=15920071829
 	 * http://localhost:8080/web/user/search/getElectronicDriverLicense.html?driverLicenseNumber=440301199002101119&userName=杨明畅&mobileNumber=18603017278
 	 */
     @RequestMapping(value="getElectronicDriverLicense")
@@ -179,22 +186,26 @@ public class AccountSearchAction extends BaseAction {
         		baseBean.setMsg("identityCard 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
     		if(StringUtils.isBlank(userName)){
         		baseBean.setMsg("userName 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
     		if(StringUtils.isBlank(mobileNumber)){
         		baseBean.setMsg("mobileNumber 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
     		
     		baseBean.setCode("0000");
         	baseBean.setMsg("");
         	ElectronicDriverLicenseVo electronicDriverLicenseVo = accountService.getElectronicDriverLicense(driverLicenseNumber, userName, mobileNumber, "C");
         	baseBean.setData(electronicDriverLicenseVo);
+        	renderJSON(baseBean);
 		} catch (Exception e) {
 			baseBean.setMsg(e.getMessage());
     		baseBean.setCode("0001");
@@ -227,16 +238,19 @@ public class AccountSearchAction extends BaseAction {
         		baseBean.setMsg("numberPlatenumber 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
     		if(StringUtils.isBlank(plateType)){
         		baseBean.setMsg("plateType 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
     		if(StringUtils.isBlank(mobileNumber)){
         		baseBean.setMsg("mobileNumber 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
     		
     		baseBean.setCode("0000");
@@ -260,7 +274,7 @@ public class AccountSearchAction extends BaseAction {
      * @param request
      * @param response
 	 * @throws Exception
-	 * http://localhost:8080/web/user/search/getMyDriverLicense.html?identityCard=622822198502074110
+	 * http://localhost:8080/web/user/search/getMyDriverLicense.html?identityCard=440301199002101119
      */
     @RequestMapping(value="getMyDriverLicense")
     public void getMyDriverLicense(String identityCard,HttpServletRequest request,HttpServletResponse response) throws Exception{
@@ -270,6 +284,7 @@ public class AccountSearchAction extends BaseAction {
         		baseBean.setMsg("identityCard 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
     		baseBean.setCode("0000");
         	MyDriverLicenseVo myDriverLicenseVo = accountService.getMyDriverLicense(identityCard, "C");
@@ -292,7 +307,7 @@ public class AccountSearchAction extends BaseAction {
      * @param request
      * @param response
 	 * @throws Exception
-	 * http://localhost:8080/web/user/search/getBndTheVehicles.html?identityCard=622822198502074110&mobilephone=15920071829
+	 * http://localhost:8080/web/user/search/getBndTheVehicles.html?identityCard=440301199002101119&mobilephone=15920071829
      */
     @RequestMapping(value="getBndTheVehicles")
     public void getBndTheVehicles(String identityCard,String mobilephone,
@@ -303,11 +318,13 @@ public class AccountSearchAction extends BaseAction {
         		baseBean.setMsg("identityCard 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
     		if(StringUtils.isBlank(mobilephone)){
         		baseBean.setMsg("mobilephone 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
     		baseBean.setCode("0000");
         	baseBean.setMsg("");
@@ -320,32 +337,6 @@ public class AccountSearchAction extends BaseAction {
 		}
     	renderJSON(baseBean);
     	logger.info(JSON.toJSONString(baseBean));
-    	
-    	
-    	/*BindTheVehicleVo bindTheVehicleVo1 = new BindTheVehicleVo();
-    	bindTheVehicleVo1.setNumberPlateNumber("粤B8888NR");
-    	bindTheVehicleVo1.setPlateType("蓝牌");
-    	bindTheVehicleVo1.setAnnualReviewDate("2017-08-04");
-    	bindTheVehicleVo1.setName("刘小明");
-    	bindTheVehicleVo1.setIdentityCard("4415445678788");
-    	bindTheVehicleVo1.setIsMyself("是");
-    	bindTheVehicleVo1.setAnnualReviewDateRemind("距离年审时间还有123天");
-    	bindTheVehicleVo1.setMobilephone("13666666666");
-    	bindTheVehicleVo1.setIllegalNumber("100");
-    	bindTheVehicleVo1.setOtherPeopleUse("车辆是否有其他人使用");
-    	
-    	BindTheVehicleVo bindTheVehicleVo2 = new BindTheVehicleVo();
-    	bindTheVehicleVo2.setNumberPlateNumber("粤B6666NR");
-    	bindTheVehicleVo2.setPlateType("黄牌");
-    	bindTheVehicleVo2.setAnnualReviewDate("2017-08-04");
-    	bindTheVehicleVo2.setName("黄小明");
-    	bindTheVehicleVo2.setIdentityCard("4515445678788");
-    	bindTheVehicleVo2.setIsMyself("否");
-    	bindTheVehicleVo2.setAnnualReviewDateRemind("距离年审时间还有333天");
-    	bindTheVehicleVo2.setMobilephone("13743333333");
-    	bindTheVehicleVo2.setIllegalNumber("20");
-    	bindTheVehicleVo2.setOtherPeopleUse("车辆是否有其他人使用");*/
-    	
     }
     /**
 	 * 我的业务(切换查询)
@@ -354,7 +345,7 @@ public class AccountSearchAction extends BaseAction {
 	 * @param request
 	 * @param response
      * @throws Exception
-     * http://192.168.1.161:8080/web/user/search/getMyBusiness.html?identityCard=622822198502074110&businessType=0&businessStatus=0
+     * http://192.168.1.161:8080/web/user/search/getMyBusiness.html?identityCard=440301199002101119&businessType=0&businessStatus=0&sourceOfCertification=C
 	 */
     @RequestMapping(value="getMyBusiness")
     public void getMyBusiness(Integer businessType,Integer businessStatus,String identityCard,String sourceOfCertification,
@@ -366,27 +357,30 @@ public class AccountSearchAction extends BaseAction {
         		baseBean.setMsg("businessType 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
     		if(null == businessStatus){
         		baseBean.setMsg("businessStatus 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
     		if(null == identityCard){
         		baseBean.setMsg("identityCard 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
     		if(null == sourceOfCertification){
         		baseBean.setMsg("sourceOfCertification 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
+        		return;
         	}
-    		
     		baseBean.setCode("0000");
         	baseBean.setMsg("");
-        	MyBusinessVo myBusinessVo = (MyBusinessVo) accountService.getMyBusiness(businessType, businessStatus, identityCard, sourceOfCertification);
-        	baseBean.setData(myBusinessVo);
+        	List<MyBusinessVo> myBusinessVos = accountService.getMyBusiness(businessType, businessStatus, identityCard, sourceOfCertification);
+        	baseBean.setData(myBusinessVos);
 		} catch (Exception e) {
 			baseBean.setCode("0001");
         	baseBean.setMsg(e.getMessage());
