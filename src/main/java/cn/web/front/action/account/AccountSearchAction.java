@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alibaba.fastjson.JSON;
 
@@ -26,6 +25,8 @@ import cn.account.bean.vo.MotorVehicleInformationSheetVo;
 import cn.account.bean.vo.MyBusinessVo;
 import cn.account.bean.vo.MyDriverLicenseVo;
 import cn.account.service.IAccountService;
+import cn.illegal.bean.IllegalInfoBean;
+import cn.illegal.service.IIllegalService;
 import cn.sdk.bean.BaseBean;
 import cn.web.front.support.BaseAction;
 /**
@@ -40,6 +41,10 @@ public class AccountSearchAction extends BaseAction {
 	@Autowired
     @Qualifier("accountService")
     private IAccountService accountService;
+	
+	@Autowired
+    @Qualifier("illegalService")
+	private IIllegalService illegalService;
 	/**
 	 * 查询我的证明(机动车信息单、驾驶人信息单、无车证明、驾驶人安全事故信用表) 进度查询4个公用一个接口，传一个类型
 	 * @param identityCard 身份证
@@ -330,6 +335,13 @@ public class AccountSearchAction extends BaseAction {
         	baseBean.setMsg("");
         	String sourceOfCertification = "C";
         	List<BindTheVehicleVo> bindTheVehicleVos =  accountService.getBndTheVehicles(identityCard, mobilephone, sourceOfCertification);
+        	for(BindTheVehicleVo bindTheVehicleVo : bindTheVehicleVos){
+        		String numberPlateNumber = bindTheVehicleVo.getNumberPlateNumber();
+        		String plateType = bindTheVehicleVo.getPlateType();
+        		//车牌号、车牌类型、车架后4位
+        		List<IllegalInfoBean> illegalInfoBeans = illegalService.queryInfoByLicensePlateNo(numberPlateNumber, plateType, "");
+        		bindTheVehicleVo.setIllegalNumber("当前本车有" + illegalInfoBeans.size() + "宗违法尚未处理");
+        	}
         	baseBean.setData(bindTheVehicleVos);
 		} catch (Exception e) {
 			baseBean.setCode("0000");
