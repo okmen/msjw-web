@@ -304,7 +304,8 @@ public class ConvenienceAction extends BaseAction{
 			String identityCard = request.getParameter("identityCard");  //身份证号
 			String address = request.getParameter("address");  //主题地点描述
 			String addressCode = request.getParameter("addressCode");  //地点代码
-			String ip = request.getParameter("ip");  //ip地址
+//			String ip = request.getParameter("ip");  //ip地址
+			String ip = request.getRemoteAddr();  //ip地址
 			String startTime = request.getParameter("startTime");  //开始时间
 			String endTime = request.getParameter("endTime");  //结束时间
 			String direction = request.getParameter("direction");  //方向
@@ -455,7 +456,8 @@ public class ConvenienceAction extends BaseAction{
 			String identityCard = request.getParameter("identityCard");  //身份证号
 			String address = request.getParameter("address");  //主题地点描述
 			String addressCode = request.getParameter("addressCode");  //地点代码
-			String ip = request.getParameter("ip");  //ip地址
+//			String ip = request.getParameter("ip");  //ip地址
+			String ip = request.getRemoteAddr();  //ip地址
 			String startTime = request.getParameter("startTime");  //开始时间
 			String endTime = request.getParameter("endTime");  //结束时间
 			String congestionCode = request.getParameter("congestionCode");  //拥堵类型code
