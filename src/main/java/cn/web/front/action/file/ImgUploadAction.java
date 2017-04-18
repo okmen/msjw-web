@@ -1,4 +1,4 @@
-package cn.web.front.common;
+package cn.web.front.action.file;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.disk.DiskFileItem;
-import org.apache.commons.io.FileUtils;
-import org.apache.velocity.texen.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
