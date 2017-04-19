@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.account.bean.vo.AuthenticationBasicInformationVo;
+import cn.account.bean.vo.BindTheVehicleVo;
+import cn.account.service.IAccountService;
 import cn.illegal.bean.AppealInfoBack;
 import cn.illegal.bean.AppealInfoBean;
 import cn.illegal.bean.CarInfoBean;
@@ -47,7 +50,10 @@ public class IllegalAction extends BaseAction {
     @Qualifier("illegalService")
     private IIllegalService illegalService;
 
-  
+    @Autowired
+    @Qualifier("accountService")
+    private IAccountService accountService;
+    
     /**
      * 
      * 获取业务列表
@@ -119,6 +125,34 @@ public class IllegalAction extends BaseAction {
 	   BaseBean base=new BaseBean();
 	 
 	   try {
+		   //判断客户是否已同步
+		   String isReg=illegalService.isRegisterUser();
+		   //未同步
+		   if("0".equals(isReg)){
+			   CustInfoBean cust=new CustInfoBean();
+			   List<CarInfoBean> carList=new ArrayList<>();
+			   //获取客户信息
+			   /*AuthenticationBasicInformationVo  custVo=accountService.getAuthenticationBasicInformation("","","");
+			  
+			   if(custVo!=null){
+				   cust.setCertificateNo(custVo.getIdentityCard());
+				   cust.setCustName(custVo.getTrueName());
+				   cust.setCertificateType("02");
+				   cust.setMobileNo(custVo.getMobilephone());
+				   cust.setDrivingLicenceNo(custVo.getIdentityCard());
+			   }*/
+			   List<BindTheVehicleVo>   carVo=accountService.getBndTheVehicles("", "", ""); 
+			   for (BindTheVehicleVo bindTheVehicleVo : carVo) {
+				   CarInfoBean bean=new CarInfoBean();
+				    bean.setLicensePlateNo(bindTheVehicleVo.getNumberPlateNumber());
+				    bean.setLicensePlateType(bindTheVehicleVo.getPlateType());
+				    bean.setVehicleIdentifyNoLast4("");
+			   }
+			   
+			   
+		   }
+		   
+		   
 		   List<IllegalInfoBean> list= illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType, vehicleIdentifyNoLast4);
 		   base.setCode("0000");
 		   if(list!=null){
@@ -131,24 +165,7 @@ public class IllegalAction extends BaseAction {
 			base.setCode("0001");
 			base.setMsg("查询失败！");
 			e.printStackTrace();
-		}
-
-	   
-	   /*IllegalInfoBean bean=new IllegalInfoBean();
-	   bean.setBillNo("000000000001");
-	   bean.setCarOwner("李四");
-	   bean.setDealType("05");
-	   bean.setIllegalAddress("深南大道");
-	   bean.setIllegalDesc("闯红灯");
-	   bean.setIllegalTime("2015-10-10 09:09:00");
-	   bean.setIllegalUnit("南山交警队");
-	   bean.setLicensePlateNo("粤A00001");
-	   bean.setLicensePlateType("06");
-	   bean.setPunishAmount(200);
-	   bean.setPunishScore(3);
-	
-	   list.add(bean);*/
-	 
+		} 
 	   renderJSON(base);
    }
       
@@ -159,32 +176,46 @@ public class IllegalAction extends BaseAction {
     */
    @RequestMapping(value = "queryInfoByDrivingLicenceNo")
    public void queryInfoByDrivingLicenceNo(String drivingLicenceNo,String recordNo){
-	   List<IllegalInfoBean> list=illegalService.queryInfoByDrivingLicenceNo(drivingLicenceNo, recordNo);
-	   /*IllegalInfoBean bean=new IllegalInfoBean();
-	   bean.setBillNo("000000000001");
-	   bean.setCarOwner("李四");
-	   bean.setDealType("05");
-	   bean.setIllegalAddress("深南大道");
-	   bean.setIllegalDesc("闯红灯");
-	   bean.setIllegalTime("2015-10-10 09:09:00");
-	   bean.setIllegalUnit("南山交警队");
-	   bean.setLicensePlateNo("粤A00001");
-	   bean.setLicensePlateType("06");
-	   bean.setPunishAmount(200);
-	   bean.setPunishScore(3);
-	
-	   list.add(bean);*/
-	   
-	   BaseBean base=new BaseBean();
-	   base.setCode("0000");
-	   base.setMsg("车辆当前无未处理的违法");
-	   if(list!=null&&list.size()>0){
-		   base.setMsg("查询成功！");
-	   }	
-	   base.setData(list);
+	   BaseBean base=new BaseBean();		 
+	   try {
+		   List<IllegalInfoBean> list=illegalService.queryInfoByDrivingLicenceNo(drivingLicenceNo, recordNo);
+		   base.setCode("0000");
+		   if(list!=null){
+			   base.setData(list);
+			   base.setMsg("成功");
+		   }else{
+			   base.setMsg("驾驶人当前无未处理的违法");
+		   }		   
+		} catch (Exception e) {
+			base.setCode("0001");
+			base.setMsg("查询失败！");
+			e.printStackTrace();
+		} 
 	   renderJSON(base);
    } 
     
+   
+   /**
+    * 打单注册接口
+    * @param licensePlateNo 车牌号
+    * @param licensePlateType 车辆类型
+    * @param mobilephone 手机号码
+    */
+   @RequestMapping(value = "trafficIllegalClaimReg")
+   public void trafficIllegalClaimReg(CustInfoBean custInfo, CarInfoBean carInfo){  	
+	  BaseBean base=new BaseBean();		 
+	   try {
+		   
+		   base=illegalService.trafficIllegalClaimReg(custInfo,carInfo);
+	   		   
+		} catch (Exception e) {
+			base.setCode("0001");
+			base.setMsg("注册失败！");
+			e.printStackTrace();
+		}
+	   renderJSON(base);
+   } 
+   
    
     /**
      * 打单前查询
@@ -193,28 +224,22 @@ public class IllegalAction extends BaseAction {
      * @param mobilephone 手机号码
      */
     @RequestMapping(value = "illegalOnlineConfirm")
-    public void illegalOnlineConfirm(String licensePlateNo,String licensePlateType,String mobilephone){
-    	
-    	
- 	   List<IllegalInfoClaim> list=illegalService.trafficIllegalClaimBefore(licensePlateNo, licensePlateType, mobilephone);
- 	   /*IllegalInfoBean bean=new IllegalInfoBean();
-	   bean.setBillNo("000000000001");
-	   bean.setCarOwner("李四");
-	   bean.setDealType("05");
-	   bean.setIllegalAddress("深南大道");
-	   bean.setIllegalDesc("闯红灯");
-	   bean.setIllegalTime("2015-10-10 09:09:00");
-	   bean.setIllegalUnit("南山交警队");
-	   bean.setLicensePlateNo("粤A00001");
-	   bean.setLicensePlateType("06");
-	   bean.setPunishAmount(200);
-	   bean.setPunishScore(3);
-	
-	   list.add(bean);*/
- 	   BaseBean base=new BaseBean();
- 	   base.setCode("0000");
- 	   base.setMsg("成功！");
- 	   base.setData(list);
+    public void illegalOnlineConfirm(String licensePlateNo,String licensePlateType,String mobilephone){  	
+ 	  BaseBean base=new BaseBean();		 
+	   try {
+		   List<IllegalInfoClaim> list=illegalService.trafficIllegalClaimBefore(licensePlateNo, licensePlateType, mobilephone);
+		   base.setCode("0000");
+		   if(list!=null){
+			   base.setData(list);
+			   base.setMsg("成功");
+		   }else{
+			   base.setMsg("当前无未处理的违法");
+		   }		   
+		} catch (Exception e) {
+			base.setCode("0001");
+			base.setMsg("查询失败！");
+			e.printStackTrace();
+		}
  	   renderJSON(base);
     } 
      
