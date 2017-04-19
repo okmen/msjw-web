@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import cn.account.bean.Documentation;
 import cn.account.bean.UserBind;
 import cn.account.bean.vo.BindCarVo;
 import cn.account.bean.vo.LoginReturnBeanVo;
@@ -83,6 +84,37 @@ public class AccountAction extends BaseAction {
     	 logger.info("info is:" + wechatUserInfo);
     	PrintWriter out =  response.getWriter();
     	out.print(JSON.toJSONString(wechatUserInfo));
+    }
+    /**
+     * 获取须知文档
+     * @param noticeKey 须知文档key
+     * @param request
+     * @param response
+     * http://192.168.1.161:8080/web/user/getDocumentationORMByNoticeKey.html?noticeKey=testKey
+     */
+    @RequestMapping("getDocumentationORMByNoticeKey")
+    public void getDocumentationORMByNoticeKey(String noticeKey,HttpServletRequest request,HttpServletResponse response){
+    	BaseBean baseBean = new BaseBean();
+    	try {
+    		if(StringUtils.isBlank(noticeKey)){
+        		baseBean.setMsg("noticeKey 不能为空!");
+        		baseBean.setCode("0001");
+        		renderJSON(baseBean);
+        		return;
+        	}
+    		Documentation documentation = accountService.getDocumentationByNoticeKey(noticeKey);
+    		baseBean.setCode("0000");
+        	baseBean.setMsg("查询成功");
+        	baseBean.setData(documentation);
+        	renderJSON(baseBean);
+		} catch (Exception e) {
+			baseBean.setCode("0001");
+        	baseBean.setMsg(e.getMessage());
+        	baseBean.setData("查询成功");
+        	logger.error(e.getMessage());
+		}
+    	renderJSON(baseBean);
+    	logger.info(JSON.toJSONString(baseBean));
     }
     
     /**
