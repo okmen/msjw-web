@@ -280,10 +280,32 @@ public class RegisterAction extends BaseAction{
 				 registerVo.setOwnerName(ownerName);
 	 		}
 	 		
+	 		
+	 		
+	 		if(StringUtil.isBlank(idCardImgPositive)){
+	 			code="500";
+	 			sb.append("车主身份证正面为空  ");
+	 		}else{
+	 			 registerVo.setOwnerIdCardImgPositive(ownerIdCardImgPositive);
+	 		}
+	 		
+	 	
+	 		
+	 		if(StringUtil.isBlank(ownerIdCardImgHandHeld)){
+	 			code="500";
+	 			sb.append("车主手持身份证为空  ");
+	 		}else{
+	 			registerVo.setOwnerIdCardImgHandHeld(ownerIdCardImgHandHeld);
+	 		}
 
 	 		BaseBean basebean = new  BaseBean();
 	 		try {
 	 			if("0000".equals(code)){//参数校验通过
+	 				registerVo.setCertifiedType("2");
+	 				 registerVo.setCallAccount("WX02_TEST");
+					 registerVo.setCertifiedRole("1");
+					 registerVo.setCertifiedSource("C");
+					// registerVo.setOwnerMobilephone("13725512400");
 				 JSONObject json =	accountService.iamALongtimeUser(registerVo);
 				 System.out.println(json);
 				  code =json.getString("CODE");

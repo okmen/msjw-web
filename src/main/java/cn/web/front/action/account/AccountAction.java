@@ -525,10 +525,6 @@ public class AccountAction extends BaseAction {
     	try {
     		if("0000".equals(code)){//参数校验通过
             	userBasicVo.setUserSource("C");
-            	String xml ="<?xml version=\"1.0\" encoding=\"utf-8\"?><REQUEST><LOGIN_USER>"+userBasicVo.getIdentityCard()+"</LOGIN_USER><LXDH>"+userBasicVo.getOldMobile()+"</LXDH>"
-        				+ "<NEWLXDH>"+userBasicVo.getNewMobile()+"</NEWLXDH><RZJS>"+userBasicVo.getUserSource()+"</RZJS></REQUEST>";
-        		String interfaceNumber = "xxcj17";
-        		System.out.println(xml);
     			JSONObject json = accountService.updateMobile(userBasicVo);
     			System.out.println(json);
     			code =json.getString("CODE");
@@ -695,10 +691,6 @@ public class AccountAction extends BaseAction {
     		 if("0000".equals(code)){//参数校验通过
     			 JSONObject json = accountService.readilyShoot(readilyShootVo);
     				System.out.println(json);
-    				String xml ="<?xml version=\"1.0\" encoding=\"utf-8\"?><request><ssrxm>"+readilyShootVo.getWhistleblower()+"</ssrxm><lxdh>"+readilyShootVo.getMobilephone()+"</lxdh><lxdz>"+readilyShootVo.getLinkAddress()+"</lxdz><ssch>"+readilyShootVo.getLicensePlateNumber()+"</ssch>"
-    						+ "<ssnr>"+readilyShootVo.getSituationStatement()+"</ssnr><jkbh>"+readilyShootVo.getPaymentNumber()+"</jkbh><sslx>"+readilyShootVo.getApplyType()+"</sslx><wfsj>"+readilyShootVo.getIllegalTime()+"</wfsj><wfdd>"+readilyShootVo.getIllegalSections()+"</wfdd>"
-    						+ "<zfdw>"+readilyShootVo.getEnforcementDepartment()+"</zfdw><zjtp>"+readilyShootVo.getImages()+"</zjtp><ssly>"+readilyShootVo.getUserSource()+"</ssly><sfzmhm>"+readilyShootVo.getUserIdCard()+"</sfzmhm><xjyhid>"+readilyShootVo.getUserNumber()+"</xjyhid></request>";
-    				System.out.println(xml);
     				code =json.getString("CODE");
     				if(!"0000".equals(code)){
     					code="500";
