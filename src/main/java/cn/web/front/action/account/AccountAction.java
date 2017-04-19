@@ -523,16 +523,30 @@ public class AccountAction extends BaseAction {
     	
     	BaseBean basebean = new  BaseBean();
     	try {
-    		if("0000".equals(code)){//参数校验通过
-            	userBasicVo.setUserSource("C");
-    			JSONObject json = accountService.updateMobile(userBasicVo);
-    			System.out.println(json);
-    			code =json.getString("CODE");
-    			if(!"0000".equals(code)){
-    				code="500";
-    			}
-    	    	basebean.setCode(code);
-    	    	basebean.setMsg(json.getString("MSG"));
+    		if("0000".equals(code)){//参数校验通过    			
+    			// 0-验证成功，1-验证失败，2-验证码失效
+        		int result = accountService.verificatioCode(newMobile, validateCode);
+        		if(0 == result){
+        			userBasicVo.setUserSource("C");
+        			JSONObject json = accountService.updateMobile(userBasicVo);
+        			System.out.println(json);
+        			code =json.getString("CODE");
+        			if(!"0000".equals(code)){
+        				code="500";
+        			}
+        			basebean.setCode(code);
+        	    	basebean.setMsg(json.getString("MSG"));
+        		}
+    			if(1 == result){
+    				code="500";	
+    				sb.append("验证码错误    ");
+    				basebean.setMsg(sb.toString());
+    			 }
+    			if(2 == result){
+    				code="500";	
+    				sb.append("验证码错误    ");
+    				basebean.setMsg(sb.toString());
+    			}   	    	
     		}else{
     			basebean.setMsg(sb.toString());
     		}
