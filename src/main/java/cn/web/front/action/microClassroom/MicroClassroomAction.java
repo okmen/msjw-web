@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.alibaba.fastjson.JSON;
+import com.esotericsoftware.kryo.io.Output;
 
 import cn.microclass.bean.studyclassroom.Answeroptions;
 import cn.microclass.bean.studyclassroom.Study;
@@ -20,6 +22,7 @@ import cn.microclass.service.IMicroclassServer;
 import cn.account.bean.studyclassroom.Study;
 import cn.account.bean.studyclassroom.StudyRecord;*/
 import cn.sdk.bean.BaseBean;
+import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
 
 /**
@@ -189,9 +192,7 @@ public class MicroClassroomAction extends BaseAction {
 		 base.setData(list);
 		renderJSON(base);
 	 }
-	 
-	 
-	 
+
 	 /***
 	  * 随机取题目接口
 	  */
@@ -283,12 +284,190 @@ public class MicroClassroomAction extends BaseAction {
 	 
 	 
 	 
+
+	 /**
+	  * 微课堂所有查询相关信息方法
+	  */
+	 @RequestMapping(value="Classroom/StudyHomepages.html")
+	 public void StudyHomepages(HttpServletRequest request, Study study){
+		 BaseBean base=new BaseBean();
+		 Study  s=new Study();
+		 List<BaseBean>list=null;
+		/* String identityCard= request.getParameter("identityCard"); //获取身份证号码
+		 String classroomId = request.getParameter("classroomId");  //获取列表ID,根据列表ID来判断进行不同的方法
+		 String mobilephone = request.getParameter("mobilephone");  //获取手机号码
+		 String ipAddress = request.getParameter("ipAddress");  //ip地址
+		 String userSource = request.getParameter("userSource");  //用户来源
+*/		 study.setIdentityCard(request.getParameter("identityCard"));//获取身份证号码 
+		 study.setClassroomId(request.getParameter("classroomId"));//获取列表ID,根据列表ID来判断进行不同的方法
+		 study.setMobilephone(request.getParameter("mobilephone"));
+		 study.setIpAddress(request.getParameter("ipAddress"));
+		 study.setUserSource(request.getParameter("userSource"));
+		 if(study!=null){
+			 
+		 
+			 //公用参数
+			 if(study.getIdentityCard()!=null){
+				 s.setIdentityCard(study.getIdentityCard());
+			 }else if(study.getMobilephone()!=null){
+				 s.setMobilephone(study.getMobilephone());
+			 }else if(study.getIpAddress()!=null){
+				 s.setIpAddress(study.getIpAddress());
+			 }else if(study.getUserSource()!=null){
+				 s.setUserSource(study.getUserSource());
+			 }else{
+				 base.setMsg("身份证,手机号,用户来源,用户IP地址不能为空！");
+			 }
+			 
+			 
+		 }
+		 if(study.getClassroomId()!=null){	
+			 if(study.getClassroomId().equals("1")){  //当列表ID等于1的时候 进入消分学习
+					s.setInterfaceId("exam003");
+					s.setIdentityCard("431022199612250036");
+					s.setMobilephone("17708404197");
+					s.setIpAddress("123.56.180.216");
+					s.setUserSource("C");
+					list= iMicroclassServer.xfStudyQuery(s);
+			 }else if(study.getClassroomId().equals("2")){  //当列表ID等于2的时候进入学习非机动车学习
+				 	
+			 }else if(study.getClassroomId().equals("3")){
+				 	
+			 }else if(study.getClassroomId().equals("4")){ //6.33.3	电动车违法学习结果查询
+				 	s.setInterfaceId("DDC2003");
+					s.setIdentityCard("431022199612250036");
+					s.setMobilephone("17708404197");
+					s.setServiceType("BA");
+					s.setDecisionId("12345");
+					s.setIpAddress("123.56.180.216");
+					s.setUserSource("C");
+					list=iMicroclassServer.ddcStudyQuery(s);
+			 }else if(study.getClassroomId().equals("5")){  //6.34	行人、非机动车驾驶人道路交通安全学习
+				 	s.setInterfaceId("DDC3003");
+					s.setIdentityCard("431022199612250036");
+					s.setMobilephone("17708404197");
+					s.setServiceType("AQ");
+					s.setIpAddress("123.56.180.216");
+					s.setUserSource("C");
+					list=iMicroclassServer.xrStudyQuery(s);	
+			 }
+			for(BaseBean b:list){
+						base.setCode(b.getCode());
+						base.setMsg(b.getMsg());
+						base.setData(b.getData());
+			}
+		 }else{
+			 base.setData("必传参数不能为空！");
+		 }
+		 renderJSON(base);	
+		// logger.info(JSON.toJSONString(base));
+	 }
+
+	 @RequestMapping(value="Classroom/Studys.html")
+	 public void Studys(HttpServletRequest request){
+		 String classroomId = request.getParameter("classroomId");  //获取列表ID,根据列表ID来判断进行不同的方法
+		 BaseBean base=new BaseBean();
+		 List<BaseBean>list=null;
+		 Study  s=new Study();
+		 if(classroomId.equals("1")){ //当列表ID等于1的时候 进入消分学习取题 
+			 s.setInterfaceId("exam001");
+			 s.setMobilephone("17708404197");
+			 s.setIdentityCard("431022199612250036");
+			 s.setIpAddress("123.56.180.216");
+			 s.setUserSource("C");
+			 list= iMicroclassServer.xfStudyAnswer(s);	 
+		 }else if(classroomId.equals("2")){        //当列表ID等于2的时候进入学习非机动车学习取题
+				
+		 }else if(classroomId.equals("3")){
+			  
+		 }else if(classroomId.equals("4")){
+			 	s.setInterfaceId("DDC2001"); //电动车违法取题编号
+				s.setSubjectId("6910099");
+				s.setIdentityCard("431022199612250036");
+				s.setMobilephone("17708404197");
+				s.setServiceType("WF");
+				s.setIpAddress("123.56.180.216");
+				s.setUserSource("C");
+				s.setSubjectAnswer("A");
+				list=iMicroclassServer.ddcStudyAnswer(s);
+		 }else if(classroomId.equals("5")){
+			    s.setInterfaceId("DDC3001");
+				s.setIdentityCard("431022199612250036");
+				s.setMobilephone("17708404197");
+				s.setServiceType("AQ");
+				s.setIpAddress("123.56.180.216");
+				s.setUserSource("C");
+			    list=iMicroclassServer.xrStudyAnswer(s);
+		 }
+			for(BaseBean b:list){
+				base.setCode(b.getCode());
+				base.setMsg(b.getMsg());
+				base.setData(b.getData());
+			}
+			renderJSON(base);
+	 }
 	 
 	 
+	 /**
+	  * 微课所有答题方法
+	  * @param request
+	  */
+	 @RequestMapping("Classroom/Answers.html")
+	 public void  Answer(HttpServletRequest request){
+		 String classroomId = request.getParameter("classroomId");  //获取列表ID,根据列表ID来判断进行不同的方法
+		 String subjectId =request.getParameter("subjectId");
+		 BaseBean base=new BaseBean();
+		 List<BaseBean>list=null;
+		 Study  s=new Study();
+		 if(classroomId.equals("1")){ //当列表ID等于1的时候 进入消分学习答题
+			 	s.setInterfaceId("exam002");
+				s.setSubjectId(subjectId);  //取题ID
+				s.setUserName("曾令成");		
+				s.setIdentityCard("431022199612250036"); //身份证号码
+				s.setMobilephone("17708404197"); //手机号码
+				s.setIpAddress("123.56.180.216"); //答题IP地址
+				s.setSubjectAnswer("A"); //答题答案 
+				s.setAnswerDateTime("2017-04-17 10:59:49");
+				s.setScoreStartDate("2016-07-09"); //取题时的计分周期始
+				s.setScoreEndDate("2017-07-09"); //取题时的计分周期末
+				s.setUserSource("C");
+				list=iMicroclassServer.xfAnswerQuey(s); 
+		 }else if(classroomId.equals("2")){ 
+			 
+		 }else if(classroomId.equals("3")){ 
+			 	
+			 
+		 }else if(classroomId.equals("4")){ 
+			 s.setInterfaceId("DDC2002");
+				s.setSubjectId(subjectId);
+				s.setIdentityCard("431022199612250036");
+				s.setMobilephone("17708404197");
+				s.setServiceType("WF");
+				s.setIpAddress("123.56.180.216");
+				s.setUserSource("C");
+				s.setSubjectAnswer("A");
+				s.setDecisionId("12345");
+				list=iMicroclassServer.ddcAnswerQuey(s);
+		 }else if(classroomId.equals("5")){ 
+			 	s.setInterfaceId("DDC3002");
+				s.setSubjectId(subjectId);
+				s.setIdentityCard("431022199612250036");
+				s.setMobilephone("17708404197");
+				s.setServiceType("AQ");
+				s.setIpAddress("123.56.180.216");
+				s.setUserSource("C");
+				s.setSubjectAnswer("A");
+				list=iMicroclassServer.xrAnswerQuey(s);	
+		 }
+		 for(BaseBean b:list){
+				base.setCode(b.getCode());
+				base.setMsg(b.getMsg());
+				base.setData(b.getData());	
+			}
+			renderJSON(base);
+	 }
 	 
-	 
-	 
-	 
+
 	public IMicroclassServer getiMicroclassServer() {
 		return iMicroclassServer;
 	}
