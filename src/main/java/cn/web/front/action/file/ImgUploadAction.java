@@ -35,17 +35,19 @@ public class ImgUploadAction extends BaseAction{
     @Autowired
     @Qualifier("fileService")
     private IFileService  fileService;
-	/**
-	 * @Title: imgUpload 
-	 * @Description: TODO(图片上传) 
-	 * @param @param request
-	 * @param @param response 设定文件 
-	 * @return void 返回类型 
-	 * @throws
-	 */
+    
+    /**
+     * @Title: imgUpload 
+     * @Description: TODO(图片上传) 
+     * @param @param request
+     * @param @param response
+     * @param @param file 文件流
+     * @return void 返回类型 
+     * @throws
+     */
 	@RequestMapping(value="/imgUpload.html")
 	public void imgUpload(HttpServletRequest request,HttpServletResponse response,
-			@RequestParam(value="file",required=false) MultipartFile file){
+			@RequestParam(value="file",required=false) MultipartFile file,@RequestParam(value="days",required=false) Integer days){
 		PrintWriter out=null;
 		HashMap<String,Object> jsonMap = new HashMap<String, Object>();
 		
@@ -66,7 +68,7 @@ public class ImgUploadAction extends BaseAction{
 			//转存文件  获取File
 			File file2 = multipartToFile(file);
 			//调用七牛上传图片  获得Url
-			String url = fileService.uploadFile(file2);
+			String url = fileService.uploadFile(file2,days);
 			
 			jsonMap.put("code", "0000");
 			jsonMap.put("msg", "图片上传成功！");
