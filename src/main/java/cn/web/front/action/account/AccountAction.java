@@ -461,7 +461,9 @@ public class AccountAction extends BaseAction {
     			userBasicVo.setUserSource("C");
             	userBasicVo.setIdCardValidityDate("2018-04-15");
             	userBasicVo.setNickname(tureName);
-    			JSONObject json = accountService.updateUser(userBasicVo);   			
+            	//logger.debug(userBasicVo.toString());
+    			JSONObject json = accountService.updateUser(userBasicVo);   
+    			//logger.debug(json.toString());
     			System.out.println(json);
     			code =json.getString("CODE");
     			if(!"0000".equals(code)){
@@ -522,7 +524,6 @@ public class AccountAction extends BaseAction {
     	BaseBean basebean = new  BaseBean();
     	try {
     		if("0000".equals(code)){//参数校验通过
-    			userBasicVo.setIdentityCard("360924199006071671");
             	userBasicVo.setUserSource("C");
             	String xml ="<?xml version=\"1.0\" encoding=\"utf-8\"?><REQUEST><LOGIN_USER>"+userBasicVo.getIdentityCard()+"</LOGIN_USER><LXDH>"+userBasicVo.getOldMobile()+"</LXDH>"
         				+ "<NEWLXDH>"+userBasicVo.getNewMobile()+"</NEWLXDH><RZJS>"+userBasicVo.getUserSource()+"</RZJS></REQUEST>";
@@ -586,7 +587,6 @@ public class AccountAction extends BaseAction {
     	try {
     		if("0000".equals(code)){//参数校验通过
     			userBasicVo.setUserSource("C");
-            	//userBasicVo.setIdentityCard("360924199006071671");
     			JSONObject json = accountService.updatePwd(userBasicVo);
     			System.out.println(json);
     			code =json.getString("CODE");
