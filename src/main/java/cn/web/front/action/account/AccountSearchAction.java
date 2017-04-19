@@ -188,7 +188,7 @@ public class AccountSearchAction extends BaseAction {
     	BaseBean baseBean = new BaseBean();
     	try {
     		if(StringUtils.isBlank(driverLicenseNumber)){
-        		baseBean.setMsg("identityCard 不能为空!");
+        		baseBean.setMsg("driverLicenseNumber 不能为空!");
         		baseBean.setCode("0001");
         		renderJSON(baseBean);
         		return;
