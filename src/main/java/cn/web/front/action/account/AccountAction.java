@@ -327,7 +327,7 @@ public class AccountAction extends BaseAction {
      */
     @RequestMapping(value = "addVehicle",method = RequestMethod.POST)
     public void addVehicle( int bindType, String vehicleType, String plateType, String licensePlateNumber
-    		, String frameNumber, String ownerName, String identityCard, String mobilephone) {
+    		, String frameNumber, String ownerName, String identityCard, String mobilephone,String provinceAbbreviation) {
     	String code="0000";
  		StringBuffer sb = new StringBuffer("下列参数有问题：");   	
     	BindCarVo bindCarVo = new BindCarVo();
@@ -524,7 +524,11 @@ public class AccountAction extends BaseAction {
     		if("0000".equals(code)){//参数校验通过
     			userBasicVo.setIdentityCard("360924199006071671");
             	userBasicVo.setUserSource("C");
-    			JSONObject json = accountService.updateUser(userBasicVo);
+            	String xml ="<?xml version=\"1.0\" encoding=\"utf-8\"?><REQUEST><LOGIN_USER>"+userBasicVo.getIdentityCard()+"</LOGIN_USER><LXDH>"+userBasicVo.getOldMobile()+"</LXDH>"
+        				+ "<NEWLXDH>"+userBasicVo.getNewMobile()+"</NEWLXDH><RZJS>"+userBasicVo.getUserSource()+"</RZJS></REQUEST>";
+        		String interfaceNumber = "xxcj17";
+        		System.out.println(xml);
+    			JSONObject json = accountService.updateMobile(userBasicVo);
     			System.out.println(json);
     			code =json.getString("CODE");
     			if(!"0000".equals(code)){
@@ -582,8 +586,8 @@ public class AccountAction extends BaseAction {
     	try {
     		if("0000".equals(code)){//参数校验通过
     			userBasicVo.setUserSource("C");
-            	userBasicVo.setIdentityCard("360924199006071671");
-    			JSONObject json = accountService.updateUser(userBasicVo);
+            	//userBasicVo.setIdentityCard("360924199006071671");
+    			JSONObject json = accountService.updatePwd(userBasicVo);
     			System.out.println(json);
     			code =json.getString("CODE");
     			if(!"0000".equals(code)){
@@ -679,13 +683,23 @@ public class AccountAction extends BaseAction {
  		}
     	//if(imgOne)
     	
-    	
+    	readilyShootVo.setLicensePlateNumber("B154578");
+    	readilyShootVo.setApplyType("4");
+    	readilyShootVo.setLinkAddress("南山区");
+    	readilyShootVo.setPaymentNumber("432432432");
+    	readilyShootVo.setEnforcementDepartment("jjdd");
+    	readilyShootVo.setUserSource("C");
+    	readilyShootVo.setUserNumber("123456");
        	BaseBean basebean = new  BaseBean();
     	try {
     		 if("0000".equals(code)){//参数校验通过
     			 JSONObject json = accountService.readilyShoot(readilyShootVo);
     				System.out.println(json);
-    				 code =json.getString("CODE");
+    				String xml ="<?xml version=\"1.0\" encoding=\"utf-8\"?><request><ssrxm>"+readilyShootVo.getWhistleblower()+"</ssrxm><lxdh>"+readilyShootVo.getMobilephone()+"</lxdh><lxdz>"+readilyShootVo.getLinkAddress()+"</lxdz><ssch>"+readilyShootVo.getLicensePlateNumber()+"</ssch>"
+    						+ "<ssnr>"+readilyShootVo.getSituationStatement()+"</ssnr><jkbh>"+readilyShootVo.getPaymentNumber()+"</jkbh><sslx>"+readilyShootVo.getApplyType()+"</sslx><wfsj>"+readilyShootVo.getIllegalTime()+"</wfsj><wfdd>"+readilyShootVo.getIllegalSections()+"</wfdd>"
+    						+ "<zfdw>"+readilyShootVo.getEnforcementDepartment()+"</zfdw><zjtp>"+readilyShootVo.getImages()+"</zjtp><ssly>"+readilyShootVo.getUserSource()+"</ssly><sfzmhm>"+readilyShootVo.getUserIdCard()+"</sfzmhm><xjyhid>"+readilyShootVo.getUserNumber()+"</xjyhid></request>";
+    				System.out.println(xml);
+    				code =json.getString("CODE");
     				if(!"0000".equals(code)){
     					code="500";
     				}else{
