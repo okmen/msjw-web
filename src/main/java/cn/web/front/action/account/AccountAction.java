@@ -525,7 +525,7 @@ public class AccountAction extends BaseAction {
     	try {
     		if("0000".equals(code)){//参数校验通过    			
     			// 0-验证成功，1-验证失败，2-验证码失效
-        		int result = accountService.verificatioCode(newMobile, validateCode);
+        		int result = accountService.verificatioCode(oldMobile, validateCode);
         		if(0 == result){
         			userBasicVo.setUserSource("C");
         			JSONObject json = accountService.updateMobile(userBasicVo);
