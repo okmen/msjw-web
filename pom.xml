@@ -117,18 +117,17 @@
 			<properties>
 				<env>test</env>
 				<publish.version>1.0.0</publish.version>
-				<dubbo.registry.url><![CDATA[test-zookeeper.choumei.me:2181]]></dubbo.registry.url>
+				<dubbo.registry.url><![CDATA[test-zookeeper.chudaokeji.me:2181]]></dubbo.registry.url>
 				<dubbo.consumer.timeout><![CDATA[30000]]></dubbo.consumer.timeout>
 				<dubbo.consumer.payment.timeout><![CDATA[15000]]></dubbo.consumer.payment.timeout>
 				<dubbo.consumer.retries><![CDATA[0]]></dubbo.consumer.retries>
 				<cn.services.version>1.0.0-SNAPSHOT</cn.services.version>
 				<common.sdk.version>1.0.0-SNAPSHOT</common.sdk.version>
-				<redis.web.configstr><![CDATA[web1:test-redis1.choumei.me:6379,web2:test-redis1.choumei.me:6379]]></redis.web.configstr>
 				<log4j.socket.host><![CDATA[test-logserver.choumei.me]]></log4j.socket.host>
 				<log4j.socket.port><![CDATA[10099]]></log4j.socket.port>
 				<log4j.rootLogger><![CDATA[info,socket,web]]></log4j.rootLogger>
 				<log4j.choumeiLevel><![CDATA[debug]]></log4j.choumeiLevel>
-				<log4j.file.dir><![CDATA[/workspace/ws-logs/]]></log4j.file.dir>
+				<log4j.file.dir><![CDATA[/opt/logs/web/]]></log4j.file.dir>
 				<no.access.token>0</no.access.token>
 				<!-- 0代表内网，1代表线上 -->
 				<cn.choumei.env>0</cn.choumei.env>
