@@ -9,22 +9,22 @@
 	<!-- 引入服务接口 --><!-- 本地调试通过添加 url="dubbo://127.0.0.1:20880/"> -->
 	
 	
-	<dubbo:reference id="accountService" url="dubbo://192.168.1.120:30100/"  interface="cn.account.service.IAccountService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" /> 
+	<dubbo:reference id="accountService"  interface="cn.account.service.IAccountService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" /> 
 	
 	<!-- 便民服务 -->
-	<dubbo:reference id="convenienceService" url="dubbo://192.168.1.120:30300/"  interface="cn.convenience.service.IConvenienceService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
+	<dubbo:reference id="convenienceService"  interface="cn.convenience.service.IConvenienceService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
 
-	<dubbo:reference id="illegalService"  url="dubbo://192.168.1.120:30200/"   interface="cn.illegal.service.IIllegalService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" /> 
+	<dubbo:reference id="illegalService"    interface="cn.illegal.service.IIllegalService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" /> 
     
-    <dubbo:reference id="microclassServer" url="dubbo://192.168.1.120:30500/" interface="cn.microclass.service.IMicroclassServer" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
+    <dubbo:reference id="microclassServer" interface="cn.microclass.service.IMicroclassServer" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
     
-    <dubbo:reference id="mobileMessageService" url="dubbo://192.168.1.120:30600/" interface="cn.message.service.IMobileMessageService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
+    <dubbo:reference id="mobileMessageService"  interface="cn.message.service.IMobileMessageService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
     
-    <dubbo:reference id="wechatService" url="dubbo://192.168.1.120:30600/" interface="cn.message.service.IWechatService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
+    <dubbo:reference id="wechatService"  interface="cn.message.service.IWechatService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
     
-    <dubbo:reference id="templateMessageService" url="dubbo://192.168.1.120:30600/" interface="cn.message.service.ITemplateMessageService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
+    <dubbo:reference id="templateMessageService"  interface="cn.message.service.ITemplateMessageService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
       
-	<dubbo:reference id="fileService" url="dubbo://192.168.1.120:30400/" interface="cn.file.service.IFileService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
+	<dubbo:reference id="fileService"  interface="cn.file.service.IFileService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
 	<!-- <dubbo:reference id="messageService"  interface="cn.message.service.IMessageService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" /> --> 
 
 	<!-- <dubbo:reference id="exceptionService" url="dubbo://127.0.0.1:30000/" interface="cn.exception.service.IExceptionService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
