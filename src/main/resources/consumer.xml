@@ -15,7 +15,7 @@
 	<dubbo:reference id="convenienceService"  interface="cn.convenience.service.IConvenienceService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
 
 	<dubbo:reference id="illegalService"    interface="cn.illegal.service.IIllegalService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" /> 
-    
+
     <dubbo:reference id="microclassServer" interface="cn.microclass.service.IMicroclassServer" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
     
     <dubbo:reference id="mobileMessageService"  interface="cn.message.service.IMobileMessageService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  

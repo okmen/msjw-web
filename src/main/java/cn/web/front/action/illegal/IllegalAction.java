@@ -3,6 +3,7 @@ package cn.web.front.action.illegal;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -121,18 +122,18 @@ public class IllegalAction extends BaseAction {
     * @param vehicleIdentifyNoLast4 车架号后四位
     */
    @RequestMapping(value = "queryInfoByLicensePlateNo") 
-   public void queryInfoByLicensePlateNo(String licensePlateNo,String licensePlateType,String vehicleIdentifyNoLast4){  
+   public void queryInfoByLicensePlateNo(String licensePlateNo,String licensePlateType,String vehicleIdentifyNoLast4,String identityCard, String sourceOfCertification, String mobilephone){  
 	   BaseBean base=new BaseBean();
 	 
 	   try {
 		   //判断客户是否已同步
 		   String isReg=illegalService.isRegisterUser();
 		   //未同步
-		   if("0".equals(isReg)){
+		   if("1".equals(isReg)){
 			   CustInfoBean cust=new CustInfoBean();
 			   List<CarInfoBean> carList=new ArrayList<>();
 			   //获取客户信息
-			   /*AuthenticationBasicInformationVo  custVo=accountService.getAuthenticationBasicInformation("","","");
+			   AuthenticationBasicInformationVo  custVo=accountService.getAuthenticationBasicInformation(identityCard, sourceOfCertification, mobilephone);
 			  
 			   if(custVo!=null){
 				   cust.setCertificateNo(custVo.getIdentityCard());
@@ -140,16 +141,19 @@ public class IllegalAction extends BaseAction {
 				   cust.setCertificateType("02");
 				   cust.setMobileNo(custVo.getMobilephone());
 				   cust.setDrivingLicenceNo(custVo.getIdentityCard());
-			   }*/
-			   List<BindTheVehicleVo>   carVo=accountService.getBndTheVehicles("", "", ""); 
+			   }
+			   List<BindTheVehicleVo>   carVo=accountService.getBndTheVehicles(identityCard, mobilephone, sourceOfCertification);
 			   for (BindTheVehicleVo bindTheVehicleVo : carVo) {
 				   CarInfoBean bean=new CarInfoBean();
 				    bean.setLicensePlateNo(bindTheVehicleVo.getNumberPlateNumber());
 				    bean.setLicensePlateType(bindTheVehicleVo.getPlateType());
-				    bean.setVehicleIdentifyNoLast4("");
+				    bean.setVehicleIdentifyNoLast4(bindTheVehicleVo.getBehindTheFrame4Digits());
+				    carList.add(bean);
 			   }
 			   
-			   
+			   //同步客户信息
+			  String str= illegalService.custRegInfoReceive(cust, carList);
+			  System.out.println("同步："+str);
 		   }
 		   
 		   
@@ -175,9 +179,39 @@ public class IllegalAction extends BaseAction {
     * @param recordNo 档案编号
     */
    @RequestMapping(value = "queryInfoByDrivingLicenceNo")
-   public void queryInfoByDrivingLicenceNo(String drivingLicenceNo,String recordNo){
+   public void queryInfoByDrivingLicenceNo(String drivingLicenceNo,String recordNo,String identityCard, String sourceOfCertification, String mobilephone){
 	   BaseBean base=new BaseBean();		 
 	   try {
+		   //判断客户是否已同步
+		   String isReg=illegalService.isRegisterUser();
+		   //未同步
+		   if("0".equals(isReg)){
+			   CustInfoBean cust=new CustInfoBean();
+			   List<CarInfoBean> carList=new ArrayList<>();
+			   //获取客户信息
+			   AuthenticationBasicInformationVo  custVo=accountService.getAuthenticationBasicInformation(identityCard, sourceOfCertification, mobilephone);
+			  
+			   if(custVo!=null){
+				   cust.setCertificateNo(custVo.getIdentityCard());
+				   cust.setCustName(custVo.getTrueName());
+				   cust.setCertificateType("02");
+				   cust.setMobileNo(custVo.getMobilephone());
+				   cust.setDrivingLicenceNo(custVo.getIdentityCard());
+			   }
+			   List<BindTheVehicleVo>   carVo=accountService.getBndTheVehicles(identityCard, mobilephone, sourceOfCertification); 
+			   for (BindTheVehicleVo bindTheVehicleVo : carVo) {
+				   CarInfoBean bean=new CarInfoBean();
+				    bean.setLicensePlateNo(bindTheVehicleVo.getNumberPlateNumber());
+				    bean.setLicensePlateType(bindTheVehicleVo.getPlateType());
+				    bean.setVehicleIdentifyNoLast4(bindTheVehicleVo.getBehindTheFrame4Digits());
+				    carList.add(bean);
+			   }
+			   
+			   //同步客户信息
+			  String str= illegalService.custRegInfoReceive(cust, carList);
+			  System.out.println("同步："+str);
+		   }
+		   
 		   List<IllegalInfoBean> list=illegalService.queryInfoByDrivingLicenceNo(drivingLicenceNo, recordNo);
 		   base.setCode("0000");
 		   if(list!=null){
@@ -202,10 +236,39 @@ public class IllegalAction extends BaseAction {
     * @param mobilephone 手机号码
     */
    @RequestMapping(value = "trafficIllegalClaimReg")
-   public void trafficIllegalClaimReg(CustInfoBean custInfo, CarInfoBean carInfo){  	
+   public void trafficIllegalClaimReg(CustInfoBean custInfo, CarInfoBean carInfo,String identityCard, String sourceOfCertification, String mobilephone){  	
 	  BaseBean base=new BaseBean();		 
 	   try {
-		   
+		 //判断客户是否已同步
+		   String isReg=illegalService.isRegisterUser();
+		   //未同步
+		   if("0".equals(isReg)){
+			   CustInfoBean cust=new CustInfoBean();
+			   List<CarInfoBean> carList=new ArrayList<>();
+			   //获取客户信息
+			   AuthenticationBasicInformationVo  custVo=accountService.getAuthenticationBasicInformation(identityCard, sourceOfCertification, mobilephone);
+			  
+			   if(custVo!=null){
+				   cust.setCertificateNo(custVo.getIdentityCard());
+				   cust.setCustName(custVo.getTrueName());
+				   cust.setCertificateType("02");
+				   cust.setMobileNo(custVo.getMobilephone());
+				   cust.setDrivingLicenceNo(custVo.getIdentityCard());
+			   }
+			   List<BindTheVehicleVo>   carVo=accountService.getBndTheVehicles(identityCard, mobilephone, sourceOfCertification); 
+			   for (BindTheVehicleVo bindTheVehicleVo : carVo) {
+				   CarInfoBean bean=new CarInfoBean();
+				    bean.setLicensePlateNo(bindTheVehicleVo.getNumberPlateNumber());
+				    bean.setLicensePlateType(bindTheVehicleVo.getPlateType());
+				    bean.setVehicleIdentifyNoLast4(bindTheVehicleVo.getBehindTheFrame4Digits());
+				    carList.add(bean);
+			   }
+			   
+			   //同步客户信息
+			  String str= illegalService.custRegInfoReceive(cust, carList);
+			  System.out.println("同步："+str);
+		   }
+		   	   
 		   base=illegalService.trafficIllegalClaimReg(custInfo,carInfo);
 	   		   
 		} catch (Exception e) {
@@ -224,9 +287,39 @@ public class IllegalAction extends BaseAction {
      * @param mobilephone 手机号码
      */
     @RequestMapping(value = "illegalOnlineConfirm")
-    public void illegalOnlineConfirm(String licensePlateNo,String licensePlateType,String mobilephone){  	
+    public void illegalOnlineConfirm(String licensePlateNo,String licensePlateType,String mobilephone,String identityCard, String sourceOfCertification){  	
  	  BaseBean base=new BaseBean();		 
 	   try {
+		 //判断客户是否已同步
+		   String isReg=illegalService.isRegisterUser();
+		   //未同步
+		   if("0".equals(isReg)){
+			   CustInfoBean cust=new CustInfoBean();
+			   List<CarInfoBean> carList=new ArrayList<>();
+			   //获取客户信息
+			   AuthenticationBasicInformationVo  custVo=accountService.getAuthenticationBasicInformation(identityCard, sourceOfCertification, mobilephone);
+			  
+			   if(custVo!=null){
+				   cust.setCertificateNo(custVo.getIdentityCard());
+				   cust.setCustName(custVo.getTrueName());
+				   cust.setCertificateType("02");
+				   cust.setMobileNo(custVo.getMobilephone());
+				   cust.setDrivingLicenceNo(custVo.getIdentityCard());
+			   }
+			   List<BindTheVehicleVo>   carVo=accountService.getBndTheVehicles(identityCard, mobilephone, sourceOfCertification); 
+			   for (BindTheVehicleVo bindTheVehicleVo : carVo) {
+				   CarInfoBean bean=new CarInfoBean();
+				    bean.setLicensePlateNo(bindTheVehicleVo.getNumberPlateNumber());
+				    bean.setLicensePlateType(bindTheVehicleVo.getPlateType());
+				    bean.setVehicleIdentifyNoLast4(bindTheVehicleVo.getBehindTheFrame4Digits());
+				    carList.add(bean);
+			   }
+			   
+			   //同步客户信息
+			  String str= illegalService.custRegInfoReceive(cust, carList);
+			  System.out.println("同步："+str);
+		   }
+		   
 		   List<IllegalInfoClaim> list=illegalService.trafficIllegalClaimBefore(licensePlateNo, licensePlateType, mobilephone);
 		   base.setCode("0000");
 		   if(list!=null){
@@ -248,35 +341,24 @@ public class IllegalAction extends BaseAction {
      * @param illegalNo 违章编号
      */
     @RequestMapping(value = "trafficIllegalClaim")
-    public void trafficIllegalClaim(String illegalNo){	   
-       IllegalInfoSheet bean=illegalService.trafficIllegalClaim(illegalNo);
-	   /*bean.setBillNo("000000000001");
-	   bean.setCarOwner("李四");
-	   bean.setDealType("05");
-	   bean.setIllegalAddress("深南大道");
-	   bean.setIllegalDesc("闯红灯");
-	   bean.setIllegalTime("2015-10-10 09:09:00");
-	   bean.setIllegalUnit("南山交警队");
-	   bean.setLicensePlateNo("粤A00001");
-	   bean.setLicensePlateType("06");
-	   bean.setPunishAmount(200);
-	   bean.setPunishScore(3);
-	   bean.setAgency("南山交警队");
-	   bean.setDealPolice("小明");
-	   bean.setTotalScore(6);
-	   bean.setWaitingDealNum(1);
-	   bean.setReturnMsg("打单成功");*/
-	   
- 	   BaseBean base=new BaseBean();
- 	   base.setCode("0000");
- 	   base.setMsg("成功！");
- 	   base.setData(bean);
+    public void trafficIllegalClaim(String illegalNo){	        
+       BaseBean base=new BaseBean();		 
+	   try {
+		   IllegalInfoSheet bean=illegalService.trafficIllegalClaim(illegalNo);
+		   base.setCode("0000");
+		   base.setMsg("成功！");
+           base.setData(bean);	   
+		} catch (Exception e) {
+			base.setCode("0001");
+			base.setMsg("查询失败！");
+			e.printStackTrace();
+		}
  	   renderJSON(base);
     } 
     
      
     /**
-     * 缴款后查询（规费编号查询）
+     * 规费信息查询
      */
     @RequestMapping(value = "toPayPage")
     public void toPayPage(String billNo,String  licensePlateNo,String mobilephone,HttpServletRequest req, HttpServletResponse resp){     
@@ -297,27 +379,27 @@ public class IllegalAction extends BaseAction {
     
     
     /**
-     * 缴款前查询
+     * 违法缴费信息
      * @param billNo 违章编号
      * @param licensePlateNo 车牌号
      * @param mobilephone 手机号码
      */
     @RequestMapping(value = "toQueryPunishmentPage")
     public void toQueryPunishmentPage(String billNo,String  licensePlateNo,String mobilephone,HttpServletRequest req, HttpServletResponse resp){
- 	   String url=illegalService.toQueryPunishmentPage(billNo,licensePlateNo,mobilephone);//"4403010922403405","粤B8A3N2","18601174358");
- 	try {
- 		if(StringUtil.isEmpty(url)){
-	    	BaseBean base=new BaseBean();
-	    	base.setCode("0001");
-	    	base.setMsg("跳转页面失败！");
-	    	renderJSON(base);
-	    	}else{
-	    		resp.sendRedirect(url);
-	    	} 
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} 
+ 	  //"4403010922403405","粤B8A3N2","18601174358");
+	 	try {
+	 		String url=illegalService.toQueryPunishmentPage(billNo,licensePlateNo,mobilephone);
+	 		if(StringUtil.isEmpty(url)){
+		    	BaseBean base=new BaseBean();
+		    	base.setCode("0001");
+		    	base.setMsg("跳转页面失败！");
+		    	renderJSON(base);
+		    	}else{
+		    		resp.sendRedirect(url);
+		    	} 
+		} catch (Exception e) {	
+			e.printStackTrace();
+		} 
 
     } 
     
@@ -327,11 +409,22 @@ public class IllegalAction extends BaseAction {
      */
     @RequestMapping(value = "getIllegalProcessingPoint")
     public void getIllegalProcessingPoint(){  	
-       List<IllegalProcessPointBean> bean=illegalService.getIllegalProcessingPoint();
-       BaseBean base=new BaseBean();
-  	   base.setCode("0000");
-  	   base.setMsg("成功！");
-  	   base.setData(bean);
+       BaseBean base=new BaseBean();  
+       try {
+		   List<IllegalProcessPointBean> list=illegalService.getIllegalProcessingPoint();
+		   base.setCode("0000");
+		   if(list!=null){
+			   base.setData(list);
+			   base.setMsg("成功");
+		   }else{
+			   base.setMsg("违法处理点获取为空");
+		   }		   
+		} catch (Exception e) {
+			base.setCode("0001");
+			base.setMsg("查询失败！");
+			e.printStackTrace();
+		}
+
   	   renderJSON(base);
     }
     
@@ -341,11 +434,21 @@ public class IllegalAction extends BaseAction {
      */
     @RequestMapping(value = "toGetSubscribeSorts")
     public void toGetSubscribeSorts(String cldbmid){
-    	 List<ReservationDay> bean=illegalService.toGetSubscribeSorts(cldbmid);
          BaseBean base=new BaseBean();
-    	 base.setCode("0000");
-    	 base.setMsg("成功！");
-    	 base.setData(bean);
+         try {
+           Map map=illegalService.toGetSubscribeSorts(cldbmid);
+  		   base.setCode("0000");
+  		   if(map!=null){
+  			   base.setData(map);
+  			   base.setMsg("成功");
+  		   }else{
+  			   base.setMsg("预约排期获取为空");
+  		   }		   
+  		} catch (Exception e) {
+  			base.setCode("0001");
+  			base.setMsg("查询失败！");
+  			e.printStackTrace();
+  		}
     	 renderJSON(base);
     }
     
@@ -357,19 +460,10 @@ public class IllegalAction extends BaseAction {
      */
     @RequestMapping(value = "toChangeSubscribe")
     public void toChangeSubscribe(String snm,String cldbmid,String cczb_id,CustInfoBean custInfo,CarInfoBean carInfo,String sourceType){
-       CarInfoBean carinfo=new CarInfoBean("粤B6F7M1",  "2", "9094");
- 	   CustInfoBean custinfo=new CustInfoBean("王玉璞", "622822198502074110", "01", "18601174358",  "622822198502074110");
- 	   illegalService.toChangeSubscribe("CgQxRtU5pO", "440319000000", "140053", custinfo, carinfo, "003");
-      /* MessageBean  bean=new MessageBean();
-       bean.setBusinessType("01");
-       bean.setSubscribeNo("000000000123");
-       bean.setReminder("预约成功");*/
-       
- 	   BaseBean base=new BaseBean();
- 	   base.setCode("0000");
- 	   base.setMsg("成功！");
- 	   //base.setData(bean);
- 	   renderJSON(base);
+      // CarInfoBean carinfo=new CarInfoBean("粤B6F7M1",  "2", "9094");
+ 	   //CustInfoBean custinfo=new CustInfoBean("王玉璞", "622822198502074110", "01", "18601174358",  "622822198502074110");
+ 	   BaseBean bean= illegalService.toChangeSubscribe(snm, cldbmid, cczb_id, custInfo, carInfo, sourceType);
+ 	   renderJSON(bean);
     } 
     
     
@@ -385,13 +479,9 @@ public class IllegalAction extends BaseAction {
        bean.setBusinessType("01");
        bean.setSubscribeNo("000000000123");
        bean.setReminder("预约成功");*/
-       String ss=illegalService.toCancleSubscribe(subscribeNo);
-    	
- 	   BaseBean base=new BaseBean();
- 	   base.setCode("0000");
- 	   base.setMsg(ss);
- 	   //base.setData(bean);
- 	   renderJSON(base);
+       BaseBean bean=illegalService.toCancleSubscribe(subscribeNo);
+
+ 	   renderJSON(bean);
     } 
     
     /**
@@ -401,27 +491,23 @@ public class IllegalAction extends BaseAction {
      * @param mobilephone
      */
     @RequestMapping(value = "toQuerySubscribe")
-    public void toQuerySubscribe(String licensePlateType,String  licensePlateNo,String mobilephone){
- 	   List<SubcribeBean> list=illegalService.querySubscribe(licensePlateNo, licensePlateType, mobilephone);
- 	   /*IllegalInfoBean bean=new IllegalInfoBean();
-	   bean.setBillNo("000000000001");
-	   bean.setCarOwner("李四");
-	   bean.setIsNeedClaim("0");
-	   bean.setIllegalAddress("深南大道");
-	   bean.setIllegalDesc("闯红灯");
-	   bean.setIllegalTime("2015-10-10 09:09:00");
-	   bean.setIllegalUnit("南山交警队");
-	   bean.setLicensePlateNo("粤A00001");
-	   bean.setLicensePlateType("06");
-	   bean.setPunishAmt(200);
-	   bean.setPunishScore(3);
-	
-	   list.add(bean);*/
- 	   
- 	   BaseBean base=new BaseBean();
- 	   base.setCode("0000");
- 	   base.setMsg("成功！");
- 	   base.setData(list);
+    public void toQuerySubscribe(String licensePlateType,String  licensePlateNo,String mobilephone){	   
+ 	  BaseBean base=new BaseBean();		 
+	   try {
+		   List<SubcribeBean> list=illegalService.querySubscribe(licensePlateNo, licensePlateType, mobilephone);
+		   base.setCode("0000");
+		   if(list!=null){
+			   base.setData(list);
+			   base.setMsg("成功");
+		   }else{
+			   base.setMsg("当前客户无预约");
+		   }		   
+		} catch (Exception e) {
+			base.setCode("0001");
+			base.setMsg("查询失败！");
+			e.printStackTrace();
+		}
+ 
  	   renderJSON(base);
     } 
    
@@ -430,24 +516,13 @@ public class IllegalAction extends BaseAction {
      * @param info 申诉信息
      */
     @RequestMapping(value = "trafficIllegalAppeal")
-    public void trafficIllegalAppeal(AppealInfoBean info){
-      /* String i=illegalService.getMsg("小明么？");
-       MessageBean  bean=new MessageBean();
-       bean.setBusinessType("03");
-       bean.setSubscribeNo("000000000123");
-       bean.setReminder("申诉成功");*/
-    	
+    public void trafficIllegalAppeal(AppealInfoBean info,String identityCard, String userCode, String sourceType){   	
        AppealInfoBean bean=new AppealInfoBean(info.getBillNo(), info.getLicensePlateNo(),info.getLicensePlateType(), info.getIllegalTime(), info.getIllegalAddress(),
     		info.getIllegalDesc(), info.getAgency(), info.getClaimant(),
     		info.getClaimantAddress(), info.getClaimantPhone(), info.getAppealType(), info.getAppealContent(),
     		info.getMaterialPicture());
- 	   String code=illegalService.trafficIllegalAppeal(bean, "622822198502074110", "", "C");
-	   
- 	   BaseBean base=new BaseBean();
- 	   base.setCode(code);
- 	   base.setMsg("成功！");
- 	   base.setData(bean);
- 	   renderJSON(base);
+       BaseBean result=illegalService.trafficIllegalAppeal(bean,identityCard,userCode,sourceType);// "622822198502074110", "", "C");	   
+ 	   renderJSON(result);
     } 
    
    
@@ -456,23 +531,23 @@ public class IllegalAction extends BaseAction {
      * @param identityCard 身份证
      */
     @RequestMapping(value = "trafficIllegalAppealFeedback")
-    public void trafficIllegalAppealFeedback(String identityCard,String sourceType){
-       /*AppealInfoBean bean =new AppealInfoBean();
-       bean.setBillNo("000000000001");
- 	   bean.setIllegalAddress("深南大道");
- 	   bean.setIllegalDesc("闯红灯");
- 	   bean.setIllegalTime("2015-10-10 09:09:00");
- 	   bean.setAgency("南山交警队");
- 	   bean.setAppealType("01");
- 	   bean.setAppealContent("处罚有误");
- 	   bean.setClaimant("薛申");
- 	   bean.setClaimantAddress("平洲三路");
- 	   bean.setClaimantPhone("13898028923");*/
-       AppealInfoBack back= illegalService.trafficIllegalAppealFeedback(identityCard, sourceType);
- 	   BaseBean base=new BaseBean();
- 	   base.setCode("0000");
- 	   base.setMsg("成功！");
- 	   base.setData(back);
+    public void trafficIllegalAppealFeedback(String identityCard,String sourceType){    
+ 	  BaseBean base=new BaseBean();
+ 	  try {
+ 		 List<AppealInfoBack> list= illegalService.trafficIllegalAppealFeedback(identityCard, sourceType);
+		   base.setCode("0000");
+		   if(list!=null){
+			   base.setData(list);
+			   base.setMsg("成功");
+		   }else{
+			   base.setMsg("当前客户无申诉信息");
+		   }		   
+		} catch (Exception e) {
+			base.setCode("0001");
+			base.setMsg("查询失败！");
+			e.printStackTrace();
+		}
+
  	   renderJSON(base);
     }
 }
