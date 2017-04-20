@@ -168,18 +168,11 @@ public class MicroClassroomAction extends BaseAction {
 	        if(clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {  
 	            clientIp = request.getRemoteAddr();  
 	        }  
-		 study.setIdentityCard(request.getParameter("identityCard"));//获取身份证号码 
-		 study.setClassroomId(request.getParameter("classroomId"));//获取列表ID,根据列表ID来判断进行不同的方法
-		 study.setMobilephone(request.getParameter("mobilephone")); //手机号码
-		 study.setUserSource(request.getParameter("userSource")); //用户来源
-		 System.out.println(study.getIdentityCard());
-		 System.out.println(study.getClassroomId());
 		 if(study!=null){
 			 //公用参数
 			 if(study.getIdentityCard()!=null){
 				 s.setIdentityCard(study.getIdentityCard());
-			 }
-			 
+			 } 
 			 if(study.getMobilephone()!=null){
 				 s.setMobilephone(study.getMobilephone());
 			 }if(study.getUserSource()!=null){
@@ -193,22 +186,21 @@ public class MicroClassroomAction extends BaseAction {
 			 }
 		 }
 		 if(study.getClassroomId()!=null){	
+			 s.setClassroomId(study.getClassroomId());
 			 if(study.getClassroomId().equals("1")){  //当列表ID等于1的时候 进入消分学习
 					s.setInterfaceId("exam003");
-					/*s.setIdentityCard("431022199612250036");
-					s.setMobilephone("17708404197");
-					s.setIpAddress(clientIp);
-					s.setUserSource("C");*/
 					list= iMicroclassServer.xfStudyQuery(s);
-			 }else if(study.getClassroomId().equals("2")){  //当列表ID等于2的时候进入学习非机动车学习
-				 	
-			 }else if(study.getClassroomId().equals("3")){
-				 	
+			 }else if(study.getClassroomId().equals("2")){  
+				  s.setInterfaceId("mfyydtjgcx");			//满分学习查询接口
+				  list=iMicroclassServer.xrStudyQuery(s);	
+			 }else if(study.getClassroomId().equals("3")){				 
+				 s.setInterfaceId("blyydtjgcx");  //	B类驾驶人培训学习结果查询 接口
+				 list=iMicroclassServer.xrStudyQuery(s);
 			 }else if(study.getClassroomId().equals("4")){ //6.33.3	电动车违法学习结果查询
 				 	s.setInterfaceId("DDC2003");
 					s.setServiceType("");
 					s.setDecisionId("");
-					list=iMicroclassServer.ddcStudyQuery(s);
+					list=iMicroclassServer.xrStudyQuery(s);
 			 }else if(study.getClassroomId().equals("5")){  //6.34	行人、非机动车驾驶人道路交通安全学习
 				 	s.setInterfaceId("DDC3003");
 					s.setServiceType("AQ");
@@ -226,6 +218,11 @@ public class MicroClassroomAction extends BaseAction {
 		// logger.info(JSON.toJSONString(base));
 	 }
 
+	 /**
+	  * 微课堂所有学习取题方法
+	  * @param request
+	  * @param study
+	  */
 	 @RequestMapping(value="Classroom/Studys.html")
 	 public void Studys(HttpServletRequest request,Study study){
 		 BaseBean base=new BaseBean();
@@ -243,11 +240,7 @@ public class MicroClassroomAction extends BaseAction {
 	        if(clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {  
 	            clientIp = request.getRemoteAddr();  
 	        }  
-/*		 study.setIdentityCard(request.getParameter("identityCard"));//获取身份证号码 
-		 study.setClassroomId(request.getParameter("classroomId"));//获取列表ID,根据列表ID来判断进行不同的方法
-		 study.setMobilephone(request.getParameter("mobilephone")); //手机号码
-		 study.setUserSource(request.getParameter("userSource")); //用户来源
-*/		 if(study!=null){
+		 if(study!=null){
 			 //公用参数
 			 if(study.getIdentityCard()!=null){
 				 s.setIdentityCard(study.getIdentityCard());
@@ -272,16 +265,20 @@ public class MicroClassroomAction extends BaseAction {
 			 }else{
 				 base.setMsg("ip地址不能为空");
 				  renderJSON(base);	
-			 }
-		 
+			 }		 
 		
+			 if(study.getClassroomId()!=null){
+				 s.setClassroomId(study.getClassroomId());
+			 }
 		 if(classroomId.equals("1")){ //当列表ID等于1的时候 进入消分学习取题 
 			 s.setInterfaceId("exam001");
 			 list= iMicroclassServer.xfStudyAnswer(s);	 
 		 }else if(classroomId.equals("2")){        //当列表ID等于2的时候进入学习非机动车学习取题
-				
+			 s.setInterfaceId("mfyyqt");
+			 list= iMicroclassServer.xfStudyAnswer(s);
 		 }else if(classroomId.equals("3")){
-			  
+			 s.setInterfaceId("blyyqt");
+			 list= iMicroclassServer.xfStudyAnswer(s); 
 		 }else if(classroomId.equals("4")){
 			 	s.setInterfaceId("DDC2001"); //电动车违法取题编号
 				s.setSubjectId("");
@@ -363,6 +360,9 @@ public class MicroClassroomAction extends BaseAction {
 				 base.setMsg("答题答案不能为空！");
 				  renderJSON(base);	
 			 }
+			 if(study.getClassroomId()!=null){
+				 s.setClassroomId(study.getClassroomId());
+			 }
 		 
 		 Date date=new Date();
 		 DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
@@ -370,31 +370,82 @@ public class MicroClassroomAction extends BaseAction {
 		 s.setAnswerDate(time);
 		 if(classroomId.equals("1")){ //当列表ID等于1的时候 进入消分学习答题
 			 	s.setInterfaceId("exam002");
-				/*s.setSubjectId(subjectId);  //取题ID
-				s.setUserName("曾令成");		
-				s.setIdentityCard("431022199612250036"); //身份证号码
-				s.setMobilephone("17708404197"); //手机号码
-				s.setIpAddress("123.56.180.216"); //答题IP地址
-				s.setSubjectAnswer("A"); //答题答案 
-				s.setAnswerDateTime("2017-04-17 10:59:49");
-				s.setScoreStartDate("2016-07-09"); //取题时的计分周期始
-				s.setScoreEndDate("2017-07-09"); //取题时的计分周期末
-				s.setUserSource("C");*/
+			 	if(study.getScoreStartDate()==null){
+					 base.setMsg("计分周期开始时间不能为空");
+					 renderJSON(base);	
+				 }else{
+					 s.setScoreStartDate(study.getScoreStartDate());
+				 }
+				 if(study.getScoreEndDate()==null){
+					 base.setMsg("计分周期结束时间不能为空");
+					 renderJSON(base);	
+				 }else{
+					 s.setScoreEndDate(study.getScoreEndDate());
+				 }
+				 if(study.getUserName()==null){
+					 base.setMsg("考生姓名不能为空！");
+					 renderJSON(base);
+				 }else{
+					 s.setUserName(study.getUserName());
+				 }
+				s.setAnswerDateTime(time);
 				list=iMicroclassServer.xfAnswerQuey(s); 
-		 }else if(classroomId.equals("2")){ 
-			 
-		 }else if(classroomId.equals("3")){ 
-			 	
-			 
-		 }else if(classroomId.equals("4")){ 
+		 }else if(classroomId.equals("2")){
+			 	s.setInterfaceId("mfyydt");
+			 	if(study.getScoreStartDate()==null){
+					 base.setMsg("计分周期开始时间不能为空");
+					 renderJSON(base);	
+				 }else{
+					 s.setScoreStartDate(study.getScoreStartDate());
+				 }
+				 if(study.getScoreEndDate()==null){
+					 base.setMsg("计分周期结束时间不能为空");
+					 renderJSON(base);	
+				 }else{
+					 s.setScoreEndDate(study.getScoreEndDate());
+				 }
+				 if(study.getUserName()==null){
+					 base.setMsg("考生姓名不能为空！");
+					 renderJSON(base);
+				 }else{
+					 s.setUserName(study.getUserName());
+				 }
+				s.setAnswerDateTime(time);
+				list=iMicroclassServer.xfAnswerQuey(s); 
+		 	}else if(classroomId.equals("3")){
+			 s.setInterfaceId("blyydt");
+			 	if(study.getScoreStartDate()==null){
+					 base.setMsg("计分周期开始时间不能为空");
+					 renderJSON(base);	
+				 }else{
+					 s.setScoreStartDate(study.getScoreStartDate());
+				 }
+				 if(study.getScoreEndDate()==null){
+					 base.setMsg("计分周期结束时间不能为空");
+					 renderJSON(base);	
+				 }else{
+					 s.setScoreEndDate(study.getScoreEndDate());
+				 }
+				 if(study.getUserName()==null){
+					 base.setMsg("考生姓名不能为空！");
+					 renderJSON(base);
+				 }else{
+					 s.setUserName(study.getUserName());
+				 }
+				s.setAnswerDateTime(time);
+				list=iMicroclassServer.xfAnswerQuey(s); 
+		 }
+		 else if(classroomId.equals("4")){ 
 			   s.setInterfaceId("DDC2002");
 				s.setServiceType("");
 				s.setDecisionId("");
+				s.setAnswerDate(s.getAnswerDate());
 				list=iMicroclassServer.ddcAnswerQuey(s);
 		 }else if(classroomId.equals("5")){ 
 			 	s.setInterfaceId("DDC3002");
 				s.setSubjectId(subjectId);
 				s.setServiceType("AQ");
+				s.setAnswerDate(s.getAnswerDate());
 				list=iMicroclassServer.xrAnswerQuey(s);	
 		 }
 		 for(BaseBean b:list){
@@ -414,8 +465,6 @@ public class MicroClassroomAction extends BaseAction {
 		this.iMicroclassServer = iMicroclassServer;
 	}
 
-	 
-	 
 	 
 	 
 	
