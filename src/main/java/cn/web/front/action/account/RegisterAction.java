@@ -260,11 +260,6 @@ public class RegisterAction extends BaseAction {
 			registerVo.setIdCardImgPositive(idCardImgPositive);
 		}
 
-		if (StringUtil.isBlank(idCardImgNegative)) {
-			code = "500";
-			sb.append("身份证反面为空 ");
-		}
-
 		if (StringUtil.isBlank(idCardImgHandHeld)) {
 			code = "500";
 			sb.append("手持身份证为空  ");
@@ -326,7 +321,6 @@ public class RegisterAction extends BaseAction {
 					registerVo.setCallAccount("WX02_TEST");
 					registerVo.setCertifiedRole("1");
 					registerVo.setCertifiedSource("C");
-					// registerVo.setOwnerMobilephone("13725512400");
 					JSONObject json = accountService.iamALongtimeUser(registerVo);
 					System.out.println(json);
 					code = json.getString("CODE");

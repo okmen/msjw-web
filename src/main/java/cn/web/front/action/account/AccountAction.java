@@ -3,6 +3,7 @@ package cn.web.front.action.account;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.account.bean.Documentation;
@@ -618,25 +620,47 @@ public class AccountAction extends BaseAction {
 
     
     /**
-     * 随手拍举报-星级用户/普通用户
-     * @param illegalTime 违法时间
-     * @param illegalSections 违法路段
-     * @param imgOne 证据材料图片1
-     * @param imgTwo 证据材料图片2
-     * @param imgThree 证据材料图片3
-     * @param situationStatement 情况说明
-     * @param whistleblower 举报人
-     * @param identityCard 身份证
-     * @param mobilephone 联系电话
-     * @param locationAddress 定位地址
+     * 
+     * @Title: readilyShoot 
+     * @author liuminkang
+     * @Description: TODO(星级用户-随手拍) 
+     * @param licensePlateNumber
+     * @param licensePlateType
+     * @param illegalActivitieOne
+     * @param illegalTime
+     * @param illegalSections
+     * @param reportImgOne
+     * @param reportImgTwo
+     * @param reportImgThree
+     * @param inputMan
+     * @param inputManName
+     * @param inputManPhone
+     * @param identityCard
+     * @param userSource
+     * @param openId    设定文件 
+     * @return void    返回类型 
+     * @date 2017年4月20日 下午3:06:02
      */
     @RequestMapping(value = "readilyShoot",method = RequestMethod.POST)
-    public void readilyShoot( String illegalTime, String illegalSections, String imgOne, String imgTwo
-    		, String imgThree, String situationStatement, String whistleblower,String identityCard
-    		, String mobilephone,String locationAddress) {
+    public void readilyShoot(String licensePlateNumber,String licensePlateType,String illegalActivitieOne, String illegalTime, String illegalSections, String reportImgOne, String reportImgTwo
+    		, String reportImgThree, String inputMan,String inputManName,String inputManPhone,String identityCard,String userSource,String openId) {
     	String code="0000";
- 		StringBuffer sb = new StringBuffer("下列参数有问题：");
+ 		StringBuffer sb = new StringBuffer("");
+ 		int imgNumber=0;//传入的图片数量
     	ReadilyShootVo readilyShootVo = new ReadilyShootVo();
+    	
+
+ 		readilyShootVo.setLicensePlateNumber(licensePlateNumber);
+
+ 		readilyShootVo.setLicensePlateType(licensePlateType);
+
+    	if(StringUtil.isBlank(illegalActivitieOne)){
+ 			code="500";
+ 			sb.append("违法行为为空  ");
+ 		}else{
+ 			readilyShootVo.setIllegalActivitieOne(illegalActivitieOne);
+ 		}
+    	
     	if(StringUtil.isBlank(identityCard)){
  			code="500";
  			sb.append("身份证为空  ");
@@ -651,71 +675,83 @@ public class AccountAction extends BaseAction {
  		}
     	if(StringUtil.isBlank(illegalSections)){
  			code="500";
- 			sb.append("违法路段为空  ");
+ 			sb.append("违法地点为空  ");
  		}else{
  			readilyShootVo.setIllegalSections(illegalSections);;
  		}
-    	if(StringUtil.isBlank(situationStatement)){
- 			code="500";
- 			sb.append("违法内容为空  ");
- 		}else{
- 			readilyShootVo.setSituationStatement(situationStatement);;
- 		}
-    	if(StringUtil.isBlank(mobilephone)){
+    	
+    	if(StringUtil.isBlank(inputManPhone)){
  			code="500";
  			sb.append("手机号码为空  ");
  		}else{
- 			readilyShootVo.setMobilephone(mobilephone);
+ 			readilyShootVo.setInputManPhone(inputManPhone);
  		}
-    	if(StringUtil.isBlank(whistleblower)){
- 			code="500";
- 			sb.append("举报人为空  ");
- 		}else{
- 			readilyShootVo.setWhistleblower(whistleblower);;
- 		}
-    	if(StringUtil.isBlank(imgOne)){
- 			code="500";
- 			sb.append("证据材料图片1为空  ");
- 		}else{
- 			readilyShootVo.setImages(imgOne);;
- 		}
-    	if(StringUtil.isBlank(imgTwo)){
- 			code="500";
- 			sb.append("证据材料图片2为空  ");
- 		}else{
- 			//readilyShootVo.setWhistleblower(whistleblower);;
- 		}
-    	if(StringUtil.isBlank(imgThree)){
- 			code="500";
- 			sb.append("证据材料图片3为空  ");
- 		}else{
- 			//readilyShootVo.setWhistleblower(whistleblower);;
- 		}
-    	//if(imgOne)
     	
-    	readilyShootVo.setLicensePlateNumber("B154578");
-    	readilyShootVo.setApplyType("4");
-    	readilyShootVo.setLinkAddress("南山区");
-    	readilyShootVo.setPaymentNumber("432432432");
-    	readilyShootVo.setEnforcementDepartment("jjdd");
-    	readilyShootVo.setUserSource("C");
-    	readilyShootVo.setUserNumber("123456");
+
+ 		readilyShootVo.setInputMan(inputMan);
+
+    	
+    	if(StringUtil.isBlank(inputManName)){
+ 			code="500";
+ 			sb.append("举报人姓名为空  ");
+ 		}else{
+ 			readilyShootVo.setInputManName(inputManName);
+ 		}
+    	   	
+    	if(StringUtil.isBlank(reportImgOne)){
+    		imgNumber++;
+ 		}else{
+ 			readilyShootVo.setReportImgOne(reportImgOne);
+ 		}
+    	
+    	if(StringUtil.isBlank(reportImgTwo)){
+    		imgNumber++;
+ 		}else{
+ 			readilyShootVo.setReportImgTwo(reportImgTwo);
+ 		}
+    	
+    	if(StringUtil.isBlank(reportImgThree)){
+    		imgNumber++;
+ 		}else{
+ 			readilyShootVo.setReportImgThree(reportImgThree);
+ 		}
+    	
+    	if(imgNumber>1){
+    		code="500";
+ 			sb.append("举报图片数量不够  ");
+    	}
+    	
+    	if(StringUtil.isBlank(userSource)){
+ 			code="500";
+ 			sb.append("用户来源为空  ");
+ 		}else{
+ 			readilyShootVo.setUserSource(userSource);
+ 		}
+    	
+    	if(StringUtil.isBlank(openId)){
+ 			code="500";
+ 			sb.append("微信openid为空  ");
+ 		}else{
+ 			readilyShootVo.setOpenId(openId);
+ 		}
+
        	BaseBean basebean = new  BaseBean();
     	try {
     		 if("0000".equals(code)){//参数校验通过
     			 JSONObject json = accountService.readilyShoot(readilyShootVo);
     				System.out.println(json);
-    				code =json.getString("CODE");
+    				code =json.getString("code");
     				if(!"0000".equals(code)){
     					code="500";
     				}else{
     					Map<String, Object> modelMap = new HashMap<String, Object>();
-    			     	modelMap.put("recordNumber", "000000000");
-    			     	modelMap.put("queryPassword", "123456");
+    					String msg=json.getString("msg");
+    			     	modelMap.put("recordNumber", msg.substring(5, 19));
+    			     	modelMap.put("queryPassword", json.getString("cxyzm"));
     			     	basebean.setData(modelMap);
     				}
     		    	basebean.setCode(code);
-    		    	basebean.setMsg(json.getString("MSG"));
+    		    	basebean.setMsg(json.getString("msg"));
     		 }else{
     			 basebean.setMsg(sb.toString());
     		 }
@@ -729,5 +765,27 @@ public class AccountAction extends BaseAction {
     	logger.info(JSON.toJSONString(basebean));
     
     }
+    
+    @RequestMapping(value = "getPositioningAddress",method = RequestMethod.POST)
+    public void getPositioningAddress(String keyword) throws Exception {
+		JSONObject json= null;
+		
+		BaseBean basebean = new  BaseBean();
+		try {
+			 json  = accountService.getPositioningAddress(keyword);
+			 System.out.println(json);
+			 String code =json.getString("code");
+			 if("0000".equals(code)){
+				 basebean.setCode(code);
+				 basebean.setMsg(json.getString("msg"));
+				 basebean.setData(json.get("body"));
+			 }
+		} catch (Exception e) {
+			logger.error("getPositioningAddress出错，错误="+ keyword,e);
+		}
+		renderJSON(basebean);
+    	logger.info(JSON.toJSONString(basebean));
+
+	}
     
 }
