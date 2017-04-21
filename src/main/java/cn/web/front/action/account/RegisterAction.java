@@ -68,7 +68,7 @@ public class RegisterAction extends BaseAction {
 			String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgNegative,
 			String idCardImgHandHeld) {
 		String code = "0000";
-		StringBuffer sb = new StringBuffer("下列参数有问题：");
+		StringBuffer sb = new StringBuffer("");
 		RegisterVo registerVo = new RegisterVo();
 		if (StringUtil.isBlank(identityCard)) {
 			code = "500";
@@ -213,7 +213,7 @@ public class RegisterAction extends BaseAction {
 			String validateCode, String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgHandHeld,
 			String idCardImgNegative, String ownerIdCardImgPositive, String ownerIdCardImgHandHeld) {
 		String code = "0000";
-		StringBuffer sb = new StringBuffer("下列参数有问题：");
+		StringBuffer sb = new StringBuffer("");
 		RegisterVo registerVo = new RegisterVo();
 		if (StringUtil.isBlank(userIdCard)) {
 			code = "500";
@@ -381,7 +381,7 @@ public class RegisterAction extends BaseAction {
 			String idCardImgHandHeld) {
 
 		String code = "0000";
-		StringBuffer sb = new StringBuffer("下列参数有问题：");
+		StringBuffer sb = new StringBuffer("");
 		RegisterVo registerVo = new RegisterVo();
 		if (StringUtil.isBlank(identityCard)) {
 			code = "500";
@@ -503,7 +503,7 @@ public class RegisterAction extends BaseAction {
 	public void isPedestrianNotDriver(String identityCard, String mobilephone, String validateCode,
 			String idCardImgPositive, String idCardImgNegative, String idCardImgHandHeld) {
 		String code = "0000";
-		StringBuffer sb = new StringBuffer("下列参数有问题：");
+		StringBuffer sb = new StringBuffer("");
 		RegisterVo registerVo = new RegisterVo();
 		if (StringUtil.isBlank(identityCard)) {
 			code = "500";

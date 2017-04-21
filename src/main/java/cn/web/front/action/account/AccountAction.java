@@ -277,7 +277,7 @@ public class AccountAction extends BaseAction {
     		 String openId, String unionId) {
     	
     	String code="0000";
- 		StringBuffer sb = new StringBuffer("下列参数有问题：");
+ 		StringBuffer sb = new StringBuffer("");
     	UserBind userBind = new UserBind();
     	
     	userBind.setOpenId(openId);
@@ -471,7 +471,7 @@ public class AccountAction extends BaseAction {
     public void updateUser( String tureName, String identityCard, String mailingAddress, String idCardImgPositive
     		, String idCardImgNegative,String idCardImgHandHeld) {
     	String code="0000";
- 		StringBuffer sb = new StringBuffer("下列参数有问题：");
+ 		StringBuffer sb = new StringBuffer("");
     	UserBasicVo userBasicVo =new UserBasicVo();
     	if(StringUtil.isBlank(identityCard)){
  			code="500";
@@ -552,7 +552,7 @@ public class AccountAction extends BaseAction {
     		,String newMobile,String identityCard) {
     	
     	String code="0000";
- 		StringBuffer sb = new StringBuffer("下列参数有问题：");
+ 		StringBuffer sb = new StringBuffer("");
     	UserBasicVo userBasicVo =new UserBasicVo();
     	if(StringUtil.isBlank(identityCard)){
  			code="500";
@@ -627,7 +627,7 @@ public class AccountAction extends BaseAction {
     @RequestMapping(value = "updatePwd",method = RequestMethod.POST)
     public void updatePwd( String oldPwd, String newPwd,String identityCard) {
     	String code="0000";
- 		StringBuffer sb = new StringBuffer("下列参数有问题：");
+ 		StringBuffer sb = new StringBuffer("");
     	
     	UserBasicVo userBasicVo =new UserBasicVo();
     	if(StringUtil.isBlank(identityCard)){
@@ -705,11 +705,17 @@ public class AccountAction extends BaseAction {
  		StringBuffer sb = new StringBuffer("");
  		int imgNumber=0;//传入的图片数量
     	ReadilyShootVo readilyShootVo = new ReadilyShootVo();
-    	
+    	if(StringUtil.isBlank(licensePlateNumber)){
+    		readilyShootVo.setLicensePlateNumber("");
+    	}else{
+   		readilyShootVo.setLicensePlateNumber(licensePlateNumber);
+    	}
 
- 		readilyShootVo.setLicensePlateNumber(licensePlateNumber);
-
- 		readilyShootVo.setLicensePlateType(licensePlateType);
+    	if(StringUtil.isBlank(licensePlateType)){
+    		readilyShootVo.setLicensePlateType("");
+    	}else{
+    		readilyShootVo.setLicensePlateType(licensePlateType);	
+    	}
 
     	if(StringUtil.isBlank(illegalActivitieOne)){
  			code="500";
@@ -734,7 +740,7 @@ public class AccountAction extends BaseAction {
  			code="500";
  			sb.append("违法地点为空  ");
  		}else{
- 			readilyShootVo.setIllegalSections(illegalSections);;
+ 			readilyShootVo.setIllegalSections(illegalSections);
  		}
     	
     	if(StringUtil.isBlank(inputManPhone)){
@@ -744,8 +750,14 @@ public class AccountAction extends BaseAction {
  			readilyShootVo.setInputManPhone(inputManPhone);
  		}
     	
+    	if(StringUtil.isBlank(inputMan)){
+    		readilyShootVo.setInputMan("");
+ 		}else{
+ 			readilyShootVo.setInputMan(inputMan);
+ 		}
+    	
 
- 		readilyShootVo.setInputMan(inputMan);
+ 		
 
     	
     	if(StringUtil.isBlank(inputManName)){
