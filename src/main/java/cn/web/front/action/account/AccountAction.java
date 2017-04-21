@@ -328,10 +328,11 @@ public class AccountAction extends BaseAction {
      * @param mobilephone 手机号
      */
     @RequestMapping(value = "addVehicle",method = RequestMethod.POST)
-    public void addVehicle( int bindType, String vehicleType, String plateType, String licensePlateNumber
-    		, String frameNumber, String ownerName, String identityCard, String mobilephone,String provinceAbbreviation) {
+    public void addVehicle( int bindType, String vehicleType, String licensePlateType, String licensePlateNumber,String userSource,
+    		String inputIP,String certifiedSource,String frameNumber, String ownerName, String ownerIdCard,String identityCard, String mobilephone,
+    		String provinceAbbreviation,String idCardImgPositive,String idCardImgHandHeld) {
     	String code="0000";
- 		StringBuffer sb = new StringBuffer("下列参数有问题：");   	
+ 		StringBuffer sb = new StringBuffer("");   	
     	BindCarVo bindCarVo = new BindCarVo();
     	
     	if(bindType<0){
@@ -339,6 +340,43 @@ public class AccountAction extends BaseAction {
  			sb.append("绑定类型错误  ");
  		}else{
  			bindCarVo.setBindType(bindType);
+ 			
+ 			if(bindType==0){
+ 				
+ 				if(StringUtil.isBlank(ownerName)){
+ 		 			code="500";
+ 		 			sb.append("车主姓名为空  ");
+ 		 		}else{
+ 		 			bindCarVo.setOwnerName(ownerName);
+ 		 		}
+ 				
+ 				if(StringUtil.isBlank(ownerIdCard)){
+ 		 			code="500";
+ 		 			sb.append("车主身份证号码为空  ");
+ 		 		}else{
+ 		 			bindCarVo.setOwnerIdCard(ownerIdCard);
+ 		 		}
+ 				
+ 				if(StringUtil.isBlank(frameNumber)){
+ 		 			code="500";
+ 		 			sb.append("车架号码为空  ");
+ 		 		}else{
+ 		 			bindCarVo.setFrameNumber(frameNumber);
+ 		 		}
+ 				if(StringUtil.isBlank(idCardImgPositive)){
+ 		 			code="500";
+ 		 			sb.append("车主正面照为空  ");
+ 		 		}else{
+ 		 			bindCarVo.setIdCardImgPositive(idCardImgPositive);
+ 		 		}
+ 				if(StringUtil.isBlank(idCardImgHandHeld)){
+ 		 			code="500";
+ 		 			sb.append("车主手持照为空  ");
+ 		 		}else{
+ 		 			bindCarVo.setIdCardImgHandHeld(idCardImgHandHeld);
+ 		 		}
+ 			}
+ 			
  		}
     	
     	if(StringUtil.isBlank(licensePlateNumber)){
@@ -347,14 +385,7 @@ public class AccountAction extends BaseAction {
  		}else{
  			bindCarVo.setLicensePlateType(licensePlateNumber);
  		}
-    	
-    	if(StringUtil.isBlank(frameNumber)){
- 			code="500";
- 			sb.append("车架号码为空  ");
- 		}else{
- 			bindCarVo.setFrameNumber(frameNumber);
- 		}
-
+ 
     	if(StringUtil.isBlank(identityCard)){
  			code="500";
  			sb.append("身份证号为空  ");
@@ -362,19 +393,41 @@ public class AccountAction extends BaseAction {
  			bindCarVo.setUserIdCard(identityCard);
  		}
     	
-    	if(StringUtil.isBlank(plateType)){
+    	if(StringUtil.isBlank(licensePlateType)){
  			code="500";
  			sb.append("号牌种类为空  ");
  		}else{
- 			bindCarVo.setLicensePlateType(plateType);
+ 			bindCarVo.setLicensePlateType(licensePlateType);
  		}
     	
-    	if(StringUtil.isBlank(ownerName)){
+    	if(StringUtil.isBlank(userSource)){
  			code="500";
- 			sb.append("车主姓名为空  ");
+ 			sb.append("用户来源为空  ");
  		}else{
- 			bindCarVo.setOwnerName(ownerName);
+ 			bindCarVo.setUserSource(userSource);
  		}
+    	
+    	if(StringUtil.isBlank(provinceAbbreviation)){
+ 			code="500";
+ 			sb.append("号牌核发省简称为空  ");
+ 		}else{
+ 			bindCarVo.setProvinceAbbreviation(provinceAbbreviation);
+ 		}
+    	
+    	if(StringUtil.isBlank(inputIP)){
+ 			code="500";
+ 			sb.append("录入ip为空  ");
+ 		}else{
+ 			bindCarVo.setInputIP(inputIP);
+ 		}
+    	
+    	if(StringUtil.isBlank(certifiedSource)){
+ 			code="500";
+ 			sb.append("账号绑定类型为空  ");
+ 		}else{
+ 			bindCarVo.setCertifiedSource(certifiedSource);
+ 		}
+    	
     	BaseBean basebean = new  BaseBean();
     	try {
     		
@@ -392,6 +445,7 @@ public class AccountAction extends BaseAction {
     	    	basebean.setCode(code);
     	    	basebean.setMsg(json.getString("MSG"));   
     		}else{
+    			basebean.setCode(code);
     			basebean.setMsg(sb.toString());
     		}
 		} catch (Exception e) {
@@ -474,6 +528,7 @@ public class AccountAction extends BaseAction {
     	    	basebean.setCode(code);
     	    	basebean.setMsg(json.getString("MSG"));
     		}else{
+    			basebean.setCode(code);
     			basebean.setMsg(sb.toString());
     		}  		
 		} catch (Exception e) {	
@@ -550,6 +605,7 @@ public class AccountAction extends BaseAction {
     				basebean.setMsg(sb.toString());
     			}   	    	
     		}else{
+    			basebean.setCode(code);
     			basebean.setMsg(sb.toString());
     		}
     		
@@ -608,6 +664,7 @@ public class AccountAction extends BaseAction {
     	    	basebean.setCode(code);
     	    	basebean.setMsg(json.getString("MSG"));
     		}else{
+    			basebean.setCode(code);
     			basebean.setMsg(sb.toString());
     		}   		
 		} catch (Exception e) {
@@ -753,6 +810,7 @@ public class AccountAction extends BaseAction {
     		    	basebean.setCode(code);
     		    	basebean.setMsg(json.getString("msg"));
     		 }else{
+    			 basebean.setCode(code);
     			 basebean.setMsg(sb.toString());
     		 }
 			

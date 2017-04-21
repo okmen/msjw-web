@@ -165,6 +165,7 @@ public class RegisterAction extends BaseAction {
 				basebean.setCode(code);
 				basebean.setMsg(json.getString("MSG"));
 			} else {
+				basebean.setCode(code);
 				basebean.setMsg(sb.toString());
 			}
 
@@ -342,6 +343,7 @@ public class RegisterAction extends BaseAction {
 				}
 
 			} else {
+				basebean.setCode(code);
 				basebean.setMsg(sb.toString());
 			}
 		} catch (Exception e) {
@@ -468,6 +470,7 @@ public class RegisterAction extends BaseAction {
 				}
 
 			} else {
+				basebean.setCode(code);
 				basebean.setMsg(sb.toString());
 			}
 
@@ -571,6 +574,7 @@ public class RegisterAction extends BaseAction {
 				}
 
 			} else {
+				basebean.setCode(code);
 				basebean.setMsg(sb.toString());
 			}
 
