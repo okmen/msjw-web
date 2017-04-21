@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.alibaba.dubbo.common.logger.Logger;
+import com.alibaba.dubbo.common.logger.LoggerFactory;
 import com.alibaba.fastjson.JSON;
 import com.esotericsoftware.kryo.io.Output;
 
@@ -39,6 +41,8 @@ import cn.web.front.support.BaseAction;
 public class MicroClassroomAction extends BaseAction {
 	@Autowired
 	private IMicroclassServer iMicroclassServer;
+	
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	
 	/**
@@ -157,7 +161,9 @@ public class MicroClassroomAction extends BaseAction {
 		 BaseBean base=new BaseBean();
 		 Study  s=new Study();
 		 List<BaseBean>list=null;
-		 
+		try {
+			
+		
 		 String clientIp = request.getHeader("x-forwarded-for");  //获取用户IP地址
 	        if(clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {  
 	            clientIp = request.getHeader("Proxy-Client-IP");  
@@ -216,6 +222,9 @@ public class MicroClassroomAction extends BaseAction {
 		 }
 		 renderJSON(base);	
 		// logger.info(JSON.toJSONString(base));
+		} catch (Exception e) {
+			logger.error("StudyHomepages方法：", e);
+		}
 	 }
 
 	 /**
@@ -228,7 +237,9 @@ public class MicroClassroomAction extends BaseAction {
 		 BaseBean base=new BaseBean();
 		 List<BaseBean>list=null;
 		 Study  s=new Study();
-
+		 try {
+			
+		
 		 String classroomId = request.getParameter("classroomId");  //获取列表ID,根据列表ID来判断进行不同的方法
 		 String clientIp = request.getHeader("x-forwarded-for");  //获取用户IP地址
 	        if(clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {  
@@ -296,6 +307,9 @@ public class MicroClassroomAction extends BaseAction {
 			}
 			renderJSON(base);
 	 }
+	 } catch (Exception e) {
+		 logger.error("Studys方法：", e);	
+	 }
 	 }
 	 
 	 
@@ -310,6 +324,9 @@ public class MicroClassroomAction extends BaseAction {
 		 BaseBean base=new BaseBean();
 		 List<BaseBean>list=null;
 		 Study  s=new Study();
+		 try {
+			
+		
 		 String classroomId = request.getParameter("classroomId");  //获取列表ID,根据列表ID来判断进行不同的方法
 		 String clientIp = request.getHeader("x-forwarded-for");  //获取用户IP地址
 	        if(clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {  
@@ -455,6 +472,9 @@ public class MicroClassroomAction extends BaseAction {
 			}
 			renderJSON(base);
 	 }
+	} catch (Exception e) {
+				logger.error("Answer方法", e);
+	}
 	 }
 	 
 
