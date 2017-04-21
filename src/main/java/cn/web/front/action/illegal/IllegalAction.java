@@ -129,7 +129,7 @@ public class IllegalAction extends BaseAction {
 		   //判断客户是否已同步
 		   String isReg=illegalService.isRegisterUser();
 		   //未同步
-		   if("1".equals(isReg)){
+		   if("0".equals(isReg)){
 			   CustInfoBean cust=new CustInfoBean();
 			   List<CarInfoBean> carList=new ArrayList<>();
 			   //获取客户信息
