@@ -329,7 +329,7 @@ public class AccountAction extends BaseAction {
      */
     @RequestMapping(value = "addVehicle",method = RequestMethod.POST)
     public void addVehicle( int bindType, String vehicleType, String licensePlateType, String licensePlateNumber,String userSource,
-    		String inputIP,String certifiedSource,String frameNumber, String ownerName, String ownerIdCard,String identityCard, String mobilephone,
+    		String inputIP,String certifiedSource,String frameNumber, String ownerName, String ownerIdCard,String userIdCard, String mobilephone,
     		String provinceAbbreviation,String idCardImgPositive,String idCardImgHandHeld) {
     	String code="0000";
  		StringBuffer sb = new StringBuffer("");   	
@@ -386,11 +386,11 @@ public class AccountAction extends BaseAction {
  			bindCarVo.setLicensePlateType(licensePlateNumber);
  		}
  
-    	if(StringUtil.isBlank(identityCard)){
+    	if(StringUtil.isBlank(userIdCard)){
  			code="500";
  			sb.append("身份证号为空  ");
  		}else{
- 			bindCarVo.setUserIdCard(identityCard);
+ 			bindCarVo.setUserIdCard(userIdCard);
  		}
     	
     	if(StringUtil.isBlank(licensePlateType)){
