@@ -216,7 +216,7 @@ public class AccountSearchAction extends BaseAction {
     		baseBean.setCode("0001");
     		renderJSON(baseBean);
 		}
-    	logger.info(JSON.toJSONString(baseBean));
+    	//logger.info(JSON.toJSONString(baseBean));
     }
     
     
@@ -268,7 +268,7 @@ public class AccountSearchAction extends BaseAction {
 			baseBean.setCode("0009");
         	baseBean.setMsg(e.getMessage());
 		}
-    	logger.info(JSON.toJSONString(baseBean));
+    	//logger.info(JSON.toJSONString(baseBean));
     }
 	
 	/**
