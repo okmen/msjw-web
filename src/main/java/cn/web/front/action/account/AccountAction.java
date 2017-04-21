@@ -432,10 +432,6 @@ public class AccountAction extends BaseAction {
     	try {
     		
     		if("0000".equals(code)){//参数校验通过
-    			bindCarVo.setUserSource("C");
-            	bindCarVo.setProvinceAbbreviation("粤");
-            	bindCarVo.setInputIP("127.0.0.1");
-        		
         		JSONObject json = accountService.addVehicle(bindCarVo);
     			System.out.println(json);
     			code =json.getString("CODE");
