@@ -30,7 +30,6 @@ public class OutJsonModel {
 	 */
 	public String toJson(){
 		String json = GsonUtil.toJson(this);
-		System.out.println(json);
 		return json;
 	}
 }

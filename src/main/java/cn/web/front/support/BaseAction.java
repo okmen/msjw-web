@@ -116,6 +116,7 @@ public class BaseAction extends cn.web.front.common.BaseAction {
     	try {
     		PrintWriter out = response.getWriter();
         	out.print(str);
+        	logger.info(str);
 		} catch (Exception e) {
 			logger.error("写字符串异常");
 		}

@@ -1,25 +1,16 @@
 package cn.web.front.action.wechat;
 
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import cn.message.bean.WechatUserInfo;
 import cn.message.service.ITemplateMessageService;
 import cn.message.service.IWechatService;
-import cn.sdk.util.DateUtil;
 import cn.web.front.support.BaseAction;
 
 @Controller
@@ -49,11 +40,12 @@ public class OauthAction extends BaseAction{
 		try {
 			//response.setCharacterEncoding("utf-8");
 			//
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("serviceName", "测试模板消息:"+DateUtil.convert2String(new Date().getTime()));
-			boolean bool = templateMessageService.sendMessage(wechatUserInfo.getOpenId(),"www.baidu.com",map);
-			logger.info("模板消息发送："+bool);
-			
+		/*	Map<String, Property> map = new HashMap<String, Property>();
+			map.put("serviceName", new TemplateDataModel().new Property("星级用户回馈大抽奖活动","#0abece"));
+			map.put("fankui", new TemplateDataModel().new Property("星级移动用户们，点击进入大转盘来领流量吧！","#0abece"));
+			boolean bool = templateMessageService.sendMessage(wechatUserInfo.getOpenId(),"ccUJnV-aKUFrAh-dQ1YTnpKoo9_9z_deYMb23xQpHzA","www.baidu.com",map);
+			logger.info("模板消息发送："+bool);*/
+			logger.info(wechatUserInfo.toString());
 			response.sendRedirect(state+
 					"?openId="+wechatUserInfo.getOpenId()+
 					"&headimgurl="+wechatUserInfo.getHeadUrlImg()+

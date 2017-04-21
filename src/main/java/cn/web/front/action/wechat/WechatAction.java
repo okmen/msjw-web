@@ -31,6 +31,7 @@ import cn.message.service.IMobileMessageService;
 import cn.message.service.IWechatService;
 import cn.sdk.exception.ResultCode;
 import cn.sdk.util.StringUtil;
+import cn.web.front.action.wechat.util.WechatPostParamsUtil;
 import cn.web.front.support.BaseAction;
 
 @Controller
@@ -69,7 +70,7 @@ public class WechatAction extends BaseAction {
 		try {
 			request.setCharacterEncoding("utf-8");
 			//获取post
-			Map<String, String> requestMap = parseXml(request);
+			Map<String, String> requestMap = WechatPostParamsUtil.parseXml(request);
 			String fromUserName = requestMap.get("FromUserName");
 	        String toUserName = requestMap.get("ToUserName");
 	        String msgType = requestMap.get("MsgType");
@@ -105,39 +106,14 @@ public class WechatAction extends BaseAction {
 		}
 	}
 	
-	/**
-	 * 解析微信端主动发送过来的消息
-	 * @param request
-	 * @return
-	 */
-	private Map<String, String> parseXml(HttpServletRequest request){
-		InputStream inputStream = null;
-		// 将解析结果存储在HashMap中
-        Map<String, String> map = new HashMap<String, String>();
+	@RequestMapping(value = "/sendMessage.html", method = RequestMethod.GET) 
+	public void sendMessage(HttpServletRequest request, HttpServletResponse response){
 		try {
-	        // 从request中取得输入流
-	        inputStream = request.getInputStream();
-	        // 读取输入流
-	        SAXReader reader = new SAXReader();
-	        Document document = reader.read(inputStream);
-	        // 得到xml根元素
-	        Element root = document.getRootElement();
-	        // 得到根元素的所有子节点
-	        List<Element> elementList = root.elements();
-	        // 遍历所有子节点
-	        for (Element e : elementList)
-	            map.put(e.getName(), e.getText());
+			boolean bool = mobileMessageService.sendMessage("13510823501", "测试短信");
+			outString(response, bool+"");
 		} catch (Exception e) {
-			logger.info("解析message消息异常",e);
-		}finally{
-			// 释放资源
-	        try {
-				inputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-	        inputStream = null;
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-        return map;
 	}
 }
