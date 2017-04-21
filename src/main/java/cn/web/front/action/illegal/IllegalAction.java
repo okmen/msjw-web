@@ -491,7 +491,7 @@ public class IllegalAction extends BaseAction {
      * @param mobilephone
      */
     @RequestMapping(value = "toQuerySubscribe")
-    public void toQuerySubscribe(String licensePlateType,String  licensePlateNo,String mobilephone){	   
+    public void toQuerySubscribe(int licensePlateType,String  licensePlateNo,String mobilephone){	   
  	  BaseBean base=new BaseBean();		 
 	   try {
 		   List<SubcribeBean> list=illegalService.querySubscribe(licensePlateNo, licensePlateType, mobilephone);
