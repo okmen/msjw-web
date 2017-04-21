@@ -387,20 +387,20 @@ public class IllegalAction extends BaseAction {
     @RequestMapping(value = "toQueryPunishmentPage")
     public void toQueryPunishmentPage(String billNo,String  licensePlateNo,String mobilephone,HttpServletRequest req, HttpServletResponse resp){
  	  //"4403010922403405","粤B8A3N2","18601174358");
+    	BaseBean base=new BaseBean();
 	 	try {
 	 		String url=illegalService.toQueryPunishmentPage(billNo,licensePlateNo,mobilephone);
-	 		if(StringUtil.isEmpty(url)){
-		    	BaseBean base=new BaseBean();
-		    	base.setCode("0001");
-		    	base.setMsg("跳转页面失败！");
-		    	renderJSON(base);
+	 		if(StringUtil.isEmpty(url)){	    	
+			    	base.setCode("0001");
+			    	base.setMsg("返回页面地址为空！");	
 		    	}else{
-		    		resp.sendRedirect(url);
+		    		base.setCode("0000");
+			    	base.setMsg(url);
 		    	} 
 		} catch (Exception e) {	
 			e.printStackTrace();
 		} 
-
+	 	renderJSON(base);
     } 
     
     
