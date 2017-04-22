@@ -341,9 +341,11 @@ public class AccountSearchAction extends BaseAction {
         		//车牌号、车牌类型、车架后4位
         		List<IllegalInfoBean> illegalInfoBeans = illegalService.queryInfoByLicensePlateNo(numberPlateNumber, plateType, "");
         		if(null != illegalInfoBeans && illegalInfoBeans.size() > 0){
-        			bindTheVehicleVo.setIllegalNumber("当前本车有" + illegalInfoBeans.size() + "宗违法尚未处理");
+        			//bindTheVehicleVo.setIllegalNumber("当前本车有" + illegalInfoBeans.size() + "宗违法尚未处理");
+        			bindTheVehicleVo.setIllegalNumber(String.valueOf(illegalInfoBeans.size()));
         		}else{
-        			bindTheVehicleVo.setIllegalNumber("当前本车有0宗违法尚未处理");
+        			//bindTheVehicleVo.setIllegalNumber("当前本车有0宗违法尚未处理");
+        			bindTheVehicleVo.setIllegalNumber("0");
         		}
         	}
         	baseBean.setData(bindTheVehicleVos);
