@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -31,6 +32,7 @@ import cn.message.service.IMobileMessageService;
 import cn.message.service.IWechatService;
 import cn.sdk.exception.ResultCode;
 import cn.sdk.util.StringUtil;
+import cn.web.front.action.wechat.util.MenuFileUtil;
 import cn.web.front.action.wechat.util.WechatPostParamsUtil;
 import cn.web.front.support.BaseAction;
 
@@ -89,9 +91,24 @@ public class WechatAction extends BaseAction {
 	@RequestMapping(value = "/createMenu.html", method = RequestMethod.GET) 
 	public void createMenu(HttpServletRequest request, HttpServletResponse response){
 		try {
-			String json = wechatService.createMenu();
-			outString(response, json);
+			String filePath = StringUtils.class.getClassLoader().getResource("/").getPath()+ "menu.json";  
+			String json = MenuFileUtil.readFileByChars(filePath);
+			String result = wechatService.createMenu(json);
+			outString(response, result);
 		} catch (Exception e) {
+			logger.info("创建菜单异常",e);
+			outString(response, "error");
+		}
+	}
+	
+	@RequestMapping(value = "/queryMenu.html", method = RequestMethod.GET) 
+	public void queryMenu(HttpServletRequest request, HttpServletResponse response){
+		try {
+			response.setCharacterEncoding("utf-8");
+			String result = wechatService.queryMenu();
+			outString(response, result);
+		} catch (Exception e) {
+			logger.error("查询菜单异常",e);
 			outString(response, "error");
 		}
 	}

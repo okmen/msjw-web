@@ -33,17 +33,15 @@ public class H5Action extends BaseAction {
 	@RequestMapping(value = "/sdkConfig.html")
 	public void sdkConfig(HttpServletRequest request,HttpServletResponse response){
 		String url = request.getParameter("url");
-		logger.info("h5 传过来的url:"+url);
 		try {
 			if(!StringUtils.isNotBlank(url)){
 				outString(response, new OutJsonModel(ConstantsErrorCode.ERROR_CODE_000001).toJson());
 				return;
 			}
-			
 			Map<String, Object> map = wechatService.sdkConfig(url);
 			outString(response, new OutJsonModel(ConstantsErrorCode.ERROR_CODE_000000, map).toJson());
 		} catch (Exception e) {
-			logger.error("服务器异常", e);
+			logger.error("服务器异常"+url, e);
 			outString(response, new OutJsonModel(ConstantsErrorCode.ERROR_CODE_10000).toJson());
 		}
 	}
