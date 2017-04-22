@@ -22,7 +22,7 @@ import com.esotericsoftware.kryo.io.Output;
 import cn.microclass.bean.studyclassroom.Answeroptions;
 import cn.microclass.bean.studyclassroom.Study;
 import cn.microclass.bean.studyclassroom.StudyRecord;
-import cn.microclass.service.IMicroclassServer;
+import cn.microclass.service.IMicroclassService;
 /*import cn.account.bean.studyclassroom.Answeroptions;
 import cn.account.bean.studyclassroom.Study;
 import cn.account.bean.studyclassroom.StudyRecord;*/
@@ -40,7 +40,7 @@ import cn.web.front.support.BaseAction;
 @Controller
 public class MicroClassroomAction extends BaseAction {
 	@Autowired
-	private IMicroclassServer iMicroclassServer;
+	private IMicroclassService iMicroclassServer;
 	
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -221,6 +221,7 @@ public class MicroClassroomAction extends BaseAction {
 			 base.setData("必传参数不能为空！");
 		 }
 		 renderJSON(base);	
+		 logger.info("查询日志"+JSON.toJSONString(base));
 		// logger.info(JSON.toJSONString(base));
 		} catch (Exception e) {
 			logger.error("StudyHomepages方法：", e);
@@ -306,6 +307,7 @@ public class MicroClassroomAction extends BaseAction {
 				base.setData(b.getData());
 			}
 			renderJSON(base);
+			logger.info("随机取题日志"+JSON.toJSONString(base));
 	 }
 	 } catch (Exception e) {
 		 logger.error("Studys方法：", e);	
@@ -471,19 +473,27 @@ public class MicroClassroomAction extends BaseAction {
 				base.setData(b.getData());	
 			}
 			renderJSON(base);
+			logger.info("答题日志"+JSON.toJSONString(base));
 	 }
 	} catch (Exception e) {
 				logger.error("Answer方法", e);
 	}
 	 }
-	 
 
-	public IMicroclassServer getiMicroclassServer() {
+	public IMicroclassService getiMicroclassServer() {
 		return iMicroclassServer;
 	}
-	public void setiMicroclassServer(IMicroclassServer iMicroclassServer) {
+
+	public void setiMicroclassServer(IMicroclassService iMicroclassServer) {
 		this.iMicroclassServer = iMicroclassServer;
 	}
+
+	public Logger getLogger() {
+		return logger;
+	}
+	 
+
+
 
 	 
 	 
