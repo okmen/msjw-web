@@ -95,25 +95,4 @@ public class WechatAction extends BaseAction {
 			outString(response, "error");
 		}
 	}
-	
-	@RequestMapping(value = "/test.html", method = RequestMethod.GET) 
-	public void test(HttpServletRequest request, HttpServletResponse response){
-		try {
-			outString(response, "ok");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	@RequestMapping(value = "/sendMessage.html", method = RequestMethod.GET) 
-	public void sendMessage(HttpServletRequest request, HttpServletResponse response){
-		try {
-			boolean bool = mobileMessageService.sendMessage("13510823501", "测试短信");
-			outString(response, bool+"");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 }

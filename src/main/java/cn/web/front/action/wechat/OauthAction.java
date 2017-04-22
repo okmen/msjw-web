@@ -35,10 +35,9 @@ public class OauthAction extends BaseAction{
 		String code = request.getParameter("code");
 		String state = request.getParameter("state");//前端会带过来一个url
 		logger.info("state:"+state);
-		//获取微信用户信息
-		WechatUserInfo wechatUserInfo = wechatService.callback4OpenId(code, state);
 		try {
-			//response.setCharacterEncoding("utf-8");
+			//获取微信用户信息
+			WechatUserInfo wechatUserInfo = wechatService.callback4OpenId(code, state);
 			//
 		/*	Map<String, Property> map = new HashMap<String, Property>();
 			map.put("serviceName", new TemplateDataModel().new Property("星级用户回馈大抽奖活动","#0abece"));
@@ -46,6 +45,7 @@ public class OauthAction extends BaseAction{
 			boolean bool = templateMessageService.sendMessage(wechatUserInfo.getOpenId(),"ccUJnV-aKUFrAh-dQ1YTnpKoo9_9z_deYMb23xQpHzA","www.baidu.com",map);
 			logger.info("模板消息发送："+bool);*/
 			logger.info(wechatUserInfo.toString());
+			response.setCharacterEncoding("utf-8");
 			response.sendRedirect(state+
 					"?openId="+wechatUserInfo.getOpenId()+
 					"&headimgurl="+wechatUserInfo.getHeadUrlImg()+
