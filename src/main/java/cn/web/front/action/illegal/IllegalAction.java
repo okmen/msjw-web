@@ -192,7 +192,7 @@ public class IllegalAction extends BaseAction {
 			   base.setMsg("当前车辆无未处理违法");
 		   }		   
 		} catch (Exception e) {
-			base.setCode("0001");
+			base.setCode("0002");
 			base.setMsg("查询失败！");
 		} 
 	   renderJSON(base);
@@ -272,7 +272,7 @@ public class IllegalAction extends BaseAction {
 			   base.setMsg("驾驶人当前无未处理的违法");
 		   }		   
 		} catch (Exception e) {
-			base.setCode("0001");
+			base.setCode("0002");
 			base.setMsg("查询失败！");
 		} 
 	   renderJSON(base);
@@ -404,7 +404,7 @@ public class IllegalAction extends BaseAction {
 			   base.setMsg("当前无未处理的违法");
 		   }		   
 		} catch (Exception e) {
-			base.setCode("0001");
+			base.setCode("0002");
 			base.setMsg("查询失败！");
 		}
  	   renderJSON(base);
@@ -430,7 +430,7 @@ public class IllegalAction extends BaseAction {
 		   base.setMsg("成功！");
            base.setData(bean);	   
 		} catch (Exception e) {
-			base.setCode("0001");
+			base.setCode("0002");
 			base.setMsg("查询失败！");
 		}
  	   renderJSON(base);
@@ -511,7 +511,7 @@ public class IllegalAction extends BaseAction {
 			   base.setMsg("违法处理点获取为空");
 		   }		   
 		} catch (Exception e) {
-			base.setCode("0001");
+			base.setCode("0002");
 			base.setMsg("查询失败！");
 		}
 
@@ -579,7 +579,7 @@ public class IllegalAction extends BaseAction {
  
     		base= illegalService.toChangeSubscribe(snm, cldbmid, cczb_id, custInfo, carInfo, sourceOfCertification);
 		} catch (Exception e) {
-			base.setCode("0001");
+			base.setCode("0002");
 			base.setMsg("预约失败！");
 		}   
  	   renderJSON(base);
@@ -650,7 +650,7 @@ public class IllegalAction extends BaseAction {
 			   base.setMsg("当前客户无预约");
 		   }		   
 		} catch (Exception e) {
-			base.setCode("0001");
+			base.setCode("0002");
 			base.setMsg("查询失败！");
 		}
  
@@ -721,7 +721,7 @@ public class IllegalAction extends BaseAction {
 			   base.setMsg("当前客户无申诉信息");
 		   }		   
 		} catch (Exception e) {
-			base.setCode("0001");
+			base.setCode("0002");
 			base.setMsg("查询失败！");
 		}
 
