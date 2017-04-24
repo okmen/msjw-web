@@ -35,8 +35,11 @@ public class WechatPostParamsUtil {
 	        // 得到根元素的所有子节点
 	        List<Element> elementList = root.elements();
 	        // 遍历所有子节点
-	        for (Element e : elementList)
-	            map.put(e.getName(), e.getText());
+	        for (Element e : elementList){
+	        	map.put(e.getName(), e.getText());
+	        	logger.info("微信post消息参数:"+ e.getName()+"="+e.getText());
+	        }
+	            
 		} catch (Exception e) {
 			logger.info("解析微信message消息异常",e);
 		}finally{

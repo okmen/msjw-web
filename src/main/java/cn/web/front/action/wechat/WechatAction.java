@@ -27,7 +27,7 @@ import com.alibaba.fastjson.JSON;
 
 import cn.account.service.IAccountService;
 import cn.message.bean.WechatPostMessageModel;
-import cn.message.bean.message.request.IMessage;
+import cn.message.bean.message.IMessage;
 import cn.message.service.IMobileMessageService;
 import cn.message.service.IWechatService;
 import cn.sdk.exception.ResultCode;
@@ -77,7 +77,9 @@ public class WechatAction extends BaseAction {
 	        String toUserName = requestMap.get("ToUserName");
 	        String msgType = requestMap.get("MsgType");
 	        String event = requestMap.get("Event"); 
-			IMessage mesasge = wechatService.processPostMessage(new WechatPostMessageModel(fromUserName, toUserName, msgType, event));
+	        String content = requestMap.get("Content");
+	        String msgId = requestMap.get("MsgId");
+			IMessage mesasge = wechatService.processPostMessage(new WechatPostMessageModel(fromUserName, toUserName, msgType, event,content,msgId));
 			if(null != mesasge){
 				outString(response, mesasge.toXml());
 			} else{
