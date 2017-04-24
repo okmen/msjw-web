@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import cn.file.service.IFileService;
+import cn.sdk.util.MsgCode;
 import cn.web.front.support.BaseAction;
 import net.sf.json.JSONObject;
 
@@ -31,6 +34,7 @@ import net.sf.json.JSONObject;
 @Controller
 @RequestMapping(value="/common")
 public class ImgUploadAction extends BaseAction{
+	private final static Logger logger = LoggerFactory.getLogger(ImgUploadAction.class);
 
     @Autowired
     @Qualifier("fileService")
@@ -59,7 +63,7 @@ public class ImgUploadAction extends BaseAction{
 			
 			//验证file是否为空
 			if (file.isEmpty()) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "请选择上传图片！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -70,13 +74,14 @@ public class ImgUploadAction extends BaseAction{
 			//调用七牛上传图片  获得Url
 			String url = fileService.uploadFile(file2,days);
 			
-			jsonMap.put("code", "0000");
+			jsonMap.put("code", MsgCode.success);
 			jsonMap.put("msg", "图片上传成功！");
 			jsonMap.put("imgUrl", url);
 			out.print(JSONObject.fromObject(jsonMap));
 		} catch (Exception e) {
-			e.printStackTrace();
-			jsonMap.put("success", "1010");
+			logger.error("图片上传Action异常:"+e);
+			
+			jsonMap.put("success", MsgCode.exception);
 			jsonMap.put("msg", "服务器繁忙！");
 			out.print(JSONObject.fromObject(jsonMap));
 		}
@@ -103,13 +108,14 @@ public class ImgUploadAction extends BaseAction{
 			out = response.getWriter();
 			
 			String token = fileService.getUpToken();
-			jsonMap.put("code", "0000");
+			jsonMap.put("code", MsgCode.success);
 			jsonMap.put("msg", "获取上传凭证成功！");
 			jsonMap.put("upToken", token);
 			out.print(JSONObject.fromObject(jsonMap));
 		} catch (Exception e) {
-			e.printStackTrace();
-			jsonMap.put("success", "1010");
+			logger.error("获取上传凭证异常:"+e);
+			
+			jsonMap.put("success", MsgCode.exception);
 			jsonMap.put("msg", "服务器繁忙！");
 			out.print(JSONObject.fromObject(jsonMap));
 		}
