@@ -23,6 +23,7 @@ import cn.account.bean.vo.DriverLicenseInformationSheetVo;
 import cn.account.bean.vo.MotorVehicleInformationSheetVo;
 import cn.account.service.IAccountService;
 import cn.sdk.bean.BaseBean;
+import cn.sdk.util.MsgCode;
 import cn.web.front.support.BaseAction;
 
 /**
@@ -51,28 +52,27 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
 		try {
 			if(StringUtils.isBlank(identityCard)){
         		baseBean.setMsg("identityCard 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(sourceOfCertification)){
         		baseBean.setMsg("sourceOfCertification 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
-			baseBean.setCode("0000");
+			baseBean.setCode(MsgCode.success);
 	    	baseBean.setMsg("");
 			MotorVehicleInformationSheetVo motorVehicleInformationSheetVo = new MotorVehicleInformationSheetVo();
 			motorVehicleInformationSheetVo = accountService.getMotorVehicleInformationSheet(identityCard, sourceOfCertification);
 			baseBean.setData(motorVehicleInformationSheetVo);
 		} catch (Exception e) {
-			baseBean.setCode("0009");
-        	baseBean.setMsg(e.getMessage());
-        	baseBean.setData("");
+			DealException(baseBean, e);
+        	logger.error("getMotorVehicleInformationSheet 错误", e);
 		}
 		renderJSON(baseBean);
-		logger.info(JSON.toJSONString(baseBean));
+		logger.debug(JSON.toJSONString(baseBean));
 	}
 	
 	/**
@@ -87,17 +87,17 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
 		try {
 			if(StringUtils.isBlank(identityCard)){
         		baseBean.setMsg("identityCard 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(sourceOfCertification)){
         		baseBean.setMsg("sourceOfCertification 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
-			baseBean.setCode("0000");
+			baseBean.setCode(MsgCode.success);
 	    	baseBean.setMsg("");
 			DriverLicenseInformationSheetVo driverLicenseInformationSheetVo = new DriverLicenseInformationSheetVo();
 			sourceOfCertification = "C";
@@ -105,10 +105,10 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
 			baseBean.setData(authenticationBasicInformationVo);
 	    	renderJSON(baseBean);
 		} catch (Exception e) {
-			baseBean.setCode("0009");
-        	baseBean.setMsg(e.getMessage());
+			DealException(baseBean, e);
+        	logger.error("getDriverLicenseInformationSheet 错误", e);
 		}
-		logger.info(JSON.toJSONString(baseBean));
+		logger.debug(JSON.toJSONString(baseBean));
 	}
 	
 	/**
@@ -128,25 +128,25 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
     	try {
     		if(StringUtils.isBlank(userName)){
         		baseBean.setMsg("userName 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(identityCard)){
         		baseBean.setMsg("identityCard 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(mobilephone)){
         		baseBean.setMsg("mobilephone 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(sourceOfCertification)){
         		baseBean.setMsg("sourceOfCertification 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
@@ -160,11 +160,11 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
             	baseBean.setMsg(msg);
         	}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
-			throw e;
+			DealException(baseBean, e);
+			logger.error("commitDriverLicenseInformationSheet 错误", e);
 		}
     	renderJSON(baseBean);
-    	logger.info(JSON.toJSONString(baseBean));
+    	logger.debug(JSON.toJSONString(baseBean));
     }
     
     /**
@@ -185,25 +185,25 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
     	try {
     		if(StringUtils.isBlank(userName)){
         		baseBean.setMsg("userName 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(identityCard)){
         		baseBean.setMsg("identityCard 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(mobilephone)){
         		baseBean.setMsg("mobilephone 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(sourceOfCertification)){
         		baseBean.setMsg("sourceOfCertification 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
@@ -217,11 +217,11 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
             	baseBean.setMsg(msg);
         	}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
-			throw e;
+			DealException(baseBean, e);
+			logger.error("commitCertificateOfAbsence",e);
 		}
     	renderJSON(baseBean);
-    	logger.info(JSON.toJSONString(baseBean));
+    	logger.debug(JSON.toJSONString(baseBean));
     }
     
     /**
@@ -242,25 +242,25 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
     	try {
     		if(StringUtils.isBlank(userName)){
         		baseBean.setMsg("userName 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(identityCard)){
         		baseBean.setMsg("identityCard 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(mobilephone)){
         		baseBean.setMsg("mobilephone 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(sourceOfCertification)){
         		baseBean.setMsg("sourceOfCertification 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
@@ -274,11 +274,11 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
             	baseBean.setMsg(msg);
         	}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
-			throw e;
+			DealException(baseBean, e);
+			logger.error("commitDriverSafetyAccident",e);
 		}
     	renderJSON(baseBean);
-    	logger.info(JSON.toJSONString(baseBean));
+    	logger.debug(JSON.toJSONString(baseBean));
     }
     
     /**
@@ -303,25 +303,25 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
     	try {
     		if(StringUtils.isBlank(userName)){
         		baseBean.setMsg("userName 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(identityCard)){
         		baseBean.setMsg("identityCard 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(mobilephone)){
         		baseBean.setMsg("mobilephone 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(sourceOfCertification)){
         		baseBean.setMsg("sourceOfCertification 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
@@ -334,11 +334,11 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
             	baseBean.setMsg(msg);
         	}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
-			throw e;
+			DealException(baseBean, e);
+			logger.error("commitMotorVehicleInformationSheet",e);
 		}
     	renderJSON(baseBean);
-    	logger.info(JSON.toJSONString(baseBean));
+    	logger.debug(JSON.toJSONString(baseBean));
     }
     
 	

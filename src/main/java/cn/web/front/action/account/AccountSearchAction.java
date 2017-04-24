@@ -28,6 +28,8 @@ import cn.account.service.IAccountService;
 import cn.illegal.bean.IllegalInfoBean;
 import cn.illegal.service.IIllegalService;
 import cn.sdk.bean.BaseBean;
+import cn.sdk.exception.WebServiceException;
+import cn.sdk.util.MsgCode;
 import cn.web.front.support.BaseAction;
 /**
  * 个人中心查询
@@ -51,26 +53,27 @@ public class AccountSearchAction extends BaseAction {
 	 * @param sourceOfCertification 认证来源
 	 * @param applyType 
 	 * http://localhost:8080/web/user/search/queryMachineInformationSheet.html?identityCard=440301199002101119&sourceOfCertification=C&applyType=1
+	 * @throws Exception 
 	 */
 	@RequestMapping(value="queryMachineInformationSheet")
-	public void queryMachineInformationSheet(String identityCard,String sourceOfCertification,String applyType){
+	public void queryMachineInformationSheet(String identityCard,String sourceOfCertification,String applyType) throws Exception{
 		BaseBean baseBean = new BaseBean();
 		try {
 			if(StringUtils.isBlank(identityCard)){
         		baseBean.setMsg("identityCard 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(sourceOfCertification)){
         		baseBean.setMsg("sourceOfCertification 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(applyType)){
         		baseBean.setMsg("applyType 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
@@ -82,20 +85,19 @@ public class AccountSearchAction extends BaseAction {
 			if("0000".equals(code)){
 				informationSheetVos = (List<InformationSheetVo>) map.get("data");
 				baseBean.setData(informationSheetVos);
-				baseBean.setCode("0000");
+				baseBean.setCode(MsgCode.success);
 		    	baseBean.setMsg("");
 			}else{
 				baseBean.setData("");
-				baseBean.setCode("0001");
+				baseBean.setCode(MsgCode.businessError);
 		    	baseBean.setMsg(msg);
 			}
 		} catch (Exception e) {
-			baseBean.setCode("0009");
-        	baseBean.setMsg(e.getMessage());
-        	baseBean.setData("");
+			DealException(baseBean, e);
+        	logger.error("getMyDriverLicense 错误!", e);
 		}
 		renderJSON(baseBean);
-		logger.info(JSON.toJSONString(baseBean));
+		logger.debug(JSON.toJSONString(baseBean));
 	}
 	
 	
@@ -111,29 +113,28 @@ public class AccountSearchAction extends BaseAction {
 		try {
 			if(StringUtils.isBlank(identityCard)){
         		baseBean.setMsg("identityCard 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(sourceOfCertification)){
         		baseBean.setMsg("sourceOfCertification 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
-			baseBean.setCode("0000");
+			baseBean.setCode(MsgCode.success);
 	    	baseBean.setMsg("");
 			MotorVehicleInformationSheetVo motorVehicleInformationSheetVo = new MotorVehicleInformationSheetVo();
 			sourceOfCertification = "C";
 			motorVehicleInformationSheetVo = accountService.getMotorVehicleInformationSheet(identityCard, sourceOfCertification);
 			baseBean.setData(motorVehicleInformationSheetVo);
 		} catch (Exception e) {
-			baseBean.setCode("0009");
-        	baseBean.setMsg(e.getMessage());
-        	baseBean.setData("");
+			DealException(baseBean, e);
+        	logger.error("getMotorVehicleInformationSheet 错误!", e);
 		}
 		renderJSON(baseBean);
-		logger.info(JSON.toJSONString(baseBean));
+		logger.debug(JSON.toJSONString(baseBean));
 	}
 	
 	/**
@@ -148,17 +149,17 @@ public class AccountSearchAction extends BaseAction {
 		try {
 			if(StringUtils.isBlank(identityCard)){
         		baseBean.setMsg("identityCard 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
 			if(StringUtils.isBlank(sourceOfCertification)){
         		baseBean.setMsg("sourceOfCertification 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
-			baseBean.setCode("0000");
+			baseBean.setCode(MsgCode.success);
 	    	baseBean.setMsg("");
 			DriverLicenseInformationSheetVo driverLicenseInformationSheetVo = new DriverLicenseInformationSheetVo();
 			sourceOfCertification = "C";
@@ -166,10 +167,10 @@ public class AccountSearchAction extends BaseAction {
 			baseBean.setData(authenticationBasicInformationVo);
 	    	renderJSON(baseBean);
 		} catch (Exception e) {
-			baseBean.setCode("0009");
-        	baseBean.setMsg(e.getMessage());
+			DealException(baseBean, e);
+        	logger.error("getDriverLicenseInformationSheet 错误!", e);
 		}
-		logger.info(JSON.toJSONString(baseBean));
+		logger.debug(JSON.toJSONString(baseBean));
 	}
 	/**
 	 * 电子驾驶证
@@ -189,34 +190,33 @@ public class AccountSearchAction extends BaseAction {
     	try {
     		if(StringUtils.isBlank(driverLicenseNumber)){
         		baseBean.setMsg("driverLicenseNumber 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
     		if(StringUtils.isBlank(userName)){
         		baseBean.setMsg("userName 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
     		if(StringUtils.isBlank(mobileNumber)){
         		baseBean.setMsg("mobileNumber 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
-    		
-    		baseBean.setCode("0000");
+    		baseBean.setCode(MsgCode.success);
         	baseBean.setMsg("");
         	ElectronicDriverLicenseVo electronicDriverLicenseVo = accountService.getElectronicDriverLicense(driverLicenseNumber, userName, mobileNumber, "C");
         	baseBean.setData(electronicDriverLicenseVo);
         	renderJSON(baseBean);
 		} catch (Exception e) {
-			baseBean.setMsg(e.getMessage());
-    		baseBean.setCode("0001");
+			DealException(baseBean, e);
+    		logger.error("getElectronicDriverLicense 错误!", e);
     		renderJSON(baseBean);
 		}
-    	//logger.info(JSON.toJSONString(baseBean));
+    	logger.debug(JSON.toJSONString(baseBean));
     }
     
     
@@ -241,34 +241,35 @@ public class AccountSearchAction extends BaseAction {
     	try {
     		if(StringUtils.isBlank(numberPlatenumber)){
         		baseBean.setMsg("numberPlatenumber 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.businessError);
         		renderJSON(baseBean);
         		return;
         	}
     		if(StringUtils.isBlank(plateType)){
         		baseBean.setMsg("plateType 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.businessError);
         		renderJSON(baseBean);
         		return;
         	}
     		if(StringUtils.isBlank(mobileNumber)){
         		baseBean.setMsg("mobileNumber 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.businessError);
         		renderJSON(baseBean);
         		return;
         	}
     		
-    		baseBean.setCode("0000");
+    		baseBean.setCode(MsgCode.success);
         	baseBean.setMsg("");
         	String sourceOfCertification = "C";
         	DrivingLicenseVo drivingLicenseVo = accountService.getDrivingLicense(numberPlatenumber, plateType, mobileNumber, sourceOfCertification);
         	baseBean.setData(drivingLicenseVo);
         	renderJSON(baseBean);
 		} catch (Exception e) {
-			baseBean.setCode("0009");
-        	baseBean.setMsg(e.getMessage());
+			DealException(baseBean, e);
+        	logger.error("getDrivingLicense 错误!", e);
 		}
-    	//logger.info(JSON.toJSONString(baseBean));
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
     }
 	
 	/**
@@ -287,21 +288,18 @@ public class AccountSearchAction extends BaseAction {
     	try {
     		if(StringUtils.isBlank(identityCard)){
         		baseBean.setMsg("identityCard 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
-    		baseBean.setCode("0000");
+    		baseBean.setCode(MsgCode.success);
         	MyDriverLicenseVo myDriverLicenseVo = accountService.getMyDriverLicense(identityCard, "C");
         	baseBean.setData(myDriverLicenseVo);
         	baseBean.setMsg("");
 		} catch (Exception e) {
-			baseBean.setCode("0009");
-        	baseBean.setMsg(e.getMessage());
-        	logger.error(e.getMessage());
+			DealException(baseBean,e);
 		}
-    	logger.info(JSON.toJSONString(baseBean));
-    	
+    	logger.debug(JSON.toJSONString(baseBean));
     	renderJSON(baseBean);
     }
 	/**
@@ -321,17 +319,17 @@ public class AccountSearchAction extends BaseAction {
     	try {
     		if(StringUtils.isBlank(identityCard)){
         		baseBean.setMsg("identityCard 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
     		if(StringUtils.isBlank(mobilephone)){
         		baseBean.setMsg("mobilephone 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
-    		baseBean.setCode("0000");
+    		baseBean.setCode(MsgCode.success);
         	baseBean.setMsg("");
         	String sourceOfCertification = "C";
         	List<BindTheVehicleVo> bindTheVehicleVos =  accountService.getBndTheVehicles(identityCard, mobilephone, sourceOfCertification);
@@ -350,11 +348,11 @@ public class AccountSearchAction extends BaseAction {
         	}
         	baseBean.setData(bindTheVehicleVos);
 		} catch (Exception e) {
-			baseBean.setCode("0000");
-        	baseBean.setMsg("");
+			DealException(baseBean, e);
+        	logger.error("getBndTheVehicles 错误", e);
 		}
     	renderJSON(baseBean);
-    	logger.info(JSON.toJSONString(baseBean));
+    	logger.debug(JSON.toJSONString(baseBean));
     }
     /**
 	 * 我的业务(切换查询)
@@ -373,38 +371,37 @@ public class AccountSearchAction extends BaseAction {
     	try {
     		if(null == businessType){
         		baseBean.setMsg("businessType 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
     		if(null == businessStatus){
         		baseBean.setMsg("businessStatus 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
     		if(null == identityCard){
         		baseBean.setMsg("identityCard 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
     		if(null == sourceOfCertification){
         		baseBean.setMsg("sourceOfCertification 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
-    		baseBean.setCode("0000");
+    		baseBean.setCode(MsgCode.success);
         	baseBean.setMsg("");
         	List<MyBusinessVo> myBusinessVos = accountService.getMyBusiness(businessType, businessStatus, identityCard, sourceOfCertification);
         	baseBean.setData(myBusinessVos);
 		} catch (Exception e) {
-			baseBean.setCode("0001");
-        	baseBean.setMsg(e.getMessage());
-			baseBean.setData("");
+			DealException(baseBean, e);
+			logger.error("getMyBusiness 错误", e);
 		}
     	renderJSON(baseBean);
-    	logger.info(JSON.toJSONString(baseBean));
+    	logger.debug(JSON.toJSONString(baseBean));
     }
 }

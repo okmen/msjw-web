@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.ResultCode;
+import cn.sdk.exception.WebServiceException;
+import cn.sdk.util.MsgCode;
 
 /**
  * action基类，提供logger成员变量、公共方法以及用户封装返回消息的方法
@@ -121,4 +124,20 @@ public class BaseAction extends cn.web.front.common.BaseAction {
 			logger.error("写字符串异常");
 		}
     }
+    
+    protected void DealException(BaseBean baseBean,Exception exception){
+    	if(exception instanceof WebServiceException){
+			WebServiceException webServiceException = (WebServiceException) exception;
+			baseBean.setCode(String.valueOf(webServiceException.getCode()));
+			baseBean.setMsg(MsgCode.webServiceCallMsg);
+		}else{
+			baseBean.setCode(MsgCode.exception);
+        	baseBean.setMsg(MsgCode.systemMsg);
+		}
+    	logger.error("getMyDriverLicense 错误!", exception);
+    	
+    	renderJSON(baseBean);
+    }
+    
+    
 }

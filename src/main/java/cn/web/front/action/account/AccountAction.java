@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -33,6 +34,7 @@ import cn.account.service.IAccountService;
 import cn.message.service.IMobileMessageService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.ResultCode;
+import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
 
@@ -93,30 +95,29 @@ public class AccountAction extends BaseAction {
      * @param request
      * @param response
      * http://192.168.1.161:8080/web/user/getDocumentationORMByNoticeKey.html?noticeKey=testKey
+     * @throws Exception 
      */
     @RequestMapping("getDocumentationORMByNoticeKey")
-    public void getDocumentationORMByNoticeKey(String noticeKey,HttpServletRequest request,HttpServletResponse response){
+    public void getDocumentationORMByNoticeKey(String noticeKey,HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
     	try {
     		if(StringUtils.isBlank(noticeKey)){
         		baseBean.setMsg("noticeKey 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
     		Documentation documentation = accountService.getDocumentationByNoticeKey(noticeKey);
-    		baseBean.setCode("0000");
+    		baseBean.setCode(MsgCode.success);
         	baseBean.setMsg("查询成功");
         	baseBean.setData(documentation);
         	renderJSON(baseBean);
 		} catch (Exception e) {
-			baseBean.setCode("0001");
-        	baseBean.setMsg(e.getMessage());
-        	baseBean.setData("查询成功");
-        	logger.error(e.getMessage());
+			DealException(baseBean, e);
+        	logger.error("getDocumentationORMByNoticeKey 错误", e);
 		}
     	renderJSON(baseBean);
-    	logger.info(JSON.toJSONString(baseBean));
+    	logger.debug(JSON.toJSONString(baseBean));
     }
     
     /**
@@ -135,45 +136,45 @@ public class AccountAction extends BaseAction {
     	try {
         	if(StringUtils.isBlank(loginName)){
         		baseBean.setMsg("loginName 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
         	if(StringUtils.isBlank(password)){
         		baseBean.setMsg("password 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
         	if(StringUtils.isBlank(openId)){
         		baseBean.setMsg("openId 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
         	if(StringUtils.isBlank(loginClient)){
         		baseBean.setMsg("loginClient 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
         	LoginReturnBeanVo loginReturnBeanVo = accountService.login(loginName,password,"C",openId,loginClient);
         	if(null != loginReturnBeanVo && "0000".equals(loginReturnBeanVo.getCode())){
-        		baseBean.setCode("0000");
+        		baseBean.setCode(MsgCode.success);
             	baseBean.setMsg("");
             	baseBean.setData(loginReturnBeanVo);
         	}else{
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.businessError);
             	baseBean.setMsg(loginReturnBeanVo.getMsg());
             	baseBean.setData("");
         	}
         	renderJSON(baseBean);
 		} catch (Exception e) {
-			baseBean.setCode("0009");
-        	baseBean.setMsg(e.getMessage());
-			renderJSON(baseBean);
+			DealException(baseBean, e);
+        	logger.error("login 错误", e);
 		}
-    	logger.info(JSON.toJSONString(baseBean));
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
     }
     /**
      * 发送短信验证码
@@ -188,7 +189,7 @@ public class AccountAction extends BaseAction {
     	try {
     		if(StringUtils.isBlank(mobilephone)){
         		baseBean.setMsg("mobilephone 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
@@ -198,22 +199,20 @@ public class AccountAction extends BaseAction {
     		boolean flag = mobileMessageService.sendMessage(mobilephone, msgContent);
     		if(flag){
     			accountService.sendSMSVerificatioCode(mobilephone,valideteCode);
-    			baseBean.setCode("0000");
+    			baseBean.setCode(MsgCode.success);
             	baseBean.setMsg("");
             	baseBean.setData("发送成功");
     		}else{
-    			baseBean.setCode("0001");
-            	baseBean.setMsg("");
+    			baseBean.setCode(MsgCode.businessError);
+            	baseBean.setMsg(MsgCode.systemMsg);
             	baseBean.setData("发送失败");
     		}
 		} catch (Exception e) {
-			baseBean.setCode("0001");
-        	baseBean.setMsg(e.getMessage());
-        	baseBean.setData("发送失败");
-        	logger.error(e.getMessage());
+			DealException(baseBean, e);
+        	logger.error("sendSMSVerificatioCode 错误!", e);
 		}
     	renderJSON(baseBean);
-    	logger.info(JSON.toJSONString(baseBean));
+    	logger.debug(JSON.toJSONString(baseBean));
     }
     /**
      * 验证验证码是否正确
@@ -229,41 +228,39 @@ public class AccountAction extends BaseAction {
     	try {
         	if(StringUtils.isBlank(mobilephone)){
         		baseBean.setMsg("mobilephone 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
         	if(StringUtils.isBlank(validateCode)){
         		baseBean.setMsg("validateCode 不能为空!");
-        		baseBean.setCode("0001");
+        		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
         	// 0-验证成功，1-验证失败，2-验证码失效
     		int result = accountService.verificatioCode(mobilephone, validateCode);
     		if(0 == result){
-    			baseBean.setCode("0000");
+    			baseBean.setCode(MsgCode.success);
             	baseBean.setMsg("");
             	baseBean.setData("验证通过");
     		}
 			if(1 == result){
-				baseBean.setCode("0001");
+				baseBean.setCode(MsgCode.businessError);
 	        	baseBean.setMsg("");
 	        	baseBean.setData("验证码错误");		
 			 }
 			if(2 == result){
-				baseBean.setCode("0002");
+				baseBean.setCode(MsgCode.businessError);
 	        	baseBean.setMsg("");
 	        	baseBean.setData("验证码失效,请重新获取");
 			}
 		} catch (Exception e) {
-			baseBean.setCode("0001");
-        	baseBean.setMsg(e.getMessage());
-        	baseBean.setData("验证失败");
-        	logger.error(e.getMessage());
+			DealException(baseBean, e);
+        	logger.error("verificatioCode 错误!", e);
 		}
     	renderJSON(baseBean);
-    	logger.info(JSON.toJSONString(baseBean));
+    	logger.debug(JSON.toJSONString(baseBean));
     }
     
     /**
