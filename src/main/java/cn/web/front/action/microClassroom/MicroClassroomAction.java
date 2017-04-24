@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -158,41 +159,52 @@ public class MicroClassroomAction extends BaseAction {
 	  */
 	 @RequestMapping(value="Classroom/StudyHomepages.html")
 	 public void StudyHomepages(HttpServletRequest request, Study study){
+		 String ip=  MicroClassroomAction.getIpAddr(request);
+		 System.out.println("查询方法"+ip);
 		 BaseBean base=new BaseBean();
 		 Study  s=new Study();
 		 List<BaseBean>list=null;
-		try {
-			
-		
-		 String clientIp = request.getHeader("x-forwarded-for");  //获取用户IP地址
-	        if(clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {  
-	            clientIp = request.getHeader("Proxy-Client-IP");  
-	        }  
-	        if(clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {  
-	            clientIp = request.getHeader("WL-Proxy-Client-IP");  
-	        }  
-	        if(clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {  
-	            clientIp = request.getRemoteAddr();  
-	        }  
+		try { 
 		 if(study!=null){
 			 //公用参数
 			 if(study.getIdentityCard()!=null){
 				 s.setIdentityCard(study.getIdentityCard());
-			 } 
-			 if(study.getMobilephone()!=null){
-				 s.setMobilephone(study.getMobilephone());
-			 }if(study.getUserSource()!=null){
-				 s.setUserSource(study.getUserSource());
-			 }if(clientIp!=null){
-				 s.setIpAddress(clientIp);				  
 			 }else{
-				 base.setMsg("身份证,手机号,用户来源,ip地址不能为空");
+				  base.setMsg("身份证号码不能为空");
 				  base.setCode("0002");
 				  renderJSON(base);	
 			 }
-		 }
-		 if(study.getClassroomId()!=null){	
-			 s.setClassroomId(study.getClassroomId());
+			 if(study.getMobilephone()!=null){
+				 s.setMobilephone(study.getMobilephone());
+			 }else{
+				 base.setMsg("手机号码不能为空");
+				  base.setCode("0002");
+				  renderJSON(base);	
+			 }
+			 
+			 if(study.getUserSource()!=null){
+				 s.setUserSource(study.getUserSource());
+			 }else{
+				 base.setMsg("用户来源不能为空");
+				  base.setCode("0002");
+				  renderJSON(base);	
+			 }
+			 
+			 if(ip!=null){
+				 s.setIpAddress(ip);				  
+			 }else{
+				 base.setMsg("ip地址不能为空");
+				  base.setCode("0002");
+				  renderJSON(base);	
+			 }
+			 if(study.getClassroomId()!=null){
+				 s.setClassroomId(study.getClassroomId());
+			 }else{
+				 base.setMsg("列表ID不能为空");
+				  base.setCode("0002");
+				  renderJSON(base);	
+			 }
+			 
 			 if(study.getClassroomId().equals("1")){  //当列表ID等于1的时候 进入消分学习
 					s.setInterfaceId("exam003");
 					list= iMicroclassServer.xfStudyQuery(s);
@@ -212,19 +224,19 @@ public class MicroClassroomAction extends BaseAction {
 					s.setServiceType("AQ");
 					list=iMicroclassServer.xrStudyQuery(s);	
 			 }
-			for(BaseBean b:list){
-						base.setCode(b.getCode());
-						base.setMsg(b.getMsg());
-						base.setData(b.getData());
-			}
-		 }else{
-			 base.setData("必传参数不能为空！");
+			 if(list!=null){
+				for(BaseBean b:list){
+							base.setCode(b.getCode());
+							base.setMsg(b.getMsg());
+							base.setData(b.getData());
+				}
+			 }
 		 }
 		 renderJSON(base);	
-		 logger.info("查询日志"+JSON.toJSONString(base));
+		// logger.info("查询日志"+JSON.toJSONString(base));
 		// logger.info(JSON.toJSONString(base));
 		} catch (Exception e) {
-			logger.error("StudyHomepages方法：", e);
+			logger.error("StudyHomepages方法："+study, e);
 		}
 	 }
 
@@ -235,23 +247,13 @@ public class MicroClassroomAction extends BaseAction {
 	  */
 	 @RequestMapping(value="Classroom/Studys.html")
 	 public void Studys(HttpServletRequest request,Study study){
+		 String ip=  MicroClassroomAction.getIpAddr(request);
+		 System.out.println("查询方法"+ip);
 		 BaseBean base=new BaseBean();
 		 List<BaseBean>list=null;
 		 Study  s=new Study();
 		 try {
-			
-		
-		 String classroomId = request.getParameter("classroomId");  //获取列表ID,根据列表ID来判断进行不同的方法
-		 String clientIp = request.getHeader("x-forwarded-for");  //获取用户IP地址
-	        if(clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {  
-	            clientIp = request.getHeader("Proxy-Client-IP");  
-	        }  
-	        if(clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {  
-	            clientIp = request.getHeader("WL-Proxy-Client-IP");  
-	        }  
-	        if(clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {  
-	            clientIp = request.getRemoteAddr();  
-	        }  
+ 
 		 if(study!=null){
 			 //公用参数
 			 if(study.getIdentityCard()!=null){
@@ -272,8 +274,8 @@ public class MicroClassroomAction extends BaseAction {
 				 base.setMsg("用户来源不能为空！");
 				  renderJSON(base);
 			 }
-			 if(clientIp!=null){
-				 s.setIpAddress(clientIp);				  
+			 if(ip!=null){
+				 s.setIpAddress(ip);				  
 			 }else{
 				 base.setMsg("ip地址不能为空");
 				  renderJSON(base);	
@@ -281,36 +283,43 @@ public class MicroClassroomAction extends BaseAction {
 		
 			 if(study.getClassroomId()!=null){
 				 s.setClassroomId(study.getClassroomId());
+			 }else{
+				 base.setMsg("列表ID不能为空");
+				  renderJSON(base);	
 			 }
-		 if(classroomId.equals("1")){ //当列表ID等于1的时候 进入消分学习取题 
+		 if(study.getClassroomId().equals("1")){ //当列表ID等于1的时候 进入消分学习取题 
 			 s.setInterfaceId("exam001");
 			 list= iMicroclassServer.xfStudyAnswer(s);	 
-		 }else if(classroomId.equals("2")){        //当列表ID等于2的时候进入学习非机动车学习取题
+		 }else if(study.getClassroomId().equals("2")){        //当列表ID等于2的时候进入学习非机动车学习取题
 			 s.setInterfaceId("mfyyqt");
 			 list= iMicroclassServer.xfStudyAnswer(s);
-		 }else if(classroomId.equals("3")){
+		 }else if(study.getClassroomId().equals("3")){
 			 s.setInterfaceId("blyyqt");
 			 list= iMicroclassServer.xfStudyAnswer(s); 
-		 }else if(classroomId.equals("4")){
+		 }else if(study.getClassroomId().equals("4")){
 			 	s.setInterfaceId("DDC2001"); //电动车违法取题编号
 				s.setSubjectId("");
 				s.setServiceType("");		
 				list=iMicroclassServer.ddcStudyAnswer(s);
-		 }else if(classroomId.equals("5")){
+		 }else if(study.getClassroomId().equals("5")){
 			    s.setInterfaceId("DDC3001");
 				s.setServiceType("AQ");
 			    list=iMicroclassServer.xrStudyAnswer(s);
 		 }
+		 if(list!=null){
+			 
+		 
 			for(BaseBean b:list){
 				base.setCode(b.getCode());
 				base.setMsg(b.getMsg());
 				base.setData(b.getData());
 			}
+		 }
 			renderJSON(base);
 			logger.info("随机取题日志"+JSON.toJSONString(base));
 	 }
 	 } catch (Exception e) {
-		 logger.error("Studys方法：", e);	
+		 logger.error("Studys方法："+study, e);	
 	 }
 	 }
 	 
@@ -321,7 +330,7 @@ public class MicroClassroomAction extends BaseAction {
 	  */
 	 @RequestMapping("Classroom/Answers.html")
 	 public void  Answer(HttpServletRequest request,Study study){
-		 
+		 String ip=MicroClassroomAction.getIpAddr(request);
 		 String subjectId =request.getParameter("subjectId");
 		 BaseBean base=new BaseBean();
 		 List<BaseBean>list=null;
@@ -329,17 +338,6 @@ public class MicroClassroomAction extends BaseAction {
 		 try {
 			
 		
-		 String classroomId = request.getParameter("classroomId");  //获取列表ID,根据列表ID来判断进行不同的方法
-		 String clientIp = request.getHeader("x-forwarded-for");  //获取用户IP地址
-	        if(clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {  
-	            clientIp = request.getHeader("Proxy-Client-IP");  
-	        }  
-	        if(clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {  
-	            clientIp = request.getHeader("WL-Proxy-Client-IP");  
-	        }  
-	        if(clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) {  
-	            clientIp = request.getRemoteAddr();  
-	        }
 	        
 		 if(study!=null){
 			 //公用参数
@@ -361,8 +359,8 @@ public class MicroClassroomAction extends BaseAction {
 				 base.setMsg("用户来源不能为空！");
 				  renderJSON(base);
 			 }
-			 if(clientIp!=null){
-				 s.setIpAddress(clientIp);				  
+			 if(ip!=null){
+				 s.setIpAddress(ip);				  
 			 }else{
 				 base.setMsg("ip地址不能为空");
 				  renderJSON(base);	
@@ -387,7 +385,7 @@ public class MicroClassroomAction extends BaseAction {
 		 DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
 		 String time=format.format(date);
 		 s.setAnswerDate(time);
-		 if(classroomId.equals("1")){ //当列表ID等于1的时候 进入消分学习答题
+		 if(s.getClassroomId().equals("1")){ //当列表ID等于1的时候 进入消分学习答题
 			 	s.setInterfaceId("exam002");
 			 	if(study.getScoreStartDate()==null){
 					 base.setMsg("计分周期开始时间不能为空");
@@ -409,7 +407,7 @@ public class MicroClassroomAction extends BaseAction {
 				 }
 				s.setAnswerDateTime(time);
 				list=iMicroclassServer.xfAnswerQuey(s); 
-		 }else if(classroomId.equals("2")){
+		 }else if(s.getClassroomId().equals("2")){
 			 	s.setInterfaceId("mfyydt");
 			 	if(study.getScoreStartDate()==null){
 					 base.setMsg("计分周期开始时间不能为空");
@@ -431,7 +429,7 @@ public class MicroClassroomAction extends BaseAction {
 				 }
 				s.setAnswerDateTime(time);
 				list=iMicroclassServer.xfAnswerQuey(s); 
-		 	}else if(classroomId.equals("3")){
+		 	}else if(s.getClassroomId().equals("3")){
 			 s.setInterfaceId("blyydt");
 			 	if(study.getScoreStartDate()==null){
 					 base.setMsg("计分周期开始时间不能为空");
@@ -454,30 +452,36 @@ public class MicroClassroomAction extends BaseAction {
 				s.setAnswerDateTime(time);
 				list=iMicroclassServer.xfAnswerQuey(s); 
 		 }
-		 else if(classroomId.equals("4")){ 
+		 else if(s.getClassroomId().equals("4")){ 
 			   s.setInterfaceId("DDC2002");
 				s.setServiceType("");
 				s.setDecisionId("");
 				s.setAnswerDate(s.getAnswerDate());
 				list=iMicroclassServer.ddcAnswerQuey(s);
-		 }else if(classroomId.equals("5")){ 
+		 }else if(s.getClassroomId().equals("5")){ 
 			 	s.setInterfaceId("DDC3002");
 				s.setSubjectId(subjectId);
 				s.setServiceType("AQ");
 				s.setAnswerDate(s.getAnswerDate());
 				list=iMicroclassServer.xrAnswerQuey(s);	
+		 }else{
+			 base.setCode("0000");
+			 base.setMsg("暂时没有其他选择类型");
 		 }
-		 for(BaseBean b:list){
-				base.setCode(b.getCode());
-				base.setMsg(b.getMsg());
-				base.setData(b.getData());	
-			}
+		 if(list!=null){
+			 for(BaseBean b:list){
+					base.setCode(b.getCode());
+					base.setMsg(b.getMsg());
+					base.setData(b.getData());	
+				}
+		 }
 			renderJSON(base);
 			logger.info("答题日志"+JSON.toJSONString(base));
 	 }
 	} catch (Exception e) {
-				logger.error("Answer方法", e);
-	}
+				logger.error("Answer方法"+study, e);
+		}
+		
 	 }
 
 	public IMicroclassService getiMicroclassServer() {
@@ -494,6 +498,25 @@ public class MicroClassroomAction extends BaseAction {
 	 
 
 
+	 public static String getIpAddr(HttpServletRequest request) {
+		          String ip = request.getHeader("X-Real-IP");
+		         if (!StringUtils.isBlank(ip) && !"unknown".equalsIgnoreCase(ip)) {
+		             return ip;
+		          }
+		          ip = request.getHeader("X-Forwarded-For");
+		          if (!StringUtils.isBlank(ip) && !"unknown".equalsIgnoreCase(ip)) {
+		              // 多次反向代理后会有多个IP值，第一个为真实IP。
+		              int index = ip.indexOf(',');
+		              if (index != -1) {
+		                  return ip.substring(0, index);
+		              } else {
+		                  return ip;
+		              }
+		          } else {
+		              return request.getRemoteAddr();
+		          }
+		          
+		      }
 
 	 
 	 
