@@ -240,12 +240,12 @@ public class RegisterAction extends BaseAction {
 			registerVo.setOwnerIdCard(ownerIdCard);
 		}
 
-		if (StringUtil.isBlank(linkAddress)) {
-			code = "500";
-			sb.append("联系地址为空  ");
-		} else {
+//		if (StringUtil.isBlank(linkAddress)) {
+//			code = "500";
+//			sb.append("联系地址为空  ");
+//		} else {
 			registerVo.setLinkAddress(linkAddress);
-		}
+//		}
 
 		if (StringUtil.isBlank(mobilephone)) {
 			code = "500";
@@ -402,12 +402,12 @@ public class RegisterAction extends BaseAction {
 			registerVo.setUserIdCard(identityCard);
 		}
 
-		if (StringUtil.isBlank(linkAddress)) {
-			code = "500";
-			sb.append("联系地址为空  ");
-		} else {
+//		if (StringUtil.isBlank(linkAddress)) {
+//			code = "500";
+//			sb.append("联系地址为空  ");
+//		} else {
 			registerVo.setLinkAddress(linkAddress);
-		}
+//		}
 
 		if (StringUtil.isBlank(mobilephone)) {
 			code = "500";
