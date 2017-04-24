@@ -90,21 +90,19 @@ public class RegisterAction extends BaseAction {
 			code = "500";
 			sb.append("是否有驾驶证错误  ");
 		} else {
-			registerVo.setMobilephone(mobilephone);
+			if(isDriverLicense==1){
+				if (StringUtil.isBlank(driverLicenseIssuedAddress)) {
+					code = "500";
+					sb.append("驾驶证核发地为空  ");
+				} else {
+					registerVo.setDriverLicenseIssuedAddress(driverLicenseIssuedAddress);
+				}
+			}
 		}
-
 		if (StringUtil.isBlank(validateCode)) {
 			code = "500";
 			sb.append("验证码为空  ");
 		}
-
-		if (StringUtil.isBlank(driverLicenseIssuedAddress)) {
-			code = "500";
-			sb.append("驾驶证核发地为空  ");
-		} else {
-			registerVo.setDriverLicenseIssuedAddress(driverLicenseIssuedAddress);
-		}
-
 		if (StringUtil.isBlank(idCardImgPositive)) {
 			code = "500";
 			sb.append("身份证正面为空  ");
@@ -148,9 +146,6 @@ public class RegisterAction extends BaseAction {
 		BaseBean basebean = new BaseBean();
 		try {
 			if ("0000".equals(code)) {// 参数校验通过
-				
-				
-				
 				int result = accountService.verificatioCode(mobilephone, validateCode);
 				if (0 == result) {
 					registerVo.setCallAccount("WX02_TEST");
