@@ -76,6 +76,8 @@ public class RegisterAction extends BaseAction {
 		} else {
 			registerVo.setUserIdCard(identityCard);
 		}
+		
+		registerVo.setLinkAddress(linkAddress);
 
 		if (StringUtil.isBlank(mobilephone)) {
 			code = "500";
