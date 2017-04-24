@@ -76,12 +76,6 @@ public class RegisterAction extends BaseAction {
 		} else {
 			registerVo.setUserIdCard(identityCard);
 		}
-		if (StringUtil.isBlank(linkAddress)) {
-			code = "500";
-			sb.append("联系地址为空  ");
-		} else {
-			registerVo.setLinkAddress(linkAddress);
-		}
 
 		if (StringUtil.isBlank(mobilephone)) {
 			code = "500";
@@ -170,7 +164,7 @@ public class RegisterAction extends BaseAction {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("iAmTheOwner出错",e);
 		}
 		renderJSON(basebean);
 		logger.info(JSON.toJSONString(basebean));
@@ -347,7 +341,7 @@ public class RegisterAction extends BaseAction {
 				basebean.setMsg(sb.toString());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("iamALongtimeUser出错",e);
 		}
 
 		renderJSON(basebean);
@@ -475,7 +469,7 @@ public class RegisterAction extends BaseAction {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("haveDriverLicenseNotCar出错",e);
 		}
 
 		renderJSON(basebean);
@@ -579,7 +573,7 @@ public class RegisterAction extends BaseAction {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("isPedestrianNotDriver出错",e);
 		}
 
 		System.out.println(basebean.getMsg());

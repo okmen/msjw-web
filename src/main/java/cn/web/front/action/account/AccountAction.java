@@ -298,8 +298,8 @@ public class AccountAction extends BaseAction {
  				userBind.setUnionId(unionId);
  			}
  		}
-    	
     	 BaseBean basebean = new  BaseBean();
+    	try {
     		int re = 0;
             re = accountService.unbindVehicle(userBind); 
         	if(re==1){
@@ -309,9 +309,12 @@ public class AccountAction extends BaseAction {
         		basebean.setCode("500");
             	basebean.setMsg("解绑出错");
         	}    
+		} catch (Exception e) {
+			logger.error("deleteVehicle出错",e);
+		}
+
     	renderJSON(basebean);
-    	logger.info(JSON.toJSONString(basebean));
-    
+    	logger.info(JSON.toJSONString(basebean));  
     }
     
     
@@ -445,7 +448,7 @@ public class AccountAction extends BaseAction {
     			basebean.setMsg(sb.toString());
     		}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("addVehicle出错",e);
 		}
    
     	renderJSON(basebean);
@@ -528,7 +531,7 @@ public class AccountAction extends BaseAction {
     			basebean.setMsg(sb.toString());
     		}  		
 		} catch (Exception e) {	
-			e.printStackTrace();
+			logger.error("updateUser出错",e);
 		}   	
     	renderJSON(basebean);
     	logger.info(JSON.toJSONString(basebean));
@@ -606,7 +609,7 @@ public class AccountAction extends BaseAction {
     		}
     		
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("updateMobile出错",e);
 		}  	
     	renderJSON(basebean);
     	logger.info(JSON.toJSONString(basebean));
@@ -664,7 +667,7 @@ public class AccountAction extends BaseAction {
     			basebean.setMsg(sb.toString());
     		}   		
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("updatePwd出错",e);
 		}  	
     	renderJSON(basebean);
     	logger.info(JSON.toJSONString(basebean));	
@@ -783,7 +786,7 @@ public class AccountAction extends BaseAction {
     	
     	if(imgNumber>1){
     		code="500";
- 			sb.append("举报图片数量不够  ");
+ 			sb.append("举报图片数量不少于2张  ");
     	}
     	
     	if(StringUtil.isBlank(userSource)){
@@ -824,7 +827,7 @@ public class AccountAction extends BaseAction {
 			
     	
     	} catch (Exception e) {
-			e.printStackTrace();
+    		logger.error("readilyShoot出错",e);
 		}
     
     	renderJSON(basebean);
