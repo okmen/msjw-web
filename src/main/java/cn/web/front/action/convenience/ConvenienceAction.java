@@ -6,6 +6,7 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.validator.Msg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import cn.convenience.bean.ConvenienceBean;
 import cn.convenience.service.IConvenienceService;
 import cn.sdk.bean.BaseBean;
+import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
 import net.sf.json.JSONObject;
@@ -75,7 +77,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数用户姓名
 			if (StringUtil.isBlank(userName)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "用户名称不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -83,7 +85,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数手机号码
 			if (StringUtil.isBlank(mobilephone)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "手机号码不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -91,7 +93,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数身份证号
 			if (StringUtil.isBlank(identityCard)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "身份证号不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -99,7 +101,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数详细地址
 			if (StringUtil.isBlank(detailAddress)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "详细地址不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -107,7 +109,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数紧急程度
 			if (StringUtil.isBlank(emergency)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "紧急程度不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -115,7 +117,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数选择类型
 			if (StringUtil.isBlank(selectTypeId) || StringUtil.isBlank(selectType)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "选择类型或id不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -123,7 +125,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数子类型选择
 			if (StringUtil.isBlank(subTypeId) || StringUtil.isBlank(subType)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "子类型选择或id不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -152,10 +154,9 @@ public class ConvenienceAction extends BaseAction{
 			jsonMap.put("msg", refBean.getMsg());
 			out.print(JSONObject.fromObject(jsonMap));
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("设备损坏Action异常:"+e);
 			
-			jsonMap.put("code", "1010");
+			jsonMap.put("code", MsgCode.exception);
 			jsonMap.put("msg", "服务器繁忙！");
 			out.print(JSONObject.fromObject(jsonMap));
 		}
@@ -197,7 +198,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数用户姓名
 			if (StringUtil.isBlank(userName)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "用户名称不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -205,7 +206,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数手机号码
 			if (StringUtil.isBlank(mobilephone)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "手机号码不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -213,7 +214,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数身份证号
 			if (StringUtil.isBlank(identityCard)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "身份证号不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -221,7 +222,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数详细地址
 			if (StringUtil.isBlank(detailAddress)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "详细地址不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -229,7 +230,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数紧急程度
 			if (StringUtil.isBlank(emergency)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "紧急程度不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -237,7 +238,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数选择类型
 			if (StringUtil.isBlank(selectTypeId) || StringUtil.isBlank(selectType)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "选择类型或id不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -245,7 +246,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数子类型选择
 			if (StringUtil.isBlank(subTypeId) || StringUtil.isBlank(subType)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "子类型选择或id不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -272,10 +273,9 @@ public class ConvenienceAction extends BaseAction{
 			jsonMap.put("msg", refBean.getMsg());
 			out.print(JSONObject.fromObject(jsonMap));
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("安全隐患Action异常:"+e);
 			
-			jsonMap.put("code", "1010");
+			jsonMap.put("code", MsgCode.exception);
 			jsonMap.put("msg", "服务器繁忙！");
 			out.print(JSONObject.fromObject(jsonMap));
 		}
@@ -317,7 +317,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数手机号码
 			if (StringUtil.isBlank(mobilephone)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "手机号码不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -325,7 +325,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数身份证号
 			if (StringUtil.isBlank(identityCard)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "身份证号不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -333,7 +333,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数地址
 			if (StringUtil.isBlank(address)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "地点不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -341,7 +341,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数地址代码
 			if (StringUtil.isBlank(addressCode)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "地点代码不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -349,7 +349,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数开始时间
 			if (StringUtil.isBlank(startTime)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "开始时间不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -357,7 +357,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数结束时间
 			if (StringUtil.isBlank(endTime)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "结束时间不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -365,7 +365,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数方向
 			if (StringUtil.isBlank(direction)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "方向不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -373,7 +373,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数拥堵类型
 			if (StringUtil.isBlank(congestionType)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "拥堵类型不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -381,7 +381,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数拥堵等级
 			if (StringUtil.isBlank(congestionGrade)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "拥堵等级不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -389,7 +389,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数道路服务水平
 			if (StringUtil.isBlank(roadServiceLevel)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "道路服务水平不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -397,7 +397,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数拥堵成因
 			if (StringUtil.isBlank(congestionReason)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "拥堵成因不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -423,10 +423,9 @@ public class ConvenienceAction extends BaseAction{
 			jsonMap.put("msg", refBean.getMsg());
 			out.print(JSONObject.fromObject(jsonMap));
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("交通拥堵Action异常:"+e);
 			
-			jsonMap.put("code", "1010");
+			jsonMap.put("code", MsgCode.exception);
 			jsonMap.put("msg", "服务器繁忙！");
 			out.print(JSONObject.fromObject(jsonMap));
 		}
@@ -466,7 +465,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数手机号码
 			if (StringUtil.isBlank(mobilephone)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "手机号码不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -474,7 +473,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数身份证号
 			if (StringUtil.isBlank(identityCard)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "身份证号不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -482,7 +481,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数地址
 			if (StringUtil.isBlank(address)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "地点不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -490,7 +489,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数地址代码
 			if (StringUtil.isBlank(addressCode)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "地点代码不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -498,7 +497,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数开始时间
 			if (StringUtil.isBlank(startTime)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "开始时间不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -506,7 +505,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数结束时间
 			if (StringUtil.isBlank(endTime)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "结束时间不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -514,7 +513,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证参数拥堵类型code
 			if (StringUtil.isBlank(congestionCode) || StringUtil.isBlank(congestionType)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "拥堵类型或id不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -537,10 +536,9 @@ public class ConvenienceAction extends BaseAction{
 			jsonMap.put("msg", refBean.getMsg());
 			out.print(JSONObject.fromObject(jsonMap));
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("秩序混乱Action异常:"+e);
 			
-			jsonMap.put("code", "1010");
+			jsonMap.put("code", MsgCode.exception);
 			jsonMap.put("msg", "服务器繁忙！");
 			out.print(JSONObject.fromObject(jsonMap));
 		}
@@ -580,7 +578,7 @@ public class ConvenienceAction extends BaseAction{
 			*/
 			//验证参数车牌简称
 			if (StringUtil.isBlank(abbreviation) || StringUtil.isBlank(numberPlate)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "车牌简称或车牌号码不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -588,7 +586,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证汽车种类
 			if (StringUtil.isBlank(carType)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "汽车种类不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -596,7 +594,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证挪车地址
 			if (StringUtil.isBlank(doodgenAddress)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "挪车地址不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -604,7 +602,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			//验证身份证号
 			if (StringUtil.isBlank(identityCard)) {
-				jsonMap.put("code", "1001");
+				jsonMap.put("code", MsgCode.paramsError);
 				jsonMap.put("msg", "身份证号不能为空！");
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
@@ -621,10 +619,9 @@ public class ConvenienceAction extends BaseAction{
 			jsonMap.put("msg", refBean.getMsg());
 			out.print(JSONObject.fromObject(jsonMap));
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("一键挪车Action异常:"+e);
 			
-			jsonMap.put("code", "1010");
+			jsonMap.put("code", MsgCode.exception);
 			jsonMap.put("msg", "服务器繁忙！");
 			out.print(JSONObject.fromObject(jsonMap));
 		}
