@@ -97,6 +97,8 @@ public class RegisterAction extends BaseAction {
 				} else {
 					registerVo.setDriverLicenseIssuedAddress(driverLicenseIssuedAddress);
 				}
+			}else{
+				registerVo.setDriverLicenseIssuedAddress("");
 			}
 		}
 		if (StringUtil.isBlank(validateCode)) {
