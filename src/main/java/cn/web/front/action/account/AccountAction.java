@@ -600,7 +600,7 @@ public class AccountAction extends BaseAction {
     			 }
     			if(2 == result){
     				code="500";	
-    				sb.append("验证码错误    ");
+    				sb.append("验证码失效    ");
     				basebean.setMsg(sb.toString());
     			}   	    	
     		}else{

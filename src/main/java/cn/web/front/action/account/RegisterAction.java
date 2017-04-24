@@ -148,18 +148,34 @@ public class RegisterAction extends BaseAction {
 		BaseBean basebean = new BaseBean();
 		try {
 			if ("0000".equals(code)) {// 参数校验通过
-				registerVo.setCallAccount("WX02_TEST");
-				registerVo.setCertifiedType("1");
-				registerVo.setCertifiedRole("1");
-				// registerVo
-				JSONObject json = accountService.iAmTheOwner(registerVo);
-				System.out.println(json);
-				code = json.getString("CODE");
-				if (!"0000".equals(code)) {
-					code = "500";
+				
+				
+				
+				int result = accountService.verificatioCode(mobilephone, validateCode);
+				if (0 == result) {
+					registerVo.setCallAccount("WX02_TEST");
+					registerVo.setCertifiedType("1");
+					registerVo.setCertifiedRole("1");
+					// registerVo
+					JSONObject json = accountService.iAmTheOwner(registerVo);
+					System.out.println(json);
+					code = json.getString("CODE");
+					if (!"0000".equals(code)) {
+						code = "500";
+					}
+					basebean.setCode(code);
+					basebean.setMsg(json.getString("MSG"));
 				}
-				basebean.setCode(code);
-				basebean.setMsg(json.getString("MSG"));
+				if (1 == result) {
+					code = "500";
+					sb.append("验证码错误    ");
+					basebean.setMsg(sb.toString());
+				}
+				if (2 == result) {
+					code = "500";
+					sb.append("验证码失效    ");
+					basebean.setMsg(sb.toString());
+				}			
 			} else {
 				basebean.setCode(code);
 				basebean.setMsg(sb.toString());
@@ -334,7 +350,7 @@ public class RegisterAction extends BaseAction {
 				}
 				if (2 == result) {
 					code = "500";
-					sb.append("验证码错误    ");
+					sb.append("验证码失效    ");
 					basebean.setMsg(sb.toString());
 				}
 
@@ -461,7 +477,7 @@ public class RegisterAction extends BaseAction {
 				}
 				if (2 == result) {
 					code = "500";
-					sb.append("验证码错误    ");
+					sb.append("验证码失效    ");
 					basebean.setMsg(sb.toString());
 				}
 
@@ -565,7 +581,7 @@ public class RegisterAction extends BaseAction {
 				}
 				if (2 == result) {
 					code = "500";
-					sb.append("验证码错误    ");
+					sb.append("验证码失效    ");
 					basebean.setMsg(sb.toString());
 				}
 
