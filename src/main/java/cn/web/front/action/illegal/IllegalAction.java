@@ -179,7 +179,7 @@ public class IllegalAction extends BaseAction {
 			   
 			   //同步客户信息
 			  String str= illegalService.custRegInfoReceive(cust, carList);
-			  System.out.println("同步："+str);
+			  logger.info("同步客户信息！");
 		   }
 		   
 		   
@@ -193,7 +193,8 @@ public class IllegalAction extends BaseAction {
 		   }		   
 		} catch (Exception e) {
 			base.setCode("0002");
-			base.setMsg("查询失败！");
+			base.setMsg("系统异常！");
+			logger.error("查询异常：",e);
 		} 
 	   renderJSON(base);
    }
@@ -273,7 +274,8 @@ public class IllegalAction extends BaseAction {
 		   }		   
 		} catch (Exception e) {
 			base.setCode("0002");
-			base.setMsg("查询失败！");
+			base.setMsg("系统异常！");
+			logger.error("查询异常：",e);
 		} 
 	   renderJSON(base);
    } 
@@ -405,7 +407,8 @@ public class IllegalAction extends BaseAction {
 		   }		   
 		} catch (Exception e) {
 			base.setCode("0002");
-			base.setMsg("查询失败！");
+			base.setMsg("系统异常！");
+			logger.error("查询异常：",e);
 		}
  	   renderJSON(base);
     } 
@@ -431,7 +434,8 @@ public class IllegalAction extends BaseAction {
            base.setData(bean);	   
 		} catch (Exception e) {
 			base.setCode("0002");
-			base.setMsg("查询失败！");
+			base.setMsg("系统异常！");
+			logger.error("打单异常：",e);
 		}
  	   renderJSON(base);
     } 
@@ -490,6 +494,7 @@ public class IllegalAction extends BaseAction {
 		} catch (Exception e) {	
 			base.setCode("0002");
 	    	base.setMsg("系统异常");
+			logger.error("获取异常：",e);
 		} 
 	 	renderJSON(base);
     } 
@@ -512,7 +517,8 @@ public class IllegalAction extends BaseAction {
 		   }		   
 		} catch (Exception e) {
 			base.setCode("0002");
-			base.setMsg("查询失败！");
+			base.setMsg("系统异常！");
+			logger.error("查询异常：",e);
 		}
 
   	   renderJSON(base);
@@ -543,8 +549,9 @@ public class IllegalAction extends BaseAction {
   			   base.setMsg("预约排期获取为空");
   		   }		   
   		} catch (Exception e) {
-  			base.setCode("0001");
-  			base.setMsg("查询失败！");
+  			base.setCode("0002");
+  			base.setMsg("系统异常！");
+			logger.error("查询异常：",e);
   		}
     	 renderJSON(base);
     }
@@ -580,7 +587,8 @@ public class IllegalAction extends BaseAction {
     		base= illegalService.toChangeSubscribe(snm, cldbmid, cczb_id, custInfo, carInfo, sourceOfCertification);
 		} catch (Exception e) {
 			base.setCode("0002");
-			base.setMsg("预约失败！");
+			base.setMsg("系统异常！");
+			logger.error("预约异常：",e);
 		}   
  	   renderJSON(base);
     } 
@@ -605,6 +613,7 @@ public class IllegalAction extends BaseAction {
 		} catch (Exception e) {
 			bean.setCode("0002");
 			bean.setMsg("系统异常！");
+			logger.error("取消预约异常：",e);
 		}
       
 
@@ -651,7 +660,8 @@ public class IllegalAction extends BaseAction {
 		   }		   
 		} catch (Exception e) {
 			base.setCode("0002");
-			base.setMsg("查询失败！");
+			base.setMsg("系统失败！");
+			logger.error("查询异常：",e);
 		}
  
  	   renderJSON(base);
@@ -689,6 +699,7 @@ public class IllegalAction extends BaseAction {
 		} catch (Exception e) {
 			base.setCode("0002");
 			base.setMsg("系统异常！");
+			logger.error("申诉异常：",e);
 		}   
  	   renderJSON(base);
     } 
@@ -722,7 +733,8 @@ public class IllegalAction extends BaseAction {
 		   }		   
 		} catch (Exception e) {
 			base.setCode("0002");
-			base.setMsg("查询失败！");
+			base.setMsg("系统异常！");
+			logger.error("查询异常：",e);
 		}
 
  	   renderJSON(base);
