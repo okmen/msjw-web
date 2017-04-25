@@ -119,6 +119,80 @@ public class AccountAction extends BaseAction {
     	renderJSON(baseBean);
     	logger.debug(JSON.toJSONString(baseBean));
     }
+    /**
+     * 重置密码
+     * @param validateCode 验证码
+     * @param identityCard 身份证
+     * @param mobilephone 手机号
+     * @param userName 用户名
+     * @param sourceOfCertification 认证来源
+     * @param request
+     * @param response
+     * @throws Exception
+     * http://192.168.1.161:8080/web/user/resetPwd.html?validateCode=1111&identityCard=420881198302280017&mobilephone=18601174358&userName=孙涛
+     */
+    @RequestMapping("resetPwd")
+    public void resetPwd(String validateCode,String identityCard,String mobilephone,String userName,String sourceOfCertification , HttpServletRequest request,HttpServletResponse response) throws Exception{
+    	BaseBean baseBean = new BaseBean();
+    	try {
+    		if(StringUtils.isBlank(validateCode)){
+        		baseBean.setMsg("验证码不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+    		if(StringUtils.isBlank(identityCard)){
+        		baseBean.setMsg("身份证不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+    		if(StringUtils.isBlank(mobilephone)){
+        		baseBean.setMsg("手机号不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+    		if(StringUtils.isBlank(userName)){
+        		baseBean.setMsg("用户名不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+    		//验证码是否正确
+    		// 0-验证成功，1-验证失败，2-验证码失效
+    		int result = accountService.verificatioCode(mobilephone, validateCode);
+    		if(0 == result){
+            	baseBean.setMsg("验证通过");
+            	Map<String, String> map = accountService.resetPwd(identityCard, userName, mobilephone, sourceOfCertification);
+            	if(null != map){
+            		String code = map.get("code");
+            		String msg = map.get("msg");
+            		if(MsgCode.success.equals(code)){
+            			baseBean.setCode(MsgCode.success);
+            			baseBean.setMsg(msg);
+            		}else{
+            			baseBean.setCode(MsgCode.businessError);
+            			baseBean.setMsg(msg);
+            		}
+            	}
+    		}
+			if(1 == result){
+				baseBean.setCode(MsgCode.businessError);
+	        	baseBean.setMsg("验证码错误");	
+			 }
+			if(2 == result){
+				baseBean.setCode(MsgCode.businessError);
+	        	baseBean.setMsg("验证码失效,请重新获取");
+			}
+        	renderJSON(baseBean);
+		} catch (Exception e) {
+			DealException(baseBean, e);
+        	logger.error("resetPwd 错误", e);
+		}
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
+    }
     
     /**
 	 * 登录
