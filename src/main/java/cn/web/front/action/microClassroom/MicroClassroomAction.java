@@ -389,8 +389,25 @@ public class MicroClassroomAction extends BaseAction {
 				 base.setCode(MsgCode.paramsError);
 				  renderJSON(base);	
 			 }
+			 if(study.getTestQuestionsType()!=null){
+				 s.setTestQuestionsType(study.getTestQuestionsType());
+			 }else{
+				 base.setMsg("答题类型不能为空！");
+				 base.setCode(MsgCode.paramsError);
+				  renderJSON(base);	
+			 }
 			 if(study.getSubjectAnswer()!=null){
-				 s.setSubjectAnswer(study.getSubjectAnswer());
+				 if(s.getTestQuestionsType().equals("判断题")){
+					 if(study.getSubjectAnswer().equals("A")){
+						 s.setSubjectAnswer("Y");
+					 }else{
+						 s.setSubjectAnswer("N");
+					 }
+				 }else{
+					 s.setSubjectAnswer(study.getSubjectAnswer());
+				 }
+				 
+				 
 			 }else{
 				 base.setMsg("答题答案不能为空！");
 				 base.setCode(MsgCode.paramsError);
