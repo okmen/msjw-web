@@ -279,14 +279,14 @@ public class AccountAction extends BaseAction {
     	
     	userBind.setOpenId(openId);
     	if(StringUtil.isBlank(identityCard)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("身份证号码为空  ");
  		}else{
  			userBind.setIdCard(identityCard);
  		}
     	
     	if(StringUtil.isBlank(userSource)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("用户来源为空  ");
  		}else{
  			if("C".equals(userSource)){
@@ -303,7 +303,7 @@ public class AccountAction extends BaseAction {
         		basebean.setCode(MsgCode.success);
             	basebean.setMsg("");
         	}else{
-        		basebean.setCode("500");
+        		basebean.setCode(MsgCode.businessError);
             	basebean.setMsg("解绑出错");
         	}    
 		} catch (Exception e) {
@@ -345,33 +345,33 @@ public class AccountAction extends BaseAction {
  			if(bindType==0){
  				
  				if(StringUtil.isBlank(ownerName)){
- 		 			code=MsgCode.exception;
+ 		 			code=MsgCode.paramsError;
  		 			sb.append("车主姓名为空  ");
  		 		}else{
  		 			bindCarVo.setOwnerName(ownerName);
  		 		}
  				
  				if(StringUtil.isBlank(ownerIdCard)){
- 		 			code=MsgCode.exception;
+ 		 			code=MsgCode.paramsError;
  		 			sb.append("车主身份证号码为空  ");
  		 		}else{
  		 			bindCarVo.setOwnerIdCard(ownerIdCard);
  		 		}
  				
  				if(StringUtil.isBlank(frameNumber)){
- 		 			code=MsgCode.exception;
+ 		 			code=MsgCode.paramsError;
  		 			sb.append("车架号码为空  ");
  		 		}else{
  		 			bindCarVo.setFrameNumber(frameNumber);
  		 		}
  				if(StringUtil.isBlank(idCardImgPositive)){
- 		 			code=MsgCode.exception;
+ 		 			code=MsgCode.paramsError;
  		 			sb.append("车主正面照为空  ");
  		 		}else{
  		 			bindCarVo.setIdCardImgPositive(idCardImgPositive);
  		 		}
  				if(StringUtil.isBlank(idCardImgHandHeld)){
- 		 			code=MsgCode.exception;
+ 		 			code=MsgCode.paramsError;
  		 			sb.append("车主手持照为空  ");
  		 		}else{
  		 			bindCarVo.setIdCardImgHandHeld(idCardImgHandHeld);
@@ -381,49 +381,49 @@ public class AccountAction extends BaseAction {
  		}
     	
     	if(StringUtil.isBlank(licensePlateNumber)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("车牌号码为空  ");
  		}else{
  			bindCarVo.setLicensePlateType(licensePlateNumber);
  		}
  
     	if(StringUtil.isBlank(userIdCard)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("身份证号为空  ");
  		}else{
  			bindCarVo.setUserIdCard(userIdCard);
  		}
     	
     	if(StringUtil.isBlank(licensePlateType)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("号牌种类为空  ");
  		}else{
  			bindCarVo.setLicensePlateType(licensePlateType);
  		}
     	
     	if(StringUtil.isBlank(userSource)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("用户来源为空  ");
  		}else{
  			bindCarVo.setUserSource(userSource);
  		}
     	
     	if(StringUtil.isBlank(provinceAbbreviation)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("号牌核发省简称为空  ");
  		}else{
  			bindCarVo.setProvinceAbbreviation(provinceAbbreviation);
  		}
     	
     	if(StringUtil.isBlank(inputIP)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("录入ip为空  ");
  		}else{
  			bindCarVo.setInputIP(inputIP);
  		}
     	
     	if(StringUtil.isBlank(certifiedSource)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("账号绑定类型为空  ");
  		}else{
  			bindCarVo.setCertifiedSource(certifiedSource);
@@ -437,7 +437,7 @@ public class AccountAction extends BaseAction {
     			System.out.println(json);
     			code =json.getString("CODE");
     			if(!MsgCode.success.equals(code)){
-    				code=MsgCode.exception;
+    				code=MsgCode.businessError;
     			}
     	    	basebean.setCode(code);
     	    	basebean.setMsg(json.getString("MSG"));   
@@ -472,37 +472,37 @@ public class AccountAction extends BaseAction {
  		StringBuffer sb = new StringBuffer("");
     	UserBasicVo userBasicVo =new UserBasicVo();
     	if(StringUtil.isBlank(identityCard)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("身份证为空  ");
  		}else{
  			userBasicVo.setIdentityCard(identityCard);;
  		}
     	if(StringUtil.isBlank(mailingAddress)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("通讯地址为空  ");
  		}else{
  			userBasicVo.setMailingAddress(mailingAddress);
  		}
     	if(StringUtil.isBlank(mailingAddress)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("通讯地址为空  ");
  		}else{
  			userBasicVo.setMailingAddress(mailingAddress);
  		}
     	if(StringUtil.isBlank(idCardImgPositive)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("身份证正面为空  ");
  		}else{
  			userBasicVo.setIdCardImgPositive(idCardImgPositive);
  		}
  		
  		if(StringUtil.isBlank(idCardImgNegative)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("身份证反面为空 ");
  		}
  		
  		if(StringUtil.isBlank(idCardImgHandHeld)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("手持身份证为空  ");
  		}else{
  			userBasicVo.setIdCardImgHandHeld(idCardImgHandHeld);
@@ -521,7 +521,7 @@ public class AccountAction extends BaseAction {
     			System.out.println(json);
     			code =json.getString("CODE");
     			if(!MsgCode.success.equals(code)){
-    				code=MsgCode.exception;
+    				code=MsgCode.businessError;
     			}
     	    	basebean.setCode(code);
     	    	basebean.setMsg(json.getString("MSG"));
@@ -554,26 +554,26 @@ public class AccountAction extends BaseAction {
  		StringBuffer sb = new StringBuffer("");
     	UserBasicVo userBasicVo =new UserBasicVo();
     	if(StringUtil.isBlank(identityCard)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("身份证为空  ");
  		}else{
  			userBasicVo.setIdentityCard(identityCard);;
  		}
     	
     	if(StringUtil.isBlank(oldMobile)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("旧手机号为空  ");
  		}else{
  			userBasicVo.setOldMobile(oldMobile);
  		}
     	if(StringUtil.isBlank(newMobile)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("新手机号为空  ");
  		}else{
  			userBasicVo.setNewMobile(newMobile);
  		}
     	if(StringUtil.isBlank(newMobile)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("验证码为空  ");
  		}
     	
@@ -588,18 +588,18 @@ public class AccountAction extends BaseAction {
         			System.out.println(json);
         			code =json.getString("CODE");
         			if(!MsgCode.success.equals(code)){
-        				code=MsgCode.exception;
+        				code=MsgCode.businessError;
         			}
         			basebean.setCode(code);
         	    	basebean.setMsg(json.getString("MSG"));
         		}
     			if(1 == result){
-    				code=MsgCode.exception;	
+    				code=MsgCode.paramsError;	
     				sb.append("验证码错误    ");
     				basebean.setMsg(sb.toString());
     			 }
     			if(2 == result){
-    				code=MsgCode.exception;	
+    				code=MsgCode.paramsError;	
     				sb.append("验证码失效    ");
     				basebean.setMsg(sb.toString());
     			}   	    	
@@ -631,19 +631,19 @@ public class AccountAction extends BaseAction {
     	
     	UserBasicVo userBasicVo =new UserBasicVo();
     	if(StringUtil.isBlank(identityCard)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("身份证为空  ");
  		}else{
  			userBasicVo.setIdentityCard(identityCard);;
  		}
     	if(StringUtil.isBlank(oldPwd)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("旧密码为空  ");
  		}else{
  			userBasicVo.setOldPwd(oldPwd);
  		}
     	if(StringUtil.isBlank(newPwd)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("新密码为空  ");
  		}else{
  			userBasicVo.setNewPwd(newPwd);
@@ -659,7 +659,7 @@ public class AccountAction extends BaseAction {
     			System.out.println(json);
     			code =json.getString("CODE");
     			if(!MsgCode.success.equals(code)){
-    				code=MsgCode.exception;
+    				code=MsgCode.businessError;
     			}
     	    	basebean.setCode(code);
     	    	basebean.setMsg(json.getString("MSG"));
@@ -719,33 +719,33 @@ public class AccountAction extends BaseAction {
     	}
 
     	if(StringUtil.isBlank(illegalActivitieOne)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("违法行为为空  ");
  		}else{
  			readilyShootVo.setIllegalActivitieOne(illegalActivitieOne);
  		}
     	
     	if(StringUtil.isBlank(identityCard)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("身份证为空  ");
  		}else{
  			readilyShootVo.setUserIdCard(identityCard);
  		}	
     	if(StringUtil.isBlank(illegalTime)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("违法时间为空  ");
  		}else{
  			readilyShootVo.setIllegalTime(illegalTime);
  		}
     	if(StringUtil.isBlank(illegalSections)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("违法地点为空  ");
  		}else{
  			readilyShootVo.setIllegalSections(illegalSections);
  		}
     	
     	if(StringUtil.isBlank(inputManPhone)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("手机号码为空  ");
  		}else{
  			readilyShootVo.setInputManPhone(inputManPhone);
@@ -762,7 +762,7 @@ public class AccountAction extends BaseAction {
 
     	
     	if(StringUtil.isBlank(inputManName)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("举报人姓名为空  ");
  		}else{
  			readilyShootVo.setInputManName(inputManName);
@@ -787,19 +787,19 @@ public class AccountAction extends BaseAction {
  		}
     	
     	if(imgNumber>1){
-    		code=MsgCode.exception;
+    		code=MsgCode.paramsError;
  			sb.append("举报图片数量不少于2张  ");
     	}
     	
     	if(StringUtil.isBlank(userSource)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("用户来源为空  ");
  		}else{
  			readilyShootVo.setUserSource(userSource);
  		}
     	
     	if(StringUtil.isBlank(openId)){
- 			code=MsgCode.exception;
+ 			code=MsgCode.paramsError;
  			sb.append("微信openid为空  ");
  		}else{
  			readilyShootVo.setOpenId(openId);
@@ -812,7 +812,7 @@ public class AccountAction extends BaseAction {
     				System.out.println(json);
     				code =json.getString("code");
     				if(!MsgCode.success.equals(code)){
-    					code=MsgCode.exception;
+    					code=MsgCode.businessError;
     				}else{
     					Map<String, Object> modelMap = new HashMap<String, Object>();
     					String msg=json.getString("msg");
