@@ -135,6 +135,12 @@ public class AccountAction extends BaseAction {
     public void resetPwd(String validateCode,String identityCard,String mobilephone,String userName,String sourceOfCertification , HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
     	try {
+    		if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("认证来源不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
     		if(StringUtils.isBlank(validateCode)){
         		baseBean.setMsg("验证码不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
