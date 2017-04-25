@@ -6,14 +6,12 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.validator.Msg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import cn.convenience.bean.ConvenienceBean;
@@ -74,6 +72,7 @@ public class ConvenienceAction extends BaseAction{
 			String subType = request.getParameter("subType");  			   //子类型选择
 			String description = request.getParameter("description");  	   //现场描述  可为空
 			String sceneImg = request.getParameter("sceneImg");  		   //现场图片		可为空
+			String imgTime = request.getParameter("imgTime");  			//发现时间
 			
 			//验证参数用户姓名
 			if (StringUtil.isBlank(userName)) {
@@ -131,6 +130,14 @@ public class ConvenienceAction extends BaseAction{
 				return;
 		    }
 			
+			//验证拍照时间
+/*			if (StringUtil.isBlank(imgTime)) {
+				jsonMap.put("code", MsgCode.paramsError);
+				jsonMap.put("msg", "拍照时间不能为空！");
+				out.print(JSONObject.fromObject(jsonMap));
+				return;
+		    }*/
+			
 			bean.setUserName(userName);    //用户姓名
 			bean.setMobilephone(mobilephone);   //用户手机
 			bean.setAddressRegion(addressRegion);   //区域
@@ -145,6 +152,7 @@ public class ConvenienceAction extends BaseAction{
 			bean.setDescription(description);	//现场描述
 			bean.setSceneImg(sceneImg); 			//现场照片
 			bean.setIdentityCard(identityCard);  //身份证号
+			bean.setStartTime(imgTime);			 //拍照时间
 			
 			
 			//接口调用
@@ -195,6 +203,7 @@ public class ConvenienceAction extends BaseAction{
 			String subType = request.getParameter("subType");  			   //子类型选择
 			String description = request.getParameter("description");  	   //现场描述  可为空
 			String sceneImg = request.getParameter("sceneImg");  		   //现场图片		可为空
+			String imgTime = request.getParameter("imgTime");  			//发现时间
 			
 			//验证参数用户姓名
 			if (StringUtil.isBlank(userName)) {
@@ -266,6 +275,7 @@ public class ConvenienceAction extends BaseAction{
 			bean.setDescription(description);	//现场描述
 			bean.setSceneImg(sceneImg); 			//现场照片
 			bean.setIdentityCard(identityCard);  //身份证号
+			bean.setStartTime(imgTime);			 //拍照时间
 			
 			//接口调用
 			BaseBean refBean = convenienceService.safeHiddenDanger(bean);
