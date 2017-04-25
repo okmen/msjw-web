@@ -29,6 +29,7 @@ import cn.account.bean.studyclassroom.Study;
 import cn.account.bean.studyclassroom.StudyRecord;*/
 import cn.sdk.bean.BaseBean;
 import cn.sdk.util.DateUtil;
+import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
 
@@ -173,6 +174,7 @@ public class MicroClassroomAction extends BaseAction {
 				  base.setMsg("身份证号码不能为空");
 				  base.setCode("0002");
 				  renderJSON(base);	
+				  return;
 			 }
 			 if(study.getMobilephone()!=null){
 				 s.setMobilephone(study.getMobilephone());
@@ -180,6 +182,7 @@ public class MicroClassroomAction extends BaseAction {
 				 base.setMsg("手机号码不能为空");
 				  base.setCode("0002");
 				  renderJSON(base);	
+				  return;
 			 }
 			 
 			 if(study.getUserSource()!=null){
@@ -188,6 +191,7 @@ public class MicroClassroomAction extends BaseAction {
 				 base.setMsg("用户来源不能为空");
 				  base.setCode("0002");
 				  renderJSON(base);	
+				  return;
 			 }
 			 
 			 if(ip!=null){
@@ -196,6 +200,7 @@ public class MicroClassroomAction extends BaseAction {
 				 base.setMsg("ip地址不能为空");
 				  base.setCode("0002");
 				  renderJSON(base);	
+				  return;
 			 }
 			 if(study.getClassroomId()!=null){
 				 s.setClassroomId(study.getClassroomId());
@@ -203,6 +208,7 @@ public class MicroClassroomAction extends BaseAction {
 				 base.setMsg("列表ID不能为空");
 				  base.setCode("0002");
 				  renderJSON(base);	
+				  return;
 			 }
 			 
 			 if(study.getClassroomId().equals("1")){  //当列表ID等于1的时候 进入消分学习
@@ -236,6 +242,7 @@ public class MicroClassroomAction extends BaseAction {
 		// logger.info("查询日志"+JSON.toJSONString(base));
 		// logger.info(JSON.toJSONString(base));
 		} catch (Exception e) {
+			DealException(base, e);
 			logger.error("StudyHomepages方法："+study, e);
 		}
 	 }
@@ -260,24 +267,28 @@ public class MicroClassroomAction extends BaseAction {
 				 s.setIdentityCard(study.getIdentityCard());
 			 }else{
 				 base.setMsg("身份证号码不能为空！");
+				 base.setCode(MsgCode.paramsError);
 				 renderJSON(base);	
 			 }
 			 if(study.getMobilephone()!=null){
 				 s.setMobilephone(study.getMobilephone());
 			 }else{
 				 base.setMsg("手机号码不能为空！");
+				 base.setCode(MsgCode.paramsError);
 				  renderJSON(base);
 			 }
 			 if(study.getUserSource()!=null){
 				 s.setUserSource(study.getUserSource());
 			 }else{
 				 base.setMsg("用户来源不能为空！");
+				 base.setCode(MsgCode.paramsError);
 				  renderJSON(base);
 			 }
 			 if(ip!=null){
 				 s.setIpAddress(ip);				  
 			 }else{
 				 base.setMsg("ip地址不能为空");
+				 base.setCode(MsgCode.paramsError);
 				  renderJSON(base);	
 			 }		 
 		
@@ -285,6 +296,7 @@ public class MicroClassroomAction extends BaseAction {
 				 s.setClassroomId(study.getClassroomId());
 			 }else{
 				 base.setMsg("列表ID不能为空");
+				 base.setCode(MsgCode.paramsError);
 				  renderJSON(base);	
 			 }
 		 if(study.getClassroomId().equals("1")){ //当列表ID等于1的时候 进入消分学习取题 
@@ -319,6 +331,7 @@ public class MicroClassroomAction extends BaseAction {
 			logger.info("随机取题日志"+JSON.toJSONString(base));
 	 }
 	 } catch (Exception e) {
+		 DealException(base, e);
 		 logger.error("Studys方法："+study, e);	
 	 }
 	 }
@@ -345,36 +358,42 @@ public class MicroClassroomAction extends BaseAction {
 				 s.setIdentityCard(study.getIdentityCard());
 			 }else{
 				 base.setMsg("身份证号码不能为空！");
+				 base.setCode(MsgCode.paramsError);
 				 renderJSON(base);	
 			 }
 			 if(study.getMobilephone()!=null){
 				 s.setMobilephone(study.getMobilephone());
 			 }else{
 				 base.setMsg("手机号码不能为空！");
+				 base.setCode(MsgCode.paramsError);
 				  renderJSON(base);
 			 }
 			 if(study.getUserSource()!=null){
 				 s.setUserSource(study.getUserSource());
 			 }else{
 				 base.setMsg("用户来源不能为空！");
+				 base.setCode(MsgCode.paramsError);
 				  renderJSON(base);
 			 }
 			 if(ip!=null){
 				 s.setIpAddress(ip);				  
 			 }else{
 				 base.setMsg("ip地址不能为空");
+				 base.setCode(MsgCode.paramsError);
 				  renderJSON(base);	
 			 }
 			 if(study.getSubjectId()!=null){
 				 s.setSubjectId(study.getSubjectId());
 			 }else{
 				 base.setMsg("答题编号不能为空！");
+				 base.setCode(MsgCode.paramsError);
 				  renderJSON(base);	
 			 }
 			 if(study.getSubjectAnswer()!=null){
 				 s.setSubjectAnswer(study.getSubjectAnswer());
 			 }else{
 				 base.setMsg("答题答案不能为空！");
+				 base.setCode(MsgCode.paramsError);
 				  renderJSON(base);	
 			 }
 			 if(study.getClassroomId()!=null){
@@ -389,18 +408,21 @@ public class MicroClassroomAction extends BaseAction {
 			 	s.setInterfaceId("exam002");
 			 	if(study.getScoreStartDate()==null){
 					 base.setMsg("计分周期开始时间不能为空");
+					 base.setCode(MsgCode.paramsError);
 					 renderJSON(base);	
 				 }else{
 					 s.setScoreStartDate(study.getScoreStartDate());
 				 }
 				 if(study.getScoreEndDate()==null){
 					 base.setMsg("计分周期结束时间不能为空");
+					 base.setCode(MsgCode.paramsError);
 					 renderJSON(base);	
 				 }else{
 					 s.setScoreEndDate(study.getScoreEndDate());
 				 }
 				 if(study.getUserName()==null){
 					 base.setMsg("考生姓名不能为空！");
+					 base.setCode(MsgCode.paramsError);
 					 renderJSON(base);
 				 }else{
 					 s.setUserName(study.getUserName());
@@ -411,18 +433,21 @@ public class MicroClassroomAction extends BaseAction {
 			 	s.setInterfaceId("mfyydt");
 			 	if(study.getScoreStartDate()==null){
 					 base.setMsg("计分周期开始时间不能为空");
+					 base.setCode(MsgCode.paramsError);
 					 renderJSON(base);	
 				 }else{
 					 s.setScoreStartDate(study.getScoreStartDate());
 				 }
 				 if(study.getScoreEndDate()==null){
 					 base.setMsg("计分周期结束时间不能为空");
+					 base.setCode(MsgCode.paramsError);
 					 renderJSON(base);	
 				 }else{
 					 s.setScoreEndDate(study.getScoreEndDate());
 				 }
 				 if(study.getUserName()==null){
 					 base.setMsg("考生姓名不能为空！");
+					 base.setCode(MsgCode.paramsError);
 					 renderJSON(base);
 				 }else{
 					 s.setUserName(study.getUserName());
@@ -433,18 +458,21 @@ public class MicroClassroomAction extends BaseAction {
 			 s.setInterfaceId("blyydt");
 			 	if(study.getScoreStartDate()==null){
 					 base.setMsg("计分周期开始时间不能为空");
+					 base.setCode(MsgCode.paramsError);
 					 renderJSON(base);	
 				 }else{
 					 s.setScoreStartDate(study.getScoreStartDate());
 				 }
 				 if(study.getScoreEndDate()==null){
 					 base.setMsg("计分周期结束时间不能为空");
+					 base.setCode(MsgCode.paramsError);
 					 renderJSON(base);	
 				 }else{
 					 s.setScoreEndDate(study.getScoreEndDate());
 				 }
 				 if(study.getUserName()==null){
 					 base.setMsg("考生姓名不能为空！");
+					 base.setCode(MsgCode.paramsError);
 					 renderJSON(base);
 				 }else{
 					 s.setUserName(study.getUserName());
@@ -478,7 +506,8 @@ public class MicroClassroomAction extends BaseAction {
 			renderJSON(base);
 			logger.info("答题日志"+JSON.toJSONString(base));
 	 }
-	} catch (Exception e) {
+		 } catch (Exception e) {
+			 	DealException(base, e);
 				logger.error("Answer方法"+study, e);
 		}
 		
