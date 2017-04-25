@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.google.gson.Gson;
 
 import cn.message.service.IWechatService;
+import cn.sdk.bean.BaseBean;
+import cn.sdk.bean.ErrorBean;
+import cn.sdk.bean.SuccessBean;
+import cn.sdk.util.MsgCode;
 import cn.web.front.action.wechat.model.OutJsonModel;
 import cn.web.front.action.wechat.util.ConstantsErrorCode;
 import cn.web.front.action.wechat.util.GsonUtil;
@@ -33,16 +37,22 @@ public class H5Action extends BaseAction {
 	@RequestMapping(value = "/sdkConfig.html")
 	public void sdkConfig(HttpServletRequest request,HttpServletResponse response){
 		String url = request.getParameter("url");
+		logger.info("h5 url 参数:"+url);
 		try {
 			if(!StringUtils.isNotBlank(url)){
-				outString(response, new OutJsonModel(ConstantsErrorCode.ERROR_CODE_000001).toJson());
+				renderJSON(new ErrorBean(MsgCode.paramsError, "url不能为空"));
 				return;
 			}
+			
 			Map<String, Object> map = wechatService.sdkConfig(url);
-			outString(response, new OutJsonModel(ConstantsErrorCode.ERROR_CODE_000000, map).toJson());
+			if(null == map){
+				renderJSON(new ErrorBean(MsgCode.paramsError, "sdk config 签名失败"));
+				return;
+			}
+			renderJSON(new SuccessBean(MsgCode.success, map));
 		} catch (Exception e) {
-			logger.error("服务器异常"+url, e);
-			outString(response, new OutJsonModel(ConstantsErrorCode.ERROR_CODE_10000).toJson());
+			DealException(new ErrorBean(), e);
+			logger.error("服务器异常:"+url, e);
 		}
 	}
 }
