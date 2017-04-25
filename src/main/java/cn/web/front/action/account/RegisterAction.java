@@ -16,6 +16,7 @@ import cn.account.bean.vo.RegisterVo;
 import cn.account.service.IAccountService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.util.Base64;
+import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
 
@@ -67,11 +68,11 @@ public class RegisterAction extends BaseAction {
 			String identityCard, String linkAddress, String mobilephone, String validateCode, int isDriverLicense,
 			String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgNegative,
 			String idCardImgHandHeld) {
-		String code = "0000";
+		String code = MsgCode.success;
 		StringBuffer sb = new StringBuffer("");
 		RegisterVo registerVo = new RegisterVo();
 		if (StringUtil.isBlank(identityCard)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("身份证为空  ");
 		} else {
 			registerVo.setUserIdCard(identityCard);
@@ -80,19 +81,19 @@ public class RegisterAction extends BaseAction {
 		registerVo.setLinkAddress(linkAddress);
 
 		if (StringUtil.isBlank(mobilephone)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("手机号码为空  ");
 		} else {
 			registerVo.setMobilephone(mobilephone);
 		}
 
 		if (isDriverLicense < 0) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("是否有驾驶证错误  ");
 		} else {
 			if(isDriverLicense==1){
 				if (StringUtil.isBlank(driverLicenseIssuedAddress)) {
-					code = "500";
+					code=MsgCode.exception;;
 					sb.append("驾驶证核发地为空  ");
 				} else {
 					registerVo.setDriverLicenseIssuedAddress(driverLicenseIssuedAddress);
@@ -102,44 +103,44 @@ public class RegisterAction extends BaseAction {
 			}
 		}
 		if (StringUtil.isBlank(validateCode)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("验证码为空  ");
 		}
 		if (StringUtil.isBlank(idCardImgPositive)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("身份证正面为空  ");
 		} else {
 			registerVo.setIdCardImgPositive(idCardImgPositive);
 		}
 
 		if (StringUtil.isBlank(idCardImgNegative)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("身份证反面为空 ");
 		}
 
 		if (StringUtil.isBlank(idCardImgHandHeld)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("手持身份证为空  ");
 		} else {
 			registerVo.setIdCardImgHandHeld(idCardImgHandHeld);
 		}
 
 		if (StringUtil.isBlank(licensePlateType)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("车牌类型为空  ");
 		} else {
 			registerVo.setLicensePlateType(licensePlateType);
 		}
 
 		if (StringUtil.isBlank(provinceAbbreviation)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("省简称为空  ");
 		} else {
 			registerVo.setProvinceAbbreviation(provinceAbbreviation);
 		}
 
 		if (StringUtil.isBlank(licensePlateNumber)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("车牌号码为空  ");
 		} else {
 			registerVo.setLicensePlateNumber(licensePlateNumber);
@@ -147,7 +148,7 @@ public class RegisterAction extends BaseAction {
 
 		BaseBean basebean = new BaseBean();
 		try {
-			if ("0000".equals(code)) {// 参数校验通过
+			if (MsgCode.success.equals(code)) {// 参数校验通过
 				int result = accountService.verificatioCode(mobilephone, validateCode);
 				if (0 == result) {
 					registerVo.setCallAccount("WX02_TEST");
@@ -157,19 +158,19 @@ public class RegisterAction extends BaseAction {
 					JSONObject json = accountService.iAmTheOwner(registerVo);
 					System.out.println(json);
 					code = json.getString("CODE");
-					if (!"0000".equals(code)) {
-						code = "500";
+					if (!MsgCode.success.equals(code)) {
+						code=MsgCode.exception;;
 					}
 					basebean.setCode(code);
 					basebean.setMsg(json.getString("MSG"));
 				}
 				if (1 == result) {
-					code = "500";
+					code=MsgCode.exception;;
 					sb.append("验证码错误    ");
 					basebean.setMsg(sb.toString());
 				}
 				if (2 == result) {
-					code = "500";
+					code=MsgCode.exception;;
 					sb.append("验证码失效    ");
 					basebean.setMsg(sb.toString());
 				}			
@@ -179,6 +180,7 @@ public class RegisterAction extends BaseAction {
 			}
 
 		} catch (Exception e) {
+			DealException(basebean, e);
 			logger.error("iAmTheOwner出错",e);
 		}
 		renderJSON(basebean);
@@ -221,85 +223,85 @@ public class RegisterAction extends BaseAction {
 			String ownerName, String ownerIdCard, String userIdCard, String linkAddress, String mobilephone,
 			String validateCode, String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgHandHeld,
 			String idCardImgNegative, String ownerIdCardImgPositive, String ownerIdCardImgHandHeld) {
-		String code = "0000";
+		String code = MsgCode.success;
 		StringBuffer sb = new StringBuffer("");
 		RegisterVo registerVo = new RegisterVo();
 		if (StringUtil.isBlank(userIdCard)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("使用人身份证为空  ");
 		} else {
 			registerVo.setUserIdCard(userIdCard);
 		}
 		if (StringUtil.isBlank(ownerIdCard)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("车主身份证为空  ");
 		} else {
 			registerVo.setOwnerIdCard(ownerIdCard);
 		}
 
 //		if (StringUtil.isBlank(linkAddress)) {
-//			code = "500";
+//			code=MsgCode.exception;;
 //			sb.append("联系地址为空  ");
 //		} else {
 			registerVo.setLinkAddress(linkAddress);
 //		}
 
 		if (StringUtil.isBlank(mobilephone)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("手机号码为空  ");
 		} else {
 			registerVo.setMobilephone(mobilephone);
 		}
 
 		if (StringUtil.isBlank(validateCode)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("验证码为空  ");
 		}
 
 		if (StringUtil.isBlank(driverLicenseIssuedAddress)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("驾驶证核发地为空  ");
 		} else {
 			registerVo.setDriverLicenseIssuedAddress(driverLicenseIssuedAddress);
 		}
 
 		if (StringUtil.isBlank(idCardImgPositive)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("身份证正面为空  ");
 		} else {
 			registerVo.setIdCardImgPositive(idCardImgPositive);
 		}
 
 		if (StringUtil.isBlank(idCardImgHandHeld)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("手持身份证为空  ");
 		} else {
 			registerVo.setIdCardImgHandHeld(idCardImgHandHeld);
 		}
 
 		if (StringUtil.isBlank(licensePlateType)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("车牌类型为空  ");
 		} else {
 			registerVo.setLicensePlateType(licensePlateType);
 		}
 
 		if (StringUtil.isBlank(provinceAbbreviation)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("省简称为空  ");
 		} else {
 			registerVo.setProvinceAbbreviation(provinceAbbreviation);
 		}
 
 		if (StringUtil.isBlank(licensePlateNumber)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("车牌号码为空  ");
 		} else {
 			registerVo.setLicensePlateNumber(licensePlateNumber);
 		}
 
 		if (StringUtil.isBlank(ownerName)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("车主姓名为空  ");
 		} else {
 			registerVo.setOwnerIdName(ownerName);
@@ -307,14 +309,14 @@ public class RegisterAction extends BaseAction {
 		}
 
 		if (StringUtil.isBlank(idCardImgPositive)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("车主身份证正面为空  ");
 		} else {
 			registerVo.setOwnerIdCardImgPositive(ownerIdCardImgPositive);
 		}
 
 		if (StringUtil.isBlank(ownerIdCardImgHandHeld)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("车主手持身份证为空  ");
 		} else {
 			registerVo.setOwnerIdCardImgHandHeld(ownerIdCardImgHandHeld);
@@ -322,7 +324,7 @@ public class RegisterAction extends BaseAction {
 
 		BaseBean basebean = new BaseBean();
 		try {
-			if ("0000".equals(code)) {// 参数校验通过
+			if (MsgCode.success.equals(code)) {// 参数校验通过
 
 				// 0-验证成功，1-验证失败，2-验证码失效
 				int result = accountService.verificatioCode(mobilephone, validateCode);
@@ -334,19 +336,19 @@ public class RegisterAction extends BaseAction {
 					JSONObject json = accountService.iamALongtimeUser(registerVo);
 					System.out.println(json);
 					code = json.getString("CODE");
-					if (!"0000".equals(code)) {
-						code = "500";
+					if (!MsgCode.success.equals(code)) {
+						code=MsgCode.exception;;
 					}
 					basebean.setCode(code);
 					basebean.setMsg(json.getString("MSG"));
 				}
 				if (1 == result) {
-					code = "500";
+					code=MsgCode.exception;;
 					sb.append("验证码错误    ");
 					basebean.setMsg(sb.toString());
 				}
 				if (2 == result) {
-					code = "500";
+					code=MsgCode.exception;;
 					sb.append("验证码失效    ");
 					basebean.setMsg(sb.toString());
 				}
@@ -356,6 +358,7 @@ public class RegisterAction extends BaseAction {
 				basebean.setMsg(sb.toString());
 			}
 		} catch (Exception e) {
+			DealException(basebean, e);
 			logger.error("iamALongtimeUser出错",e);
 		}
 
@@ -389,56 +392,56 @@ public class RegisterAction extends BaseAction {
 			String validateCode, String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgNegative,
 			String idCardImgHandHeld) {
 
-		String code = "0000";
+		String code = MsgCode.success;
 		StringBuffer sb = new StringBuffer("");
 		RegisterVo registerVo = new RegisterVo();
 		if (StringUtil.isBlank(identityCard)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("身份证为空  ");
 		} else {
 			registerVo.setUserIdCard(identityCard);
 		}
 
 //		if (StringUtil.isBlank(linkAddress)) {
-//			code = "500";
+//			code=MsgCode.exception;;
 //			sb.append("联系地址为空  ");
 //		} else {
 			registerVo.setLinkAddress(linkAddress);
 //		}
 
 		if (StringUtil.isBlank(mobilephone)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("手机号码为空  ");
 		} else {
 			registerVo.setMobilephone(mobilephone);
 		}
 
 		if (StringUtil.isBlank(validateCode)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("验证码为空  ");
 		}
 
 		if (StringUtil.isBlank(driverLicenseIssuedAddress)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("驾驶证核发地为空  ");
 		} else {
 			registerVo.setDriverLicenseIssuedAddress(driverLicenseIssuedAddress);
 		}
 
 		if (StringUtil.isBlank(idCardImgPositive)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("身份证正面为空  ");
 		} else {
 			registerVo.setIdCardImgPositive(idCardImgPositive);
 		}
 
 		if (StringUtil.isBlank(idCardImgNegative)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("身份证反面为空 ");
 		}
 
 		if (StringUtil.isBlank(idCardImgHandHeld)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("手持身份证为空  ");
 		} else {
 			registerVo.setIdCardImgHandHeld(idCardImgHandHeld);
@@ -449,7 +452,7 @@ public class RegisterAction extends BaseAction {
 		BaseBean basebean = new BaseBean();
 		try {
 
-			if ("0000".equals(code)) {// 参数校验通过
+			if (MsgCode.success.equals(code)) {// 参数校验通过
 
 				// 0-验证成功，1-验证失败，2-验证码失效
 				int result = accountService.verificatioCode(mobilephone, validateCode);
@@ -461,19 +464,19 @@ public class RegisterAction extends BaseAction {
 					JSONObject json = accountService.haveDriverLicenseNotCar(registerVo);
 					System.out.println(json);
 					code = json.getString("CODE");
-					if (!"0000".equals(code)) {
-						code = "500";
+					if (!MsgCode.success.equals(code)) {
+						code=MsgCode.exception;;
 					}
 					basebean.setCode(code);
 					basebean.setMsg(json.getString("MSG"));
 				}
 				if (1 == result) {
-					code = "500";
+					code=MsgCode.exception;;
 					sb.append("验证码错误    ");
 					basebean.setMsg(sb.toString());
 				}
 				if (2 == result) {
-					code = "500";
+					code=MsgCode.exception;;
 					sb.append("验证码失效    ");
 					basebean.setMsg(sb.toString());
 				}
@@ -484,6 +487,7 @@ public class RegisterAction extends BaseAction {
 			}
 
 		} catch (Exception e) {
+			DealException(basebean, e);
 			logger.error("haveDriverLicenseNotCar出错",e);
 		}
 
@@ -511,42 +515,42 @@ public class RegisterAction extends BaseAction {
 	@RequestMapping(value = "isPedestrianNotDriver", method = RequestMethod.POST)
 	public void isPedestrianNotDriver(String identityCard, String mobilephone, String validateCode,
 			String idCardImgPositive, String idCardImgNegative, String idCardImgHandHeld) {
-		String code = "0000";
+		String code = MsgCode.success;
 		StringBuffer sb = new StringBuffer("");
 		RegisterVo registerVo = new RegisterVo();
 		if (StringUtil.isBlank(identityCard)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("身份证为空  ");
 		} else {
 			registerVo.setUserIdCard(identityCard);
 		}
 
 		if (StringUtil.isBlank(mobilephone)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("手机号码为空  ");
 		} else {
 			registerVo.setMobilephone(mobilephone);
 		}
 
 		if (StringUtil.isBlank(validateCode)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("验证码为空  ");
 		}
 
 		if (StringUtil.isBlank(idCardImgPositive)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("身份证正面为空  ");
 		} else {
 			registerVo.setIdCardImgPositive(idCardImgPositive);
 		}
 
 		if (StringUtil.isBlank(idCardImgNegative)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("身份证反面为空 ");
 		}
 
 		if (StringUtil.isBlank(idCardImgHandHeld)) {
-			code = "500";
+			code=MsgCode.exception;;
 			sb.append("手持身份证为空  ");
 		} else {
 			registerVo.setIdCardImgHandHeld(idCardImgHandHeld);
@@ -555,7 +559,7 @@ public class RegisterAction extends BaseAction {
 		System.out.println(sb.toString());
 		BaseBean basebean = new BaseBean();
 		try {
-			if ("0000".equals(code)) {
+			if (MsgCode.success.equals(code)) {
 
 				// 0-验证成功，1-验证失败，2-验证码失效
 				int result = accountService.verificatioCode(mobilephone, validateCode);
@@ -565,19 +569,19 @@ public class RegisterAction extends BaseAction {
 					JSONObject json = accountService.isPedestrianNotDriver(registerVo);
 					System.out.println(json);
 					code = json.getString("CODE");
-					if (!"0000".equals(code)) {
-						code = "500";
+					if (!MsgCode.success.equals(code)) {
+						code=MsgCode.exception;;
 					}
 					basebean.setCode(code);
 					basebean.setMsg(json.getString("MSG"));
 				}
 				if (1 == result) {
-					code = "500";
+					code=MsgCode.exception;;
 					sb.append("验证码错误    ");
 					basebean.setMsg(sb.toString());
 				}
 				if (2 == result) {
-					code = "500";
+					code=MsgCode.exception;;
 					sb.append("验证码失效    ");
 					basebean.setMsg(sb.toString());
 				}
@@ -588,6 +592,7 @@ public class RegisterAction extends BaseAction {
 			}
 
 		} catch (Exception e) {
+			DealException(basebean, e);
 			logger.error("isPedestrianNotDriver出错",e);
 		}
 
