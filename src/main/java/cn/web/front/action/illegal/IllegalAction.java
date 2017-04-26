@@ -127,28 +127,28 @@ public class IllegalAction extends BaseAction {
 		   //参数校验
 		   if(StringUtil.isEmpty(licensePlateNo)){
 			   base.setCode("0001");
-			   base.setMsg(licensePlateNo+"不能为空！");
+			   base.setMsg("licensePlateNo不能为空！");
 			   renderJSON(base);
 		   }
 		   if(StringUtil.isEmpty(licensePlateType)){
 			   base.setCode("0001");
-			   base.setMsg(licensePlateType+"不能为空！");
+			   base.setMsg("licensePlateType不能为空！");
 			   renderJSON(base);
 		   }
 
 		   if(StringUtil.isEmpty(identityCard)){
 			   base.setCode("0001");
-			   base.setMsg(identityCard+"不能为空！");
+			   base.setMsg("identityCard不能为空！");
 			   renderJSON(base);
 		   }
 		   if(StringUtil.isEmpty(sourceOfCertification)){
 			   base.setCode("0001");
-			   base.setMsg(sourceOfCertification+"不能为空！");
+			   base.setMsg("sourceOfCertification不能为空！");
 			   renderJSON(base);
 		   }
 		   if(StringUtil.isEmpty(mobilephone)){
 			   base.setCode("0001");
-			   base.setMsg("不能为空！");
+			   base.setMsg("mobilephone不能为空！");
 			   renderJSON(base);
 		   }
    
@@ -209,27 +209,27 @@ public class IllegalAction extends BaseAction {
 	   try {
 		   if(StringUtil.isEmpty(drivingLicenceNo)){
 			   base.setCode("0001");
-			   base.setMsg(drivingLicenceNo+"不能为空！");
+			   base.setMsg("drivingLicenceNo不能为空！");
 			   renderJSON(base);
 		   }
 		   if(StringUtil.isEmpty(recordNo)){
 			   base.setCode("0001");
-			   base.setMsg(recordNo+"不能为空！");
+			   base.setMsg("recordNo不能为空！");
 			   renderJSON(base);
 		   }
 		   if(StringUtil.isEmpty(identityCard)){
 			   base.setCode("0001");
-			   base.setMsg(identityCard+"不能为空！");
+			   base.setMsg("identityCard不能为空！");
 			   renderJSON(base);
 		   }
 		   if(StringUtil.isEmpty(sourceOfCertification)){
 			   base.setCode("0001");
-			   base.setMsg(sourceOfCertification+"不能为空！");
+			   base.setMsg("sourceOfCertification不能为空！");
 			   renderJSON(base);
 		   }
 		   if(StringUtil.isEmpty(mobilephone)){
 			   base.setCode("0001");
-			   base.setMsg("不能为空！");
+			   base.setMsg("mobilephone不能为空！");
 			   renderJSON(base);
 		   }
 		   
