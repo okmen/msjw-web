@@ -671,11 +671,7 @@ public class IllegalAction extends BaseAction {
 			   base.setMsg("身份证不能为空！");
 			   renderJSON(base);
 		}
-	 	if(StringUtil.isEmpty(userCode)){
-			   base.setCode("0001");
-			   base.setMsg("用户名不能为空！");
-			   renderJSON(base);
-		}
+
 	 	if(StringUtil.isEmpty(sourceOfCertification)){
 			   base.setCode("0001");
 			   base.setMsg("来源方式不能为空！");
