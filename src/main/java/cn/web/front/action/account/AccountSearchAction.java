@@ -209,6 +209,9 @@ public class AccountSearchAction extends BaseAction {
     		baseBean.setCode(MsgCode.success);
         	baseBean.setMsg("");
         	ElectronicDriverLicenseVo electronicDriverLicenseVo = accountService.getElectronicDriverLicense(driverLicenseNumber, userName, mobileNumber, "C");
+        	if(StringUtils.isBlank(electronicDriverLicenseVo.getElectronicDriverLicense())){
+        		baseBean.setMsg("未查询到该用户的星级用户身份认证信息");
+        	}
         	baseBean.setData(electronicDriverLicenseVo);
         	renderJSON(baseBean);
 		} catch (Exception e) {
@@ -262,6 +265,9 @@ public class AccountSearchAction extends BaseAction {
         	baseBean.setMsg("");
         	String sourceOfCertification = "C";
         	DrivingLicenseVo drivingLicenseVo = accountService.getDrivingLicense(numberPlatenumber, plateType, mobileNumber, sourceOfCertification);
+        	if(StringUtils.isBlank(drivingLicenseVo.getElectronicDrivingLicense())){
+        		baseBean.setMsg("未查询到该用户的星级用户身份认证信息");
+        	}
         	baseBean.setData(drivingLicenseVo);
         	renderJSON(baseBean);
 		} catch (Exception e) {
