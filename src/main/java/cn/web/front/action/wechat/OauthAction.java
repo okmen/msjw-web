@@ -38,8 +38,10 @@ public class OauthAction extends BaseAction{
 			response.setCharacterEncoding("utf-8");
 			if(state.contains("szjj.u-road.com")){
 				if(state.contains("failureReporttest")){
+					/*response.sendRedirect(state+
+							"/"+code+"/test");*/
 					response.sendRedirect(state+
-							"/"+code+"/test");
+							"/"+code);
 					return;
 				}
 				response.sendRedirect(state);

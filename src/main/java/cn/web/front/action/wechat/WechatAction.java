@@ -79,7 +79,8 @@ public class WechatAction extends BaseAction {
 	        String event = requestMap.get("Event"); 
 	        String content = requestMap.get("Content");
 	        String msgId = requestMap.get("MsgId");
-			IMessage mesasge = wechatService.processPostMessage(new WechatPostMessageModel(fromUserName, toUserName, msgType, event,content,msgId));
+	        String eventKey = requestMap.get("EventKey");
+			IMessage mesasge = wechatService.processPostMessage(new WechatPostMessageModel(fromUserName, toUserName, msgType, event,content,msgId,eventKey));
 			if(null != mesasge){
 				outString(response, mesasge.toXml());
 			} else{
