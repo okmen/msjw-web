@@ -129,7 +129,7 @@ public class AccountAction extends BaseAction {
      * @param request
      * @param response
      * @throws Exception
-     * http://192.168.1.161:8080/web/user/resetPwd.html?validateCode=1111&identityCard=420881198302280017&mobilephone=18601174358&userName=孙涛
+     * http://192.168.1.161:8080/web/user/resetPwd.html?validateCode=1111&identityCard=420881198302280017&mobilephone=18601174358&userName=孙涛&sourceOfCertification=C
      */
     @RequestMapping("resetPwd")
     public void resetPwd(String validateCode,String identityCard,String mobilephone,String userName,String sourceOfCertification , HttpServletRequest request,HttpServletResponse response) throws Exception{
