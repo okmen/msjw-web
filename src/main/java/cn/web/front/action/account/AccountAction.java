@@ -207,12 +207,17 @@ public class AccountAction extends BaseAction {
 	 * @param request
 	 * @param response
      * @throws Exception
-     * http://localhost:8080/web/user/login.html?loginName=622822198502074110&password=168321
-     * http://localhost:8080/web/user/login.html?loginName=440301199002101119&password=631312&openId=000000xxx&loginClient=weixin
+     * http://localhost:8080/web/user/login.html?loginName=440301199002101119&password=631312&openId=000000xxx&loginClient=weixin&sourceOfCertification=C
 	 */
     @RequestMapping(value="login")
     public void login(String loginName,String password,String openId,String loginClient,HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
+    	String xx = request.getHeader("sourceOfCertification");
+    	
+    	String sourceOfCertification = request.getParameter("sourceOfCertification");
+    	logger.info("xx=" + xx);
+    	logger.info("sourceOfCertification=" + sourceOfCertification);
+    	
     	try {
         	if(StringUtils.isBlank(loginName)){
         		baseBean.setMsg("loginName 不能为空!");
@@ -238,7 +243,7 @@ public class AccountAction extends BaseAction {
         		renderJSON(baseBean);
         		return;
         	}
-        	LoginReturnBeanVo loginReturnBeanVo = accountService.login(loginName,password,"C",openId,loginClient);
+        	LoginReturnBeanVo loginReturnBeanVo = accountService.login(loginName,password,sourceOfCertification,openId,loginClient);
         	if(null != loginReturnBeanVo && MsgCode.success.equals(loginReturnBeanVo.getCode())){
         		baseBean.setCode(MsgCode.success);
             	baseBean.setMsg("");
@@ -350,8 +355,7 @@ public class AccountAction extends BaseAction {
      * @param unionId 支付宝unionId
      */
     @RequestMapping(value = "deleteVehicle",method = RequestMethod.POST)
-    public void deleteVehicle( String identityCard,String userSource,
-    		 String openId, String unionId) {
+    public void deleteVehicle( String identityCard,String userSource,String openId, String unionId,String sourceOfCertification) {
     	
     	String code=MsgCode.success;
  		StringBuffer sb = new StringBuffer("");
@@ -369,10 +373,11 @@ public class AccountAction extends BaseAction {
  			code=MsgCode.paramsError;
  			sb.append("用户来源为空  ");
  		}else{
- 			if("C".equals(userSource)){
+ 			userBind.setClientType(sourceOfCertification);
+ 			if("C".equals(sourceOfCertification)){
  				userBind.setOpenId(openId);
- 			}else if("Z".equals(userSource)){
- 				userBind.setUnionId(unionId);
+ 			}else if("Z".equals(sourceOfCertification)){
+ 				userBind.setUserId(openId);
  			}
  		}
     	 BaseBean basebean = new  BaseBean();
