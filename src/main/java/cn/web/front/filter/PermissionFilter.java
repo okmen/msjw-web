@@ -84,7 +84,11 @@ public class PermissionFilter extends HttpServlet implements Filter {
 
         for (Map.Entry<String, String[]> entity : parameters.entrySet()) {
 
-            logger.info(String.format("%s = %s", entity.getKey(), StringUtils.join(entity.getValue(), ",")));
+        	if ("idCardImgPositive,idCardImgHandHeld,idCardImgNegative,reportImgOne,reportImgTwo,reportImgThree,ownerIdCardImgPositive,ownerIdCardImgHandHeld,sceneImg".contains(entity.getKey())) {
+        		logger.info(String.format("%s = %s", entity.getKey(), "照片流字符太长，不打印"));
+			}else {
+				logger.info(String.format("%s = %s", entity.getKey(), StringUtils.join(entity.getValue(), ",")));
+			}
         }
 
     }
