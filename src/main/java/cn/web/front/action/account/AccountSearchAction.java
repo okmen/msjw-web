@@ -78,7 +78,6 @@ public class AccountSearchAction extends BaseAction {
         		return;
         	}
 			List<InformationSheetVo> informationSheetVos = new ArrayList<InformationSheetVo>();
-			sourceOfCertification = "C";
 			Map<String, Object> map = accountService.queryMachineInformationSheet(applyType,identityCard,sourceOfCertification);
 			String code = (String) map.get("code");
 			String msg = (String) map.get("msg");
@@ -126,7 +125,6 @@ public class AccountSearchAction extends BaseAction {
 			baseBean.setCode(MsgCode.success);
 	    	baseBean.setMsg("");
 			MotorVehicleInformationSheetVo motorVehicleInformationSheetVo = new MotorVehicleInformationSheetVo();
-			sourceOfCertification = "C";
 			motorVehicleInformationSheetVo = accountService.getMotorVehicleInformationSheet(identityCard, sourceOfCertification);
 			baseBean.setData(motorVehicleInformationSheetVo);
 		} catch (Exception e) {
@@ -162,7 +160,6 @@ public class AccountSearchAction extends BaseAction {
 			baseBean.setCode(MsgCode.success);
 	    	baseBean.setMsg("");
 			DriverLicenseInformationSheetVo driverLicenseInformationSheetVo = new DriverLicenseInformationSheetVo();
-			sourceOfCertification = "C";
 			AuthenticationBasicInformationVo authenticationBasicInformationVo = accountService.authenticationBasicInformationQuery(identityCard, sourceOfCertification);
 			baseBean.setData(authenticationBasicInformationVo);
 	    	renderJSON(baseBean);
@@ -184,7 +181,7 @@ public class AccountSearchAction extends BaseAction {
 	 * http://localhost:8080/web/user/search/getElectronicDriverLicense.html?driverLicenseNumber=440301199002101119&userName=杨明畅&mobileNumber=18603017278
 	 */
     @RequestMapping(value="getElectronicDriverLicense")
-    public void getElectronicDriverLicense(String driverLicenseNumber,String userName,String mobileNumber,
+    public void getElectronicDriverLicense(String driverLicenseNumber,String userName,String mobileNumber,String sourceOfCertification,
     		HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
     	try {
@@ -206,9 +203,15 @@ public class AccountSearchAction extends BaseAction {
         		renderJSON(baseBean);
         		return;
         	}
+    		if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
     		baseBean.setCode(MsgCode.success);
         	baseBean.setMsg("");
-        	ElectronicDriverLicenseVo electronicDriverLicenseVo = accountService.getElectronicDriverLicense(driverLicenseNumber, userName, mobileNumber, "C");
+        	ElectronicDriverLicenseVo electronicDriverLicenseVo = accountService.getElectronicDriverLicense(driverLicenseNumber, userName, mobileNumber,sourceOfCertification);
         	if(StringUtils.isBlank(electronicDriverLicenseVo.getElectronicDriverLicense())){
         		baseBean.setMsg("未查询到该用户的星级用户身份认证信息");
         	}
@@ -238,7 +241,7 @@ public class AccountSearchAction extends BaseAction {
 	 * 
      */
     @RequestMapping(value="getDrivingLicense")
-    public void getDrivingLicense(String numberPlatenumber,String plateType,String mobileNumber,
+    public void getDrivingLicense(String numberPlatenumber,String plateType,String mobileNumber,String sourceOfCertification,
     		HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
     	try {
@@ -260,10 +263,14 @@ public class AccountSearchAction extends BaseAction {
         		renderJSON(baseBean);
         		return;
         	}
-    		
+    		if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode(MsgCode.businessError);
+        		renderJSON(baseBean);
+        		return;
+        	}
     		baseBean.setCode(MsgCode.success);
         	baseBean.setMsg("");
-        	String sourceOfCertification = "C";
         	DrivingLicenseVo drivingLicenseVo = accountService.getDrivingLicense(numberPlatenumber, plateType, mobileNumber, sourceOfCertification);
         	if(StringUtils.isBlank(drivingLicenseVo.getElectronicDrivingLicense())){
         		baseBean.setMsg("未查询到该用户的星级用户身份认证信息");
@@ -289,7 +296,7 @@ public class AccountSearchAction extends BaseAction {
 	 * http://localhost:8080/web/user/search/getMyDriverLicense.html?identityCard=440301199002101119
      */
     @RequestMapping(value="getMyDriverLicense")
-    public void getMyDriverLicense(String identityCard,HttpServletRequest request,HttpServletResponse response) throws Exception{
+    public void getMyDriverLicense(String identityCard,HttpServletRequest request,HttpServletResponse response,String sourceOfCertification) throws Exception{
     	BaseBean baseBean = new BaseBean();
     	try {
     		if(StringUtils.isBlank(identityCard)){
@@ -298,8 +305,14 @@ public class AccountSearchAction extends BaseAction {
         		renderJSON(baseBean);
         		return;
         	}
+    		if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
     		baseBean.setCode(MsgCode.success);
-        	MyDriverLicenseVo myDriverLicenseVo = accountService.getMyDriverLicense(identityCard, "C");
+        	MyDriverLicenseVo myDriverLicenseVo = accountService.getMyDriverLicense(identityCard, sourceOfCertification);
         	baseBean.setData(myDriverLicenseVo);
         	baseBean.setMsg("");
 		} catch (Exception e) {
@@ -319,7 +332,7 @@ public class AccountSearchAction extends BaseAction {
 	 * http://localhost:8080/web/user/search/getBndTheVehicles.html?identityCard=440301199002101119&mobilephone=15920071829
      */
     @RequestMapping(value="getBndTheVehicles")
-    public void getBndTheVehicles(String identityCard,String mobilephone,
+    public void getBndTheVehicles(String identityCard,String mobilephone,String sourceOfCertification,
     		HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
     	try {
@@ -335,9 +348,14 @@ public class AccountSearchAction extends BaseAction {
         		renderJSON(baseBean);
         		return;
         	}
+    		if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
     		baseBean.setCode(MsgCode.success);
         	baseBean.setMsg("");
-        	String sourceOfCertification = "C";
         	List<BindTheVehicleVo> bindTheVehicleVos =  accountService.getBndTheVehicles(identityCard, mobilephone, sourceOfCertification);
         	for(BindTheVehicleVo bindTheVehicleVo : bindTheVehicleVos){
         		String numberPlateNumber = bindTheVehicleVo.getNumberPlateNumber();

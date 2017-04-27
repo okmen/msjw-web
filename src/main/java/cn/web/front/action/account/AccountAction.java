@@ -210,14 +210,8 @@ public class AccountAction extends BaseAction {
      * http://localhost:8080/web/user/login.html?loginName=440301199002101119&password=631312&openId=000000xxx&loginClient=weixin&sourceOfCertification=C
 	 */
     @RequestMapping(value="login")
-    public void login(String loginName,String password,String openId,String loginClient,HttpServletRequest request,HttpServletResponse response) throws Exception{
+    public void login(String sourceOfCertification,String loginName,String password,String openId,String loginClient,HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
-    	String xx = request.getHeader("sourceOfCertification");
-    	
-    	String sourceOfCertification = request.getParameter("sourceOfCertification");
-    	logger.info("xx=" + xx);
-    	logger.info("sourceOfCertification=" + sourceOfCertification);
-    	
     	try {
         	if(StringUtils.isBlank(loginName)){
         		baseBean.setMsg("loginName 不能为空!");
@@ -237,8 +231,8 @@ public class AccountAction extends BaseAction {
         		renderJSON(baseBean);
         		return;
         	}
-        	if(StringUtils.isBlank(loginClient)){
-        		baseBean.setMsg("loginClient 不能为空!");
+        	if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
@@ -373,7 +367,6 @@ public class AccountAction extends BaseAction {
  			code=MsgCode.paramsError;
  			sb.append("用户来源为空  ");
  		}else{
- 			userBind.setClientType(sourceOfCertification);
  			if("C".equals(sourceOfCertification)){
  				userBind.setOpenId(openId);
  			}else if("Z".equals(sourceOfCertification)){
@@ -383,7 +376,8 @@ public class AccountAction extends BaseAction {
     	 BaseBean basebean = new  BaseBean();
     	try {
     		int re = 0;
-            re = accountService.unbindVehicle(userBind); 
+    		userBind.setClientType(sourceOfCertification);
+            re = accountService.unbindVehicle(userBind);
         	if(re==1){
         		basebean.setCode(MsgCode.success);
             	basebean.setMsg("");

@@ -100,7 +100,6 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
 			baseBean.setCode(MsgCode.success);
 	    	baseBean.setMsg("");
 			DriverLicenseInformationSheetVo driverLicenseInformationSheetVo = new DriverLicenseInformationSheetVo();
-			sourceOfCertification = "C";
 			AuthenticationBasicInformationVo authenticationBasicInformationVo = accountService.authenticationBasicInformationQuery(identityCard, sourceOfCertification);
 			baseBean.setData(authenticationBasicInformationVo);
 	    	renderJSON(baseBean);
