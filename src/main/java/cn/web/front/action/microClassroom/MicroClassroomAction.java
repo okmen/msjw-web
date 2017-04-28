@@ -328,7 +328,7 @@ public class MicroClassroomAction extends BaseAction {
 			}
 		 }
 			renderJSON(base);
-			logger.info("随机取题日志"+JSON.toJSONString(base));
+			logger.debug("随机取题日志"+JSON.toJSONString(base));
 	 }
 	 } catch (Exception e) {
 		 DealException(base, e);
@@ -521,7 +521,7 @@ public class MicroClassroomAction extends BaseAction {
 				}
 		 }
 			renderJSON(base);
-			logger.info("答题日志"+JSON.toJSONString(base));
+			logger.debug("答题日志"+JSON.toJSONString(base));
 	 }
 		 } catch (Exception e) {
 			 	DealException(base, e);
