@@ -23,7 +23,7 @@
     
     <dubbo:reference id="templateMessageService"  interface="cn.message.service.ITemplateMessageService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
       
-	<dubbo:reference id="fileService"  interface="cn.file.service.IFileService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
+	
 	<!-- <dubbo:reference id="messageService"  interface="cn.message.service.IMessageService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" /> --> 
 
 	<!-- <dubbo:reference id="exceptionService" url="dubbo://127.0.0.1:30000/" interface="cn.exception.service.IExceptionService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
