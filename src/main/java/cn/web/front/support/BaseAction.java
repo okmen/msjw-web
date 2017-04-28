@@ -52,7 +52,7 @@ public class BaseAction extends cn.web.front.common.BaseAction {
      */
     protected void renderJSON(Object object) {
         String result = JSON.toJSONStringWithDateFormat(object, "YYYY-MM-dd HH:mm:ss");
-        logger.debug("<== render object[{}] to JSON[{}]", 
+        logger.info("<== render object[{}] to JSON[{}]", 
                 object == null ? null : String.format("%s@%s",object.getClass().getName(), object.hashCode()), result);
         HttpServletResponse response = responseThreadLocal.get();
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

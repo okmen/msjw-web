@@ -641,14 +641,14 @@ public class IllegalAction extends BaseAction {
 		}
  	   
 	   try {
-		   List<SubcribeBean> list=illegalService.querySubscribe(licensePlateNo, type, mobilephone);
+		  /* List<SubcribeBean> list=illegalService.querySubscribe(licensePlateNo, type, mobilephone);
 		   base.setCode("0000");
 		   if(list!=null){
 			   base.setData(list);
 			   base.setMsg("成功");
 		   }else{
 			   base.setMsg("当前客户无预约");
-		   }		   
+		   }		   */
 		} catch (Exception e) {
 			DealException(base, e);
 			logger.error("查询异常：",e);

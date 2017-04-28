@@ -22,6 +22,18 @@
     <url-pattern>*.html</url-pattern>
     <url-pattern>*.json</url-pattern>
   </servlet-mapping>
+  
+  <!-- 支付宝网关servlet -->
+  <servlet>  
+      <servlet-name>Getway</servlet-name>  
+      <servlet-class>cn.web.front.action.alipay.Getway</servlet-class>  
+  </servlet>
+  
+   <servlet-mapping>  
+        <servlet-name>Getway</servlet-name>  
+        <url-pattern>/alipay/Getway</url-pattern>  
+  </servlet-mapping>
+  
   <filter>
     <filter-name>permissionFilter</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>

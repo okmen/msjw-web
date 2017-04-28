@@ -11,23 +11,19 @@
 	<dubbo:reference id="accountService" interface="cn.account.service.IAccountService" timeout="${dubbo.consumer.account.timeout}" retries="${dubbo.consumer.retries}" /> 
 	
 	<!-- 便民服务 -->
-	<dubbo:reference id="convenienceService"  interface="cn.convenience.service.IConvenienceService" timeout="${dubbo.consumer.convenience.timeout}" retries="${dubbo.consumer.retries}" />
+	<dubbo:reference id="convenienceService" interface="cn.convenience.service.IConvenienceService" timeout="${dubbo.consumer.convenience.timeout}" retries="${dubbo.consumer.retries}" />
 
-	<dubbo:reference id="illegalService"    interface="cn.illegal.service.IIllegalService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" /> 
+	<dubbo:reference id="illegalService" interface="cn.illegal.service.IIllegalService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" /> 
 
-    <dubbo:reference id="microclassServer" interface="cn.microclass.service.IMicroclassService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
+	<dubbo:reference id="microclassServer" interface="cn.microclass.service.IMicroclassService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
+	
+    <dubbo:reference id="mobileMessageService" interface="cn.message.service.IMobileMessageService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
     
-    <dubbo:reference id="mobileMessageService"  interface="cn.message.service.IMobileMessageService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
-    
-    <dubbo:reference id="wechatService"  interface="cn.message.service.IWechatService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
+    <dubbo:reference id="wechatService" interface="cn.message.service.IWechatService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
     
     <dubbo:reference id="templateMessageService"  interface="cn.message.service.ITemplateMessageService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
-      
 	
-	<!-- <dubbo:reference id="messageService"  interface="cn.message.service.IMessageService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" /> --> 
-
-	<!-- <dubbo:reference id="exceptionService" url="dubbo://127.0.0.1:30000/" interface="cn.exception.service.IExceptionService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
-	<dubbo:reference id="accountService" url="dubbo://127.0.0.1:30100/" interface="cn.account.service.IAccountService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  -->
+	<dubbo:reference id="alipayService"  interface="cn.message.service.IAlipayService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
      
 </beans>
 	

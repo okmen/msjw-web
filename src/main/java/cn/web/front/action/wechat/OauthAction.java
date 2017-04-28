@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cn.message.bean.WechatUserInfo;
+import cn.message.model.wechat.WechatUserInfo;
 import cn.message.service.ITemplateMessageService;
 import cn.message.service.IWechatService;
 import cn.web.front.support.BaseAction;
@@ -20,10 +20,7 @@ public class OauthAction extends BaseAction{
 	@Autowired
 	@Qualifier("wechatService")
 	private IWechatService wechatService;
-
-	@Autowired
-	@Qualifier("templateMessageService")
-	private ITemplateMessageService templateMessageService;
+	
 	/**
 	 * 微信用户授权获取openId 回调函数
 	 * 前端应当缓存openId
@@ -38,8 +35,6 @@ public class OauthAction extends BaseAction{
 			response.setCharacterEncoding("utf-8");
 			if(state.contains("szjj.u-road.com")){
 				if(state.contains("failureReporttest")){
-					/*response.sendRedirect(state+
-							"/"+code+"/test");*/
 					response.sendRedirect(state+
 							"/"+code);
 					return;
@@ -50,7 +45,7 @@ public class OauthAction extends BaseAction{
 			
 			//获取微信用户信息
 			WechatUserInfo wechatUserInfo = wechatService.callback4OpenId(code, state);
-			logger.info("WechatUserInfo:"+wechatUserInfo.toString());
+			logger.info("Wechat 获取用户信息:"+wechatUserInfo.toString());
 			response.sendRedirect(state+
 					"?openId="+wechatUserInfo.getOpenId()+
 					"&headimgurl="+wechatUserInfo.getHeadUrlImg()+

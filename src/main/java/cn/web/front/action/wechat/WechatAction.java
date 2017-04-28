@@ -1,38 +1,22 @@
 package cn.web.front.action.wechat;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSON;
-
-import cn.account.service.IAccountService;
-import cn.message.bean.WechatPostMessageModel;
-import cn.message.bean.message.IMessage;
+import cn.message.model.wechat.WechatPostMessageModel;
+import cn.message.model.wechat.message.IMessage;
 import cn.message.service.IMobileMessageService;
 import cn.message.service.IWechatService;
-import cn.sdk.exception.ResultCode;
-import cn.sdk.util.StringUtil;
-import cn.web.front.action.wechat.util.MenuFileUtil;
 import cn.web.front.action.wechat.util.WechatPostParamsUtil;
 import cn.web.front.support.BaseAction;
 
@@ -94,9 +78,7 @@ public class WechatAction extends BaseAction {
 	@RequestMapping(value = "/createMenu.html", method = RequestMethod.GET) 
 	public void createMenu(HttpServletRequest request, HttpServletResponse response){
 		try {
-			String filePath = StringUtils.class.getClassLoader().getResource("/").getPath()+ "menu.json";  
-			String json = MenuFileUtil.readFileByChars(filePath);
-			String result = wechatService.createMenu(json);
+			String result = wechatService.createMenu();
 			outString(response, result);
 		} catch (Exception e) {
 			logger.info("创建菜单异常",e);
