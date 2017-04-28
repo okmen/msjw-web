@@ -156,7 +156,6 @@ public class RegisterAction extends BaseAction {
 					registerVo.setCertifiedRole("1");
 					// registerVo
 					JSONObject json = accountService.iAmTheOwner(registerVo);
-					System.out.println(json);
 					code = json.getString("CODE");
 					if (!MsgCode.success.equals(code)) {
 						code=MsgCode.businessError;
@@ -184,7 +183,7 @@ public class RegisterAction extends BaseAction {
 			logger.error("iAmTheOwner出错",e);
 		}
 		renderJSON(basebean);
-		logger.info(JSON.toJSONString(basebean));
+		logger.debug(JSON.toJSONString(basebean));
 
 	}
 
@@ -334,7 +333,6 @@ public class RegisterAction extends BaseAction {
 					registerVo.setCertifiedRole("1");
 					registerVo.setCertifiedSource("C");
 					JSONObject json = accountService.iamALongtimeUser(registerVo);
-					System.out.println(json);
 					code = json.getString("CODE");
 					if (!MsgCode.success.equals(code)) {
 						code=MsgCode.businessError;
@@ -363,7 +361,7 @@ public class RegisterAction extends BaseAction {
 		}
 
 		renderJSON(basebean);
-		logger.info(JSON.toJSONString(basebean));
+		logger.debug(JSON.toJSONString(basebean));
 
 	}
 
@@ -462,7 +460,6 @@ public class RegisterAction extends BaseAction {
 					registerVo.setCertifiedRole("1");
 					registerVo.setCertifiedSource("C");
 					JSONObject json = accountService.haveDriverLicenseNotCar(registerVo);
-					System.out.println(json);
 					code = json.getString("CODE");
 					if (!MsgCode.success.equals(code)) {
 						code=MsgCode.businessError;
@@ -492,7 +489,7 @@ public class RegisterAction extends BaseAction {
 		}
 
 		renderJSON(basebean);
-		logger.info(JSON.toJSONString(basebean));
+		logger.debug(JSON.toJSONString(basebean));
 
 	}
 
@@ -567,7 +564,6 @@ public class RegisterAction extends BaseAction {
 					registerVo.setCertifiedSource("C");
 					registerVo.setCertifiedType("4");
 					JSONObject json = accountService.isPedestrianNotDriver(registerVo);
-					System.out.println(json);
 					code = json.getString("CODE");
 					if (!MsgCode.success.equals(code)) {
 						code=MsgCode.businessError;
@@ -598,7 +594,7 @@ public class RegisterAction extends BaseAction {
 
 		System.out.println(basebean.getMsg());
 		renderJSON(basebean);
-		logger.info(JSON.toJSONString(basebean));
+		logger.debug(JSON.toJSONString(basebean));
 
 	}
 

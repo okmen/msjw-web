@@ -391,7 +391,7 @@ public class AccountAction extends BaseAction {
 		}
 
     	renderJSON(basebean);
-    	logger.info(JSON.toJSONString(basebean));  
+    	logger.debug(JSON.toJSONString(basebean));  
     }
     
     
@@ -513,7 +513,6 @@ public class AccountAction extends BaseAction {
     		
     		if(MsgCode.success.equals(code)){//参数校验通过
         		JSONObject json = accountService.addVehicle(bindCarVo);
-    			System.out.println(json);
     			code =json.getString("CODE");
     			if(!MsgCode.success.equals(code)){
     				code=MsgCode.businessError;
@@ -530,7 +529,7 @@ public class AccountAction extends BaseAction {
 		}
    
     	renderJSON(basebean);
-    	logger.info(JSON.toJSONString(basebean));
+    	logger.debug(JSON.toJSONString(basebean));
     
     }
     
@@ -594,10 +593,7 @@ public class AccountAction extends BaseAction {
     			userBasicVo.setUserSource("C");
             	userBasicVo.setIdCardValidityDate("2018-04-15");
             	userBasicVo.setNickname(tureName);
-            	//logger.debug(userBasicVo.toString());
     			JSONObject json = accountService.updateUser(userBasicVo);   
-    			//logger.debug(json.toString());
-    			System.out.println(json);
     			code =json.getString("CODE");
     			if(!MsgCode.success.equals(code)){
     				code=MsgCode.businessError;
@@ -613,7 +609,7 @@ public class AccountAction extends BaseAction {
 			logger.error("updateUser出错",e);
 		}   	
     	renderJSON(basebean);
-    	logger.info(JSON.toJSONString(basebean));
+    	logger.debug(JSON.toJSONString(basebean));
     
     }
     
@@ -664,7 +660,6 @@ public class AccountAction extends BaseAction {
         		if(0 == result){
         			userBasicVo.setUserSource("C");
         			JSONObject json = accountService.updateMobile(userBasicVo);
-        			System.out.println(json);
         			code =json.getString("CODE");
         			if(!MsgCode.success.equals(code)){
         				code=MsgCode.businessError;
@@ -692,7 +687,7 @@ public class AccountAction extends BaseAction {
 			logger.error("updateMobile出错",e);
 		}  	
     	renderJSON(basebean);
-    	logger.info(JSON.toJSONString(basebean));
+    	logger.debug(JSON.toJSONString(basebean));
     
     }
     
@@ -735,7 +730,6 @@ public class AccountAction extends BaseAction {
     		if(MsgCode.success.equals(code)){//参数校验通过
     			userBasicVo.setUserSource("C");
     			JSONObject json = accountService.updatePwd(userBasicVo);
-    			System.out.println(json);
     			code =json.getString("CODE");
     			if(!MsgCode.success.equals(code)){
     				code=MsgCode.businessError;
@@ -751,7 +745,7 @@ public class AccountAction extends BaseAction {
 			logger.error("updatePwd出错",e);
 		}  	
     	renderJSON(basebean);
-    	logger.info(JSON.toJSONString(basebean));	
+    	logger.debug(JSON.toJSONString(basebean));
     
     }
 
@@ -888,7 +882,6 @@ public class AccountAction extends BaseAction {
     	try {
     		 if(MsgCode.success.equals(code)){//参数校验通过
     			 JSONObject json = accountService.readilyShoot(readilyShootVo);
-    				System.out.println(json);
     				code =json.getString("code");
     				if(!MsgCode.success.equals(code)){
     					code=MsgCode.businessError;
@@ -913,10 +906,20 @@ public class AccountAction extends BaseAction {
 		}
     
     	renderJSON(basebean);
-    	logger.info(JSON.toJSONString(basebean));
+    	logger.debug(JSON.toJSONString(basebean));
     
     }
     
+    /**
+     * 
+     * @Title: getPositioningAddress 
+     * @author liuminkang
+     * @Description: TODO(根据关键字获取违法地点) 
+     * @param keyword
+     * @throws Exception    设定文件 
+     * @return void    返回类型 
+     * @date 2017年4月28日 上午10:36:45
+     */
     @RequestMapping(value = "getPositioningAddress",method = RequestMethod.POST)
     public void getPositioningAddress(String keyword) throws Exception {
 		JSONObject json= null;
@@ -924,7 +927,6 @@ public class AccountAction extends BaseAction {
 		BaseBean basebean = new  BaseBean();
 		try {
 			 json  = accountService.getPositioningAddress(keyword);
-			 System.out.println(json);
 			 String code =json.getString("code");
 			 if(MsgCode.success.equals(code)){
 				 basebean.setCode(code);
@@ -935,7 +937,7 @@ public class AccountAction extends BaseAction {
 			logger.error("getPositioningAddress出错，错误="+ keyword,e);
 		}
 		renderJSON(basebean);
-    	logger.info(JSON.toJSONString(basebean));
+		logger.debug(JSON.toJSONString(basebean));
 
 	}
     
