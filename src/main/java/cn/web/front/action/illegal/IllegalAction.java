@@ -394,11 +394,22 @@ public class IllegalAction extends BaseAction {
 			  String str= illegalService.custRegInfoReceive(cust, carList);
 			  System.out.println("同步："+str);
 		   }
+		   List<IllegalInfoBean> returnList=null;
 		   
-		   List<IllegalInfoClaim> list=illegalService.trafficIllegalClaimBefore(licensePlateNo, licensePlateType, mobilephone);
-		   base.setCode("0000");
-		   if(list!=null){
-			   base.setData(list);
+		   BaseBean result=illegalService.trafficIllegalClaimBefore(licensePlateNo, licensePlateType, mobilephone);
+		   String msgCode=result.getCode();
+		   String msg=result.getMsg();
+		   if("0000".equals(msgCode)){
+			   returnList= illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType,"");
+		   }else{
+			   if("您好，没有查找到可用互联网方式处理的交通违法，感谢您对我局工作的支持！".equals(msg)||"由于您的驾驶证处理此宗违法后累计分已经超过12分，请到各大队违例窗口现场办理。".equals(msg)){
+				   returnList= illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType,"");
+			   }
+			   
+		   }		   
+		   base.setCode("0000");  
+		   if(returnList!=null){
+			   base.setData(returnList);
 			   base.setMsg("成功");
 		   }else{
 			   base.setMsg("当前无未处理的违法");
