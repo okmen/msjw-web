@@ -378,6 +378,7 @@ public class AccountAction extends BaseAction {
     		int re = 0;
     		userBind.setClientType(sourceOfCertification);
             re = accountService.unbindVehicle(userBind);
+            //都是返回解绑成功
         	basebean.setCode(MsgCode.success);
             basebean.setMsg("");
 		} catch (Exception e) {
