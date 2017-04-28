@@ -151,7 +151,7 @@
 				<common.sdk.version>1.0.0</common.sdk.version>
 				<log4j.socket.host><![CDATA[logserver.choumei.cn]]></log4j.socket.host>
 				<log4j.socket.port><![CDATA[10099]]></log4j.socket.port>
-				<log4j.rootLogger><![CDATA[warn,socket,web]]></log4j.rootLogger>
+				<log4j.rootLogger><![CDATA[info,socket,web]]></log4j.rootLogger>
 				<log4j.choumeiLevel><![CDATA[info]]></log4j.choumeiLevel>
 				<log4j.file.dir><![CDATA[/opt/logs/web/]]></log4j.file.dir>
 				<no.access.token>0</no.access.token>
