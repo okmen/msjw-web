@@ -18,18 +18,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.alibaba.dubbo.common.logger.Logger;
 import com.alibaba.dubbo.common.logger.LoggerFactory;
 import com.alibaba.fastjson.JSON;
-import com.esotericsoftware.kryo.io.Output;
 
-import cn.microclass.bean.studyclassroom.Answeroptions;
 import cn.microclass.bean.studyclassroom.Study;
-import cn.microclass.bean.studyclassroom.StudyRecord;
+import cn.microclass.service.IMicroclassService;
 /*import cn.account.bean.studyclassroom.Answeroptions;
 import cn.account.bean.studyclassroom.Study;
 import cn.account.bean.studyclassroom.StudyRecord;*/
 import cn.sdk.bean.BaseBean;
-import cn.sdk.util.DateUtil;
 import cn.sdk.util.MsgCode;
-import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
 
 /**
@@ -40,18 +36,18 @@ import cn.web.front.support.BaseAction;
  */
 @Controller
 public class MicroClassroomAction extends BaseAction {
-/*	@Autowired
+	@Autowired
 	private IMicroclassService iMicroclassServer;
 	
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	
-	*//**
+	/**
 	 * 微课堂须知页面
 	 * 创建时间:2017-4-10
 	 * 创建人:曾令成
 	 *
-	 *//*
+	 */
 	@RequestMapping(value="Classroom/noticeIndex.html")
 	public void noticeIndex(HttpServletRequest request, Study study){
 		 study.setClassroomId(request.getParameter("classroomId"));
@@ -154,9 +150,9 @@ public class MicroClassroomAction extends BaseAction {
 				
 	}
 
-	 *//**
+	 /**
 	  * 微课堂所有查询相关信息方法
-	  *//*
+	  */
 	 @RequestMapping(value="Classroom/StudyHomepages.html")
 	 public void StudyHomepages(HttpServletRequest request, Study study){
 		 String ip=  MicroClassroomAction.getIpAddr(request);
@@ -246,11 +242,11 @@ public class MicroClassroomAction extends BaseAction {
 		}
 	 }
 
-	 *//**
+	 /**
 	  * 微课堂所有学习取题方法
 	  * @param request
 	  * @param study
-	  *//*
+	  */
 	 @RequestMapping(value="Classroom/Studys.html")
 	 public void Studys(HttpServletRequest request,Study study){
 		 String ip=  MicroClassroomAction.getIpAddr(request);
@@ -336,10 +332,10 @@ public class MicroClassroomAction extends BaseAction {
 	 }
 	 
 	 
-	 *//**
+	 /**
 	  * 微课所有答题方法
 	  * @param request
-	  *//*
+	  */
 	 @RequestMapping("Classroom/Answers.html")
 	 public void  Answer(HttpServletRequest request,Study study){
 		 String ip=MicroClassroomAction.getIpAddr(request);
@@ -564,6 +560,5 @@ public class MicroClassroomAction extends BaseAction {
 		      }
 
 	 
-	 */
 	
 }
