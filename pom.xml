@@ -404,12 +404,6 @@
         </dependency>
         <!--Json array end -->
         
-        <!-- 上传图片相关 -->
-		<dependency>
-			<groupId>${choumei.services.groupId}</groupId>
-			<artifactId>file-center-api</artifactId>
-			<version>${cn.services.version}</version>
-		</dependency>
 		<dependency>
 		    <groupId>org.apache.commons</groupId>
 		    <artifactId>commons-lang3</artifactId>
