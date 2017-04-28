@@ -378,13 +378,8 @@ public class AccountAction extends BaseAction {
     		int re = 0;
     		userBind.setClientType(sourceOfCertification);
             re = accountService.unbindVehicle(userBind);
-        	if(re==1){
-        		basebean.setCode(MsgCode.success);
-            	basebean.setMsg("");
-        	}else{
-        		basebean.setCode(MsgCode.businessError);
-            	basebean.setMsg("解绑出错");
-        	}    
+        	basebean.setCode(MsgCode.success);
+            basebean.setMsg("");
 		} catch (Exception e) {
 			DealException(basebean, e);
 			logger.error("deleteVehicle出错",e);
