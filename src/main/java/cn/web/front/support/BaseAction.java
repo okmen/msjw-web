@@ -19,7 +19,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.sdk.bean.BaseBean;
-import cn.sdk.exception.ResultCode;
 import cn.sdk.exception.WebServiceException;
 import cn.sdk.util.MsgCode;
 
@@ -52,7 +51,7 @@ public class BaseAction extends cn.web.front.common.BaseAction {
      */
     protected void renderJSON(Object object) {
         String result = JSON.toJSONStringWithDateFormat(object, "YYYY-MM-dd HH:mm:ss");
-        logger.info("<== render object[{}] to JSON[{}]", 
+        logger.debug("<== render object[{}] to JSON[{}]", 
                 object == null ? null : String.format("%s@%s",object.getClass().getName(), object.hashCode()), result);
         HttpServletResponse response = responseThreadLocal.get();
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
