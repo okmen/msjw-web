@@ -52,7 +52,6 @@ public class ConvenienceAction extends BaseAction{
 	public void equipmentDamageReport(HttpServletRequest request,HttpServletResponse response){
 		PrintWriter out=null;
 		HashMap<String,Object> jsonMap = new HashMap<String, Object>();
-		BaseBean refBean = new BaseBean();
 		try {
 			request.setCharacterEncoding("UTF-8");
 			response.setCharacterEncoding("UTF-8");
@@ -158,7 +157,7 @@ public class ConvenienceAction extends BaseAction{
 			
 			
 			//接口调用
-			refBean = convenienceService.equipmentDamageReport(bean);
+			BaseBean refBean = convenienceService.equipmentDamageReport(bean);
         	
 			jsonMap.put("code", refBean.getCode());
 			jsonMap.put("msg", refBean.getMsg());
