@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import cn.convenience.bean.ConvenienceBean;
 import cn.convenience.service.IConvenienceService;
 import cn.sdk.bean.BaseBean;
+import cn.sdk.exception.WebServiceException;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
@@ -51,6 +52,7 @@ public class ConvenienceAction extends BaseAction{
 	public void equipmentDamageReport(HttpServletRequest request,HttpServletResponse response){
 		PrintWriter out=null;
 		HashMap<String,Object> jsonMap = new HashMap<String, Object>();
+		BaseBean refBean = new BaseBean();
 		try {
 			request.setCharacterEncoding("UTF-8");
 			response.setCharacterEncoding("UTF-8");
@@ -156,16 +158,23 @@ public class ConvenienceAction extends BaseAction{
 			
 			
 			//接口调用
-			BaseBean refBean = convenienceService.equipmentDamageReport(bean);
-			
+			refBean = convenienceService.equipmentDamageReport(bean);
+        	
 			jsonMap.put("code", refBean.getCode());
 			jsonMap.put("msg", refBean.getMsg());
 			out.print(JSONObject.fromObject(jsonMap));
 		} catch (Exception e) {
 			logger.error("设备损坏Action异常:"+e);
 			
-			jsonMap.put("code", MsgCode.exception);
-			jsonMap.put("msg", "服务器繁忙！");
+			//
+			if(e instanceof WebServiceException){
+				WebServiceException webServiceException = (WebServiceException) e;
+				jsonMap.put("code", String.valueOf(webServiceException.getCode()));
+				jsonMap.put("msg", MsgCode.webServiceCallMsg);
+			}else{
+	        	jsonMap.put("code", MsgCode.exception);
+				jsonMap.put("msg", MsgCode.systemMsg);
+			}
 			out.print(JSONObject.fromObject(jsonMap));
 		}
 	}
@@ -285,8 +294,15 @@ public class ConvenienceAction extends BaseAction{
 		} catch (Exception e) {
 			logger.error("安全隐患Action异常:"+e);
 			
-			jsonMap.put("code", MsgCode.exception);
-			jsonMap.put("msg", "服务器繁忙！");
+			//
+			if(e instanceof WebServiceException){
+				WebServiceException webServiceException = (WebServiceException) e;
+				jsonMap.put("code", String.valueOf(webServiceException.getCode()));
+				jsonMap.put("msg", MsgCode.webServiceCallMsg);
+			}else{
+	        	jsonMap.put("code", MsgCode.exception);
+				jsonMap.put("msg", MsgCode.systemMsg);
+			}
 			out.print(JSONObject.fromObject(jsonMap));
 		}
 	}
@@ -435,8 +451,15 @@ public class ConvenienceAction extends BaseAction{
 		} catch (Exception e) {
 			logger.error("交通拥堵Action异常:"+e);
 			
-			jsonMap.put("code", MsgCode.exception);
-			jsonMap.put("msg", "服务器繁忙！");
+			//
+			if(e instanceof WebServiceException){
+				WebServiceException webServiceException = (WebServiceException) e;
+				jsonMap.put("code", String.valueOf(webServiceException.getCode()));
+				jsonMap.put("msg", MsgCode.webServiceCallMsg);
+			}else{
+	        	jsonMap.put("code", MsgCode.exception);
+				jsonMap.put("msg", MsgCode.systemMsg);
+			}
 			out.print(JSONObject.fromObject(jsonMap));
 		}
 	}
@@ -548,8 +571,15 @@ public class ConvenienceAction extends BaseAction{
 		} catch (Exception e) {
 			logger.error("秩序混乱Action异常:"+e);
 			
-			jsonMap.put("code", MsgCode.exception);
-			jsonMap.put("msg", "服务器繁忙！");
+			//
+			if(e instanceof WebServiceException){
+				WebServiceException webServiceException = (WebServiceException) e;
+				jsonMap.put("code", String.valueOf(webServiceException.getCode()));
+				jsonMap.put("msg", MsgCode.webServiceCallMsg);
+			}else{
+	        	jsonMap.put("code", MsgCode.exception);
+				jsonMap.put("msg", MsgCode.systemMsg);
+			}
 			out.print(JSONObject.fromObject(jsonMap));
 		}
 	}
@@ -631,8 +661,15 @@ public class ConvenienceAction extends BaseAction{
 		} catch (Exception e) {
 			logger.error("一键挪车Action异常:"+e);
 			
-			jsonMap.put("code", MsgCode.exception);
-			jsonMap.put("msg", "服务器繁忙！");
+			//
+			if(e instanceof WebServiceException){
+				WebServiceException webServiceException = (WebServiceException) e;
+				jsonMap.put("code", String.valueOf(webServiceException.getCode()));
+				jsonMap.put("msg", MsgCode.webServiceCallMsg);
+			}else{
+	        	jsonMap.put("code", MsgCode.exception);
+				jsonMap.put("msg", MsgCode.systemMsg);
+			}
 			out.print(JSONObject.fromObject(jsonMap));
 		}
 	}
