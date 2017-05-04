@@ -152,11 +152,11 @@ public class MicroClassroomAction extends BaseAction {
 
 	 /**
 	  * 微课堂所有查询相关信息方法
+	 * @throws Exception 
 	  */
 	 @RequestMapping(value="Classroom/StudyHomepages.html")
-	 public void StudyHomepages(HttpServletRequest request, Study study){
+	 public void StudyHomepages(HttpServletRequest request, Study study) throws Exception{
 		 String ip=  MicroClassroomAction.getIpAddr(request);
-		 System.out.println("查询方法"+ip);
 		 BaseBean base=new BaseBean();
 		 Study  s=new Study();
 		 List<BaseBean>list=null;
@@ -239,6 +239,7 @@ public class MicroClassroomAction extends BaseAction {
 		} catch (Exception e) {
 			DealException(base, e);
 			logger.error("StudyHomepages方法："+study, e);
+			throw e;
 		}
 	 }
 
@@ -246,11 +247,11 @@ public class MicroClassroomAction extends BaseAction {
 	  * 微课堂所有学习取题方法
 	  * @param request
 	  * @param study
+	 * @throws Exception 
 	  */
 	 @RequestMapping(value="Classroom/Studys.html")
-	 public void Studys(HttpServletRequest request,Study study){
+	 public void Studys(HttpServletRequest request,Study study) throws Exception{
 		 String ip=  MicroClassroomAction.getIpAddr(request);
-		 System.out.println("查询方法"+ip);
 		 BaseBean base=new BaseBean();
 		 List<BaseBean>list=null;
 		 Study  s=new Study();
@@ -327,7 +328,8 @@ public class MicroClassroomAction extends BaseAction {
 	 }
 	 } catch (Exception e) {
 		 DealException(base, e);
-		 logger.error("Studys方法："+study, e);	
+		 logger.error("Studys方法："+study, e);
+		 throw e;
 	 }
 	 }
 	 
@@ -335,9 +337,10 @@ public class MicroClassroomAction extends BaseAction {
 	 /**
 	  * 微课所有答题方法
 	  * @param request
+	 * @throws Exception 
 	  */
 	 @RequestMapping("Classroom/Answers.html")
-	 public void  Answer(HttpServletRequest request,Study study){
+	 public void  Answer(HttpServletRequest request,Study study) throws Exception{
 		 String ip=MicroClassroomAction.getIpAddr(request);
 		 String subjectId =request.getParameter("subjectId");
 		 BaseBean base=new BaseBean();
@@ -521,6 +524,7 @@ public class MicroClassroomAction extends BaseAction {
 		 } catch (Exception e) {
 			 	DealException(base, e);
 				logger.error("Answer方法"+study, e);
+				throw e;
 		}
 		
 	 }
