@@ -1,6 +1,5 @@
 package cn.web.front.action.illegal;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,6 @@ import cn.illegal.bean.CarInfoBean;
 import cn.illegal.bean.CustInfoBean;
 import cn.illegal.bean.IllegalBusiness;
 import cn.illegal.bean.IllegalInfoBean;
-import cn.illegal.bean.IllegalInfoClaim;
 import cn.illegal.bean.IllegalInfoSheet;
 import cn.illegal.bean.IllegalProcessPointBean;
 import cn.illegal.bean.SubcribeBean;
@@ -546,13 +544,12 @@ public class IllegalAction extends BaseAction {
 		   }
         	 
            Map map=illegalService.toGetSubscribeSorts(cldbmid);
-  		   base.setCode("0000");
-  		   if(map!=null){
-  			   base.setData(map);
-  			   base.setMsg("成功");
-  		   }else{
-  			   base.setMsg("预约排期获取为空");
-  		   }		   
+           if(map!=null&&"0".equals(map.get("code"))){
+        	   base.setCode("0000");   	  
+           }else{
+        	   base.setCode("0001");
+           }
+           base.setData(map);		   
   		} catch (Exception e) {
   			DealException(base, e);
 			logger.error("查询异常：",e);
