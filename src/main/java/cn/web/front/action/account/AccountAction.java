@@ -884,7 +884,7 @@ public class AccountAction extends BaseAction {
     				}else{
     					Map<String, Object> modelMap = new HashMap<String, Object>();
     					String msg=json.getString("msg");
-    			     	modelMap.put("recordNumber", msg.substring(5, 19));
+    			     	modelMap.put("recordNumber", msg.substring(5, 20));
     			     	modelMap.put("queryPassword", json.getString("cxyzm"));
     			     	basebean.setData(modelMap);
     				}
