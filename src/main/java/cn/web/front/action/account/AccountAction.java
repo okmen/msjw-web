@@ -274,7 +274,7 @@ public class AccountAction extends BaseAction {
         	}
     		//生成验证码，六位数
     		String valideteCode = StringUtil.createValidateCode();
-    		String msgContent = "短信验证码："+valideteCode+"，您正在使用深圳交警微信“随手拍举报”业务，有效时间为5分钟。";
+    		String msgContent = "短信验证码："+valideteCode+"，您正在使用深圳交警微信业务，有效时间为5分钟。";
     		boolean flag = mobileMessageService.sendMessage(mobilephone, msgContent);
     		if(flag){
     			accountService.sendSMSVerificatioCode(mobilephone,valideteCode);
