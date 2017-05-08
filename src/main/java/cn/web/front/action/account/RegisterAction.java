@@ -38,30 +38,19 @@ public class RegisterAction extends BaseAction {
 	/**
 	 * 星级用户认证-我是车主
 	 * 
-	 * @param licensePlateType
-	 *            车牌类型
-	 * @param provinceAbbreviation
-	 *            省简称
-	 * @param licensePlateNumber
-	 *            车牌号码
-	 * @param identityCard
-	 *            身份证
-	 * @param linkAddress
-	 *            联系地址
-	 * @param mobilephone
-	 *            手机号码
-	 * @param validateCode
-	 *            验证码
-	 * @param isDriverLicense
-	 *            是否有驾驶证
-	 * @param driverLicenseIssuedAddress
-	 *            驾驶证核发地
-	 * @param idCardImgPositive
-	 *            身份证正面
-	 * @param idCardImgNegative
-	 *            身份证反面
-	 * @param idCardImgHandHeld
-	 *            手持身份证
+	 * @param licensePlateType 车牌类型
+	 * @param provinceAbbreviation  省简称
+	 * @param licensePlateNumber 车牌号码
+	 * @param identityCard 身份证
+	 * @param linkAddress 联系地址
+	 * @param mobilephone 手机号码
+	 * @param validateCode 验证码
+	 * @param isDriverLicense  是否有驾驶证
+	 * @param driverLicenseIssuedAddress 驾驶证核发地
+	 * @param idCardImgPositive 身份证正面
+	 * @param idCardImgNegative  身份证反面
+	 * @param idCardImgHandHeld  手持身份证
+	 *           
 	 */
 	@RequestMapping(value = "iAmTheOwner", method = RequestMethod.POST)
 	public void iAmTheOwner(String licensePlateType, String provinceAbbreviation, String licensePlateNumber,
@@ -91,7 +80,7 @@ public class RegisterAction extends BaseAction {
 			code=MsgCode.paramsError;
 			sb.append("是否有驾驶证错误  ");
 		} else {
-			if(isDriverLicense==1){
+			if(isDriverLicense==1){//1-有驾驶证
 				if (StringUtil.isBlank(driverLicenseIssuedAddress)) {
 					code=MsgCode.paramsError;
 					sb.append("驾驶证核发地为空  ");
@@ -151,7 +140,7 @@ public class RegisterAction extends BaseAction {
 			if (MsgCode.success.equals(code)) {// 参数校验通过
 				int result = accountService.verificatioCode(mobilephone, validateCode);
 				if (0 == result) {
-					registerVo.setCallAccount("WX02_TEST");
+					registerVo.setCallAccount("WX02_TEST"); //默认写死，玉璞发的
 					registerVo.setCertifiedType("1");
 					registerVo.setCertifiedRole("1");
 					// registerVo
@@ -190,18 +179,14 @@ public class RegisterAction extends BaseAction {
 	/**
 	 * 星级用户认证-我是长期使用人
 	 * 
-	 * @param licensePlateType
-	 *            车牌类型
-	 * @param provinceAbbreviation
-	 *            省简称
-	 * @param licensePlateNumber
-	 *            车牌号码
-	 * @param ownerName
-	 *            车主姓名
-	 * @param ownerIdCard
-	 *            车主身份证
-	 * @param userIdCard
-	 *            使用人身份证
+	 * @param licensePlateType 车牌类型
+	 * @param provinceAbbreviation 省简称
+	 * @param licensePlateNumber 车牌号码
+	 * @param ownerName 车主姓名
+	 * @param ownerIdCard 车主身份证
+	 *           
+	 * @param userIdCard 使用人身份证
+	 *            
 	 * @param linkAddress
 	 *            联系地址
 	 * @param mobilephone
@@ -455,7 +440,7 @@ public class RegisterAction extends BaseAction {
 				// 0-验证成功，1-验证失败，2-验证码失效
 				int result = accountService.verificatioCode(mobilephone, validateCode);
 				if (0 == result) {
-					registerVo.setCertifiedType("3");
+					registerVo.setCertifiedType("3"); 
 					registerVo.setCallAccount("WX02_TEST");
 					registerVo.setCertifiedRole("1");
 					registerVo.setCertifiedSource("C");

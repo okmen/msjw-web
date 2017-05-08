@@ -390,140 +390,134 @@ public class AccountAction extends BaseAction {
     	logger.debug(JSON.toJSONString(basebean));  
     }
     
-    
-    
     /**
      * 用户中心-添加车辆(个人和他人)
-     * @param bindType 绑定类型
-     * @param vehicleType 车辆类型
-     * @param plateType 号牌种类
+     * @param bindType 绑定类型 1-绑定个人车辆信息、0-绑定他人车辆
+     * @param licensePlateType 车辆类型 蓝牌、黄牌、黑牌、个性牌、小型新能源车号牌、大型新能源车号牌
+     * @param provinceAbbreviation 省简称 例如：粤
      * @param licensePlateNumber 车牌号码
      * @param frameNumber 车架号码
-     * @param ownerName   车主姓名  
-     * @param identityCard 身份证号
-     * @param mobilephone 手机号
+     * @param certifiedSource  A app C微信 Z支付宝  E邮政 W外网星火
+     * @param ownerName 车主姓名
+     * @param ownerIdCard 车主身份证号
+     * @param userIdCard 登录用户身份证
+     * @param idCardImgPositive 身份证正面
+     * @param idCardImgHandHeld 手持身份证
      */
-    @RequestMapping(value = "addVehicle",method = RequestMethod.POST)
-    public void addVehicle( int bindType, String vehicleType, String licensePlateType, String licensePlateNumber,String userSource,
-    		String inputIP,String certifiedSource,String frameNumber, String ownerName, String ownerIdCard,String userIdCard, String mobilephone,
-    		String provinceAbbreviation,String idCardImgPositive,String idCardImgHandHeld) {
+    @RequestMapping(value = "addVehicle")
+    public void addVehicle( Integer bindType, String licensePlateType,String provinceAbbreviation,String licensePlateNumber,String frameNumber,String certifiedSource,
+    		String ownerName, String ownerIdCard,String userIdCard, String idCardImgPositive,String idCardImgHandHeld,HttpServletRequest request) {
     	String code=MsgCode.success;
- 		StringBuffer sb = new StringBuffer("");   	
+    	StringBuffer sb = new StringBuffer("");   	
     	BindCarVo bindCarVo = new BindCarVo();
-    	
-    	if(bindType<0){
- 			code=MsgCode.exception;
- 			sb.append("绑定类型错误  ");
- 		}else{
- 			bindCarVo.setBindType(bindType);
- 			
- 			if(bindType==0){
- 				
- 				if(StringUtil.isBlank(ownerName)){
- 		 			code=MsgCode.paramsError;
- 		 			sb.append("车主姓名为空  ");
- 		 		}else{
- 		 			bindCarVo.setOwnerName(ownerName);
- 		 		}
- 				
- 				if(StringUtil.isBlank(ownerIdCard)){
- 		 			code=MsgCode.paramsError;
- 		 			sb.append("车主身份证号码为空  ");
- 		 		}else{
- 		 			bindCarVo.setOwnerIdCard(ownerIdCard);
- 		 		}
- 				
- 				if(StringUtil.isBlank(frameNumber)){
- 		 			code=MsgCode.paramsError;
- 		 			sb.append("车架号码为空  ");
- 		 		}else{
- 		 			bindCarVo.setFrameNumber(frameNumber);
- 		 		}
- 				if(StringUtil.isBlank(idCardImgPositive)){
- 		 			code=MsgCode.paramsError;
- 		 			sb.append("车主正面照为空  ");
- 		 		}else{
- 		 			bindCarVo.setIdCardImgPositive(idCardImgPositive);
- 		 		}
- 				if(StringUtil.isBlank(idCardImgHandHeld)){
- 		 			code=MsgCode.paramsError;
- 		 			sb.append("车主手持照为空  ");
- 		 		}else{
- 		 			bindCarVo.setIdCardImgHandHeld(idCardImgHandHeld);
- 		 		}
- 			}
- 			
- 		}
-    	
-    	if(StringUtil.isBlank(licensePlateNumber)){
- 			code=MsgCode.paramsError;
- 			sb.append("车牌号码为空  ");
- 		}else{
- 			bindCarVo.setLicensePlateType(licensePlateNumber);
- 		}
- 
-    	if(StringUtil.isBlank(userIdCard)){
- 			code=MsgCode.paramsError;
- 			sb.append("身份证号为空  ");
- 		}else{
- 			bindCarVo.setUserIdCard(userIdCard);
- 		}
-    	
-    	if(StringUtil.isBlank(licensePlateType)){
- 			code=MsgCode.paramsError;
- 			sb.append("号牌种类为空  ");
- 		}else{
- 			bindCarVo.setLicensePlateType(licensePlateType);
- 		}
-    	
-    	if(StringUtil.isBlank(userSource)){
- 			code=MsgCode.paramsError;
- 			sb.append("用户来源为空  ");
- 		}else{
- 			bindCarVo.setUserSource(userSource);
- 		}
-    	
-    	if(StringUtil.isBlank(provinceAbbreviation)){
- 			code=MsgCode.paramsError;
- 			sb.append("号牌核发省简称为空  ");
- 		}else{
- 			bindCarVo.setProvinceAbbreviation(provinceAbbreviation);
- 		}
-    	
-    	if(StringUtil.isBlank(inputIP)){
- 			code=MsgCode.paramsError;
- 			sb.append("录入ip为空  ");
- 		}else{
- 			bindCarVo.setInputIP(inputIP);
- 		}
-    	
-    	if(StringUtil.isBlank(certifiedSource)){
- 			code=MsgCode.paramsError;
- 			sb.append("账号绑定类型为空  ");
- 		}else{
- 			bindCarVo.setCertifiedSource(certifiedSource);
- 		}
-    	
     	BaseBean basebean = new  BaseBean();
-    	try {
-    		
-    		if(MsgCode.success.equals(code)){//参数校验通过
-        		JSONObject json = accountService.addVehicle(bindCarVo);
-    			code =json.getString("CODE");
-    			if(!MsgCode.success.equals(code)){
-    				code=MsgCode.businessError;
-    			}
-    	    	basebean.setCode(code);
-    	    	basebean.setMsg(json.getString("MSG"));   
+    	if(null == bindType || bindType<0){
+    		basebean.setMsg("bindType 绑定类型错误!");
+    		basebean.setCode(MsgCode.paramsError);
+    		renderJSON(basebean);
+    		return;
+    	}else{
+    		bindCarVo.setBindType(bindType);
+    		if(StringUtils.isBlank(userIdCard)){
+    			basebean.setMsg("userIdCard 不能为空!");
+        		basebean.setCode(MsgCode.paramsError);
+        		renderJSON(basebean);
+        		return;
     		}else{
-    			basebean.setCode(code);
-    			basebean.setMsg(sb.toString());
+    			bindCarVo.setUserIdCard(userIdCard);
     		}
+    		if(StringUtils.isBlank(licensePlateType)){
+    			basebean.setMsg("licensePlateType 不能为空!");
+        		basebean.setCode(MsgCode.paramsError);
+        		renderJSON(basebean);
+        		return;
+    		}else{
+    			bindCarVo.setLicensePlateType(licensePlateType);
+    		}
+    		if(StringUtils.isBlank(provinceAbbreviation)){
+    			basebean.setMsg("provinceAbbreviation 不能为空!");
+        		basebean.setCode(MsgCode.paramsError);
+        		renderJSON(basebean);
+        		return;
+    		}else{
+    			bindCarVo.setProvinceAbbreviation(provinceAbbreviation);
+    		}
+    		if(StringUtils.isBlank(licensePlateNumber)){
+    			basebean.setMsg("licensePlateNumber 不能为空!");
+        		basebean.setCode(MsgCode.paramsError);
+        		renderJSON(basebean);
+        		return;
+    		}else{
+    			bindCarVo.setLicensePlateNumber(licensePlateNumber);
+    		}
+    		if(StringUtils.isBlank(frameNumber)){
+    			basebean.setMsg("frameNumber 不能为空!");
+        		basebean.setCode(MsgCode.paramsError);
+        		renderJSON(basebean);
+        		return;
+    		}else{
+    			bindCarVo.setFrameNumber(frameNumber);
+    		}
+    		if(StringUtils.isBlank(certifiedSource)){
+    			basebean.setMsg("certifiedSource 不能为空!");
+        		basebean.setCode(MsgCode.paramsError);
+        		renderJSON(basebean);
+        		return;
+    		}else{
+    			bindCarVo.setCertifiedSource(certifiedSource);
+    		}
+    		if(1 == bindType){
+    			//1-绑定个人车辆信息
+    		}
+    		if(0 == bindType){
+    			//0-绑定他人车辆
+    			if(StringUtils.isBlank(ownerName)){
+        			basebean.setMsg("ownerName 不能为空!");
+            		basebean.setCode(MsgCode.paramsError);
+            		renderJSON(basebean);
+            		return;
+        		}else{
+        			bindCarVo.setOwnerName(ownerName);
+        		}
+    			if(StringUtils.isBlank(ownerIdCard)){
+        			basebean.setMsg("ownerIdCard 不能为空!");
+            		basebean.setCode(MsgCode.paramsError);
+            		renderJSON(basebean);
+            		return;
+        		}else{
+        			bindCarVo.setOwnerIdCard(ownerIdCard);
+        		}
+    			if(StringUtils.isBlank(idCardImgPositive)){
+    				basebean.setMsg("idCardImgPositive 不能为空!");
+            		basebean.setCode(MsgCode.paramsError);
+            		renderJSON(basebean);
+            		return;
+    			}else{
+    				bindCarVo.setIdCardImgPositive(idCardImgPositive);
+    			}
+    			if(StringUtils.isBlank(idCardImgHandHeld)){
+    				basebean.setMsg("idCardImgHandHeld 不能为空!");
+            		basebean.setCode(MsgCode.paramsError);
+            		renderJSON(basebean);
+            		return;
+    			}else{
+    				bindCarVo.setIdCardImgHandHeld(idCardImgHandHeld);
+    			}
+    		}
+    		bindCarVo.setInputIP(getIp2(request));
+    	}
+    	try {
+    		JSONObject json = accountService.addVehicle(bindCarVo);
+			code =json.getString("CODE");
+			if(!MsgCode.success.equals(code)){
+				code=MsgCode.businessError;
+			}
+	    	basebean.setCode(code);
+	    	basebean.setMsg(json.getString("MSG"));   
 		} catch (Exception e) {
 			DealException(basebean, e);
 			logger.error("addVehicle出错",e);
 		}
-   
     	renderJSON(basebean);
     	logger.debug(JSON.toJSONString(basebean));
     
@@ -587,7 +581,7 @@ public class AccountAction extends BaseAction {
     	try {  	
     		if(MsgCode.success.equals(code)){//参数校验通过
     			userBasicVo.setUserSource("C");
-            	userBasicVo.setIdCardValidityDate("2018-04-15");
+            	userBasicVo.setIdCardValidityDate("2018-04-15"); //身份证有效期
             	userBasicVo.setNickname(tureName);
     			JSONObject json = accountService.updateUser(userBasicVo);   
     			code =json.getString("CODE");
@@ -747,24 +741,24 @@ public class AccountAction extends BaseAction {
 
     
     /**
-     * 
+     * 随手拍s
      * @Title: readilyShoot 
      * @author liuminkang
      * @Description: TODO(星级用户-随手拍) 
-     * @param licensePlateNumber
-     * @param licensePlateType
-     * @param illegalActivitieOne
-     * @param illegalTime
-     * @param illegalSections
-     * @param reportImgOne
-     * @param reportImgTwo
-     * @param reportImgThree
-     * @param inputMan
-     * @param inputManName
-     * @param inputManPhone
-     * @param identityCard
-     * @param userSource
-     * @param openId    设定文件 
+     * @param licensePlateNumber 车牌号
+     * @param licensePlateType 车牌类型
+     * @param illegalActivitieOne 情况说明
+     * @param illegalTime 违法时间
+     * @param illegalSections 违法地点
+     * @param reportImgOne 举报图片1
+     * @param reportImgTwo 举报图片2
+     * @param reportImgThree 举报图片3
+     * @param inputMan 举报人 (暂时无用 )
+     * @param inputManName  举报人 姓名
+     * @param inputManPhone  举报人手机号
+     * @param identityCard 举报人身份证
+     * @param userSource 认证来源(微信C，支付宝Z)
+     * @param openId    openId(暂时无用)
      * @return void    返回类型 
      * @date 2017年4月20日 下午3:06:02
      */
