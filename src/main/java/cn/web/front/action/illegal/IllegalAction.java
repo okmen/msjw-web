@@ -1,5 +1,6 @@
 package cn.web.front.action.illegal;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,8 @@ import cn.illegal.bean.IllegalInfoSheet;
 import cn.illegal.bean.IllegalProcessPointBean;
 import cn.illegal.bean.SubcribeBean;
 import cn.illegal.service.IIllegalService;
+import cn.message.model.wechat.WechatUserInfo;
+import cn.message.service.IWechatService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
@@ -51,6 +54,9 @@ public class IllegalAction extends BaseAction {
     @Qualifier("accountService")
     private IAccountService accountService;
     
+    @Autowired
+	@Qualifier("wechatService")
+	private IWechatService wechatService;
     /**
      * 
      * 获取业务列表
@@ -447,14 +453,16 @@ public class IllegalAction extends BaseAction {
     
      
     /**
-     * 规费信息查询
+     * 二维码扫码信息查询
      */
-   /* @RequestMapping(value = "toPayPage")
-    public void toPayPage(String billNo,String  licensePlateNo,String mobilephone,HttpServletRequest req, HttpServletResponse resp){     
-       String url=illegalService.toPayPage(billNo,licensePlateNo,mobilephone);
+   /* @RequestMapping(value = "qrCodeToQueryPage")
+    public void qrCodeToQueryPage(String userName, String traffData, String mobileNo,String openId,HttpServletRequest req, HttpServletResponse resp){     
+        
        BaseBean base=new BaseBean();
        try {
-	    	if(StringUtil.isEmpty(url)){
+    	    String url=illegalService.qrCodeToQueryPage(userName,traffData,mobileNo,openId);
+    	    String url1 = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+appI+"&redirect_uri="+url+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+	    	if(StringUtil.isEmpty(url1)){
 	    	
 	    	base.setCode("0001");
 	    	base.setMsg("跳转页面失败！");
@@ -462,13 +470,42 @@ public class IllegalAction extends BaseAction {
 	    	}else{
 	    		resp.sendRedirect(url);
 	    	}  		
-	   	} catch (IOException e) {
+	   	} catch (Exception e) {
 	   		base.setCode("0002");
 			base.setMsg("系统异常！");
 	   	} 
        renderJSON(base);
-    } */
+    }*/
     
+    
+    /**
+	 * 扫码缴费查询页面跳转
+	 * 
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value = "qrCodeToQueryPage")
+	public void callback4OpenId(HttpServletRequest request,HttpServletResponse response){
+		BaseBean base=new BaseBean();
+		String code = request.getParameter("code");
+		String state = request.getParameter("state");//前端会带过来一个url
+		String traffData = request.getParameter("traffData");
+		String userName = request.getParameter("userName");
+		String mobileNo = request.getParameter("code");
+		try {
+			response.setCharacterEncoding("utf-8");
+		
+			//获取微信用户信息
+			WechatUserInfo wechatUserInfo = wechatService.callback4OpenId(code, state);
+			logger.info("Wechat 获取用户信息:"+wechatUserInfo.toString());
+			
+			String url=illegalService.qrCodeToQueryPage(userName, traffData, mobileNo, wechatUserInfo.getOpenId());
+			response.sendRedirect(url);
+		} catch (Exception e) {
+			DealException(base, e);
+			logger.error("页面跳转异常 ",e);
+		}
+	}
     
     /**
      * 违法缴费信息
@@ -502,6 +539,9 @@ public class IllegalAction extends BaseAction {
 		} 
 	 	renderJSON(base);
     } 
+    
+    
+    
     
     
     /**
