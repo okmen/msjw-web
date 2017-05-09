@@ -455,27 +455,20 @@ public class IllegalAction extends BaseAction {
     /**
      * 二维码扫码信息查询
      */
-   /* @RequestMapping(value = "qrCodeToQueryPage")
-    public void qrCodeToQueryPage(String userName, String traffData, String mobileNo,String openId,HttpServletRequest req, HttpServletResponse resp){     
-        
+    @RequestMapping(value = "callback")
+    public void qrCodeToQueryPage(HttpServletRequest req, HttpServletResponse resp){     
+       String traffData = req.getParameter("traffData");
        BaseBean base=new BaseBean();
        try {
-    	    String url=illegalService.qrCodeToQueryPage(userName,traffData,mobileNo,openId);
-    	    String url1 = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+appI+"&redirect_uri="+url+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
-	    	if(StringUtil.isEmpty(url1)){
-	    	
-	    	base.setCode("0001");
-	    	base.setMsg("跳转页面失败！");
-	    	
-	    	}else{
-	    		resp.sendRedirect(url);
-	    	}  		
+    	   resp.setCharacterEncoding("utf-8");
+    	   String url=illegalService.callback(traffData);
+	       resp.sendRedirect(url);  		
 	   	} catch (Exception e) {
-	   		base.setCode("0002");
-			base.setMsg("系统异常！");
+	   		DealException(base, e);
+			logger.error("微信回调异常 ",e);
 	   	} 
        renderJSON(base);
-    }*/
+    }
     
     
     /**
