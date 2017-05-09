@@ -491,16 +491,20 @@ public class IllegalAction extends BaseAction {
 		String state = request.getParameter("state");//前端会带过来一个url
 		String traffData = request.getParameter("traffData");
 		String userName = request.getParameter("userName");
-		String mobileNo = request.getParameter("code");
+		String mobileNo = request.getParameter("mobileNo");
 		try {
 			response.setCharacterEncoding("utf-8");
 		
+			logger.info(code+""+state+traffData+userName+mobileNo);
 			//获取微信用户信息
 			WechatUserInfo wechatUserInfo = wechatService.callback4OpenId(code, state);
-			logger.info("Wechat 获取用户信息:"+wechatUserInfo.toString());
-			
-			String url=illegalService.qrCodeToQueryPage(userName, traffData, mobileNo, wechatUserInfo.getOpenId());
-			response.sendRedirect(url);
+			if(wechatUserInfo!=null){
+				logger.info("Wechat 获取用户信息:"+wechatUserInfo.toString());
+				String url=illegalService.qrCodeToQueryPage(userName, traffData, mobileNo, wechatUserInfo.getOpenId());
+				response.sendRedirect(url);
+			}else{
+				logger.error("Wechat 获取用户信息为空！");
+			}	
 		} catch (Exception e) {
 			DealException(base, e);
 			logger.error("页面跳转异常 ",e);
