@@ -20,7 +20,7 @@ public class RoundUtil {
 	//static String ydDomain = "http://tmp.szydweixin.com/static/html/super_lottery/h5/round_8/index.html";//测试地址 
 	static String ydDomain = "http://mp.szydweixin.com/static/html/super_lottery/h5/round_8/index.html";
 	static String secret = "szyd_supper_lottery";
-	static String super_lottery_id = "7";//大转盘id
+	static String super_lottery_id = "12";//大转盘id
 	
 	public static boolean sendTemplateMessage(ITemplateMessageService templateMessageService,String toUserName,String mobile){
 		Map<String, Property> map = new HashMap<String, Property>();

@@ -76,11 +76,13 @@ public class WechatAction extends BaseAction {
 	        String keyStandard = requestMap.get("KeyStandard");
 	        
 	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_TYPE_SCAN.equals(event)){
+	        	 logger.info("微信消息xml:"+xml);
 	        	 String pinganResult = "";
 	    		 if("code128".equals(keyStandard)){
 	    			 String url="http://code.stcpay.com:8088/ysth-traffic-front/weixin/msg.do"; 
 	    			 //发送报文到平安获得返回报文
 	    			 pinganResult=HttpRequest.sendPost(url, xml);
+	    			 logger.info("平安返回报文:"+pinganResult);
 	    		 }
 	    		 outString(response,pinganResult);		
 	    		 return;
