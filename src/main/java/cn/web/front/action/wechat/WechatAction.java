@@ -75,7 +75,7 @@ public class WechatAction extends BaseAction {
 	        String xml = requestMap.get("xml");
 	        String keyStandard = requestMap.get("KeyStandard");
 	        
-	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_TYPE_SCAN.equals(event)){
+	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_TYPE_SCAN.toLowerCase().equals(event)){
 	        	 logger.info("微信消息xml:"+xml);
 	        	 String pinganResult = "";
 	    		 if("code128".equals(keyStandard)){
