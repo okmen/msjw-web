@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.sdk.bean.BaseBean;
+import cn.sdk.exception.HttpPingAnException;
 import cn.sdk.exception.WebServiceException;
 import cn.sdk.util.MsgCode;
 
@@ -129,6 +130,10 @@ public class BaseAction extends cn.web.front.common.BaseAction {
 			WebServiceException webServiceException = (WebServiceException) exception;
 			baseBean.setCode(String.valueOf(webServiceException.getCode()));
 			baseBean.setMsg(MsgCode.webServiceCallMsg);
+		}else if(exception instanceof HttpPingAnException){
+			HttpPingAnException pingAnException = (HttpPingAnException) exception;
+			baseBean.setCode(String.valueOf(pingAnException.getCode()));
+			baseBean.setMsg(MsgCode.httpPingAnCallMsg);
 		}else{
 			baseBean.setCode(MsgCode.exception);
         	baseBean.setMsg(MsgCode.systemMsg);
