@@ -138,7 +138,7 @@ public class BaseAction extends cn.web.front.common.BaseAction {
 			baseBean.setCode(MsgCode.exception);
         	baseBean.setMsg(MsgCode.systemMsg);
 		}
-    	logger.error("getMyDriverLicense 错误!", exception);
+    	logger.error("DealException 错误!", exception);
     	
     	renderJSON(baseBean);
     }

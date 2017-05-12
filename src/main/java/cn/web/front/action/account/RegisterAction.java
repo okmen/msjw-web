@@ -53,9 +53,9 @@ public class RegisterAction extends BaseAction {
 	 * @param openId 微信openId
 	 *           
 	 */
-	@RequestMapping(value = "iAmTheOwner", method = RequestMethod.POST)
+	@RequestMapping(value = "iAmTheOwner")
 	public void iAmTheOwner(String licensePlateType, String provinceAbbreviation, String licensePlateNumber,
-			String identityCard, String linkAddress, String mobilephone, String validateCode, int isDriverLicense,
+			String identityCard, String linkAddress, String mobilephone, String validateCode, Integer isDriverLicense,
 			String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgNegative,
 			String idCardImgHandHeld,String openId) {
 		String code = MsgCode.success;
@@ -210,7 +210,7 @@ public class RegisterAction extends BaseAction {
 	 *  @param openId
 	 *  			微信openId
 	 */
-	@RequestMapping(value = "iamALongtimeUser", method = RequestMethod.POST)
+	@RequestMapping(value = "iamALongtimeUser")
 	public void iamALongtimeUser(String licensePlateType, String provinceAbbreviation, String licensePlateNumber,
 			String ownerName, String ownerIdCard, String userIdCard, String linkAddress, String mobilephone,
 			String validateCode, String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgHandHeld,
@@ -386,7 +386,7 @@ public class RegisterAction extends BaseAction {
 	 * url
 	 * http://localhost:8080/web/register/haveDriverLicenseNotCar.html?identityCard=33333333&linkAddress=1111111&mobilephone=13652311206&validateCode=222222&driverLicenseIssuedAddress=33333&idCardImgPositive=444444&idCardImgNegative=55555&idCardImgHandHeld=555555
 	 */
-	@RequestMapping(value = "haveDriverLicenseNotCar", method = RequestMethod.POST)
+	@RequestMapping(value = "haveDriverLicenseNotCar")
 	public void haveDriverLicenseNotCar(String identityCard, String linkAddress, String mobilephone,
 			String validateCode, String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgNegative,
 			String idCardImgHandHeld,String openId) {
@@ -516,7 +516,7 @@ public class RegisterAction extends BaseAction {
 	 * url
 	 * http://localhost:8080/web/register/isPedestrianNotDriver.html?identityCard=34343434343&mobilephone=13652311206&validateCode=402765&idCardImgPositive=1111111111&idCardImgNegative=2222&idCardImgHandHeld=3333&openId=222222
 	 */
-	@RequestMapping(value = "isPedestrianNotDriver", method = RequestMethod.POST)
+	@RequestMapping(value = "isPedestrianNotDriver")
 	public void isPedestrianNotDriver(String identityCard, String mobilephone, String validateCode,
 			String idCardImgPositive, String idCardImgNegative, String idCardImgHandHeld,String openId) {
 		String code = MsgCode.success;
