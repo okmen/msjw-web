@@ -931,4 +931,30 @@ public class AccountAction extends BaseAction {
 
 	}
     
+    /**
+     * 违法行为的选择项目
+     * @param keyword 关键字   机动车
+     * @throws Exception
+     */
+    @RequestMapping(value = "getTheChoiceOfIllegalActivities")
+    public void getTheChoiceOfIllegalActivities(String keyword) throws Exception {
+		JSONObject json= null;
+		
+		BaseBean basebean = new  BaseBean();
+		try {
+			 json  = accountService.getTheChoiceOfIllegalActivities(keyword);
+			 String code =json.getString("code");
+			 if(MsgCode.success.equals(code)){
+				 basebean.setCode(code);
+				 basebean.setMsg(json.getString("msg"));
+				 basebean.setData(json.get("body"));
+			 }
+		} catch (Exception e) {
+			logger.error("getPositioningAddress出错，错误="+ keyword,e);
+		}
+		renderJSON(basebean);
+		logger.debug(JSON.toJSONString(basebean));
+
+	}
+    
 }

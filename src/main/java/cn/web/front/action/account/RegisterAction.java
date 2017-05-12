@@ -50,13 +50,14 @@ public class RegisterAction extends BaseAction {
 	 * @param idCardImgPositive 身份证正面
 	 * @param idCardImgNegative  身份证反面
 	 * @param idCardImgHandHeld  手持身份证
+	 * @param openId 微信openId
 	 *           
 	 */
 	@RequestMapping(value = "iAmTheOwner", method = RequestMethod.POST)
 	public void iAmTheOwner(String licensePlateType, String provinceAbbreviation, String licensePlateNumber,
 			String identityCard, String linkAddress, String mobilephone, String validateCode, int isDriverLicense,
 			String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgNegative,
-			String idCardImgHandHeld) {
+			String idCardImgHandHeld,String openId) {
 		String code = MsgCode.success;
 		StringBuffer sb = new StringBuffer("");
 		RegisterVo registerVo = new RegisterVo();
@@ -66,7 +67,12 @@ public class RegisterAction extends BaseAction {
 		} else {
 			registerVo.setUserIdCard(identityCard);
 		}
-		
+		if (StringUtil.isBlank(openId)) {
+			code=MsgCode.paramsError;
+			sb.append("openId为空  ");
+		} else {
+			registerVo.setOpenId(openId);
+		}
 		registerVo.setLinkAddress(linkAddress);
 
 		if (StringUtil.isBlank(mobilephone)) {
@@ -201,12 +207,14 @@ public class RegisterAction extends BaseAction {
 	 *            身份证反面
 	 * @param idCardImgHandHeld
 	 *            手持身份证
+	 *  @param openId
+	 *  			微信openId
 	 */
 	@RequestMapping(value = "iamALongtimeUser", method = RequestMethod.POST)
 	public void iamALongtimeUser(String licensePlateType, String provinceAbbreviation, String licensePlateNumber,
 			String ownerName, String ownerIdCard, String userIdCard, String linkAddress, String mobilephone,
 			String validateCode, String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgHandHeld,
-			String idCardImgNegative, String ownerIdCardImgPositive, String ownerIdCardImgHandHeld) {
+			String idCardImgNegative, String ownerIdCardImgPositive, String ownerIdCardImgHandHeld,String openId) {
 		String code = MsgCode.success;
 		StringBuffer sb = new StringBuffer("");
 		RegisterVo registerVo = new RegisterVo();
@@ -221,6 +229,12 @@ public class RegisterAction extends BaseAction {
 			sb.append("车主身份证为空  ");
 		} else {
 			registerVo.setOwnerIdCard(ownerIdCard);
+		}
+		if (StringUtil.isBlank(openId)) {
+			code=MsgCode.paramsError;
+			sb.append("openId为空  ");
+		} else {
+			registerVo.setOpenId(openId);
 		}
 
 //		if (StringUtil.isBlank(linkAddress)) {
@@ -344,10 +358,8 @@ public class RegisterAction extends BaseAction {
 			DealException(basebean, e);
 			logger.error("iamALongtimeUser出错",e);
 		}
-
 		renderJSON(basebean);
 		logger.debug(JSON.toJSONString(basebean));
-
 	}
 
 	/**
@@ -369,11 +381,15 @@ public class RegisterAction extends BaseAction {
 	 *            身份证反面
 	 * @param idCardImgHandHeld
 	 *            手持身份证
+	 * @param openId
+	 *            微信openId
+	 * url
+	 * http://localhost:8080/web/register/haveDriverLicenseNotCar.html?identityCard=33333333&linkAddress=1111111&mobilephone=13652311206&validateCode=222222&driverLicenseIssuedAddress=33333&idCardImgPositive=444444&idCardImgNegative=55555&idCardImgHandHeld=555555
 	 */
 	@RequestMapping(value = "haveDriverLicenseNotCar", method = RequestMethod.POST)
 	public void haveDriverLicenseNotCar(String identityCard, String linkAddress, String mobilephone,
 			String validateCode, String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgNegative,
-			String idCardImgHandHeld) {
+			String idCardImgHandHeld,String openId) {
 
 		String code = MsgCode.success;
 		StringBuffer sb = new StringBuffer("");
@@ -397,6 +413,13 @@ public class RegisterAction extends BaseAction {
 			sb.append("手机号码为空  ");
 		} else {
 			registerVo.setMobilephone(mobilephone);
+		}
+		
+		if (StringUtil.isBlank(openId)) {
+			code=MsgCode.paramsError;
+			sb.append("openId为空  ");
+		} else {
+			registerVo.setOpenId(openId);
 		}
 
 		if (StringUtil.isBlank(validateCode)) {
@@ -429,9 +452,6 @@ public class RegisterAction extends BaseAction {
 		} else {
 			registerVo.setIdCardImgHandHeld(idCardImgHandHeld);
 		}
-
-		System.out.println(sb.toString());
-
 		BaseBean basebean = new BaseBean();
 		try {
 
@@ -472,10 +492,8 @@ public class RegisterAction extends BaseAction {
 			DealException(basebean, e);
 			logger.error("haveDriverLicenseNotCar出错",e);
 		}
-
 		renderJSON(basebean);
 		logger.debug(JSON.toJSONString(basebean));
-
 	}
 
 	/**
@@ -493,10 +511,14 @@ public class RegisterAction extends BaseAction {
 	 *            身份证反面
 	 * @param idCardImgHandHeld
 	 *            手持身份证
+	 * @param openId 
+	 * 			   微信openId
+	 * url
+	 * http://localhost:8080/web/register/isPedestrianNotDriver.html?identityCard=34343434343&mobilephone=13652311206&validateCode=402765&idCardImgPositive=1111111111&idCardImgNegative=2222&idCardImgHandHeld=3333&openId=222222
 	 */
 	@RequestMapping(value = "isPedestrianNotDriver", method = RequestMethod.POST)
 	public void isPedestrianNotDriver(String identityCard, String mobilephone, String validateCode,
-			String idCardImgPositive, String idCardImgNegative, String idCardImgHandHeld) {
+			String idCardImgPositive, String idCardImgNegative, String idCardImgHandHeld,String openId) {
 		String code = MsgCode.success;
 		StringBuffer sb = new StringBuffer("");
 		RegisterVo registerVo = new RegisterVo();
@@ -514,6 +536,13 @@ public class RegisterAction extends BaseAction {
 			registerVo.setMobilephone(mobilephone);
 		}
 
+		if (StringUtil.isBlank(openId)) {
+			code=MsgCode.paramsError;
+			sb.append("openId为空  ");
+		} else {
+			registerVo.setOpenId(openId);
+		}
+		
 		if (StringUtil.isBlank(validateCode)) {
 			code=MsgCode.paramsError;
 			sb.append("验证码为空  ");
@@ -537,8 +566,6 @@ public class RegisterAction extends BaseAction {
 		} else {
 			registerVo.setIdCardImgHandHeld(idCardImgHandHeld);
 		}
-
-		System.out.println(sb.toString());
 		BaseBean basebean = new BaseBean();
 		try {
 			if (MsgCode.success.equals(code)) {
@@ -576,11 +603,8 @@ public class RegisterAction extends BaseAction {
 			DealException(basebean, e);
 			logger.error("isPedestrianNotDriver出错",e);
 		}
-
-		System.out.println(basebean.getMsg());
 		renderJSON(basebean);
 		logger.debug(JSON.toJSONString(basebean));
-
 	}
 
 }
