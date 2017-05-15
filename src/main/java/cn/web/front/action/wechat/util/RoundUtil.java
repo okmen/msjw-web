@@ -31,7 +31,7 @@ public class RoundUtil {
 		return templateMessageService.sendMessage(toUserName, templateId, getRoundUrl(mobile), map);
 	}
 	
-	public static String getRoundUrl(String mobile){
+	private static String getRoundUrl(String mobile){
 		String uniCode = MD5.MD5Encode(mobile + secret);
 		StringBuffer sb = new StringBuffer();
 		sb.append(ydDomain);

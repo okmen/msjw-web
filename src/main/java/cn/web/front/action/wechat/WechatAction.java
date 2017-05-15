@@ -142,8 +142,8 @@ public class WechatAction extends BaseAction {
 		}
 	}
 	
-	@RequestMapping(value = "/round.html", method = RequestMethod.GET) 
-	public void round(HttpServletRequest request, HttpServletResponse response){
+	@RequestMapping(value = "/roundTest.html", method = RequestMethod.GET) 
+	public void roundTest(HttpServletRequest request, HttpServletResponse response){
 		try {
 			response.setCharacterEncoding("utf-8");
 //			欢迎语：星级用户移动大转盘
@@ -156,9 +156,24 @@ public class WechatAction extends BaseAction {
 //			陈圆	13631530641
 			boolean bool = RoundUtil.sendTemplateMessage(templateMessageService, "oTlk3s3LVb9RYwlBNF-Euurz9mS4", "13510823501");
 			outString(response, bool+"");
-			logger.info("模板消息发送："+bool);
+			logger.info("测试模板消息发送："+bool);
 		} catch (Exception e) {
-			logger.error("发送模板消息异常",e);
+			logger.error("测试发送模板消息异常",e);
+			outString(response, "error");
+		}
+	}
+	
+	
+	@RequestMapping(value = "/round.html", method = RequestMethod.GET) 
+	public void round(HttpServletRequest request, HttpServletResponse response){
+		try {
+			String openId = request.getParameter("openId");
+			String mobile = request.getParameter("mobile");
+			boolean bool = RoundUtil.sendTemplateMessage(templateMessageService, openId, mobile);
+			outString(response, bool+"");
+			logger.info("round 模板消息发送："+bool);
+		} catch (Exception e) {
+			logger.error("round 发送模板消息异常",e);
 			outString(response, "error");
 		}
 	}
