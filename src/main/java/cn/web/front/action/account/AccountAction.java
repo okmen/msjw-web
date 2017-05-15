@@ -2,6 +2,7 @@ package cn.web.front.action.account;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +26,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.account.bean.Documentation;
+import cn.account.bean.ElectronicPolicyBean;
 import cn.account.bean.UserBind;
 import cn.account.bean.vo.BindCarVo;
+import cn.account.bean.vo.InformationSheetVo;
 import cn.account.bean.vo.LoginReturnBeanVo;
 import cn.account.bean.vo.ReadilyShootVo;
 import cn.account.bean.vo.UserBasicVo;
@@ -954,7 +957,68 @@ public class AccountAction extends BaseAction {
 		}
 		renderJSON(basebean);
 		logger.debug(JSON.toJSONString(basebean));
-
 	}
-    
+    /**
+     * 电子保单查询
+     * @param identityCard 身份证号
+     * @param mobileNumber 手机号
+     * @param licensePlateNumber 车牌号码
+     * @param licensePlateType 车辆类型
+     * @param sourceOfCertification 认证来源
+     */
+    @RequestMapping(value = "getElectronicPolicy")
+    public void getElectronicPolicy(String identityCard,String mobileNumber,String licensePlateNumber,String licensePlateType,String sourceOfCertification){
+    	BaseBean baseBean = new BaseBean();
+		try {
+			if(StringUtils.isBlank(identityCard)){
+        		baseBean.setMsg("identityCard 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(mobileNumber)){
+        		baseBean.setMsg("mobileNumber 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(licensePlateNumber)){
+        		baseBean.setMsg("licensePlateNumber 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(licensePlateType)){
+        		baseBean.setMsg("licensePlateType 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			List<ElectronicPolicyBean> electronicPolicyBeans = new ArrayList<ElectronicPolicyBean>();
+			Map<String, Object> map = accountService.getElectronicPolicy(identityCard, mobileNumber, licensePlateNumber, licensePlateType, sourceOfCertification);
+			String code = (String) map.get("code");
+			String msg = (String) map.get("msg");
+			if("0000".equals(code)){
+				electronicPolicyBeans = (List<ElectronicPolicyBean>) map.get("data");
+				baseBean.setData(electronicPolicyBeans);
+				baseBean.setCode(MsgCode.success);
+		    	baseBean.setMsg("");
+			}else{
+				baseBean.setData("");
+				baseBean.setCode(MsgCode.businessError);
+		    	baseBean.setMsg(msg);
+			}
+		} catch (Exception e) {
+			DealException(baseBean, e);
+        	logger.error("getElectronicPolicy 错误!", e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+    }
 }
