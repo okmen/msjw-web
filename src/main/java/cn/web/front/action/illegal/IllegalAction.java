@@ -511,7 +511,7 @@ public class IllegalAction extends BaseAction {
      * @param mobilephone 手机号码
      */
     @RequestMapping(value = "toQueryPunishmentPage")
-    public void toQueryPunishmentPage(String billNo,String  licensePlateNo,String mobilephone,HttpServletRequest req, HttpServletResponse resp){
+    public void toQueryPunishmentPage(String billNo,String  licensePlateNo,String mobilephone,String openId,HttpServletRequest req, HttpServletResponse resp){
  	  //"4403010922403405","粤B8A3N2","18601174358");
     	BaseBean base=new BaseBean();
 	 	try {
@@ -521,8 +521,18 @@ public class IllegalAction extends BaseAction {
 			   base.setMsg("缴款编号不能为空！");
 			   renderJSON(base);
 		   }
+		   if(StringUtil.isEmpty(licensePlateNo)){
+			   base.setCode("0001");
+			   base.setMsg("车牌号不能为空！");
+			   renderJSON(base);
+		   }
+		   if(StringUtil.isEmpty(openId)){
+			   base.setCode("0001");
+			   base.setMsg("openId不能为空！");
+			   renderJSON(base);
+		   }
 		
-	 		String url=illegalService.toQueryPunishmentPage(billNo,licensePlateNo,mobilephone);
+	 		String url=illegalService.toQueryPunishmentPage(billNo,licensePlateNo,mobilephone,openId);
 	 		if(StringUtil.isEmpty(url)){	    	
 			    	base.setCode("0001");
 			    	base.setMsg("返回页面地址为空！");	
