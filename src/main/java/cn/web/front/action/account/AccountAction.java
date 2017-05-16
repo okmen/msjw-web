@@ -264,10 +264,20 @@ public class AccountAction extends BaseAction {
      * @param request
      * @param response
      * http://localhost:8080/web/user/sendSMSVerificatioCode.html?mobilephone=13652311206
+     * @throws Exception 
      */
     @RequestMapping("sendSMSVerificatioCode")
-    public void sendSMSVerificatioCode(String mobilephone,HttpServletRequest request,HttpServletResponse response){
+    public void sendSMSVerificatioCode(String mobilephone,HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
+    	//5秒钟发一次,处理
+    	String key = accountService.getSendSmsFreqLimit(mobilephone);
+    	if(StringUtils.isNotBlank(key)){
+    		baseBean.setCode(MsgCode.businessError);
+        	baseBean.setMsg("短信发送太频繁");
+        	baseBean.setData("短信发送太频繁");
+        	renderJSON(baseBean);
+    		return;
+    	}
     	try {
     		if(StringUtils.isBlank(mobilephone)){
         		baseBean.setMsg("mobilephone 不能为空!");
@@ -281,6 +291,7 @@ public class AccountAction extends BaseAction {
     		boolean flag = mobileMessageService.sendMessage(mobilephone, msgContent);
     		if(flag){
     			accountService.sendSMSVerificatioCode(mobilephone,valideteCode);
+    			accountService.sendSmsFreqLimit(mobilephone);
     			baseBean.setCode(MsgCode.success);
             	baseBean.setMsg("");
             	baseBean.setData("发送成功");
@@ -762,12 +773,14 @@ public class AccountAction extends BaseAction {
      * @param identityCard 举报人身份证
      * @param userSource 认证来源(微信C，支付宝Z)
      * @param openId    openId(暂时无用)
+     * @param wfxw1 违法行为1
+     * 
      * @return void    返回类型 
      * @date 2017年4月20日 下午3:06:02
      */
     @RequestMapping(value = "readilyShoot",method = RequestMethod.POST)
     public void readilyShoot(String licensePlateNumber,String licensePlateType,String illegalActivitieOne, String illegalTime, String illegalSections, String reportImgOne, String reportImgTwo
-    		, String reportImgThree, String inputMan,String inputManName,String inputManPhone,String identityCard,String userSource,String openId) {
+    		, String reportImgThree, String inputMan,String inputManName,String inputManPhone,String identityCard,String userSource,String openId,String wfxw1) {
     	String code=MsgCode.success;
  		StringBuffer sb = new StringBuffer("");
  		int imgNumber=0;//传入的图片数量
@@ -783,14 +796,12 @@ public class AccountAction extends BaseAction {
     	}else{
     		readilyShootVo.setLicensePlateType(licensePlateType);	
     	}
-
     	if(StringUtil.isBlank(illegalActivitieOne)){
  			code=MsgCode.paramsError;
  			sb.append("违法行为为空  ");
  		}else{
  			readilyShootVo.setIllegalActivitieOne(illegalActivitieOne);
  		}
-    	
     	if(StringUtil.isBlank(identityCard)){
  			code=MsgCode.paramsError;
  			sb.append("身份证为空  ");
