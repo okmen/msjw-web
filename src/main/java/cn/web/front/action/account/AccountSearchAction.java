@@ -332,7 +332,7 @@ public class AccountSearchAction extends BaseAction {
 	 * http://localhost:8080/web/user/search/getBndTheVehicles.html?identityCard=440301199002101119&mobilephone=15920071829
      */
     @RequestMapping(value="getBndTheVehicles")
-    public void getBndTheVehicles(String identityCard,String mobilephone,String sourceOfCertification,
+    public void getBndTheVehicles(String identityCard,String mobilephone,String sourceOfCertification,String openId,
     		HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
     	try {
@@ -361,7 +361,7 @@ public class AccountSearchAction extends BaseAction {
         		String numberPlateNumber = bindTheVehicleVo.getNumberPlateNumber();
         		String plateType = bindTheVehicleVo.getPlateType();
         		//车牌号、车牌类型、车架后4位
-        		List<IllegalInfoBean> illegalInfoBeans = illegalService.queryInfoByLicensePlateNo(numberPlateNumber, plateType, "");
+        		List<IllegalInfoBean> illegalInfoBeans = illegalService.queryInfoByLicensePlateNo(numberPlateNumber, plateType, "",openId);
         		if(null != illegalInfoBeans && illegalInfoBeans.size() > 0){
         			//bindTheVehicleVo.setIllegalNumber("当前本车有" + illegalInfoBeans.size() + "宗违法尚未处理");
         			bindTheVehicleVo.setIllegalNumber(String.valueOf(illegalInfoBeans.size()));
