@@ -124,7 +124,7 @@ public class IllegalAction extends BaseAction {
     * @param vehicleIdentifyNoLast4 车架号后四位
     */
    @RequestMapping(value = "queryInfoByLicensePlateNo") 
-   public void queryInfoByLicensePlateNo(String licensePlateNo,String licensePlateType,String vehicleIdentifyNoLast4,String identityCard, String sourceOfCertification, String mobilephone){  
+   public void queryInfoByLicensePlateNo(String licensePlateNo,String licensePlateType,String vehicleIdentifyNoLast4,String identityCard, String sourceOfCertification, String mobilephone,String openId){  
 	   BaseBean base=new BaseBean();
 	 
 	   try {
@@ -155,9 +155,14 @@ public class IllegalAction extends BaseAction {
 			   base.setMsg("mobilephone不能为空！");
 			   renderJSON(base);
 		   }
+		   if(StringUtil.isEmpty(openId)){
+			   base.setCode("0001");
+			   base.setMsg("未获取到openId！");
+			   renderJSON(base);
+		   }
    
 		   //判断客户是否已同步
-		   String isReg=illegalService.isRegisterUser();
+		   String isReg=illegalService.isRegisterUser(openId);
 		   //未同步
 		   if("0".equals(isReg)){
 			   CustInfoBean cust=new CustInfoBean();
@@ -182,12 +187,12 @@ public class IllegalAction extends BaseAction {
 			   }
 			   
 			   //同步客户信息
-			  String str= illegalService.custRegInfoReceive(cust, carList);
+			  String str= illegalService.custRegInfoReceive(cust, carList,openId);
 			  logger.info("同步客户信息！");
 		   }
 		   
 		   
-		   List<IllegalInfoBean> list= illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType, vehicleIdentifyNoLast4);
+		   List<IllegalInfoBean> list= illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType, vehicleIdentifyNoLast4,openId);
 		   base.setCode("0000");
 		   if(list!=null){
 			   base.setData(list);
@@ -208,7 +213,7 @@ public class IllegalAction extends BaseAction {
     * @param recordNo 档案编号
     */
    @RequestMapping(value = "queryInfoByDrivingLicenceNo")
-   public void queryInfoByDrivingLicenceNo(String drivingLicenceNo,String recordNo,String identityCard, String sourceOfCertification, String mobilephone){
+   public void queryInfoByDrivingLicenceNo(String drivingLicenceNo,String recordNo,String identityCard, String sourceOfCertification, String mobilephone,String openId){
 	   BaseBean base=new BaseBean();		 
 	   try {
 		   if(StringUtil.isEmpty(drivingLicenceNo)){
@@ -236,9 +241,13 @@ public class IllegalAction extends BaseAction {
 			   base.setMsg("mobilephone不能为空！");
 			   renderJSON(base);
 		   }
-		   
+		   if(StringUtil.isEmpty(openId)){
+			   base.setCode("0001");
+			   base.setMsg("未获取到openId！");
+			   renderJSON(base);
+		   }
 		   //判断客户是否已同步
-		   String isReg=illegalService.isRegisterUser();
+		   String isReg=illegalService.isRegisterUser(openId);
 		   //未同步
 		   if("0".equals(isReg)){
 			   CustInfoBean cust=new CustInfoBean();
@@ -263,11 +272,11 @@ public class IllegalAction extends BaseAction {
 			   }
 			   
 			   //同步客户信息
-			  String str= illegalService.custRegInfoReceive(cust, carList);
+			  String str= illegalService.custRegInfoReceive(cust, carList,openId);
 			  System.out.println("同步："+str);
 		   }
 		   
-		   List<IllegalInfoBean> list=illegalService.queryInfoByDrivingLicenceNo(drivingLicenceNo, recordNo);
+		   List<IllegalInfoBean> list=illegalService.queryInfoByDrivingLicenceNo(drivingLicenceNo, recordNo,openId);
 		   base.setCode("0000");
 		   if(list!=null){
 			   base.setData(list);
@@ -340,7 +349,7 @@ public class IllegalAction extends BaseAction {
      * @param mobilephone 手机号码
      */
     @RequestMapping(value = "illegalOnlineConfirm")
-    public void illegalOnlineConfirm(String licensePlateNo,String licensePlateType,String mobilephone,String identityCard, String sourceOfCertification){  	
+    public void illegalOnlineConfirm(String licensePlateNo,String licensePlateType,String mobilephone,String identityCard, String sourceOfCertification,String openId){  	
  	  BaseBean base=new BaseBean();		 
 	   try {
 		   //参数校验
@@ -369,8 +378,13 @@ public class IllegalAction extends BaseAction {
 			   base.setMsg("手机号码不能为空！");
 			   renderJSON(base);
 		   }
+		   if(StringUtil.isEmpty(openId)){
+			   base.setCode("0001");
+			   base.setMsg("未获取到openId！");
+			   renderJSON(base);
+		   }
 		 //判断客户是否已同步
-		   String isReg=illegalService.isRegisterUser();
+		   String isReg=illegalService.isRegisterUser(openId);
 		   //未同步
 		   if("0".equals(isReg)){
 			   CustInfoBean cust=new CustInfoBean();
@@ -395,19 +409,19 @@ public class IllegalAction extends BaseAction {
 			   }
 			   
 			   //同步客户信息
-			  String str= illegalService.custRegInfoReceive(cust, carList);
+			  String str= illegalService.custRegInfoReceive(cust, carList,openId);
 			  System.out.println("同步："+str);
 		   }
 		   List<IllegalInfoBean> returnList=null;
 		   
-		   BaseBean result=illegalService.trafficIllegalClaimBefore(licensePlateNo, licensePlateType, mobilephone);
+		   BaseBean result=illegalService.trafficIllegalClaimBefore(licensePlateNo, licensePlateType, mobilephone,openId);
 		   String msgCode=result.getCode();
 		   String msg=result.getMsg();
 		   if("0000".equals(msgCode)){
-			   returnList= illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType,"");
+			   returnList= illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType,"",openId);
 		   }else{
 			   if("您好，没有查找到可用互联网方式处理的交通违法，感谢您对我局工作的支持！".equals(msg)||"由于您的驾驶证处理此宗违法后累计分已经超过12分，请到各大队违例窗口现场办理。".equals(msg)){
-				   returnList= illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType,"");
+				   returnList= illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType,"",openId);
 			   }
 			   
 		   }		   
@@ -430,7 +444,7 @@ public class IllegalAction extends BaseAction {
      * @param illegalNo 违章编号
      */
     @RequestMapping(value = "trafficIllegalClaim")
-    public void trafficIllegalClaim(String illegalNo){	        
+    public void trafficIllegalClaim(String illegalNo,String openId){	        
        BaseBean base=new BaseBean();		 
 	   try {
 		 //参数校验
@@ -439,8 +453,12 @@ public class IllegalAction extends BaseAction {
 			   base.setMsg("违法编号不能为空！");
 			   renderJSON(base);
 		   }
-		   
-		   IllegalInfoSheet bean=illegalService.trafficIllegalClaim(illegalNo);
+		   if(StringUtil.isEmpty(openId)){
+			   base.setCode("0001");
+			   base.setMsg("未获取到openId！");
+			   renderJSON(base);
+		   }
+		   IllegalInfoSheet bean=illegalService.trafficIllegalClaim(illegalNo,openId);
 		   base.setCode("0000");
 		   base.setMsg("成功！");
            base.setData(bean);	   
@@ -528,7 +546,7 @@ public class IllegalAction extends BaseAction {
 		   }
 		   if(StringUtil.isEmpty(openId)){
 			   base.setCode("0001");
-			   base.setMsg("openId不能为空！");
+			   base.setMsg("未获取到openId！");
 			   renderJSON(base);
 		   }
 		
