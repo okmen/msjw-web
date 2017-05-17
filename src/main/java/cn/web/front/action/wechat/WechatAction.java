@@ -130,14 +130,29 @@ public class WechatAction extends BaseAction {
 			response.setCharacterEncoding("utf-8");
 			String key = request.getParameter("key");
 			if("qxwsed@!s1334".equals(key)){
-				String accessToken = wechatService.queryAccessToken("");
+				String accessToken = wechatService.queryAccessToken();
 				outString(response, accessToken);
 				return;
 			}
 		} catch (Exception e) {
-			logger.error("获取异常",e);
+			logger.error("获取token异常",e);
 			outString(response, "error");
 		}
 	}
 	
+	@RequestMapping(value = "/jfhfsgagsa.html", method = RequestMethod.GET) 
+	public void jfhfsgagsa(HttpServletRequest request, HttpServletResponse response){
+		try {
+			response.setCharacterEncoding("utf-8");
+			String key = request.getParameter("key");
+			if("qxwsed@!s1334".equals(key)){
+				String accessToken = wechatService.createAccessToken();
+				outString(response, accessToken);
+				return;
+			}
+		} catch (Exception e) {
+			logger.error("创建token异常",e);
+			outString(response, "error");
+		}
+	}
 }

@@ -33,16 +33,6 @@ public class OauthAction extends BaseAction{
 		String state = request.getParameter("state");//前端会带过来一个url
 		try {
 			response.setCharacterEncoding("utf-8");
-			if(state.contains("szjj.u-road.com")){
-				if(state.contains("failureReporttest")){
-					response.sendRedirect(state+
-							"/"+code);
-					return;
-				}
-				response.sendRedirect(state);
-				return;
-			}
-			
 			//获取微信用户信息
 			WechatUserInfo wechatUserInfo = wechatService.callback4OpenId(code, state);
 			logger.info("Wechat 获取用户信息:"+wechatUserInfo.toString());
