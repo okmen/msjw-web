@@ -46,10 +46,26 @@ public class EastReservationAction extends BaseAction {
             	baseBean.setMsg(loginReturnBeanVo.getMsg());
             	baseBean.setData("");
         	}*/
+        	List<ReservationBean> reservationBeans = new ArrayList<ReservationBean>();
+        	ReservationBean reservationBean1 = new ReservationBean();
+        	ReservationBean reservationBean2 = new ReservationBean();
+        	reservationBean1.setAddress("梅沙片区");
+        	reservationBean1.setDate("2017.05.28");
+        	reservationBean1.setTime("am");
+        	reservationBean1.setRemainingPercentage("100");
+        	
+        	reservationBean2.setAddress("大鹏岛片区");
+        	reservationBean2.setDate("2017.05.28");
+        	reservationBean2.setTime("bm");
+        	reservationBean2.setRemainingPercentage("300");
+        	
+        	reservationBeans.add(reservationBean1);
+        	reservationBeans.add(reservationBean2);
+        	
         	baseBean.setCode("0000");
-        	baseBean.setData("");
-        	baseBean.setMsg("查询成功");
+        	baseBean.setData(reservationBeans);
         	renderJSON(baseBean);
+        	
 		} catch (Exception e) {
 			baseBean.setCode("0002");
         	baseBean.setData("");

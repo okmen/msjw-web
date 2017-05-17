@@ -1032,4 +1032,65 @@ public class AccountAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
     }
+    
+    @RequestMapping(value = "getBetweenAndId")
+	public void getBetweenAndId(String startId, String endId) {
+		BaseBean baseBean = new BaseBean();
+		if(StringUtils.isBlank(startId)){
+    		baseBean.setMsg("startId 不能为空!");
+    		baseBean.setCode(MsgCode.paramsError);
+    		renderJSON(baseBean);
+    		return;
+    	}
+		if(StringUtils.isBlank(endId)){
+    		baseBean.setMsg("endId 不能为空!");
+    		baseBean.setCode(MsgCode.paramsError);
+    		renderJSON(baseBean);
+    		return;
+    	}
+		List<UserBind> userBinds = null;
+		try {
+			userBinds =	accountService.getBetweenAndId(startId, endId);
+			baseBean.setData(userBinds);
+			baseBean.setCode(MsgCode.success);
+	    	baseBean.setMsg("");
+	    	renderJSON(baseBean);
+		} catch (Exception e) {
+			logger.error("getBetweenAndId 错误", e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+
+
+    @RequestMapping(value = "getBetweenAndBindDate")
+   	public void getBetweenAndBindDate(String startDate, String endDate) {
+   		BaseBean baseBean = new BaseBean();
+   		if(StringUtils.isBlank(startDate)){
+       		baseBean.setMsg("startDate 不能为空!");
+       		baseBean.setCode(MsgCode.paramsError);
+       		renderJSON(baseBean);
+       		return;
+       	}
+   		if(StringUtils.isBlank(endDate)){
+       		baseBean.setMsg("endDate 不能为空!");
+       		baseBean.setCode(MsgCode.paramsError);
+       		renderJSON(baseBean);
+       		return;
+       	}
+   		List<UserBind> userBinds = null;
+   		try {
+   			userBinds =	accountService.getBetweenAndBindDate(startDate, endDate);
+   			baseBean.setData(userBinds);
+   			baseBean.setCode(MsgCode.success);
+   	    	baseBean.setMsg("");
+   	    	renderJSON(baseBean);
+   		} catch (Exception e) {
+   			logger.error("getBetweenAndBindDate 错误", e);
+   			DealException(baseBean, e);
+   		}
+   		renderJSON(baseBean);
+   		logger.debug(JSON.toJSONString(baseBean));
+   	}
 }
