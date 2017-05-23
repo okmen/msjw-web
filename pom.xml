@@ -360,7 +360,11 @@
 			<artifactId>message-center-api</artifactId>
 			<version>${cn.services.version}</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>${choumei.services.groupId}</groupId>
+			<artifactId>file-center-api</artifactId>
+			<version>${cn.services.version}</version>
+		</dependency>
 		
 		<dependency>
 			<groupId>log4j</groupId>

@@ -34,11 +34,15 @@ import cn.account.bean.vo.ReadilyShootVo;
 import cn.account.bean.vo.UserBasicVo;
 import cn.account.service.IAccountService;
 import cn.convenience.service.IConvenienceService;
+import cn.file.service.IFileService;
+import cn.message.model.wechat.TemplateDataModel;
 import cn.message.service.IMobileMessageService;
+import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.ResultCode;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
+import cn.web.front.action.wechat.util.HttpRequest;
 import cn.web.front.support.BaseAction;
 
 
@@ -61,8 +65,15 @@ public class AccountAction extends BaseAction {
     private IMobileMessageService mobileMessageService;
     
     @Autowired
+    @Qualifier("fileService")
+    private IFileService fileService;
+    
+    @Autowired
     @Qualifier("convenienceService")
     private IConvenienceService convenienceService;
+    
+	@Qualifier("templateMessageService")
+	private ITemplateMessageService templateMessageService;
 
     @RequestMapping(value = "get-wechat-userInfo-by-id")
     public ModelAndView getWechatUserInfoById(HttpServletRequest request) {
@@ -887,34 +898,69 @@ public class AccountAction extends BaseAction {
  		}
 
        	BaseBean basebean = new  BaseBean();
+       	ReadilyShoot readilyShoot = new ReadilyShoot();
     	try {
     		 if(MsgCode.success.equals(code)){//参数校验通过
     			 JSONObject json = accountService.readilyShoot(readilyShootVo);
     				code =json.getString("code");
+    				String msg=json.getString("msg");
     				if(!MsgCode.success.equals(code)){
     					code=MsgCode.businessError;
     				}else{
-    					Map<String, Object> modelMap = new HashMap<String, Object>();
-    					String msg=json.getString("msg");
     					String reportSerialNumber = msg.substring(5, 20);
-    					String password = json.getString("cxyzm");
+						String password = json.getString("cxyzm");
+						
+    					Map<String, Object> modelMap = new HashMap<String, Object>();
     			     	modelMap.put("recordNumber", reportSerialNumber);
     			     	modelMap.put("queryPassword", password);
     			     	basebean.setData(modelMap);
     			     	
+    			     	List<String> base64Imgs = new ArrayList<String>();
+    			     	base64Imgs.add(reportImgOne);
+    			     	base64Imgs.add(reportImgTwo);
+    			     	base64Imgs.add(reportImgThree);
+    			     	
+    			     	List<String> imgs = new ArrayList<String>();
+    			     	try {
+    			     		imgs = fileService.writeImgReadilyShoot(reportSerialNumber, base64Imgs);
+						} catch (Exception e) {
+							logger.error("写图片到225服务器  失败", e);
+						}
+    			     	
     			     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
-    			        Date date = sdf.parse(illegalTime); 
-    			        
-    			     	ReadilyShoot readilyShoot = new ReadilyShoot();
+    			        Date date = sdf.parse(illegalTime);
     			     	readilyShoot.setAddDate(new Date());
     					readilyShoot.setIllegalTime(date);
     					readilyShoot.setIllegalSections(illegalSections);
     					readilyShoot.setReportSerialNumber(reportSerialNumber);
     					readilyShoot.setPassword(password);
-    					readilyShoot.setIllegalImg1(reportImgOne);
-    					readilyShoot.setIllegalImg1(reportImgTwo);
-    					readilyShoot.setIllegalImg1(reportImgTwo);
-    					accountService.saveReadilyShoot(readilyShoot);
+    					
+    					if(null != imgs && imgs.size() > 0){
+    						for(int i = 0; i< imgs.size(); i++){
+    				    		String img = imgs.get(i);
+    				    		if(0 == i){
+    				    			readilyShoot.setIllegalImg1(img);
+    				    		}
+    				    		if(1 == i){
+    				    			readilyShoot.setIllegalImg2(img);
+    				    		}
+    				    		if(2 == i){
+    				    			readilyShoot.setIllegalImg3(img);
+    				    		}
+    				    	}
+    					}
+    					int count = accountService.saveReadilyShoot(readilyShoot);
+    					if(1 == count){
+    						 //举报成功发送模板消息
+        					String templateId = "pFy7gcEYSklRmg32165BUBwM3PFbUbBSLe0IPw3ZuY4";
+        					String url = "http://szjj.u-road.com/h5/#/takePicturesSuccess1?reportSerialNumber=" + reportSerialNumber + "&password=" + password;
+    						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+    						map.put("first", new TemplateDataModel().new Property("随手拍举报通知","#212121"));
+    						map.put("keyword1", new TemplateDataModel().new Property(reportSerialNumber,"#212121"));
+    						map.put("keyword2", new TemplateDataModel().new Property(password,"#212121"));
+    						map.put("remark", new TemplateDataModel().new Property("举报状态：已记录\r\n您已完成本次举报流程，可通过深圳交警微信公众平台【交警互动】板块《举报信息查询》栏目输入您的记录号与查询密码进行查询，感谢您使用深圳交警微信公众平台。", "#212121"));
+    						templateMessageService.sendMessage(openId, templateId, url, map);
+    					}
     				}
     		    	basebean.setCode(code);
     		    	basebean.setMsg(json.getString("msg"));
@@ -922,18 +968,71 @@ public class AccountAction extends BaseAction {
     			 basebean.setCode(code);
     			 basebean.setMsg(sb.toString());
     		 }
-			
-    	
     	} catch (Exception e) {
     		DealException(basebean, e);
     		logger.error("readilyShoot出错",e);
 		}
-    
+    	try {
+    		sendReadilyShootVoDataToPhp(readilyShoot,readilyShootVo);
+		} catch (Exception e) {
+			logger.error("随手拍发送数据给php系统 错误", e);
+		}
+    	
     	renderJSON(basebean);
     	logger.debug(JSON.toJSONString(basebean));
     
     }
     
+    
+    public static void main(String[] args) {
+		
+    	List<String> aa = new ArrayList<String>();
+    	for(int i=0;i<aa.size();i++){
+    		String x1 = aa.get(i);
+        	System.out.println(x1);
+    	}
+    	
+	}
+    /**
+     * 随手拍发送数据给php系统
+     */
+    private void sendReadilyShootVoDataToPhp(ReadilyShoot readilyShoot,ReadilyShootVo readilyShootVo){
+    	logger.info("readilyShoot=" + readilyShoot);
+    	logger.info("readilyShootVo=" + readilyShootVo);
+    	/*jbbh 举报成功后返回的编号
+    	wfsj 违法时间
+    	querypwd 返回的查询密码
+    	wfroad 违法路段
+    	hphm 号牌
+    	hpzl 号牌各类 为数字 
+    	wfname 违法行为名
+    	jbr 举报人
+    	fromopenid 举报人openid
+    	imagepath 图片路径
+    	token Chudao4Wfjj写死*/
+    	//jbbh=1234&wfsj=0&querypwd=123456&wfroad=test&hphm=ABCDE&hpzl=1&wfname=asd&=randy&fromopenid=test123456&imagepath=http://test&phone=123456789&token=Chudao4Wfjj
+    	StringBuffer sb = new StringBuffer();
+    	
+    	
+    	StringBuffer imagepath = new StringBuffer();
+    	imagepath.append(readilyShoot.getIllegalImg1()).append(",").append(readilyShoot.getIllegalImg2()).append(",").append(readilyShoot.getIllegalImg3());
+    	
+    	String url = "http://szjj.u-road.com/SZJJAPIServer/index.php?/report/reportfornew?";
+    	sb.append(url).append("jbbh=").append(readilyShoot.getReportSerialNumber()).append("&");
+    	sb.append("wfsj=").append(readilyShoot.getIllegalTime()).append("&");
+    	sb.append("querypwd=").append(readilyShoot.getPassword()).append("&");
+    	sb.append("wfroad=").append(readilyShoot.getIllegalSections()).append("&");
+    	sb.append("hphm=").append(readilyShootVo.getLicensePlateNumber()).append("&");
+    	sb.append("hpzl=").append(readilyShootVo.getLicensePlateType()).append("&");
+    	sb.append("wfname=").append(readilyShootVo.getIllegalActivitieOne()).append("&");
+    	sb.append("jbr=").append(readilyShootVo.getInputMan()).append("&");
+    	sb.append("fromopenid=").append(readilyShootVo.getOpenId()).append("&");
+    	sb.append("imagepath=").append(imagepath.toString()).append("&");
+    	sb.append("token=").append("Chudao4Wfjj").append("&");
+    	
+    	HttpRequest.sendGet(sb.toString());
+    }
+   
     /**
      * 
      * @Title: getPositioningAddress 
@@ -1053,7 +1152,11 @@ public class AccountAction extends BaseAction {
 		logger.debug(JSON.toJSONString(baseBean));
     }
     
-
+    /**
+     * 根据id范围取openId数据
+     * @param startId
+     * @param endId
+     */
     @RequestMapping(value = "getBetweenAndId")
 	public void getBetweenAndId(String startId, String endId) {
 		BaseBean baseBean = new BaseBean();
@@ -1084,7 +1187,11 @@ public class AccountAction extends BaseAction {
 		logger.debug(JSON.toJSONString(baseBean));
 	}
 
-
+    /**
+     * 根据时间范围取openId数据
+     * @param startDate
+     * @param endDate
+     */
     @RequestMapping(value = "getBetweenAndBindDate")
    	public void getBetweenAndBindDate(String startDate, String endDate) {
    		BaseBean baseBean = new BaseBean();
@@ -1115,33 +1222,4 @@ public class AccountAction extends BaseAction {
    		logger.debug(JSON.toJSONString(baseBean));
    	}
     
-    
-    /**
-     * 
-     * @Title: getAllResourcesAbsoluteUrl 
-     * @author jiangjiayi
-     * @Description: TODO(加载所有资源绝对路径url) 
-     * @param 无
-     * @throws Exception    
-     * @return void    返回类型 
-     */
-    @RequestMapping(value = "getAllResourcesAbsoluteUrl")
-    public void getAllResourcesAbsoluteUrl(){
-    	BaseBean baseBean = new BaseBean();
-    	
-    	List list = null;
-    	try {
-			list = convenienceService.getAllResourcesAbsoluteUrl();
-			baseBean.setCode(MsgCode.success);
-			baseBean.setMsg("");
-			baseBean.setData(list);
-		} catch (Exception e) {
-			logger.error("getAllResourcesAbsoluteUrl 错误", e);
-   			DealException(baseBean, e);
-		}
-    	renderJSON(baseBean);
-   		logger.debug(JSON.toJSONString(baseBean));
-    }
-    
-
 }
