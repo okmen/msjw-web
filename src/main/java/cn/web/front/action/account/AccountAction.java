@@ -2,7 +2,9 @@ package cn.web.front.action.account;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +12,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.validator.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -22,14 +22,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.account.bean.Documentation;
 import cn.account.bean.ElectronicPolicyBean;
+import cn.account.bean.ReadilyShoot;
 import cn.account.bean.UserBind;
 import cn.account.bean.vo.BindCarVo;
-import cn.account.bean.vo.InformationSheetVo;
 import cn.account.bean.vo.LoginReturnBeanVo;
 import cn.account.bean.vo.ReadilyShootVo;
 import cn.account.bean.vo.UserBasicVo;
@@ -897,9 +896,25 @@ public class AccountAction extends BaseAction {
     				}else{
     					Map<String, Object> modelMap = new HashMap<String, Object>();
     					String msg=json.getString("msg");
-    			     	modelMap.put("recordNumber", msg.substring(5, 20));
-    			     	modelMap.put("queryPassword", json.getString("cxyzm"));
+    					String reportSerialNumber = msg.substring(5, 20);
+    					String password = json.getString("cxyzm");
+    			     	modelMap.put("recordNumber", reportSerialNumber);
+    			     	modelMap.put("queryPassword", password);
     			     	basebean.setData(modelMap);
+    			     	
+    			     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+    			        Date date = sdf.parse(illegalTime); 
+    			        
+    			     	ReadilyShoot readilyShoot = new ReadilyShoot();
+    			     	readilyShoot.setAddDate(new Date());
+    					readilyShoot.setIllegalTime(date);
+    					readilyShoot.setIllegalSections(illegalSections);
+    					readilyShoot.setReportSerialNumber(reportSerialNumber);
+    					readilyShoot.setPassword(password);
+    					readilyShoot.setIllegalImg1(reportImgOne);
+    					readilyShoot.setIllegalImg1(reportImgTwo);
+    					readilyShoot.setIllegalImg1(reportImgTwo);
+    					accountService.saveReadilyShoot(readilyShoot);
     				}
     		    	basebean.setCode(code);
     		    	basebean.setMsg(json.getString("msg"));
@@ -1038,6 +1053,7 @@ public class AccountAction extends BaseAction {
 		logger.debug(JSON.toJSONString(baseBean));
     }
     
+<<<<<<< Updated upstream
     @RequestMapping(value = "getBetweenAndId")
 	public void getBetweenAndId(String startId, String endId) {
 		BaseBean baseBean = new BaseBean();
@@ -1127,4 +1143,6 @@ public class AccountAction extends BaseAction {
    		logger.debug(JSON.toJSONString(baseBean));
     }
     
+=======
+>>>>>>> Stashed changes
 }

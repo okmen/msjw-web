@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSON;
 
+import cn.account.bean.ResultOfReadilyShoot;
 import cn.account.bean.vo.AuthenticationBasicInformationVo;
 import cn.account.bean.vo.BindTheVehicleVo;
 import cn.account.bean.vo.DriverLicenseInformationSheetVo;
@@ -428,4 +429,57 @@ public class AccountSearchAction extends BaseAction {
     	renderJSON(baseBean);
     	logger.debug(JSON.toJSONString(baseBean));
     }
+    
+    /**
+   	 * 违法信息查询
+   	 * @param recordNumber
+   	 * @param queryPassword
+   	 * @param request
+   	 * @param response
+        * @throws Exception
+        * http://192.168.1.161:8080/web/user/search/queryResultOfReadilyShoot.html?reportSerialNumber=W20170522881675&password=090551
+   	 */
+       @RequestMapping(value="queryResultOfReadilyShoot")
+       public void queryResultOfReadilyShoot(String reportSerialNumber,String password,HttpServletRequest request,HttpServletResponse response) throws Exception{
+       	
+       	BaseBean baseBean = new BaseBean();
+       	try {
+       		if(null == reportSerialNumber){
+           		baseBean.setMsg("reportSerialNumber 不能为空!");
+           		baseBean.setCode(MsgCode.paramsError);
+           		renderJSON(baseBean);
+           		return;
+           	}
+       		if(null == password){
+           		baseBean.setMsg("password 不能为空!");
+           		baseBean.setCode(MsgCode.paramsError);
+           		renderJSON(baseBean);
+           		return;
+           	}
+       		
+           	ResultOfReadilyShoot resultOfReadilyShoot = accountService.queryResultOfReadilyShoot(reportSerialNumber, password);
+           	if (null == resultOfReadilyShoot) {
+				baseBean.setMsg("查询号码或密码错误");
+				baseBean.setCode(MsgCode.paramsError);
+				renderJSON(baseBean);
+           		return;
+			}
+           	
+           	String msg = resultOfReadilyShoot.getMsg();
+           	if (null!=msg) {
+				baseBean.setMsg(msg);
+				baseBean.setCode(MsgCode.paramsError);
+           		renderJSON(baseBean);
+				return;
+			}
+           	baseBean.setCode(MsgCode.success);
+           	baseBean.setMsg("");
+           	baseBean.setData(resultOfReadilyShoot);
+   		} catch (Exception e) {
+   			DealException(baseBean, e);
+   			logger.error("queryResultOfReadilyShoot 错误", e);
+   		}
+       	renderJSON(baseBean);
+       	logger.debug(JSON.toJSONString(baseBean));
+       }
 }
