@@ -34,6 +34,7 @@ import cn.account.bean.vo.LoginReturnBeanVo;
 import cn.account.bean.vo.ReadilyShootVo;
 import cn.account.bean.vo.UserBasicVo;
 import cn.account.service.IAccountService;
+import cn.convenience.service.IConvenienceService;
 import cn.message.service.IMobileMessageService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.ResultCode;
@@ -59,6 +60,10 @@ public class AccountAction extends BaseAction {
     @Autowired
     @Qualifier("mobileMessageService")
     private IMobileMessageService mobileMessageService;
+    
+    @Autowired
+    @Qualifier("convenienceService")
+    private IConvenienceService convenienceService;
 
     @RequestMapping(value = "get-wechat-userInfo-by-id")
     public ModelAndView getWechatUserInfoById(HttpServletRequest request) {
@@ -1093,4 +1098,33 @@ public class AccountAction extends BaseAction {
    		renderJSON(baseBean);
    		logger.debug(JSON.toJSONString(baseBean));
    	}
+    
+    
+    /**
+     * 
+     * @Title: getAllResourcesAbsoluteUrl 
+     * @author jiangjiayi
+     * @Description: TODO(加载所有资源绝对路径url) 
+     * @param 无
+     * @throws Exception    
+     * @return void    返回类型 
+     */
+    @RequestMapping(value = "getAllResourcesAbsoluteUrl")
+    public void getAllResourcesAbsoluteUrl(){
+    	BaseBean baseBean = new BaseBean();
+    	
+    	List list = null;
+    	try {
+			list = convenienceService.getAllResourcesAbsoluteUrl();
+			baseBean.setCode(MsgCode.success);
+			baseBean.setMsg("");
+			baseBean.setData(list);
+		} catch (Exception e) {
+			logger.error("getAllResourcesAbsoluteUrl 错误", e);
+   			DealException(baseBean, e);
+		}
+    	renderJSON(baseBean);
+   		logger.debug(JSON.toJSONString(baseBean));
+    }
+    
 }
