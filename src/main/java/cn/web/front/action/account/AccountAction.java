@@ -1053,7 +1053,7 @@ public class AccountAction extends BaseAction {
 		logger.debug(JSON.toJSONString(baseBean));
     }
     
-<<<<<<< Updated upstream
+
     @RequestMapping(value = "getBetweenAndId")
 	public void getBetweenAndId(String startId, String endId) {
 		BaseBean baseBean = new BaseBean();
@@ -1143,6 +1143,5 @@ public class AccountAction extends BaseAction {
    		logger.debug(JSON.toJSONString(baseBean));
     }
     
-=======
->>>>>>> Stashed changes
+
 }
