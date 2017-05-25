@@ -33,7 +33,6 @@ import cn.account.bean.vo.LoginReturnBeanVo;
 import cn.account.bean.vo.ReadilyShootVo;
 import cn.account.bean.vo.UserBasicVo;
 import cn.account.service.IAccountService;
-import cn.convenience.service.IConvenienceService;
 import cn.file.service.IFileService;
 import cn.message.model.wechat.TemplateDataModel;
 import cn.message.service.IMobileMessageService;
@@ -69,9 +68,6 @@ public class AccountAction extends BaseAction {
     private IFileService fileService;
     
     @Autowired
-    @Qualifier("convenienceService")
-    private IConvenienceService convenienceService;
-    
 	@Qualifier("templateMessageService")
 	private ITemplateMessageService templateMessageService;
 
@@ -916,10 +912,15 @@ public class AccountAction extends BaseAction {
     			     	basebean.setData(modelMap);
     			     	
     			     	List<String> base64Imgs = new ArrayList<String>();
-    			     	base64Imgs.add(reportImgOne);
-    			     	base64Imgs.add(reportImgTwo);
-    			     	base64Imgs.add(reportImgThree);
-    			     	
+    			     	if(StringUtils.isNotBlank(reportImgOne)){
+    			     		base64Imgs.add(reportImgOne);
+    			     	}
+    			     	if(StringUtils.isNotBlank(reportImgTwo)){
+    			     		base64Imgs.add(reportImgTwo);
+    			     	}
+    			     	if(StringUtils.isNotBlank(reportImgThree)){
+    			     		base64Imgs.add(reportImgThree);
+    			     	}
     			     	List<String> imgs = new ArrayList<String>();
     			     	try {
     			     		imgs = fileService.writeImgReadilyShoot(reportSerialNumber, base64Imgs);
@@ -934,6 +935,7 @@ public class AccountAction extends BaseAction {
     					readilyShoot.setIllegalSections(illegalSections);
     					readilyShoot.setReportSerialNumber(reportSerialNumber);
     					readilyShoot.setPassword(password);
+    					readilyShoot.setSituationStatement(illegalActivitieOne);
     					
     					if(null != imgs && imgs.size() > 0){
     						for(int i = 0; i< imgs.size(); i++){
@@ -950,17 +952,22 @@ public class AccountAction extends BaseAction {
     				    	}
     					}
     					int count = accountService.saveReadilyShoot(readilyShoot);
-    					if(1 == count){
-    						 //举报成功发送模板消息
-        					String templateId = "pFy7gcEYSklRmg32165BUBwM3PFbUbBSLe0IPw3ZuY4";
+    					logger.info("saveReadilyShoot返回值：" + count);
+						 //举报成功发送模板消息
+    					try {
+    						String templateId = "pFy7gcEYSklRmg32165BUBwM3PFbUbBSLe0IPw3ZuY4";
         					String url = "http://szjj.u-road.com/h5/#/takePicturesSuccess1?reportSerialNumber=" + reportSerialNumber + "&password=" + password;
     						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
     						map.put("first", new TemplateDataModel().new Property("随手拍举报通知","#212121"));
     						map.put("keyword1", new TemplateDataModel().new Property(reportSerialNumber,"#212121"));
     						map.put("keyword2", new TemplateDataModel().new Property(password,"#212121"));
     						map.put("remark", new TemplateDataModel().new Property("举报状态：已记录\r\n您已完成本次举报流程，可通过深圳交警微信公众平台【交警互动】板块《举报信息查询》栏目输入您的记录号与查询密码进行查询，感谢您使用深圳交警微信公众平台。", "#212121"));
-    						templateMessageService.sendMessage(openId, templateId, url, map);
-    					}
+    						boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
+    						logger.info("发送模板消息结果：" + flag);
+						} catch (Exception e) {
+							logger.error("发送模板消息  失败===", e);
+						}
+    					
     				}
     		    	basebean.setCode(code);
     		    	basebean.setMsg(json.getString("msg"));
@@ -972,12 +979,11 @@ public class AccountAction extends BaseAction {
     		DealException(basebean, e);
     		logger.error("readilyShoot出错",e);
 		}
-    	try {
+    	/*try {
     		sendReadilyShootVoDataToPhp(readilyShoot,readilyShootVo);
 		} catch (Exception e) {
 			logger.error("随手拍发送数据给php系统 错误", e);
-		}
-    	
+		}*/
     	renderJSON(basebean);
     	logger.debug(JSON.toJSONString(basebean));
     
