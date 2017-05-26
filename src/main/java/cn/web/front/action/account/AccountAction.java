@@ -29,6 +29,7 @@ import cn.account.bean.ElectronicPolicyBean;
 import cn.account.bean.ReadilyShoot;
 import cn.account.bean.UserBind;
 import cn.account.bean.vo.BindCarVo;
+import cn.account.bean.vo.BindDriverLicenseVo;
 import cn.account.bean.vo.LoginReturnBeanVo;
 import cn.account.bean.vo.ReadilyShootVo;
 import cn.account.bean.vo.UserBasicVo;
@@ -968,6 +969,12 @@ public class AccountAction extends BaseAction {
 							logger.error("发送模板消息  失败===", e);
 						}
     					
+
+    					readilyShoot.setIllegalImg1(reportImgOne);
+    					readilyShoot.setIllegalImg2(reportImgTwo);
+    					readilyShoot.setIllegalImg3(reportImgThree);
+    					readilyShoot.setSituationStatement(illegalActivitieOne);
+    					accountService.saveReadilyShoot(readilyShoot);
     				}
     		    	basebean.setCode(code);
     		    	basebean.setMsg(json.getString("msg"));
@@ -1228,4 +1235,129 @@ public class AccountAction extends BaseAction {
    		logger.debug(JSON.toJSONString(baseBean));
    	}
     
+
+    
+    /**
+     * 
+     * @Title: getAllResourcesAbsoluteUrl 
+     * @author jiangjiayi
+     * @Description: TODO(加载所有资源绝对路径url) 
+     * @param 无
+     * @throws Exception    
+     * @return void    返回类型 
+     */
+    @RequestMapping(value = "getAllResourcesAbsoluteUrl")
+    public void getAllResourcesAbsoluteUrl(){
+    	BaseBean baseBean = new BaseBean();
+    	
+    	
+    	
+    	
+    	List list = null;
+    	try {
+			list = convenienceService.getAllResourcesAbsoluteUrl();
+			baseBean.setCode(MsgCode.success);
+			baseBean.setMsg("");
+			baseBean.setData(list);
+		} catch (Exception e) {
+			logger.error("getAllResourcesAbsoluteUrl 错误", e);
+   			DealException(baseBean, e);
+		}
+    	renderJSON(baseBean);
+   		logger.debug(JSON.toJSONString(baseBean));
+    }
+    
+    /**
+     * 驾驶证绑定
+     * @Title: bindDriverLicense 
+     * @author wufan
+     * @Description: TODO(星级用户-驾驶证绑定) 
+     * @param loginName 登录账户
+     * @param intype
+     * @param userSource 用户来源（A app C微信 Z支付宝  E邮政 W外网星火）
+     * @param identityCard 我的身份证
+     * @param driverLicenseIssuedAddress 驾驶证核发地（1-本地、2-本省外市、3-外省）
+     * @param name 姓名
+     * @param sourceOfCertification 认证来源(A app C微信 Z支付宝  E邮政 W外网星火)
+     * @param http://192.168.1.243:8080/web/user/bindDriverLicense.html?loginName=440301199002101119&intype=0&userSource=C&identityCard=440301199002101119&driverLicenseIssuedAddress=1&name=杨明畅&sourceOfCertification=C
+     * @return void    返回类型 
+     */
+    @RequestMapping(value = "bindDriverLicense")
+    public void bindDriverLicense(String loginName,String intype,String userSource,String identityCard,String driverLicenseIssuedAddress,String name,String sourceOfCertification) {
+    	String code=MsgCode.success;
+ 		StringBuffer sb = new StringBuffer("");
+    	BindDriverLicenseVo bindDriverLicenseVo = new BindDriverLicenseVo();
+    	if(StringUtil.isBlank(loginName)){
+    		bindDriverLicenseVo.setLoginName("");
+    	}else{
+    		bindDriverLicenseVo.setLoginName(loginName);
+    	}
+    		
+    	if (StringUtil.isBlank(userSource)) {
+			bindDriverLicenseVo.setUserSource("");
+		}else{
+			bindDriverLicenseVo.setUserSource(userSource);
+		}
+    	
+    	if (StringUtil.isBlank(identityCard)) {
+			code = MsgCode.paramsError;
+			sb.append("身份证为空");
+		}else{
+			bindDriverLicenseVo.setIdentityCard(identityCard);
+		}
+    	
+    	if (StringUtil.isBlank(driverLicenseIssuedAddress)) {
+			code = MsgCode.paramsError;
+			sb.append("驾驶证核发地为空");
+		}else{
+			bindDriverLicenseVo.setDriverLicenseIssuedAddress(driverLicenseIssuedAddress);
+		}
+    	
+    	if (StringUtil.isBlank(name)) {
+			code = MsgCode.paramsError;
+			sb.append("姓名为空");
+		}else{
+			bindDriverLicenseVo.setName(name);
+		}
+    	
+    	if (StringUtil.isBlank(sourceOfCertification)) {
+			bindDriverLicenseVo.setSourceOfCertification("");
+		}else{
+			bindDriverLicenseVo.setSourceOfCertification(sourceOfCertification);
+		}
+       	BaseBean basebean = new  BaseBean();
+    	try {
+    		 if(MsgCode.success.equals(code)){//参数校验通过
+    			 JSONObject json = accountService.bindDriverLicense(bindDriverLicenseVo);
+    				code =json.getString("CODE");
+    				if(!MsgCode.success.equals(code)){
+    					code=MsgCode.businessError;
+    				}else{
+    					Map<String, Object> modelMap = new HashMap<String, Object>();
+    					String msg=json.getString("msg");
+    					String recordNumber = msg.substring(5, 24);
+    					String queryPassword = json.getString("cxyzm");
+    			     	modelMap.put("recordNumber", recordNumber);
+    			     	modelMap.put("queryPassword", queryPassword);
+    			     	basebean.setData(modelMap);
+    				}
+    		    	basebean.setCode(code);
+    		    	basebean.setMsg(json.getString("MSG"));
+    		 }else{
+    			 basebean.setCode(code);
+    			 basebean.setMsg(sb.toString());
+    		 }
+			
+    	
+    	} catch (Exception e) {
+    		DealException(basebean, e);
+    		logger.error("bindDriverLicense出错",e);
+		}
+    
+    	renderJSON(basebean);
+    	logger.debug(JSON.toJSONString(basebean));
+    
+    }
+    
+
 }
