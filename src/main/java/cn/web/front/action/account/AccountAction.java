@@ -271,6 +271,57 @@ public class AccountAction extends BaseAction {
     	logger.debug(JSON.toJSONString(baseBean));
     }
     /**
+     * 支付宝生活号 登录接口
+     * http://localhost:8080/web/user/alipayLogin.html?loginName=18603017278&openId=000000xxx&sourceOfCertification=Z
+     * @param sourceOfCertification 认证来源 支付宝Z
+     * @param loginName 手机号/身份证
+     * @param openId 支付宝id
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(value="alipayLogin")
+    public void alipayLogin(String sourceOfCertification,String loginName,String openId,HttpServletRequest request,HttpServletResponse response) throws Exception{
+    	BaseBean baseBean = new BaseBean();
+    	try {
+        	if(StringUtils.isBlank(loginName)){
+        		baseBean.setMsg("loginName 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+        	if(StringUtils.isBlank(openId)){
+        		baseBean.setMsg("openId 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+        	if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+        	LoginReturnBeanVo loginReturnBeanVo = accountService.alipayLogin(loginName,sourceOfCertification,openId);
+        	if(null != loginReturnBeanVo && MsgCode.success.equals(loginReturnBeanVo.getCode())){
+        		baseBean.setCode(MsgCode.success);
+            	baseBean.setMsg("");
+            	baseBean.setData(loginReturnBeanVo);
+        	}else{
+        		baseBean.setCode(MsgCode.businessError);
+            	baseBean.setMsg(loginReturnBeanVo.getMsg());
+            	baseBean.setData("");
+        	}
+        	renderJSON(baseBean);
+		} catch (Exception e) {
+			DealException(baseBean, e);
+        	logger.error("login 错误", e);
+		}
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
+    }
+    
+    /**
      * 发送短信验证码
      * @param mobilephone 用户手机号
      * @param request
@@ -1246,7 +1297,7 @@ public class AccountAction extends BaseAction {
      * @throws Exception    
      * @return void    返回类型 
      */
-    @RequestMapping(value = "getAllResourcesAbsoluteUrl")
+   /* @RequestMapping(value = "getAllResourcesAbsoluteUrl")
     public void getAllResourcesAbsoluteUrl(){
     	BaseBean baseBean = new BaseBean();
     	
@@ -1265,7 +1316,7 @@ public class AccountAction extends BaseAction {
 		}
     	renderJSON(baseBean);
    		logger.debug(JSON.toJSONString(baseBean));
-    }
+    }*/
     
     /**
      * 驾驶证绑定
@@ -1279,7 +1330,7 @@ public class AccountAction extends BaseAction {
      * @param driverLicenseIssuedAddress 驾驶证核发地（1-本地、2-本省外市、3-外省）
      * @param name 姓名
      * @param sourceOfCertification 认证来源(A app C微信 Z支付宝  E邮政 W外网星火)
-     * @param http://192.168.1.243:8080/web/user/bindDriverLicense.html?loginName=440301199002101119&intype=0&userSource=C&identityCard=440301199002101119&driverLicenseIssuedAddress=1&name=杨明畅&sourceOfCertification=C
+     * @param http://localhost/web/user/bindDriverLicense.html?loginName=440301199002101119&intype=0&userSource=C&identityCard=440301199002101119&driverLicenseIssuedAddress=1&name=杨明畅&sourceOfCertification=C
      * @return void    返回类型 
      */
     @RequestMapping(value = "bindDriverLicense")
@@ -1292,34 +1343,29 @@ public class AccountAction extends BaseAction {
     	}else{
     		bindDriverLicenseVo.setLoginName(loginName);
     	}
-    		
     	if (StringUtil.isBlank(userSource)) {
 			bindDriverLicenseVo.setUserSource("");
 		}else{
 			bindDriverLicenseVo.setUserSource(userSource);
 		}
-    	
     	if (StringUtil.isBlank(identityCard)) {
 			code = MsgCode.paramsError;
 			sb.append("身份证为空");
 		}else{
 			bindDriverLicenseVo.setIdentityCard(identityCard);
 		}
-    	
     	if (StringUtil.isBlank(driverLicenseIssuedAddress)) {
 			code = MsgCode.paramsError;
 			sb.append("驾驶证核发地为空");
 		}else{
 			bindDriverLicenseVo.setDriverLicenseIssuedAddress(driverLicenseIssuedAddress);
 		}
-    	
     	if (StringUtil.isBlank(name)) {
 			code = MsgCode.paramsError;
 			sb.append("姓名为空");
 		}else{
 			bindDriverLicenseVo.setName(name);
 		}
-    	
     	if (StringUtil.isBlank(sourceOfCertification)) {
 			bindDriverLicenseVo.setSourceOfCertification("");
 		}else{
@@ -1328,17 +1374,19 @@ public class AccountAction extends BaseAction {
        	BaseBean basebean = new  BaseBean();
     	try {
     		 if(MsgCode.success.equals(code)){//参数校验通过
-    			 JSONObject json = accountService.bindDriverLicense(bindDriverLicenseVo);
-    				code =json.getString("CODE");
+    			 	JSONObject json = accountService.bindDriverLicense(bindDriverLicenseVo);
+    			 	logger.info("绑返回数据是：" + json);
+    				
+    			 	code =json.getString("CODE");
     				if(!MsgCode.success.equals(code)){
     					code=MsgCode.businessError;
     				}else{
+    					//绑定成功处理
     					Map<String, Object> modelMap = new HashMap<String, Object>();
-    					String msg=json.getString("msg");
-    					String recordNumber = msg.substring(5, 24);
-    					String queryPassword = json.getString("cxyzm");
-    			     	modelMap.put("recordNumber", recordNumber);
-    			     	modelMap.put("queryPassword", queryPassword);
+    					String msg=json.getString("MSG");
+    					JSONObject  jsonObject = json.getJSONObject("BODY");
+    					String cId = jsonObject.getString("CID");
+    			     	modelMap.put("recordNumber", cId);
     			     	basebean.setData(modelMap);
     				}
     		    	basebean.setCode(code);
@@ -1347,17 +1395,11 @@ public class AccountAction extends BaseAction {
     			 basebean.setCode(code);
     			 basebean.setMsg(sb.toString());
     		 }
-			
-    	
     	} catch (Exception e) {
     		DealException(basebean, e);
     		logger.error("bindDriverLicense出错",e);
 		}
-    
     	renderJSON(basebean);
     	logger.debug(JSON.toJSONString(basebean));
-    
     }
-    
-
 }

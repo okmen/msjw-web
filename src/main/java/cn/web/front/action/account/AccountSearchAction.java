@@ -11,10 +11,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 
+import cn.account.bean.DrivingLicense;
 import cn.account.bean.ResultOfReadilyShoot;
 import cn.account.bean.vo.AuthenticationBasicInformationVo;
 import cn.account.bean.vo.BindTheVehicleVo;
@@ -29,7 +32,6 @@ import cn.account.service.IAccountService;
 import cn.illegal.bean.IllegalInfoBean;
 import cn.illegal.service.IIllegalService;
 import cn.sdk.bean.BaseBean;
-import cn.sdk.exception.WebServiceException;
 import cn.sdk.util.MsgCode;
 import cn.web.front.support.BaseAction;
 /**
@@ -286,6 +288,87 @@ public class AccountSearchAction extends BaseAction {
     	logger.debug(JSON.toJSONString(baseBean));
     }
 	
+    
+    /**
+     * 查询电子行驶证多个
+     * @param businessType
+     * @param businessStatus
+     * @param identityCard
+     * @param request
+     * @param response
+	 * @throws Exception
+	 * getDrivingLicense
+	 * url
+	 * http://localhost:8080/web/user/search/getDrivingLicenseToMore.html?drivingLicensesStr="[{"mobileNumber":"2222222","numberPlatenumber":"粤Bffff"},{"mobileNumber":"3333333"}]";
+	 * 
+	 * 
+     */
+    @RequestMapping(value="getDrivingLicenseToMore")
+    public void getDrivingLicenseToMore(@RequestBody List<DrivingLicense> drivingLicenses,HttpServletRequest request,HttpServletResponse response) throws Exception{
+    	BaseBean baseBean = new BaseBean();
+    	//List<DrivingLicense> drivingLicenses = (List<DrivingLicense>) JSONArray.parseObject(drivingLicensesStr, DrivingLicense.class);
+    	try {
+    		List<DrivingLicenseVo> drivingLicenseVos = new ArrayList<DrivingLicenseVo>();
+    		for(DrivingLicense drivingLicense : drivingLicenses){
+    			if(StringUtils.isBlank(drivingLicense.getNumberPlatenumber())){
+            		baseBean.setMsg("numberPlatenumber 不能为空!");
+            		baseBean.setCode(MsgCode.businessError);
+            		renderJSON(baseBean);
+            		return;
+            	}
+        		if(StringUtils.isBlank(drivingLicense.getPlateType())){
+            		baseBean.setMsg("plateType 不能为空!");
+            		baseBean.setCode(MsgCode.businessError);
+            		renderJSON(baseBean);
+            		return;
+            	}
+        		if(StringUtils.isBlank(drivingLicense.getMobileNumber())){
+            		baseBean.setMsg("mobileNumber 不能为空!");
+            		baseBean.setCode(MsgCode.businessError);
+            		renderJSON(baseBean);
+            		return;
+            	}
+        		if(StringUtils.isBlank(drivingLicense.getSourceOfCertification())){
+            		baseBean.setMsg("sourceOfCertification 不能为空!");
+            		baseBean.setCode(MsgCode.businessError);
+            		renderJSON(baseBean);
+            		return;
+            	}
+        		
+        		DrivingLicenseVo drivingLicenseVo = accountService.getDrivingLicense(drivingLicense.getNumberPlatenumber(), drivingLicense.getPlateType(), drivingLicense.getMobileNumber(), drivingLicense.getSourceOfCertification());
+        		drivingLicenseVos.add(drivingLicenseVo);
+    		}
+    		baseBean.setCode(MsgCode.success);
+        	baseBean.setMsg("");
+        	
+        	if(drivingLicenseVos.size() == 0){
+        		baseBean.setMsg("未查询到该用户的星级用户身份认证信息");
+        	}
+        	baseBean.setData(drivingLicenseVos);
+        	renderJSON(baseBean);
+		} catch (Exception e) {
+			DealException(baseBean, e);
+        	logger.error("getDrivingLicense 错误!", e);
+		}
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
+    }
+    
+    
+    public static void main(String[] args) {
+    	List<DrivingLicense> drivingLicenses = new ArrayList<DrivingLicense>();
+    	DrivingLicense drivingLicense1 = new DrivingLicense();
+    	drivingLicense1.setMobileNumber("2222222");
+    	drivingLicense1.setNumberPlatenumber("粤Bsaaa");
+    	
+    	DrivingLicense drivingLicense2 = new DrivingLicense();
+    	drivingLicense2.setMobileNumber("3333333");
+    	drivingLicense1.setNumberPlatenumber("粤Bffff");
+    	
+    	drivingLicenses.add(drivingLicense1);
+    	drivingLicenses.add(drivingLicense2);
+    	System.out.println(JSON.toJSONString(drivingLicenses));
+	}
 	/**
      * 我的驾驶证
      * @param businessType
