@@ -139,22 +139,13 @@ public class IllegalAction extends BaseAction {
 			   base.setMsg("licensePlateType不能为空！");
 			   renderJSON(base);
 		   }
-
-		   if(StringUtil.isEmpty(identityCard)){
-			   base.setCode("0001");
-			   base.setMsg("identityCard不能为空！");
-			   renderJSON(base);
-		   }
+		   
 		   if(StringUtil.isEmpty(sourceOfCertification)){
 			   base.setCode("0001");
 			   base.setMsg("sourceOfCertification不能为空！");
 			   renderJSON(base);
 		   }
-		   if(StringUtil.isEmpty(mobilephone)){
-			   base.setCode("0001");
-			   base.setMsg("mobilephone不能为空！");
-			   renderJSON(base);
-		   }
+		   
 		   if(StringUtil.isEmpty(openId)){
 			   base.setCode("0001");
 			   base.setMsg("未获取到openId！");
@@ -163,6 +154,14 @@ public class IllegalAction extends BaseAction {
    
 		   //判断客户是否已同步
 		   String isReg=illegalService.isRegisterUser(openId);
+		   
+		   if(StringUtil.isEmpty(identityCard)){
+			   isReg="1";
+		   }
+		   if(StringUtil.isEmpty(mobilephone)){
+			   isReg="1";
+		   }
+		   
 		   //未同步
 		   if("0".equals(isReg)){
 			   CustInfoBean cust=new CustInfoBean();
@@ -226,28 +225,27 @@ public class IllegalAction extends BaseAction {
 			   base.setMsg("recordNo不能为空！");
 			   renderJSON(base);
 		   }
-		   if(StringUtil.isEmpty(identityCard)){
-			   base.setCode("0001");
-			   base.setMsg("identityCard不能为空！");
-			   renderJSON(base);
-		   }
+
 		   if(StringUtil.isEmpty(sourceOfCertification)){
 			   base.setCode("0001");
 			   base.setMsg("sourceOfCertification不能为空！");
 			   renderJSON(base);
 		   }
-		   if(StringUtil.isEmpty(mobilephone)){
-			   base.setCode("0001");
-			   base.setMsg("mobilephone不能为空！");
-			   renderJSON(base);
-		   }
+	
 		   if(StringUtil.isEmpty(openId)){
 			   base.setCode("0001");
 			   base.setMsg("未获取到openId！");
 			   renderJSON(base);
 		   }
-		   //判断客户是否已同步
+		 //判断客户是否已同步
 		   String isReg=illegalService.isRegisterUser(openId);
+		   
+		   if(StringUtil.isEmpty(identityCard)){
+			   isReg="1";
+		   }
+		   if(StringUtil.isEmpty(mobilephone)){
+			   isReg="1";
+		   }
 		   //未同步
 		   if("0".equals(isReg)){
 			   CustInfoBean cust=new CustInfoBean();
@@ -363,28 +361,27 @@ public class IllegalAction extends BaseAction {
 			   base.setMsg("车牌类型不能为空！");
 			   renderJSON(base);
 		   }
-		   if(StringUtil.isEmpty(identityCard)){
-			   base.setCode("0001");
-			   base.setMsg("身份证不能为空！");
-			   renderJSON(base);
-		   }
+
 		   if(StringUtil.isEmpty(sourceOfCertification)){
 			   base.setCode("0001");
 			   base.setMsg("来源方式不能为空！");
 			   renderJSON(base);
 		   }
-		   if(StringUtil.isEmpty(mobilephone)){
-			   base.setCode("0001");
-			   base.setMsg("手机号码不能为空！");
-			   renderJSON(base);
-		   }
+	
 		   if(StringUtil.isEmpty(openId)){
 			   base.setCode("0001");
 			   base.setMsg("未获取到openId！");
 			   renderJSON(base);
 		   }
-		 //判断客户是否已同步
+		   //判断客户是否已同步
 		   String isReg=illegalService.isRegisterUser(openId);
+		   
+		   if(StringUtil.isEmpty(identityCard)){
+			   isReg="1";
+		   }
+		   if(StringUtil.isEmpty(mobilephone)){
+			   isReg="1";
+		   }
 		   //未同步
 		   if("0".equals(isReg)){
 			   CustInfoBean cust=new CustInfoBean();
