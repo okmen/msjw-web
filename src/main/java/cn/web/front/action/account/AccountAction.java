@@ -1021,11 +1021,11 @@ public class AccountAction extends BaseAction {
 						}
     					
 
-    					readilyShoot.setIllegalImg1(reportImgOne);
-    					readilyShoot.setIllegalImg2(reportImgTwo);
-    					readilyShoot.setIllegalImg3(reportImgThree);
+    					/*readilyShoot.setIllegalImg1(readilyShoot.getIllegalImg1());
+    					readilyShoot.setIllegalImg2(readilyShoot.getIllegalImg2());
+    					readilyShoot.setIllegalImg3(readilyShoot.getIllegalImg3());
     					readilyShoot.setSituationStatement(illegalActivitieOne);
-    					accountService.saveReadilyShoot(readilyShoot);
+    					accountService.saveReadilyShoot(readilyShoot);*/
     				}
     		    	basebean.setCode(code);
     		    	basebean.setMsg(json.getString("msg"));
@@ -1388,6 +1388,7 @@ public class AccountAction extends BaseAction {
     					String cId = jsonObject.getString("CID");
     			     	modelMap.put("recordNumber", cId);
     			     	basebean.setData(modelMap);
+    			     	basebean.setCode(code);
     				}
     		    	basebean.setCode(code);
     		    	basebean.setMsg(json.getString("MSG"));

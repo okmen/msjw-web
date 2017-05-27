@@ -96,10 +96,10 @@
 				<env>dev</env>
 				<publish.version>1.0.0</publish.version>
 				<dubbo.registry.url><![CDATA[192.168.1.120:2181]]></dubbo.registry.url>
-				<dubbo.consumer.timeout><![CDATA[30000]]></dubbo.consumer.timeout>
-				<dubbo.consumer.convenience.timeout><![CDATA[60000]]></dubbo.consumer.convenience.timeout>
-				<dubbo.consumer.account.timeout><![CDATA[60000]]></dubbo.consumer.account.timeout>
-				<dubbo.consumer.payment.timeout><![CDATA[15000]]></dubbo.consumer.payment.timeout>
+				<dubbo.consumer.timeout><![CDATA[20000]]></dubbo.consumer.timeout>
+				<dubbo.consumer.convenience.timeout><![CDATA[20000]]></dubbo.consumer.convenience.timeout>
+				<dubbo.consumer.account.timeout><![CDATA[20000]]></dubbo.consumer.account.timeout>
+				<dubbo.consumer.payment.timeout><![CDATA[20000]]></dubbo.consumer.payment.timeout>
 				<dubbo.consumer.retries><![CDATA[0]]></dubbo.consumer.retries>
 				<cn.services.version>1.0.0-SNAPSHOT</cn.services.version>
 				<common.sdk.version>1.0.0-SNAPSHOT</common.sdk.version>
@@ -142,10 +142,10 @@
 				<env>online</env>
 				<publish.version>1.0.0</publish.version>
 				<dubbo.registry.url><![CDATA[zookeeper.szjj.me:2181]]></dubbo.registry.url>
-				<dubbo.consumer.timeout><![CDATA[30000]]></dubbo.consumer.timeout>
-				<dubbo.consumer.convenience.timeout><![CDATA[60000]]></dubbo.consumer.convenience.timeout>
-				<dubbo.consumer.account.timeout><![CDATA[60000]]></dubbo.consumer.account.timeout>
-				<dubbo.consumer.payment.timeout><![CDATA[15000]]></dubbo.consumer.payment.timeout>
+				<dubbo.consumer.timeout><![CDATA[20000]]></dubbo.consumer.timeout>
+				<dubbo.consumer.convenience.timeout><![CDATA[20000]]></dubbo.consumer.convenience.timeout>
+				<dubbo.consumer.account.timeout><![CDATA[20000]]></dubbo.consumer.account.timeout>
+				<dubbo.consumer.payment.timeout><![CDATA[20000]]></dubbo.consumer.payment.timeout>
 				<dubbo.consumer.retries><![CDATA[0]]></dubbo.consumer.retries>
 				<cn.services.version>1.0.0</cn.services.version>
 				<common.sdk.version>1.0.0</common.sdk.version>

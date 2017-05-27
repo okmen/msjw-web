@@ -354,21 +354,6 @@ public class AccountSearchAction extends BaseAction {
     	logger.debug(JSON.toJSONString(baseBean));
     }
     
-    
-    public static void main(String[] args) {
-    	List<DrivingLicense> drivingLicenses = new ArrayList<DrivingLicense>();
-    	DrivingLicense drivingLicense1 = new DrivingLicense();
-    	drivingLicense1.setMobileNumber("2222222");
-    	drivingLicense1.setNumberPlatenumber("粤Bsaaa");
-    	
-    	DrivingLicense drivingLicense2 = new DrivingLicense();
-    	drivingLicense2.setMobileNumber("3333333");
-    	drivingLicense1.setNumberPlatenumber("粤Bffff");
-    	
-    	drivingLicenses.add(drivingLicense1);
-    	drivingLicenses.add(drivingLicense2);
-    	System.out.println(JSON.toJSONString(drivingLicenses));
-	}
 	/**
      * 我的驾驶证
      * @param businessType
@@ -533,6 +518,7 @@ public class AccountSearchAction extends BaseAction {
            		renderJSON(baseBean);
            		return;
            	}
+       		reportSerialNumber = reportSerialNumber.toUpperCase();
        		if(null == password){
            		baseBean.setMsg("password 不能为空!");
            		baseBean.setCode(MsgCode.paramsError);
