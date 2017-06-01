@@ -440,7 +440,7 @@ public class IllegalAction extends BaseAction {
 				   claim.setIllegalTime(bean.getIllegalTime());
 				   claim.setIllegalDesc(bean.getIllegalDesc());
 				   claim.setDealType(bean.getIsNeedClaim());
-				   claim.setPunishAmt(bean.getPunishAmt());
+				   claim.setPunishAmt(bean.getPunishAmt()*100);
 				   claim.setLicensePlateNo(bean.getLicensePlateNo());
 				   claim.setLicensePlateType(bean.getLicensePlateType());
 				   claim.setPunishScore(bean.getPunishScore());
