@@ -1429,4 +1429,115 @@ public class AccountAction extends BaseAction {
     	renderJSON(basebean);
     	logger.debug(JSON.toJSONString(basebean));
     }
+    
+    /**
+	 * 提交无车证明申请
+	 * @Description: TODO(提交无车证明申请) 
+	 * @param applyType 申请类型
+	 * @param applyName 姓名
+	 * @param identityCard 身份证号
+	 * @param applyPhone 联系电话
+	 * @param sourceOfCertification 来源方式
+	 * @return
+	 */
+    @RequestMapping("addNoneCarCertification")
+    public void addNoneCarCertification(String applyType, String applyName, String identityCard, String applyPhone, String sourceOfCertification){
+    	BaseBean baseBean = new BaseBean();		//创建返回结果
+		
+		try {
+			if(StringUtil.isBlank(applyType) || !"3".equals(applyType)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("申请类型输入有误!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(applyName)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("姓名不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(identityCard)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("身份证号不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(applyPhone)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("联系电话不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(sourceOfCertification)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("来源方式不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			baseBean = accountService.addNoneCarCertification(applyType, applyName, identityCard, applyPhone, sourceOfCertification);
+		} catch (Exception e) {
+			logger.error("提交无车证明申请Action异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+    }
+    
+    
+    /**
+     * 提交驾驶人安全事故信用表申请
+     * @Description: TODO(提交驾驶人安全事故信用表申请)
+     * @param applyType 申请类型
+	 * @param applyName 姓名
+	 * @param identityCard 身份证号
+	 * @param applyPhone 联系电话
+	 * @param sourceOfCertification 来源方式
+     */
+    @RequestMapping("addSafeAccidentCredit")
+    public void addSafeAccidentCredit(String applyType, String applyName, String identityCard, String applyPhone, String sourceOfCertification){
+    	BaseBean baseBean = new BaseBean();		//创建返回结果
+		
+		try {
+			if(StringUtil.isBlank(applyType) || !"4".equals(applyType)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("申请类型输入有误!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(applyName)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("姓名不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(identityCard)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("身份证号不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(applyPhone)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("联系电话不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(sourceOfCertification)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("来源方式不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			baseBean = accountService.addSafeAccidentCredit(applyType, applyName, identityCard, applyPhone, sourceOfCertification);
+		} catch (Exception e) {
+			logger.error("提交驾驶人安全事故信用表申请Action异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+    }
+    
 }
