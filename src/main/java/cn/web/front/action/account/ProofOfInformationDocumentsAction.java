@@ -341,6 +341,139 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
     }
     
 	
+    
+    /**
+	 * 提交机动车信息单打印申请
+	  *@param applyType 申请类型（1代表驾驶人信息单；2代表机动车信息单 3代表无车证明申请；4代表驾驶人安全事故信用表）
+	 * @param userName 申请人姓名（必须是星级用户姓名）
+	 * @param idnetityCard 申请人身份证号码（必须是星级用户身份证号码）
+	 * @param mobilephone 申请人联系电话（必须是星级用户联系电话）
+	 * @param licensePlateNumber 号牌号码 
+     * @param plateType 号牌种类 例如 02-蓝牌
+     * @param sourceOfCertification 申请来源（APP 传A，微信传C，支付宝传Z）
+	 * @param request
+	 * @param response
+	 * @throws Exception 
+	 * http://localhost:8080/web/user/proofOfInformationDocuments/submitApplicationForMotorVehicleInformation.html?applyName=张宇帆&identityCard=445222199209020034&applyPhone=15920050177&licensePlateNumber=粤B6A42E&plateType=02&sourceOfCertification=C
+	 */
+    @RequestMapping(value="submitApplicationForMotorVehicleInformation")
+    public void submitApplicationForMotorVehicleInformation(String applyName,String identityCard,String applyPhone,
+    		String licensePlateNumber,String plateType,String sourceOfCertification,HttpServletRequest request,HttpServletResponse response) throws Exception{
+    	BaseBean baseBean = new BaseBean();
+    	try {
+    		if(StringUtils.isBlank(applyName)){
+        		baseBean.setMsg("applyName 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(identityCard)){
+        		baseBean.setMsg("identityCard 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(applyPhone)){
+        		baseBean.setMsg("applyPhone 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			
+			if(StringUtils.isBlank(licensePlateNumber)){
+        		baseBean.setMsg("licensePlateNumber 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(plateType)){
+        		baseBean.setMsg("plateType 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			
+			if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			baseBean.setData("");
+	    	String applyType = "2";
+    		Map<String, String> map = accountService.submitApplicationForMotorVehicleInformation(applyType,applyName, identityCard, applyPhone,licensePlateNumber,plateType, sourceOfCertification);
+        	if(null != map){
+        		String code = map.get("code");
+        		String msg = map.get("msg");
+        		baseBean.setCode(code);
+            	baseBean.setMsg(msg);
+        	}
+		} catch (Exception e) {
+			DealException(baseBean, e);
+			logger.error("submitApplicationForMotorVehicleInformation 错误", e);
+		}
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
+    }
+    
+    
+    /**
+	 * 提交驾驶人信息单打印申请
+	  *@param applyType 申请类型（1代表驾驶人信息单；2代表机动车信息单 3代表无车证明申请；4代表驾驶人安全事故信用表）
+	 * @param userName 申请人姓名（必须是星级用户姓名）
+	 * @param idnetityCard 申请人身份证号码（必须是星级用户身份证号码）
+	 * @param mobilephone 申请人联系电话（必须是星级用户联系电话）
+	 * @param sourceOfCertification 申请来源（APP 传A，微信传C，支付宝传Z）
+	 * @param request
+	 * @param response
+	 * @throws Exception 
+	 * http://localhost:8080/web/user/proofOfInformationDocuments/submitApplicationForDriverInformation.html?applyName=张宇帆&identityCard=445222199209020034&applyPhone=15920050177&sourceOfCertification=C
+	 */
+    @RequestMapping(value="submitApplicationForDriverInformation")
+    public void submitApplicationForDriverInformation(String applyName,String identityCard,String applyPhone,
+    		String sourceOfCertification,HttpServletRequest request,HttpServletResponse response) throws Exception{
+    	BaseBean baseBean = new BaseBean();
+    	try {
+    		if(StringUtils.isBlank(applyName)){
+        		baseBean.setMsg("applyName 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(identityCard)){
+        		baseBean.setMsg("identityCard 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(applyPhone)){
+        		baseBean.setMsg("applyPhone 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			baseBean.setData("");
+	    	String applyType = "1";
+    		Map<String, String> map = accountService.submitApplicationForDriverInformation(applyType,applyName, identityCard, applyPhone, sourceOfCertification);
+        	if(null != map){
+        		String code = map.get("code");
+        		String msg = map.get("msg");
+        		baseBean.setCode(code);
+            	baseBean.setMsg(msg);
+        	}
+		} catch (Exception e) {
+			DealException(baseBean, e);
+			logger.error("submitApplicationForDriverInformation 错误", e);
+		}
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
+    }
 	/**
 	 * 获取驾驶证信息单
 	 * @param identityCard
