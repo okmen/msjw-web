@@ -39,7 +39,9 @@
 		<constructor-arg value="${cn.choumei.env}"></constructor-arg>
 	</bean>
 
-	<bean id="sharedThreadPool" class="cn.sdk.thread.BilinThreadPool" />
+	<bean id="bilinThreadPool" class="cn.sdk.thread.BilinThreadPool" />
+	
+	<bean id="accountTaskExecute" class="cn.web.front.action.account.task.AccountTaskExecute" />
 
 	<!-- 支持上传文件 -->  
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> 

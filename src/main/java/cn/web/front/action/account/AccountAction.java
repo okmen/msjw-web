@@ -40,8 +40,11 @@ import cn.message.service.IMobileMessageService;
 import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.ResultCode;
+import cn.sdk.thread.BilinThreadPool;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
+import cn.web.front.action.account.task.AccountTask;
+import cn.web.front.action.account.task.AccountTaskExecute;
 import cn.web.front.action.wechat.util.HttpRequest;
 import cn.web.front.support.BaseAction;
 
@@ -71,6 +74,14 @@ public class AccountAction extends BaseAction {
     @Autowired
 	@Qualifier("templateMessageService")
 	private ITemplateMessageService templateMessageService;
+    
+    @Autowired
+	@Qualifier("bilinThreadPool")
+	private BilinThreadPool bilinThreadPool;
+    
+    @Autowired
+    @Qualifier("accountTaskExecute")
+    private AccountTaskExecute accountTaskExecute;
 
     @RequestMapping(value = "get-wechat-userInfo-by-id")
     public ModelAndView getWechatUserInfoById(HttpServletRequest request) {
@@ -104,6 +115,23 @@ public class AccountAction extends BaseAction {
     	PrintWriter out =  response.getWriter();
     	out.print(JSON.toJSONString(wechatUserInfo));
     }
+    
+    @RequestMapping("gziImgOld")
+    public void gziImgOld() throws Exception{
+    	BaseBean baseBean = new BaseBean();
+    	try {
+    		fileService.gziImgOld();
+    		baseBean.setCode(MsgCode.success);
+        	baseBean.setMsg("历史图片压缩成功");
+        	renderJSON(baseBean);
+		} catch (Exception e) {
+			DealException(baseBean, e);
+        	logger.error("gziImgOld 错误", e);
+		}
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
+    }
+    
     /**
      * 获取须知文档
      * @param noticeKey 须知文档key
@@ -272,7 +300,7 @@ public class AccountAction extends BaseAction {
     }
     /**
      * 支付宝生活号 登录接口
-     * http://localhost:8080/web/user/alipayLogin.html?loginName=18603017278&openId=000000xxx&sourceOfCertification=Z
+     * http://192.168.1.161/web/user/alipayLogin.html?loginName=18603017278&openId=000000xxx&sourceOfCertification=Z
      * @param sourceOfCertification 认证来源 支付宝Z
      * @param loginName 手机号/身份证
      * @param openId 支付宝id
@@ -282,6 +310,7 @@ public class AccountAction extends BaseAction {
      */
     @RequestMapping(value="alipayLogin")
     public void alipayLogin(String sourceOfCertification,String loginName,String openId,HttpServletRequest request,HttpServletResponse response) throws Exception{
+    	
     	BaseBean baseBean = new BaseBean();
     	try {
         	if(StringUtils.isBlank(loginName)){
@@ -309,7 +338,52 @@ public class AccountAction extends BaseAction {
             	baseBean.setData(loginReturnBeanVo);
         	}else{
         		baseBean.setCode(MsgCode.businessError);
-            	baseBean.setMsg(loginReturnBeanVo.getMsg());
+            	baseBean.setMsg("登录用户不存在");
+            	baseBean.setData("");
+        	}
+        	renderJSON(baseBean);
+		} catch (Exception e) {
+			DealException(baseBean, e);
+        	logger.error("login 错误", e);
+		}
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
+    }
+    
+    /**
+     * 
+     * http://192.168.1.163/web/user/getLoginInfoByLoginName.html?loginName=18603017278&sourceOfCertification=Z
+     * @param sourceOfCertification 认证来源 支付宝Z
+     * @param loginName 手机号/身份证
+     * @param openId 支付宝id
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(value="getLoginInfoByLoginName")
+    public void getLoginInfoByLoginName(String sourceOfCertification,String loginName,HttpServletRequest request,HttpServletResponse response) throws Exception{
+    	BaseBean baseBean = new BaseBean();
+    	try {
+        	if(StringUtils.isBlank(loginName)){
+        		baseBean.setMsg("loginName 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+        	if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+        	LoginReturnBeanVo loginReturnBeanVo = accountService.getLoginInfoByLoginName(loginName, sourceOfCertification);
+        	if(null != loginReturnBeanVo && MsgCode.success.equals(loginReturnBeanVo.getCode())){
+        		baseBean.setCode(MsgCode.success);
+            	baseBean.setMsg("");
+            	baseBean.setData(loginReturnBeanVo);
+        	}else{
+        		baseBean.setCode(MsgCode.businessError);
+            	baseBean.setMsg("登录用户不存在");
             	baseBean.setData("");
         	}
         	renderJSON(baseBean);
@@ -897,10 +971,6 @@ public class AccountAction extends BaseAction {
  			readilyShootVo.setInputMan(inputMan);
  		}
     	
-
- 		
-
-    	
     	if(StringUtil.isBlank(inputManName)){
  			code=MsgCode.paramsError;
  			sb.append("举报人姓名为空  ");
@@ -1019,13 +1089,6 @@ public class AccountAction extends BaseAction {
 						} catch (Exception e) {
 							logger.error("发送模板消息  失败===", e);
 						}
-    					
-
-    					/*readilyShoot.setIllegalImg1(readilyShoot.getIllegalImg1());
-    					readilyShoot.setIllegalImg2(readilyShoot.getIllegalImg2());
-    					readilyShoot.setIllegalImg3(readilyShoot.getIllegalImg3());
-    					readilyShoot.setSituationStatement(illegalActivitieOne);
-    					accountService.saveReadilyShoot(readilyShoot);*/
     				}
     		    	basebean.setCode(code);
     		    	basebean.setMsg(json.getString("msg"));
@@ -1037,11 +1100,13 @@ public class AccountAction extends BaseAction {
     		DealException(basebean, e);
     		logger.error("readilyShoot出错",e);
 		}
-    	/*try {
-    		sendReadilyShootVoDataToPhp(readilyShoot,readilyShootVo);
+    	try {
+    	 if (bilinThreadPool != null) {
+			bilinThreadPool.execute(new AccountTask(accountTaskExecute, readilyShoot, readilyShootVo));
+    	 }
 		} catch (Exception e) {
 			logger.error("随手拍发送数据给php系统 错误", e);
-		}*/
+		}
     	renderJSON(basebean);
     	logger.debug(JSON.toJSONString(basebean));
     
@@ -1057,46 +1122,7 @@ public class AccountAction extends BaseAction {
     	}
     	
 	}
-    /**
-     * 随手拍发送数据给php系统
-     */
-    private void sendReadilyShootVoDataToPhp(ReadilyShoot readilyShoot,ReadilyShootVo readilyShootVo){
-    	logger.info("readilyShoot=" + readilyShoot);
-    	logger.info("readilyShootVo=" + readilyShootVo);
-    	/*jbbh 举报成功后返回的编号
-    	wfsj 违法时间
-    	querypwd 返回的查询密码
-    	wfroad 违法路段
-    	hphm 号牌
-    	hpzl 号牌各类 为数字 
-    	wfname 违法行为名
-    	jbr 举报人
-    	fromopenid 举报人openid
-    	imagepath 图片路径
-    	token Chudao4Wfjj写死*/
-    	//jbbh=1234&wfsj=0&querypwd=123456&wfroad=test&hphm=ABCDE&hpzl=1&wfname=asd&=randy&fromopenid=test123456&imagepath=http://test&phone=123456789&token=Chudao4Wfjj
-    	StringBuffer sb = new StringBuffer();
-    	
-    	
-    	StringBuffer imagepath = new StringBuffer();
-    	imagepath.append(readilyShoot.getIllegalImg1()).append(",").append(readilyShoot.getIllegalImg2()).append(",").append(readilyShoot.getIllegalImg3());
-    	
-    	String url = "http://szjj.u-road.com/SZJJAPIServer/index.php?/report/reportfornew?";
-    	sb.append(url).append("jbbh=").append(readilyShoot.getReportSerialNumber()).append("&");
-    	sb.append("wfsj=").append(readilyShoot.getIllegalTime()).append("&");
-    	sb.append("querypwd=").append(readilyShoot.getPassword()).append("&");
-    	sb.append("wfroad=").append(readilyShoot.getIllegalSections()).append("&");
-    	sb.append("hphm=").append(readilyShootVo.getLicensePlateNumber()).append("&");
-    	sb.append("hpzl=").append(readilyShootVo.getLicensePlateType()).append("&");
-    	sb.append("wfname=").append(readilyShootVo.getIllegalActivitieOne()).append("&");
-    	sb.append("jbr=").append(readilyShootVo.getInputMan()).append("&");
-    	sb.append("fromopenid=").append(readilyShootVo.getOpenId()).append("&");
-    	sb.append("imagepath=").append(imagepath.toString()).append("&");
-    	sb.append("token=").append("Chudao4Wfjj").append("&");
-    	
-    	HttpRequest.sendGet(sb.toString());
-    }
-   
+    
     /**
      * 
      * @Title: getPositioningAddress 

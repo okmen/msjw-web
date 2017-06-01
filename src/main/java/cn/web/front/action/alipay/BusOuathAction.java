@@ -16,20 +16,23 @@ import cn.message.model.alipay.AlipayUserInfo;
 import cn.message.service.IAlipayService;
 import cn.web.front.action.alipay.util.ParamsUtil;
 import cn.web.front.support.BaseAction;
-
+/**
+ * 支付宝商户应用授权
+ * @author Mbenben
+ *
+ */
 @Controller
-@RequestMapping(value = "/oauthAlipay")
+@RequestMapping(value = "/busOuathAlipay")
 @SuppressWarnings(value = "all")
-public class OuathAction extends BaseAction {
-	Logger logger = Logger.getLogger(OuathAction.class);
+public class BusOuathAction extends BaseAction {
+Logger logger = Logger.getLogger(OuathAction.class);
 	
 	@Autowired
 	@Qualifier("alipayService")
 	private IAlipayService alipayService;
 	
 	@RequestMapping(value = "/callback.html")
-	public void callback(HttpServletRequest request,
-			HttpServletResponse response) {
+	public void callback(HttpServletRequest request,HttpServletResponse response) {
 		Map<String, String> params = ParamsUtil.getRequestParams(request);
 		//换取用户信息的code
 		String code = params.get("auth_code");

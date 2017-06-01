@@ -21,6 +21,7 @@ import cn.account.bean.DrivingLicense;
 import cn.account.bean.ReadilyShoot;
 import cn.account.bean.vo.ReadilyShootVo;
 import cn.account.service.IAccountService;
+import cn.account.service.IThirdPartyInformationService;
 import cn.file.service.IFileService;
 import cn.message.model.wechat.TemplateDataModel;
 import cn.message.model.wechat.TemplateDataModel.Property;
@@ -37,7 +38,11 @@ import cn.web.front.support.BaseAction;
 public class ServerAction extends BaseAction{
 	@Autowired
     @Qualifier("accountService")
-    private IAccountService accountService;
+	private IAccountService accountService;
+	
+	@Autowired
+    @Qualifier("thirdPartyInformationService")
+    private IThirdPartyInformationService thirdPartyInformationService;
     
     @Autowired
     @Qualifier("mobileMessageService")
@@ -169,7 +174,7 @@ public class ServerAction extends BaseAction{
        	ReadilyShoot readilyShoot = new ReadilyShoot();
     	try {
     		 if(MsgCode.success.equals(code)){//参数校验通过
-    			 JSONObject json = accountService.readilyShoot(readilyShootVo);
+    			 JSONObject json = thirdPartyInformationService.readilyShoot(readilyShootVo);
     				code =json.getString("code");
     				String msg=json.getString("msg");
     				if(!MsgCode.success.equals(code)){
@@ -239,11 +244,6 @@ public class ServerAction extends BaseAction{
 						} catch (Exception e) {
 							logger.error("发送模板消息  失败===", e);
 						}
-    					readilyShoot.setIllegalImg1(reportImgOne);
-    					readilyShoot.setIllegalImg2(reportImgTwo);
-    					readilyShoot.setIllegalImg3(reportImgThree);
-    					readilyShoot.setSituationStatement(illegalActivitieOne);
-    					accountService.saveReadilyShoot(readilyShoot);
     				}
     		    	basebean.setCode(code);
     		    	basebean.setMsg(json.getString("msg"));
@@ -280,7 +280,7 @@ public class ServerAction extends BaseAction{
     		return;
     	}
 		try {
-			 json  = accountService.getPositioningAddress(keyword);
+			 json  = thirdPartyInformationService.getPositioningAddress(keyword);
 			 String code =json.getString("code");
 			 if(MsgCode.success.equals(code)){
 				 basebean.setCode(code);
@@ -303,19 +303,7 @@ public class ServerAction extends BaseAction{
 		JSONObject json= null;
 		BaseBean basebean = new BaseBean();
 		try {
-			 List<DrivingLicense> drivingLicenses = new ArrayList<DrivingLicense>();
-			 DrivingLicense drivingLicense1 = new DrivingLicense("02", "蓝牌");
-			 DrivingLicense drivingLicense2 = new DrivingLicense("01", "黄牌");
-			 DrivingLicense drivingLicense3 = new DrivingLicense("06", "黑牌");
-			 DrivingLicense drivingLicense4 = new DrivingLicense("02", "个性牌");
-			 DrivingLicense drivingLicense5 = new DrivingLicense("02", "小型新能源车号牌");
-			 DrivingLicense drivingLicense6 = new DrivingLicense("02", "大型新能源车号牌");
-			 drivingLicenses.add(drivingLicense1);
-			 drivingLicenses.add(drivingLicense2);
-			 drivingLicenses.add(drivingLicense3);
-			 drivingLicenses.add(drivingLicense4);
-			 drivingLicenses.add(drivingLicense5);
-			 drivingLicenses.add(drivingLicense6);
+			 List<DrivingLicense> drivingLicenses = thirdPartyInformationService.getLicensePlateTypes();
 			 basebean.setCode("0000");
 			 basebean.setMsg("查询成功");
 			 basebean.setData(drivingLicenses);
