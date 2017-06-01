@@ -34,6 +34,8 @@ Logger logger = Logger.getLogger(OuathAction.class);
 	@RequestMapping(value = "/callback.html")
 	public void callback(HttpServletRequest request,HttpServletResponse response) {
 		Map<String, String> params = ParamsUtil.getRequestParams(request);
+		
+		
 		//换取用户信息的code
 		String code = params.get("auth_code");
 		//需要跳转的url

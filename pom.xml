@@ -107,7 +107,7 @@
 				<log4j.socket.port><![CDATA[10099]]></log4j.socket.port>
 				<log4j.rootLogger><![CDATA[info,socket,web,std]]></log4j.rootLogger>
 				<log4j.choumeiLevel><![CDATA[debug]]></log4j.choumeiLevel>
-				<log4j.file.dir><![CDATA[/workspace/ws-logs/]]></log4j.file.dir>
+				<log4j.file.dir><![CDATA[/opt/logs/web/]]></log4j.file.dir>
 				<no.access.token>1</no.access.token>
 				<!-- 0代表内网，1代表线上 -->
 				<cn.choumei.env>0</cn.choumei.env>
