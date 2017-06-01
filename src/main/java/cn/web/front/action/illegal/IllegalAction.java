@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.account.bean.vo.AuthenticationBasicInformationVo;
 import cn.account.bean.vo.BindTheVehicleVo;
 import cn.account.service.IAccountService;
@@ -24,6 +26,7 @@ import cn.illegal.bean.CarInfoBean;
 import cn.illegal.bean.CustInfoBean;
 import cn.illegal.bean.IllegalBusiness;
 import cn.illegal.bean.IllegalInfoBean;
+import cn.illegal.bean.IllegalInfoClaim;
 import cn.illegal.bean.IllegalInfoSheet;
 import cn.illegal.bean.IllegalProcessPointBean;
 import cn.illegal.bean.SubcribeBean;
@@ -409,22 +412,49 @@ public class IllegalAction extends BaseAction {
 			  String str= illegalService.custRegInfoReceive(cust, carList,openId);
 			  System.out.println("同步："+str);
 		   }
-		   List<IllegalInfoBean> returnList=null;
+		   List<IllegalInfoBean> returnList=new ArrayList<IllegalInfoBean>();
+		   List<IllegalInfoClaim> infos=new ArrayList<IllegalInfoClaim>();
 		   
 		   BaseBean result=illegalService.trafficIllegalClaimBefore(licensePlateNo, licensePlateType, mobilephone,openId);
 		   String msgCode=result.getCode();
 		   String msg=result.getMsg();
 		   if("0000".equals(msgCode)){
+			   infos=(List<IllegalInfoClaim>) JSON.parseArray(result.getData().toString(), IllegalInfoClaim.class);
 			   returnList= illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType,"",openId);
 		   }else{
 			   if("您好，没有查找到可用互联网方式处理的交通违法，感谢您对我局工作的支持！".equals(msg)||"由于您的驾驶证处理此宗违法后累计分已经超过12分，请到各大队违例窗口现场办理。".equals(msg)){
 				   returnList= illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType,"",openId);
+			   }else{
+				   base.setCode(msgCode);
+				   base.setMsg(msg);
+				   renderJSON(base);
 			   }
-			   
-		   }		   
+		   }
+		   
+		   //拼接对象
+		   for (IllegalInfoBean bean : returnList) {
+			   //直接缴款类型
+			   if(bean.getIsNeedClaim().equals("2")||(bean.getBillNo()!=null&&bean.getBillNo().length()>0)){
+				   IllegalInfoClaim claim=new IllegalInfoClaim();
+				   claim.setIllegalNo(bean.getBillNo());
+				   claim.setIllegalTime(bean.getIllegalTime());
+				   claim.setIllegalDesc(bean.getIllegalDesc());
+				   claim.setDealType(bean.getIsNeedClaim());
+				   claim.setPunishAmt(bean.getPunishAmt());
+				   claim.setLicensePlateNo(bean.getLicensePlateNo());
+				   claim.setLicensePlateType(bean.getLicensePlateType());
+				   claim.setPunishScore(bean.getPunishScore());
+				   claim.setIllegalAddr(bean.getIllegalAddr());
+				   claim.setAgency("");
+				   claim.setDrivingLicenceNo("");
+				   infos.add(claim);
+			   }
+		   }
+		   
+		   
 		   base.setCode("0000");  
-		   if(returnList!=null){
-			   base.setData(returnList);
+		   if(infos.size()>0){
+			   base.setData(infos);
 			   base.setMsg("成功");
 		   }else{
 			   base.setMsg("当前无未处理的违法");
