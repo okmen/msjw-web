@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import cn.account.bean.DrivingLicense;
 import cn.account.bean.ResultOfReadilyShoot;
@@ -28,6 +29,7 @@ import cn.account.bean.vo.InformationSheetVo;
 import cn.account.bean.vo.MotorVehicleInformationSheetVo;
 import cn.account.bean.vo.MyBusinessVo;
 import cn.account.bean.vo.MyDriverLicenseVo;
+import cn.account.bean.vo.ResultOfBIndDriverLicenseVo;
 import cn.account.service.IAccountService;
 import cn.illegal.bean.IllegalInfoBean;
 import cn.illegal.service.IIllegalService;
@@ -97,6 +99,110 @@ public class AccountSearchAction extends BaseAction {
 		} catch (Exception e) {
 			DealException(baseBean, e);
         	logger.error("getMyDriverLicense 错误!", e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+	
+	/**
+	 * 查询驾驶人信息单
+	 * @param identityCard 身份证
+	 * @param sourceOfCertification 认证来源
+	 * @param applyType 
+	 * http://localhost:8080/web/user/search/queryScheduleOfDriverInformationList.html?identityCard=440301199002101119&sourceOfCertification=C&applyType=1
+	 * @throws Exception 
+	 */
+	@RequestMapping(value="queryScheduleOfDriverInformationList")
+	public void queryScheduleOfDriverInformationList(String identityCard,String sourceOfCertification,String applyType) throws Exception{
+		BaseBean baseBean = new BaseBean();
+		try {
+			if(StringUtils.isBlank(identityCard)){
+        		baseBean.setMsg("identityCard 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(applyType)){
+        		baseBean.setMsg("applyType 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			List<InformationSheetVo> informationSheetVos = new ArrayList<InformationSheetVo>();
+			Map<String, Object> map = accountService.queryScheduleOfDriverInformationList(applyType,identityCard,sourceOfCertification);
+			String code = (String) map.get("code");
+			String msg = (String) map.get("msg");
+			if("0000".equals(code)){
+				informationSheetVos = (List<InformationSheetVo>) map.get("data");
+				baseBean.setData(informationSheetVos);
+				baseBean.setCode(MsgCode.success);
+		    	baseBean.setMsg("");
+			}else{
+				baseBean.setData("");
+				baseBean.setCode(MsgCode.businessError);
+		    	baseBean.setMsg(msg);
+			}
+		} catch (Exception e) {
+			DealException(baseBean, e);
+        	logger.error("queryScheduleOfDriverInformationList 错误!", e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+	
+	/**
+	 * 查询机动车信息单
+	 * @param identityCard 身份证
+	 * @param sourceOfCertification 认证来源
+	 * @param applyType 
+	 * http://localhost:8080/web/user/search/queryScheduleOfMotorVehicleInformationList.html?identityCard=445222199209020034&sourceOfCertification=C&applyType=2
+	 * @throws Exception 
+	 */
+	@RequestMapping(value="queryScheduleOfMotorVehicleInformationList")
+	public void queryScheduleOfMotorVehicleInformationList(String identityCard,String sourceOfCertification,String applyType) throws Exception{
+		BaseBean baseBean = new BaseBean();
+		try {
+			if(StringUtils.isBlank(identityCard)){
+        		baseBean.setMsg("identityCard 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			if(StringUtils.isBlank(applyType)){
+        		baseBean.setMsg("applyType 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+			List<InformationSheetVo> informationSheetVos = new ArrayList<InformationSheetVo>();
+			Map<String, Object> map = accountService.queryScheduleOfMotorVehicleInformationList(applyType,identityCard,sourceOfCertification);
+			String code = (String) map.get("code");
+			String msg = (String) map.get("msg");
+			if("0000".equals(code)){
+				informationSheetVos = (List<InformationSheetVo>) map.get("data");
+				baseBean.setData(informationSheetVos);
+				baseBean.setCode(MsgCode.success);
+		    	baseBean.setMsg("");
+			}else{
+				baseBean.setData("");
+				baseBean.setCode(MsgCode.businessError);
+		    	baseBean.setMsg(msg);
+			}
+		} catch (Exception e) {
+			DealException(baseBean, e);
+        	logger.error("queryScheduleOfMotorVehicleInformationList 错误!", e);
 		}
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
@@ -551,4 +657,54 @@ public class AccountSearchAction extends BaseAction {
        	renderJSON(baseBean);
        	logger.debug(JSON.toJSONString(baseBean));
        }
+       
+       /**
+      	 * 驾驶证绑定结果查询
+      	 * @param identityCard 身份证号
+      	 * @param userSource 用户来源
+      	 * @param request
+      	 * @param response
+           * @throws Exception
+           * http://192.168.1.244:8080/web/user/search/queryResultOfBindDriverLicense.html?identityCard=360428199308071413&userSource=C
+      	 */
+          @RequestMapping(value="queryResultOfBindDriverLicense")
+          public void queryResultOfBindDriverLicense(String identityCard,String userSource,HttpServletRequest request,HttpServletResponse response) throws Exception{
+          	BaseBean baseBean = new BaseBean();
+          	ResultOfBIndDriverLicenseVo resultOfBIndDriverLicenseVo = null;
+          	try {
+          		if(StringUtils.isBlank(identityCard)){
+              		baseBean.setMsg("identityCard 不能为空!");
+              		baseBean.setCode(MsgCode.paramsError);
+              		renderJSON(baseBean);
+              		return;
+              	}
+          		
+          		if(StringUtils.isBlank(userSource)){
+              		baseBean.setMsg("userSource 不能为空!");
+              		baseBean.setCode(MsgCode.paramsError);
+              		renderJSON(baseBean);
+              		return;
+              	}
+          		
+          		resultOfBIndDriverLicenseVo = accountService.queryResultOfBindDriverLicense(identityCard, userSource);
+          		
+          		String msg = resultOfBIndDriverLicenseVo.getMsg();
+          		if (null!=msg) {
+          			baseBean.setMsg(msg);
+          			baseBean.setCode(MsgCode.paramsError);
+          			renderJSON(baseBean);
+          			return;
+          		}
+				
+              	
+              	baseBean.setCode(MsgCode.success);
+              	baseBean.setMsg("");
+              	baseBean.setData(resultOfBIndDriverLicenseVo);
+      		} catch (Exception e) {
+      			DealException(baseBean, e);
+      			logger.error("queryResultOfBindDriverLicense 错误", e);
+      		}
+          	renderJSON(baseBean);
+          	logger.debug(JSON.toJSONString(baseBean));
+          }
 }

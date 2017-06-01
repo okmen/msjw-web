@@ -1089,6 +1089,7 @@ public class AccountAction extends BaseAction {
 						} catch (Exception e) {
 							logger.error("发送模板消息  失败===", e);
 						}
+
     				}
     		    	basebean.setCode(code);
     		    	basebean.setMsg(json.getString("msg"));
