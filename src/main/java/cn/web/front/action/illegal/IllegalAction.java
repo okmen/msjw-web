@@ -486,9 +486,14 @@ public class IllegalAction extends BaseAction {
 			   renderJSON(base);
 		   }
 		   IllegalInfoSheet bean=illegalService.trafficIllegalClaim(illegalNo,openId);
-		   base.setCode("0000");
-		   base.setMsg("成功！");
-           base.setData(bean);	   
+		   if(bean==null){
+			   base.setCode("0001");
+			   base.setMsg("打单失败！");
+		   }else{
+			   base.setCode("0000");
+			   base.setMsg("成功！");
+	           base.setData(bean);	
+		   }
 		} catch (Exception e) {
 			DealException(base, e);
 			logger.error("打单异常：",e);
