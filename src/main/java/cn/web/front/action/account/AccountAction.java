@@ -40,12 +40,12 @@ import cn.message.service.IMobileMessageService;
 import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.ResultCode;
+import cn.sdk.msg.MsgTemplate;
 import cn.sdk.thread.BilinThreadPool;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.action.account.task.AccountTask;
 import cn.web.front.action.account.task.AccountTaskExecute;
-import cn.web.front.action.wechat.util.HttpRequest;
 import cn.web.front.support.BaseAction;
 
 
@@ -424,7 +424,7 @@ public class AccountAction extends BaseAction {
         	}
     		//生成验证码，六位数
     		String valideteCode = StringUtil.createValidateCode();
-    		String msgContent = "短信验证码："+valideteCode+"，您正在使用深圳交警微信业务，有效时间为5分钟。";
+    		String msgContent = MsgTemplate.getSzjjSendMsg(valideteCode);
     		boolean flag = mobileMessageService.sendMessage(mobilephone, msgContent);
     		if(flag){
     			accountService.sendSMSVerificatioCode(mobilephone,valideteCode);
