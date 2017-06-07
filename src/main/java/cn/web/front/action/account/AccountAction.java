@@ -398,13 +398,14 @@ public class AccountAction extends BaseAction {
     /**
      * 发送短信验证码
      * @param mobilephone 用户手机号
+     * @param businessType 业务类型(交警公众号-szjj、东部预约-easternReservation)
      * @param request
      * @param response
-     * http://localhost:8080/web/user/sendSMSVerificatioCode.html?mobilephone=13652311206
+     * http://localhost:8080/web/user/sendSMSVerificatioCode.html?mobilephone=13652311206&businessType=szjj
      * @throws Exception 
      */
     @RequestMapping("sendSMSVerificatioCode")
-    public void sendSMSVerificatioCode(String mobilephone,HttpServletRequest request,HttpServletResponse response) throws Exception{
+    public void sendSMSVerificatioCode(String mobilephone,String businessType,HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
     	//5秒钟发一次,处理
     	String key = accountService.getSendSmsFreqLimit(mobilephone);
@@ -424,7 +425,7 @@ public class AccountAction extends BaseAction {
         	}
     		//生成验证码，六位数
     		String valideteCode = StringUtil.createValidateCode();
-    		String msgContent = MsgTemplate.getSzjjSendMsg(valideteCode);
+    		String msgContent = MsgTemplate.getSzjjSendMsgTemplate(valideteCode,businessType);
     		boolean flag = mobileMessageService.sendMessage(mobilephone, msgContent);
     		if(flag){
     			accountService.sendSMSVerificatioCode(mobilephone,valideteCode);
