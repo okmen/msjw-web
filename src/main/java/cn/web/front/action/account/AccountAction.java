@@ -407,6 +407,7 @@ public class AccountAction extends BaseAction {
     @RequestMapping("sendSMSVerificatioCode")
     public void sendSMSVerificatioCode(String mobilephone,String businessType,HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
+    	
     	//5秒钟发一次,处理
     	String key = accountService.getSendSmsFreqLimit(mobilephone);
     	if(StringUtils.isNotBlank(key)){
