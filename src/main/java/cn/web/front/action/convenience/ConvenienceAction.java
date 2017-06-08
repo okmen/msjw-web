@@ -282,7 +282,7 @@ public class ConvenienceAction extends BaseAction{
 			bean.setSelectTypeId(selectTypeId);     //申诉类型id
 			bean.setSelectType(selectType);	//申诉类型描述
 			bean.setSubTypeId(subTypeId);       //子类型id
-			bean.setSubType(subTypeId);		//子类型描述
+			bean.setSubType(subType);		//子类型描述
 			bean.setDescription(description);	//现场描述
 			bean.setSceneImg(sceneImg); 			//现场照片
 			bean.setIdentityCard(identityCard);  //身份证号
