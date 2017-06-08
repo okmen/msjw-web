@@ -15,7 +15,7 @@
 	<!-- 便民服务 -->
 	<dubbo:reference id="convenienceService" interface="cn.convenience.service.IConvenienceService" timeout="${dubbo.consumer.convenience.timeout}" retries="${dubbo.consumer.retries}" />
 
-	<dubbo:reference id="illegalService"  url="dubbo://127.0.0.1:30200/"  interface="cn.illegal.service.IIllegalService" timeout="16000" retries="${dubbo.consumer.retries}" /> 
+	<dubbo:reference id="illegalService"  interface="cn.illegal.service.IIllegalService" timeout="16000" retries="${dubbo.consumer.retries}" /> 
 
 	<dubbo:reference id="microclassServer" interface="cn.microclass.service.IMicroclassService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
 	
@@ -28,6 +28,7 @@
 	<dubbo:reference id="alipayService" interface="cn.message.service.IAlipayService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
 	
 	<dubbo:reference id="fileService"  interface="cn.file.service.IFileService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
-     
+    
+   	<dubbo:reference id="activityService"  interface="cn.activity.service.IActivityService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
 </beans>
 	
