@@ -35,7 +35,7 @@ import cn.web.front.support.BaseAction;
 @Controller
 @RequestMapping(value="/server/")
 @SuppressWarnings(value="all")
-public class ServerAction extends BaseAction{
+public class ChannelUpload extends BaseAction{
 	@Autowired
     @Qualifier("accountService")
 	private IAccountService accountService;
@@ -255,11 +255,11 @@ public class ServerAction extends BaseAction{
     		DealException(basebean, e);
     		logger.error("readilyShoot出错",e);
 		}
-    	/*try {
-    		sendReadilyShootVoDataToPhp(readilyShoot,readilyShootVo);
+    	try {
+    		//sendReadilyShootVoDataToPhp(readilyShoot,readilyShootVo);
 		} catch (Exception e) {
 			logger.error("随手拍发送数据给php系统 错误", e);
-		}*/
+		}
     	renderJSON(basebean);
     	logger.debug(JSON.toJSONString(basebean));
     }
