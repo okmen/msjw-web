@@ -1,5 +1,6 @@
 package cn.web.front.action.activity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -114,7 +115,8 @@ public class EastAppointmentAction extends BaseAction {
     public void getNormalApptDistrictAndTime(String sourceOfCertification){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
     	List<ApptDistrictAndTimeVo> list = new ArrayList<>();
-		String[] apptDistricts = {"1", "2"};	//1-梅沙片区,2-大鹏片区
+		//String[] apptDistricts = {"1", "2"};	//1-梅沙片区,2-大鹏片区
+		String apptDistrict = "1";	//暂时只做1-梅沙片区
     	
 		try {
 			//查询可预约日期
@@ -124,7 +126,18 @@ public class EastAppointmentAction extends BaseAction {
 				String dateStr = baseBean.getData().toString();
 				BaseBean refBean = null;
 				String[] apptDates = dateStr.split(",");		//多个日期用逗号分隔	2017-06-10,2017-06-11
-				for (String apptDistrict : apptDistricts) {
+				
+				//暂时只做梅沙片区
+				for (String apptDate : apptDates) {
+					//根据预约日期获取配额信息
+					refBean = activityService.getQuotaInfoByApptDate(apptDate, apptDistrict, sourceOfCertification);
+					ApptDistrictAndTimeVo vo = (ApptDistrictAndTimeVo) refBean.getData();;
+					if(vo != null){
+						list.add(vo);	//封装片区及时间段信息
+					}
+				}
+				
+				/*for (String apptDistrict : apptDistricts) {
 					for (String apptDate : apptDates) {
 						//根据预约日期获取配额信息
 						refBean = activityService.getQuotaInfoByApptDate(apptDate, apptDistrict, sourceOfCertification);
@@ -133,7 +146,8 @@ public class EastAppointmentAction extends BaseAction {
 							list.add(vo);	//封装片区及时间段信息
 						}
 					}
-				}
+				}*/
+				
 				baseBean.setData(list);
 				baseBean.setCode(refBean.getCode());
 			}
@@ -222,7 +236,29 @@ public class EastAppointmentAction extends BaseAction {
     		int result = accountService.verificatioCode(info.getMobilePhone(), validateCode);
     		if(result == 0){
     			
-    			baseBean = activityService.addNormalApptInfo(info, sourceOfCertification, openId);
+    			//预约的是上午
+    			if("1".equals(info.getApptInterval())){
+    				//表示 "2017-06-10 12:00:00"
+    				String strDateTime = info.getApptDate() + " " + "12:00:00";	//上午预约结束时间点
+    				//转化为date
+    				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    				Date apptDateTime = sdf.parse(strDateTime);
+    				//当前时间在预约上午之前,才可预约
+    				if(new Date().before(apptDateTime)){
+    					baseBean = activityService.addNormalApptInfo(info, sourceOfCertification, openId);
+    					logger.info("当前时间在预约上午之前,可预约!");
+    				}else{
+    					logger.info("预约时间过了当天上午,不能预约!");
+    					baseBean.setCode(MsgCode.paramsError);
+    					baseBean.setMsg("上午预约时段已过,请预约其他时段!");
+    					renderJSON(baseBean);
+    		        	return;
+    				}
+    			}
+    			//预约下午
+    			else{
+    				baseBean = activityService.addNormalApptInfo(info, sourceOfCertification, openId);
+    			}
     			
     			String code = baseBean.getCode();	//状态码
     			if("0000".equals(code)){
