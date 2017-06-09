@@ -452,8 +452,7 @@ public class EastAppointmentAction extends BaseAction {
 		String apptDistrict = "1";	//暂时只做1-梅沙片区
     	
 		try {
-			//String curDate = DateUtil2.date2dayStr(new Date());	//当前日期	格式yyyy-MM-dd
-			String curDate = "2017-06-10";	//当前日期	格式yyyy-MM-dd TODO
+			String curDate = DateUtil2.date2dayStr(new Date());	//当前日期	格式yyyy-MM-dd
 			
 			//查询可预约日期
 			BaseBean dateBean = activityService.getNormalApptDate(sourceOfCertification);
