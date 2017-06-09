@@ -448,7 +448,8 @@ public class EastAppointmentAction extends BaseAction {
     public void getTempApptDistrictAndTime(String sourceOfCertification){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
     	List<ApptDistrictAndTimeVo> list = new ArrayList<>();
-		String[] apptDistricts = {"1", "2"};	//1-梅沙片区,2-大鹏片区
+		//String[] apptDistricts = {"1", "2"};	//1-梅沙片区,2-大鹏片区
+		String apptDistrict = "1";	//暂时只做1-梅沙片区
     	
 		try {
 			String curDate = DateUtil2.date2dayStr(new Date());	//当前日期	格式yyyy-MM-dd
@@ -463,14 +464,14 @@ public class EastAppointmentAction extends BaseAction {
 					//当前日期是节假日时,才查询显示
 					if(curDate.equals(apptDate)){
 						BaseBean refBean = null;
-						for (String apptDistrict : apptDistricts) {
+						//for (String apptDistrict : apptDistricts) {	//暂时只有梅沙片区
 							//根据预约日期获取配额信息
 							refBean = activityService.getQuotaInfoByApptDate(apptDate, apptDistrict, sourceOfCertification);
 							ApptDistrictAndTimeVo vo = (ApptDistrictAndTimeVo) refBean.getData();;
 							if(vo != null){
 								list.add(vo);	//封装片区及时间段信息
 							}
-						}
+						//}
 						baseBean.setCode(refBean.getCode());
 						baseBean.setData(list);
 					}
