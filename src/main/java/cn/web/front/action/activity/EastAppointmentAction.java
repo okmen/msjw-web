@@ -239,18 +239,17 @@ public class EastAppointmentAction extends BaseAction {
     			//预约的是上午
     			if("1".equals(info.getApptInterval())){
     				//表示 "2017-06-10 12:00:00"
-    				String strDateTime = info.getApptDate() + " " + "12:00:00";	//上午预约结束时间点
+    				String strTwelve = info.getApptDate() + " " + "12:00:00";	//上午预约结束时间点
     				//转化为date
-    				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    				Date apptDateTime = sdf.parse(strDateTime);
+    				Date dateTwelve = DateUtil2.str2date(strTwelve);
     				//当前时间在预约上午之前,才可预约
-    				if(new Date().before(apptDateTime)){
+    				if(new Date().before(dateTwelve)){
     					baseBean = activityService.addNormalApptInfo(info, sourceOfCertification, openId);
     					logger.info("当前时间在预约上午之前,可预约!");
     				}else{
     					logger.info("预约时间过了当天上午,不能预约!");
     					baseBean.setCode(MsgCode.paramsError);
-    					baseBean.setMsg("上午预约时段已过,请预约其他时段!");
+    					baseBean.setMsg("上午预约时段已过,请选择其他时段!");
     					renderJSON(baseBean);
     		        	return;
     				}
@@ -467,8 +466,18 @@ public class EastAppointmentAction extends BaseAction {
 						//for (String apptDistrict : apptDistricts) {	//暂时只有梅沙片区
 							//根据预约日期获取配额信息
 							refBean = activityService.getQuotaInfoByApptDate(apptDate, apptDistrict, sourceOfCertification);
-							ApptDistrictAndTimeVo vo = (ApptDistrictAndTimeVo) refBean.getData();;
+							ApptDistrictAndTimeVo vo = (ApptDistrictAndTimeVo) refBean.getData();
+							
 							if(vo != null){
+								//上午,下午设置
+								String strTwelve = apptDate + " " + "12:00:00";//可预约当天12点整,区别上,下午
+								Date dateTwelve = DateUtil2.str2date(strTwelve);
+								if(new Date().before(dateTwelve)){	//当前时间在当天12点之前
+									vo.setApptInterval("1");//1-上午
+								}else{								//12点之后
+									vo.setApptInterval("2");//2-下午
+								}
+								
 								list.add(vo);	//封装片区及时间段信息
 							}
 						//}
@@ -483,9 +492,9 @@ public class EastAppointmentAction extends BaseAction {
 				baseBean.setMsg("非节假日时段，无需预约！");
 			}
 			
-			logger.info("获取预约场次信息返回web数据:" + JSON.toJSONString(baseBean));
+			logger.info("获取临时预约场次信息返回web数据:" + JSON.toJSONString(baseBean));
 		} catch (Exception e) {
-			logger.error("获取预约场次信息Action异常:" + e);
+			logger.error("获取临时预约场次信息Action异常:" + e);
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
