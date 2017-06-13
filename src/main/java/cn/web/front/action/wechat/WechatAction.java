@@ -81,7 +81,7 @@ public class WechatAction extends BaseAction {
 	    		 if("code128".equals(keyStandard)){
 	    			 String url="http://code.stcpay.com:8088/ysth-traffic-front/weixin/msg.do"; 
 	    			 //发送报文到平安获得返回报文
-	    			 pinganResult=HttpRequest.sendPost(url, xml);
+	    			 pinganResult=HttpRequest.sendPost(url, xml, 4900);
 	    			 logger.info("平安返回报文:"+pinganResult);
 	    		 }
 	    		 outString(response,pinganResult);		
