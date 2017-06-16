@@ -417,7 +417,7 @@ public class AccountAction extends BaseAction {
      * @param businessType 业务类型(交警公众号-szjj、东部预约-easternReservation)
      * @param request
      * @param response
-     * http://localhost:8080/web/user/sendSMSVerificatioCode.html?mobilephone=13652311206&businessType=szjj
+     * http://localhost:8080/web/user/sendSMSVerificatioCode.html?mobilephone=18601174358&businessType=szjj
      * @throws Exception 
      */
     @RequestMapping("sendSMSVerificatioCode")
@@ -779,6 +779,7 @@ public class AccountAction extends BaseAction {
      * @param oldMobile 旧手机号
      * @param validateCode 验证码
      * @param newMobile 新手机号
+     * http://192.168.1.245:8080/web/user/updateMobile.html?oldMobile=13652311206&validateCode=478467&newMobile=18601174358&identityCard=420881198302280017
      */
     @RequestMapping(value = "updateMobile",method = RequestMethod.POST)
     public void updateMobile( String oldMobile, String validateCode
@@ -814,8 +815,8 @@ public class AccountAction extends BaseAction {
     	BaseBean basebean = new  BaseBean();
     	try {
     		if(MsgCode.success.equals(code)){//参数校验通过    			
-    			// 0-验证成功，1-验证失败，2-验证码失效
-        		int result = accountService.verificatioCode(oldMobile, validateCode);
+    			// 0-验证成功，1-验证失败，2-验证码失效     以前是给老手机号码发送短信，业务变成给新手机号发短信
+        		int result = accountService.verificatioCode(newMobile, validateCode);
         		if(0 == result){
         			userBasicVo.setUserSource("C");
         			JSONObject json = accountService.updateMobile(userBasicVo);
