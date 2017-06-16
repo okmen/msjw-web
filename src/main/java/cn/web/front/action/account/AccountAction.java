@@ -1749,9 +1749,10 @@ public class AccountAction extends BaseAction {
         		String msg = map.get("msg");
         		baseBean.setCode(code);
         		if ("9999".endsWith(code)) {
-					baseBean.setCode("输入信息格式有误！");
+        			baseBean.setMsg("输入信息格式有误！");
+				}else{
+					baseBean.setMsg(msg);
 				}
-            	baseBean.setMsg(msg);
         	}
 			
 		} catch (Exception e) {
@@ -1942,9 +1943,10 @@ public class AccountAction extends BaseAction {
         		String msg = map.get("msg");
         		baseBean.setCode(code);
         		if ("9999".endsWith(code)) {
-					baseBean.setCode("输入信息格式有误！");
+        			baseBean.setMsg("输入信息格式有误！");
+				}else{
+					baseBean.setMsg(msg);
 				}
-            	baseBean.setMsg(msg);
         	}
 			
 		} catch (Exception e) {
@@ -2137,9 +2139,10 @@ public class AccountAction extends BaseAction {
         		String msg = map.get("msg");
         		baseBean.setCode(code);
         		if ("9999".endsWith(code)) {
-					baseBean.setCode("输入信息格式有误！");
+        			baseBean.setMsg("输入信息格式有误！");
+				}else{
+					baseBean.setMsg(msg);
 				}
-            	baseBean.setMsg(msg);
         	}
 			
 		} catch (Exception e) {
@@ -2324,9 +2327,10 @@ public class AccountAction extends BaseAction {
         		String msg = map.get("msg");
         		baseBean.setCode(code);
         		if ("9999".endsWith(code)) {
-					baseBean.setCode("输入信息格式有误！");
+        			baseBean.setMsg("输入信息格式有误！");
+				}else{
+					baseBean.setMsg(msg);
 				}
-            	baseBean.setMsg(msg);
         	}
 			
 		} catch (Exception e) {
@@ -2533,13 +2537,14 @@ HttpServletRequest request,HttpServletResponse response){
 			map = accountService.repairDriverLicense(repairOrReplaceDriverLicenseVo);
 			
 			if(null != map){
-        		String code = map.get("code");
+				String code = map.get("code");
         		String msg = map.get("msg");
         		baseBean.setCode(code);
         		if ("9999".endsWith(code)) {
-					baseBean.setCode("输入信息格式有误！");
+        			baseBean.setMsg("输入信息格式有误！");
+				}else{
+					baseBean.setMsg(msg);
 				}
-            	baseBean.setMsg(msg);
         	}
 			
 		} catch (Exception e) {
@@ -2742,10 +2747,14 @@ HttpServletRequest request,HttpServletResponse response){
 			map = accountService.replaceDriverLicense(repairOrReplaceDriverLicenseVo);
 			
 			if(null != map){
-        		String code = map.get("code");
+				String code = map.get("code");
         		String msg = map.get("msg");
         		baseBean.setCode(code);
-            	baseBean.setMsg(msg);
+        		if ("9999".endsWith(code)) {
+        			baseBean.setMsg("输入信息格式有误！");
+				}else{
+					baseBean.setMsg(msg);
+				}
         	}
 			
 		} catch (Exception e) {
@@ -2899,9 +2908,10 @@ HttpServletRequest request,HttpServletResponse response){
         		String msg = map.get("msg");
         		baseBean.setCode(code);
         		if ("9999".endsWith(code)) {
-					baseBean.setCode("输入信息格式有误！");
+        			baseBean.setMsg("输入信息格式有误！");
+				}else{
+					baseBean.setMsg(msg);
 				}
-            	baseBean.setMsg(msg);
         	}
 			
 		} catch (Exception e) {
