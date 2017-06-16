@@ -1741,13 +1741,14 @@ public class AccountAction extends BaseAction {
 			
 			String ip = getIp2(request);
 			driverLicenseAnnualVerificationVo.setIp(ip);
-			Map<String, String> map = new HashMap<>();
-			map = accountService.driverLicenseAnnualVerification(driverLicenseAnnualVerificationVo);
-			
-			if(null != map){
-				String code = map.get("code");
-        		String msg = map.get("msg");
-        		baseBean.setCode(code);
+			Map<String, String> map = accountService.driverLicenseAnnualVerification(driverLicenseAnnualVerificationVo);
+			String code = map.get("code");
+			String msg = map.get("msg");
+			if("0000".equals(code)){
+        		baseBean.setCode(MsgCode.success);
+        		baseBean.setMsg(msg);
+        	}else{
+        		baseBean.setCode(MsgCode.businessError);
         		if ("9999".endsWith(code)) {
         			baseBean.setMsg("输入信息格式有误！");
 				}else{
@@ -1935,13 +1936,14 @@ public class AccountAction extends BaseAction {
 			
 			String ip = getIp2(request);
 			renewalDriverLicenseVo.setIp(ip);
-			Map<String, String> map = new HashMap<>();
-			map = accountService.renewalDriverLicense(renewalDriverLicenseVo);
-			
-			if(null != map){
-				String code = map.get("code");
-        		String msg = map.get("msg");
-        		baseBean.setCode(code);
+			Map<String, String> map = accountService.renewalDriverLicense(renewalDriverLicenseVo);
+			String code = map.get("code");
+			String msg = map.get("msg");
+			if("0000".equals(code)){
+        		baseBean.setCode(MsgCode.success);
+        		baseBean.setMsg(msg);
+        	}else{
+        		baseBean.setCode(MsgCode.businessError);
         		if ("9999".endsWith(code)) {
         			baseBean.setMsg("输入信息格式有误！");
 				}else{
@@ -2131,13 +2133,14 @@ public class AccountAction extends BaseAction {
 			
 			String ip = getIp2(request);
 			driverLicenseIntoVo.setIp(ip);
-			Map<String, String> map = new HashMap<>();
-			map = accountService.driverLicenseInto(driverLicenseIntoVo);
-			
-			if(null != map){
-				String code = map.get("code");
-        		String msg = map.get("msg");
-        		baseBean.setCode(code);
+			Map<String, String> map = accountService.driverLicenseInto(driverLicenseIntoVo);
+			String code = map.get("code");
+			String msg = map.get("msg");
+			if("0000".equals(code)){
+        		baseBean.setCode(MsgCode.success);
+        		baseBean.setMsg(msg);
+        	}else{
+        		baseBean.setCode(MsgCode.businessError);
         		if ("9999".endsWith(code)) {
         			baseBean.setMsg("输入信息格式有误！");
 				}else{
@@ -2319,13 +2322,14 @@ public class AccountAction extends BaseAction {
 			
 			String ip = getIp2(request);
 			driverLicenseVoluntaryDemotionVo.setIp(ip);
-			Map<String, String> map = new HashMap<>();
-			map = accountService.driverLicenseVoluntaryDemotion(driverLicenseVoluntaryDemotionVo);
-			
-			if(null != map){
-				String code = map.get("code");
-        		String msg = map.get("msg");
-        		baseBean.setCode(code);
+			Map<String, String> map = accountService.driverLicenseVoluntaryDemotion(driverLicenseVoluntaryDemotionVo);
+			String code = map.get("code");
+			String msg = map.get("msg");
+			if("0000".equals(code)){
+        		baseBean.setCode(MsgCode.success);
+        		baseBean.setMsg(msg);
+        	}else{
+        		baseBean.setCode(MsgCode.businessError);
         		if ("9999".endsWith(code)) {
         			baseBean.setMsg("输入信息格式有误！");
 				}else{
@@ -2533,13 +2537,14 @@ HttpServletRequest request,HttpServletResponse response){
 			repairOrReplaceDriverLicenseVo.setPostalcode(postalcode);
 			String ip = getIp2(request);
 			repairOrReplaceDriverLicenseVo.setIp(ip);
-			Map<String, String> map = new HashMap<>();
-			map = accountService.repairDriverLicense(repairOrReplaceDriverLicenseVo);
-			
-			if(null != map){
-				String code = map.get("code");
-        		String msg = map.get("msg");
-        		baseBean.setCode(code);
+			Map<String, String> map = accountService.repairDriverLicense(repairOrReplaceDriverLicenseVo);
+			String code = map.get("code");
+			String msg = map.get("msg");
+			if("0000".equals(code)){
+        		baseBean.setCode(MsgCode.success);
+        		baseBean.setMsg(msg);
+        	}else{
+        		baseBean.setCode(MsgCode.businessError);
         		if ("9999".endsWith(code)) {
         			baseBean.setMsg("输入信息格式有误！");
 				}else{
@@ -2743,13 +2748,14 @@ HttpServletRequest request,HttpServletResponse response){
 			
 			String ip = getIp2(request);
 			repairOrReplaceDriverLicenseVo.setIp(ip);
-			Map<String, String> map = new HashMap<>();
-			map = accountService.replaceDriverLicense(repairOrReplaceDriverLicenseVo);
-			
-			if(null != map){
-				String code = map.get("code");
-        		String msg = map.get("msg");
-        		baseBean.setCode(code);
+			Map<String, String> map = accountService.replaceDriverLicense(repairOrReplaceDriverLicenseVo);
+			String code = map.get("code");
+			String msg = map.get("msg");
+			if("0000".equals(code)){
+        		baseBean.setCode(MsgCode.success);
+        		baseBean.setMsg(msg);
+        	}else{
+        		baseBean.setCode(MsgCode.businessError);
         		if ("9999".endsWith(code)) {
         			baseBean.setMsg("输入信息格式有误！");
 				}else{
@@ -2900,13 +2906,14 @@ HttpServletRequest request,HttpServletResponse response){
 			
 			String ip = getIp2(request);
 			driverChangeContactVo.setIp(ip);
-			Map<String, String> map = new HashMap<>();
-			map = accountService.driverChangeContact(driverChangeContactVo);
-			
-			if(null != map){
-				String code = map.get("code");
-        		String msg = map.get("msg");
-        		baseBean.setCode(code);
+			Map<String, String> map = accountService.driverChangeContact(driverChangeContactVo);
+			String code = map.get("code");
+			String msg = map.get("msg");
+			if("0000".equals(code)){
+        		baseBean.setCode(MsgCode.success);
+        		baseBean.setMsg(msg);
+        	}else{
+        		baseBean.setCode(MsgCode.businessError);
         		if ("9999".endsWith(code)) {
         			baseBean.setMsg("输入信息格式有误！");
 				}else{
