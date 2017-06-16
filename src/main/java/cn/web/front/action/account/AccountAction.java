@@ -1745,9 +1745,12 @@ public class AccountAction extends BaseAction {
 			map = accountService.driverLicenseAnnualVerification(driverLicenseAnnualVerificationVo);
 			
 			if(null != map){
-        		String code = map.get("code");
+				String code = map.get("code");
         		String msg = map.get("msg");
         		baseBean.setCode(code);
+        		if ("9999".endsWith(code)) {
+					baseBean.setCode("输入信息格式有误！");
+				}
             	baseBean.setMsg(msg);
         	}
 			
@@ -1935,9 +1938,12 @@ public class AccountAction extends BaseAction {
 			map = accountService.renewalDriverLicense(renewalDriverLicenseVo);
 			
 			if(null != map){
-        		String code = map.get("code");
+				String code = map.get("code");
         		String msg = map.get("msg");
         		baseBean.setCode(code);
+        		if ("9999".endsWith(code)) {
+					baseBean.setCode("输入信息格式有误！");
+				}
             	baseBean.setMsg(msg);
         	}
 			
@@ -2127,9 +2133,12 @@ public class AccountAction extends BaseAction {
 			map = accountService.driverLicenseInto(driverLicenseIntoVo);
 			
 			if(null != map){
-        		String code = map.get("code");
+				String code = map.get("code");
         		String msg = map.get("msg");
         		baseBean.setCode(code);
+        		if ("9999".endsWith(code)) {
+					baseBean.setCode("输入信息格式有误！");
+				}
             	baseBean.setMsg(msg);
         	}
 			
@@ -2311,9 +2320,12 @@ public class AccountAction extends BaseAction {
 			map = accountService.driverLicenseVoluntaryDemotion(driverLicenseVoluntaryDemotionVo);
 			
 			if(null != map){
-        		String code = map.get("code");
+				String code = map.get("code");
         		String msg = map.get("msg");
         		baseBean.setCode(code);
+        		if ("9999".endsWith(code)) {
+					baseBean.setCode("输入信息格式有误！");
+				}
             	baseBean.setMsg(msg);
         	}
 			
@@ -2524,6 +2536,9 @@ HttpServletRequest request,HttpServletResponse response){
         		String code = map.get("code");
         		String msg = map.get("msg");
         		baseBean.setCode(code);
+        		if ("9999".endsWith(code)) {
+					baseBean.setCode("输入信息格式有误！");
+				}
             	baseBean.setMsg(msg);
         	}
 			
@@ -2880,9 +2895,12 @@ HttpServletRequest request,HttpServletResponse response){
 			map = accountService.driverChangeContact(driverChangeContactVo);
 			
 			if(null != map){
-        		String code = map.get("code");
+				String code = map.get("code");
         		String msg = map.get("msg");
         		baseBean.setCode(code);
+        		if ("9999".endsWith(code)) {
+					baseBean.setCode("输入信息格式有误！");
+				}
             	baseBean.setMsg(msg);
         	}
 			
@@ -2975,9 +2993,12 @@ HttpServletRequest request,HttpServletResponse response){
 
 			if (null != map) {
 				String code = map.get("code");
-				String msg = map.get("msg");
-				baseBean.setCode(code);
-				baseBean.setMsg(msg);
+        		String msg = map.get("msg");
+        		baseBean.setCode(code);
+        		if ("9999".endsWith(code)) {
+					baseBean.setCode("输入信息格式有误！");
+				}
+            	baseBean.setMsg(msg);
 			}
 
 		} catch (Exception e) {
