@@ -92,11 +92,11 @@ public class WechatAction extends BaseAction {
 			if(null != mesasge){
 				outString(response, mesasge.toXml());
 			} else{
-				outString(response, "");
+				outString(response, "success");
 			}
 			
 		} catch (IOException e) { 
-			outString(response, "");
+			outString(response, "success");
 			logger.error("接收微信post消息异常",e);
 		}
 	}
