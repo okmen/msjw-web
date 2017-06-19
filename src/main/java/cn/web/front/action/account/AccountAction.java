@@ -1750,7 +1750,7 @@ public class AccountAction extends BaseAction {
         		baseBean.setMsg(msg);
         	}else{
         		baseBean.setCode(MsgCode.businessError);
-        		if ("9999".endsWith(code)) {
+        		if ("9999".equals(code)) {
         			baseBean.setMsg("输入信息格式有误！");
 				}else{
 					baseBean.setMsg(msg);
@@ -1945,7 +1945,7 @@ public class AccountAction extends BaseAction {
         		baseBean.setMsg(msg);
         	}else{
         		baseBean.setCode(MsgCode.businessError);
-        		if ("9999".endsWith(code)) {
+        		if ("9999".equals(code)) {
         			baseBean.setMsg("输入信息格式有误！");
 				}else{
 					baseBean.setMsg(msg);
@@ -2142,7 +2142,7 @@ public class AccountAction extends BaseAction {
         		baseBean.setMsg(msg);
         	}else{
         		baseBean.setCode(MsgCode.businessError);
-        		if ("9999".endsWith(code)) {
+        		if ("9999".equals(code)) {
         			baseBean.setMsg("输入信息格式有误！");
 				}else{
 					baseBean.setMsg(msg);
@@ -2331,7 +2331,7 @@ public class AccountAction extends BaseAction {
         		baseBean.setMsg(msg);
         	}else{
         		baseBean.setCode(MsgCode.businessError);
-        		if ("9999".endsWith(code)) {
+        		if ("9999".equals(code)) {
         			baseBean.setMsg("输入信息格式有误！");
 				}else{
 					baseBean.setMsg(msg);
@@ -2546,7 +2546,7 @@ HttpServletRequest request,HttpServletResponse response){
         		baseBean.setMsg(msg);
         	}else{
         		baseBean.setCode(MsgCode.businessError);
-        		if ("9999".endsWith(code)) {
+        		if ("9999".equals(code)) {
         			baseBean.setMsg("输入信息格式有误！");
 				}else{
 					baseBean.setMsg(msg);
@@ -2757,7 +2757,7 @@ HttpServletRequest request,HttpServletResponse response){
         		baseBean.setMsg(msg);
         	}else{
         		baseBean.setCode(MsgCode.businessError);
-        		if ("9999".endsWith(code)) {
+        		if ("9999".equals(code)) {
         			baseBean.setMsg("输入信息格式有误！");
 				}else{
 					baseBean.setMsg(msg);
@@ -2915,7 +2915,7 @@ HttpServletRequest request,HttpServletResponse response){
         		baseBean.setMsg(msg);
         	}else{
         		baseBean.setCode(MsgCode.businessError);
-        		if ("9999".endsWith(code)) {
+        		if ("9999".equals(code)) {
         			baseBean.setMsg("输入信息格式有误！");
 				}else{
 					baseBean.setMsg(msg);
