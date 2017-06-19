@@ -2590,7 +2590,7 @@ HttpServletRequest request,HttpServletResponse response){
      */
     @RequestMapping("replaceDriverLicense")
     public void replaceDriverLicense(String identificationNO ,String IDcard ,String name ,String mobilephone ,String IDCardPhoto1 ,String IDCardPhoto2 ,String photoReturnNumberString ,String foreignersLiveTable ,String placeOfDomicile,String receiverName ,String receiverNumber ,String mailingAddress ,String livePhoto1 ,String livePhoto2 ,String loginUser ,String sourceOfCertification ,String userSource ,                           
-HttpServletRequest request,HttpServletResponse response){
+    			HttpServletRequest request,HttpServletResponse response){
     	
     	BaseBean baseBean = new BaseBean();		//创建返回结果
     	RepairOrReplaceDriverLicenseVo repairOrReplaceDriverLicenseVo = new RepairOrReplaceDriverLicenseVo();
