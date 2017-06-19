@@ -33,18 +33,19 @@ import cn.account.bean.ReadilyShoot;
 import cn.account.bean.UserBind;
 import cn.account.bean.vo.BindCarVo;
 import cn.account.bean.vo.BindDriverLicenseVo;
-import cn.account.bean.vo.DriverChangeContactVo;
-import cn.account.bean.vo.DriverLicenseAnnualVerificationVo;
-import cn.account.bean.vo.DriverLicenseIntoVo;
-import cn.account.bean.vo.DriverLicenseVoluntaryDemotionVo;
 import cn.account.bean.vo.LoginReturnBeanVo;
 import cn.account.bean.vo.ReadilyShootVo;
-import cn.account.bean.vo.RenewalDriverLicenseVo;
-import cn.account.bean.vo.RepairOrReplaceDriverLicenseVo;
 import cn.account.bean.vo.UnbindVehicleVo;
 import cn.account.bean.vo.UserBasicVo;
 import cn.account.service.IAccountService;
 import cn.file.service.IFileService;
+import cn.handle.bean.vo.DriverChangeContactVo;
+import cn.handle.bean.vo.DriverLicenseAnnualVerificationVo;
+import cn.handle.bean.vo.DriverLicenseIntoVo;
+import cn.handle.bean.vo.DriverLicenseVoluntaryDemotionVo;
+import cn.handle.bean.vo.RenewalDriverLicenseVo;
+import cn.handle.bean.vo.RepairOrReplaceDriverLicenseVo;
+import cn.handle.service.IHandleService;
 import cn.illegal.bean.IllegalInfoBean;
 import cn.illegal.service.IIllegalService;
 import cn.message.model.wechat.TemplateDataModel;
@@ -71,6 +72,10 @@ import cn.web.front.support.BaseAction;
 @RequestMapping(value="/user/")
 @SuppressWarnings(value="all")
 public class AccountAction extends BaseAction {
+    @Autowired
+    @Qualifier("handleService")
+    private IHandleService handleService;
+    
     @Autowired
     @Qualifier("accountService")
     private IAccountService accountService;
@@ -1580,7 +1585,7 @@ public class AccountAction extends BaseAction {
 	 * @param loginUser 认证用户身份证号码               
 	 * @param sourceOfCertification 认证来源        
 	 * @param userSource 申报途径（A移动APP C微信Z支付宝E邮政）
-	 * @param http://192.168.1.245:8080/web/user/driverLicenseAnnualVerification.html?identificationNO=A&name=张宇帆&IDcard=445222199209020034&mobilephone=15920050177&placeOfDomicile=深圳&receiverName=11&receiverNumber=15920050177&mailingAddress=深圳市宝安区&IDCardPhoto1=111&IDCardPhoto2=222&livePhoto1=111&livePhoto2=222 &educationDrawingtab=111&foreignersLiveTable=222&postalcode=1&loginUser=445222199209020034&sourceOfCertification=C&userSource=C
+	 * @param http://192.168.1.245:8080/web/user/driverLicenseAnnualVerification.html?identificationNO=A&name=张宇帆&IDcard=445222199209020034&mobilephone=15920050177&placeOfDomicile=深圳&receiverName=11&receiverNumber=15920050177&mailingAddress=深圳市宝安区&IDCardPhoto1=111&IDCardPhoto2=222&livePhoto1=111&livePhoto2=222 &educationDrawingtable=111&foreignersLiveTable=222&postalcode=1&loginUser=445222199209020034&sourceOfCertification=C&userSource=C
 
 	 * 
      */
@@ -1742,7 +1747,7 @@ public class AccountAction extends BaseAction {
 			
 			String ip = getIp2(request);
 			driverLicenseAnnualVerificationVo.setIp(ip);
-			Map<String, String> map = accountService.driverLicenseAnnualVerification(driverLicenseAnnualVerificationVo);
+			Map<String, String> map = handleService.driverLicenseAnnualVerification(driverLicenseAnnualVerificationVo);
 			String code = map.get("code");
 			String msg = map.get("msg");
 			if("0000".equals(code)){
@@ -1937,7 +1942,7 @@ public class AccountAction extends BaseAction {
 			
 			String ip = getIp2(request);
 			renewalDriverLicenseVo.setIp(ip);
-			Map<String, String> map = accountService.renewalDriverLicense(renewalDriverLicenseVo);
+			Map<String, String> map = handleService.renewalDriverLicense(renewalDriverLicenseVo);
 			String code = map.get("code");
 			String msg = map.get("msg");
 			if("0000".equals(code)){
@@ -2134,7 +2139,7 @@ public class AccountAction extends BaseAction {
 			
 			String ip = getIp2(request);
 			driverLicenseIntoVo.setIp(ip);
-			Map<String, String> map = accountService.driverLicenseInto(driverLicenseIntoVo);
+			Map<String, String> map = handleService.driverLicenseInto(driverLicenseIntoVo);
 			String code = map.get("code");
 			String msg = map.get("msg");
 			if("0000".equals(code)){
@@ -2323,7 +2328,7 @@ public class AccountAction extends BaseAction {
 			
 			String ip = getIp2(request);
 			driverLicenseVoluntaryDemotionVo.setIp(ip);
-			Map<String, String> map = accountService.driverLicenseVoluntaryDemotion(driverLicenseVoluntaryDemotionVo);
+			Map<String, String> map = handleService.driverLicenseVoluntaryDemotion(driverLicenseVoluntaryDemotionVo);
 			String code = map.get("code");
 			String msg = map.get("msg");
 			if("0000".equals(code)){
@@ -2538,7 +2543,7 @@ HttpServletRequest request,HttpServletResponse response){
 			repairOrReplaceDriverLicenseVo.setPostalcode(postalcode);
 			String ip = getIp2(request);
 			repairOrReplaceDriverLicenseVo.setIp(ip);
-			Map<String, String> map = accountService.repairDriverLicense(repairOrReplaceDriverLicenseVo);
+			Map<String, String> map = handleService.repairDriverLicense(repairOrReplaceDriverLicenseVo);
 			String code = map.get("code");
 			String msg = map.get("msg");
 			if("0000".equals(code)){
@@ -2749,7 +2754,7 @@ HttpServletRequest request,HttpServletResponse response){
 			
 			String ip = getIp2(request);
 			repairOrReplaceDriverLicenseVo.setIp(ip);
-			Map<String, String> map = accountService.replaceDriverLicense(repairOrReplaceDriverLicenseVo);
+			Map<String, String> map = handleService.replaceDriverLicense(repairOrReplaceDriverLicenseVo);
 			String code = map.get("code");
 			String msg = map.get("msg");
 			if("0000".equals(code)){
@@ -2907,7 +2912,7 @@ HttpServletRequest request,HttpServletResponse response){
 			
 			String ip = getIp2(request);
 			driverChangeContactVo.setIp(ip);
-			Map<String, String> map = accountService.driverChangeContact(driverChangeContactVo);
+			Map<String, String> map = handleService.driverChangeContact(driverChangeContactVo);
 			String code = map.get("code");
 			String msg = map.get("msg");
 			if("0000".equals(code)){
