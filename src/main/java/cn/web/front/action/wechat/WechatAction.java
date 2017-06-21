@@ -62,6 +62,8 @@ public class WechatAction extends BaseAction {
 	@RequestMapping(value = "/doGet.html", method = RequestMethod.POST)
 	public void message(HttpServletRequest request, HttpServletResponse response){
 		try {
+			long begin = System.currentTimeMillis();
+			
 			request.setCharacterEncoding("utf-8");
 			//获取post
 			Map<String, String> requestMap = WechatPostParamsUtil.parseXml(request);
@@ -94,7 +96,11 @@ public class WechatAction extends BaseAction {
 			} else{
 				outString(response, "success");
 			}
+			long end = System.currentTimeMillis();
 			
+			if(end-begin > 5000){
+				logger.info("doGet响应超过5秒 耗时:"+(end-begin)+",xml:"+xml);
+			}
 		} catch (IOException e) { 
 			outString(response, "success");
 			logger.error("接收微信post消息异常",e);
