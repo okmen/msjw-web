@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSONObject;
 import cn.account.bean.DrivingLicense;
 import cn.account.bean.ResultOfReadilyShoot;
 import cn.account.bean.vo.AuthenticationBasicInformationVo;
+import cn.account.bean.vo.BindTheOtherDriversUseMyCarVo;
 import cn.account.bean.vo.BindTheVehicleVo;
 import cn.account.bean.vo.DriverLicenseInformationSheetVo;
 import cn.account.bean.vo.DrivingLicenseVo;
@@ -535,6 +536,20 @@ public class AccountSearchAction extends BaseAction {
         	for(BindTheVehicleVo bindTheVehicleVo : bindTheVehicleVos){
         		String numberPlateNumber = bindTheVehicleVo.getNumberPlateNumber();
         		String plateType = bindTheVehicleVo.getPlateType();
+        		String isMyself = bindTheVehicleVo.getIsMyself();
+        		if ("本人".equals(isMyself)) {
+        			try{
+            			Map<String, Object> map = accountService.getBindTheOtherDriversUseMyCar(identityCard,numberPlateNumber, plateType,sourceOfCertification);
+                		String code = (String) map.get("code");
+                		if ("0000".equals(code)) {
+        					List<BindTheOtherDriversUseMyCarVo> list = (List<BindTheOtherDriversUseMyCarVo>) map.get("data");
+        					bindTheVehicleVo.setList(list);				
+        					}
+            		}catch(Exception e){
+            			DealException(baseBean, e);
+                    	logger.error("车主查询本人车辆绑定的其他驾驶人错误", e);
+            		}
+				}
         		//车牌号、车牌类型、车架后4位
         		List<IllegalInfoBean> illegalInfoBeans = illegalService.queryInfoByLicensePlateNo(numberPlateNumber, plateType, "",openId);
         		if(null != illegalInfoBeans && illegalInfoBeans.size() > 0){
