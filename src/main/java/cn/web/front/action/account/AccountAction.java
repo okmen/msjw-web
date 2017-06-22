@@ -35,6 +35,7 @@ import cn.account.bean.vo.BindCarVo;
 import cn.account.bean.vo.BindDriverLicenseVo;
 import cn.account.bean.vo.LoginReturnBeanVo;
 import cn.account.bean.vo.ReadilyShootVo;
+import cn.account.bean.vo.TrafficQueryVo;
 import cn.account.bean.vo.UnbindVehicleVo;
 import cn.account.bean.vo.UserBasicVo;
 import cn.account.service.IAccountService;
@@ -3011,18 +3012,20 @@ HttpServletRequest request,HttpServletResponse response){
 				unbindVehicleVo.setSourceOfCertification(sourceOfCertification);
 			}
 
-			Map<String, String> map = new HashMap<>();
-			map = accountService.unbindVehicle(unbindVehicleVo);
-
-			if (null != map) {
-				String code = map.get("code");
-        		String msg = map.get("msg");
-        		baseBean.setCode(code);
-        		if ("9999".endsWith(code)) {
-					baseBean.setCode("输入信息格式有误！");
+			Map<String, String> map = accountService.unbindVehicle(unbindVehicleVo);
+			String code = map.get("code");
+			String msg = map.get("msg");
+			if("0000".equals(code)){
+        		baseBean.setCode(MsgCode.success);
+        		baseBean.setMsg(msg);
+        	}else{
+        		baseBean.setCode(MsgCode.businessError);
+        		if ("9999".equals(code)) {
+        			baseBean.setMsg("输入信息格式有误！");
+				}else{
+					baseBean.setMsg(msg);
 				}
-            	baseBean.setMsg(msg);
-			}
+        	}
 
 		} catch (Exception e) {
 			logger.error("车辆解绑异常:" + e);
@@ -3453,7 +3456,97 @@ HttpServletRequest request,HttpServletResponse response){
 		logger.debug(JSON.toJSONString(baseBean));
 	}
     
+   /**
+    * 路况查询
+    * @param sourceOfCertification
+    * http://192.168.1.245:8080/web/user/trafficQuery.html?sourceOfCertification=C
+    */
+    @RequestMapping("trafficQuery")
+    public void trafficQuery(String sourceOfCertification){
+    	BaseBean baseBean = new BaseBean();	
+    	try{
+    		//创建返回结果
+			Map<String, Object> map = accountService.trafficQuery(sourceOfCertification);
+			String code = (String) map.get("code");
+			String msg = (String) map.get("msg");
+			if("0000".equals(code)){
+				List<TrafficQueryVo> list = (List<TrafficQueryVo>) map.get("data");
+        		baseBean.setCode(MsgCode.success);
+        		baseBean.setData(list);
+        	}else{
+        		baseBean.setCode(MsgCode.businessError);
+				baseBean.setMsg(msg);
+				baseBean.setData("");
+        	}
+			
+		} catch (Exception e) {
+			logger.error("路况查询异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+    }
     
+    /**
+     * 单条路况查询
+     * @param zjz 事件编号
+     * @param sourceOfCertification
+     *  http://192.168.1.245:8080/web/user/detailsTrafficQuery.html?zjz=537535&sourceOfCertification=C
+     */
+     @RequestMapping("detailsTrafficQuery")
+	public void detailsTrafficQuery(String zjz, String sourceOfCertification) {
+		BaseBean baseBean = new BaseBean();
+		boolean falg = false;
+		try {
+			// 创建返回结果
+			Map<String, String> map = accountService.detailsTrafficQuery(zjz, sourceOfCertification);
+			String code = map.get("code");
+			String msg = map.get("msg");
+			if ("0000".equals(code)) {
+				String pic = map.get("data");
+				try {
+					Map<String, Object> tmap = accountService.trafficQuery(sourceOfCertification);
+					String tcode = (String) tmap.get("code");
+					String tmsg = (String) tmap.get("msg");
+					if ("0000".equals(tcode)) {
+						List<TrafficQueryVo> trafficQueryVos = (List<TrafficQueryVo>) tmap.get("data");
+						for (TrafficQueryVo trafficQueryVo : trafficQueryVos) {
+							if (zjz.equals(trafficQueryVo.getId())) {
+								falg =true;
+								trafficQueryVo.setPic(pic);
+								baseBean.setCode(MsgCode.success);
+								baseBean.setData(trafficQueryVo);
+							}
+						}
+					} else {
+						baseBean.setCode(MsgCode.businessError);
+						baseBean.setMsg(tmsg);
+						baseBean.setData("");
+					}
+
+				} catch (Exception e) {
+					logger.error("路况查询异常:" + e);
+					DealException(baseBean, e);
+				}
+				
+				if (!falg) {
+					baseBean.setCode(MsgCode.businessError);
+					baseBean.setMsg("未查询到相关信息");
+				}
+
+			} else {
+				baseBean.setCode(MsgCode.businessError);
+				baseBean.setMsg(msg);
+				baseBean.setData("");
+			}
+
+		} catch (Exception e) {
+			logger.error("单条路况查询异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
     
 
 }
