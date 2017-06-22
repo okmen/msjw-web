@@ -192,8 +192,6 @@ public class IllegalAction extends BaseAction {
 			  String str= illegalService.custRegInfoReceive(cust, carList,openId);
 			  logger.info("同步客户信息！");
 		   }
-		   
-		   
 		   List<IllegalInfoBean> list= illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType, vehicleIdentifyNoLast4,openId);
 		   base.setCode("0000");
 		   if(list!=null){
@@ -420,10 +418,10 @@ public class IllegalAction extends BaseAction {
 		   String msg=result.getMsg();
 		   if("0000".equals(msgCode)){
 			   infos=(List<IllegalInfoClaim>) JSON.parseArray(result.getData().toString(), IllegalInfoClaim.class);
-			   returnList= illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType,"",openId);
+			   returnList= illegalService.queryInfoByLicensePlateNo1(licensePlateNo, licensePlateType,"",openId);
 		   }else{
 			   if("您好，没有查找到可用互联网方式处理的交通违法，感谢您对我局工作的支持！".equals(msg)||"由于您的驾驶证处理此宗违法后累计分已经超过12分，请到各大队违例窗口现场办理。".equals(msg)){
-				   returnList= illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType,"",openId);
+				   returnList= illegalService.queryInfoByLicensePlateNo1(licensePlateNo, licensePlateType,"",openId);
 			   }else{
 				   base.setCode(msgCode);
 				   base.setMsg(msg);
