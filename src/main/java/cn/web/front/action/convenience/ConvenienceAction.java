@@ -77,6 +77,8 @@ public class ConvenienceAction extends BaseAction{
 			String description = request.getParameter("description");  	   //现场描述  可为空
 			String sceneImg = request.getParameter("sceneImg");  		   //现场图片		可为空
 			String imgTime = request.getParameter("imgTime");  			//发现时间
+			String sourceOfCertification = request.getParameter("sourceOfCertification");  	//来源
+			
 			
 			//验证参数用户姓名
 			if (StringUtil.isBlank(userName)) {
@@ -142,6 +144,14 @@ public class ConvenienceAction extends BaseAction{
 				return;
 		    }*/
 			
+			//验证来源
+			if (StringUtil.isBlank(sourceOfCertification)) {
+				jsonMap.put("code", MsgCode.paramsError);
+				jsonMap.put("msg", "来源不能为空！");
+				out.print(JSONObject.fromObject(jsonMap));
+				return;
+		    }
+			
 			bean.setUserName(userName);    //用户姓名
 			bean.setMobilephone(mobilephone);   //用户手机
 			bean.setAddressRegion(addressRegion);   //区域
@@ -157,6 +167,7 @@ public class ConvenienceAction extends BaseAction{
 			bean.setSceneImg(sceneImg); 			//现场照片
 			bean.setIdentityCard(identityCard);  //身份证号
 			bean.setStartTime(imgTime);			 //拍照时间
+			bean.setSourceOfCertification(sourceOfCertification); //来源
 			
 			
 			//接口调用
@@ -215,6 +226,7 @@ public class ConvenienceAction extends BaseAction{
 			String description = request.getParameter("description");  	   //现场描述  可为空
 			String sceneImg = request.getParameter("sceneImg");  		   //现场图片		可为空
 			String imgTime = request.getParameter("imgTime");  			//发现时间
+			String sourceOfCertification = request.getParameter("sourceOfCertification");  	//来源
 			
 			//验证参数用户姓名
 			if (StringUtil.isBlank(userName)) {
@@ -272,6 +284,14 @@ public class ConvenienceAction extends BaseAction{
 				return;
 		    }
 			
+			//验证来源
+			if (StringUtil.isBlank(sourceOfCertification)) {
+				jsonMap.put("code", MsgCode.paramsError);
+				jsonMap.put("msg", "来源不能为空！");
+				out.print(JSONObject.fromObject(jsonMap));
+				return;
+		    }
+			
 			bean.setUserName(userName);    //用户姓名
 			bean.setMobilephone(mobilephone);   //用户手机
 			bean.setAddressRegion(addressRegion);   //区域
@@ -287,6 +307,7 @@ public class ConvenienceAction extends BaseAction{
 			bean.setSceneImg(sceneImg); 			//现场照片
 			bean.setIdentityCard(identityCard);  //身份证号
 			bean.setStartTime(imgTime);			 //拍照时间
+			bean.setSourceOfCertification(sourceOfCertification); //来源
 			
 			//接口调用
 			BaseBean refBean = convenienceService.safeHiddenDanger(bean);
@@ -342,6 +363,7 @@ public class ConvenienceAction extends BaseAction{
 			String roadServiceLevel = request.getParameter("roadServiceLevel");  //道路服务水平
 			String congestionReason = request.getParameter("congestionReason");  //拥堵成因
 			String improveAdvice = request.getParameter("improveAdvice");  //改善建议
+			String sourceOfCertification = request.getParameter("sourceOfCertification");  	//来源
 			
 			//验证参数手机号码
 			if (StringUtil.isBlank(mobilephone)) {
@@ -431,6 +453,14 @@ public class ConvenienceAction extends BaseAction{
 				return;
 			}
 			
+			//验证来源
+			if (StringUtil.isBlank(sourceOfCertification)) {
+				jsonMap.put("code", MsgCode.paramsError);
+				jsonMap.put("msg", "来源不能为空！");
+				out.print(JSONObject.fromObject(jsonMap));
+				return;
+		    }
+			
 			bean.setIdentityCard(identityCard);  //身份证号
 			bean.setMobilephone(mobilephone);   //用户手机
 			bean.setIp(ip);    //ip
@@ -444,6 +474,7 @@ public class ConvenienceAction extends BaseAction{
 			bean.setImproveAdvice(improveAdvice);  	//改善建议
 			bean.setAddress(address);			//主题地点描述
 			bean.setAddressCode(addressCode);  // 经纬度  主题地点代码
+			bean.setSourceOfCertification(sourceOfCertification); //来源
 			
 			//接口调用
 			BaseBean refBean = convenienceService.trafficCongestion(bean);
@@ -497,6 +528,7 @@ public class ConvenienceAction extends BaseAction{
 			String congestionCode = request.getParameter("congestionCode");  //拥堵类型code
 			String congestionType = request.getParameter("congestionType");  //拥堵类型
 			String description = request.getParameter("description");  //现场描述
+			String sourceOfCertification = request.getParameter("sourceOfCertification");  	//来源
 			
 			//验证参数手机号码
 			if (StringUtil.isBlank(mobilephone)) {
@@ -554,6 +586,14 @@ public class ConvenienceAction extends BaseAction{
 				return;
 			}
 			
+			//验证来源
+			if (StringUtil.isBlank(sourceOfCertification)) {
+				jsonMap.put("code", MsgCode.paramsError);
+				jsonMap.put("msg", "来源不能为空！");
+				out.print(JSONObject.fromObject(jsonMap));
+				return;
+		    }
+			
 			bean.setIdentityCard(identityCard);  //身份证号
 			bean.setMobilephone(mobilephone);   //用户手机
 			bean.setIp(ip);    //ip
@@ -564,6 +604,7 @@ public class ConvenienceAction extends BaseAction{
 			bean.setCongestionType(congestionType);  //机动车违法停放
 			bean.setAddress(address);			//主题地点描述
 			bean.setAddressCode(addressCode);  // 经纬度  主题地点代码
+			bean.setSourceOfCertification(sourceOfCertification); //来源
 			
 			//接口调用
 			BaseBean refBean = convenienceService.sequenceChaos(bean);
@@ -601,7 +642,8 @@ public class ConvenienceAction extends BaseAction{
 			@RequestParam(value="numberPlate",required=false) String numberPlate,
 			@RequestParam(value="carType",required=false) String carType,
 			@RequestParam(value="doodgenAddress",required=false) String doodgenAddress,
-			@RequestParam(value="identityCard",required=false) String identityCard
+			@RequestParam(value="identityCard",required=false) String identityCard,
+			@RequestParam(value="sourceOfCertification",required=false) String sourceOfCertification
 			){
 		PrintWriter out=null;
 		HashMap<String,Object> jsonMap = new HashMap<String, Object>();
@@ -650,11 +692,20 @@ public class ConvenienceAction extends BaseAction{
 				return;
 			}
 			
+			//验证来源
+			if (StringUtil.isBlank(sourceOfCertification)) {
+				jsonMap.put("code", MsgCode.paramsError);
+				jsonMap.put("msg", "来源不能为空！");
+				out.print(JSONObject.fromObject(jsonMap));
+				return;
+		    }
+			
 			bean.setIdentityCard(identityCard);  //身份证号
 			bean.setNumberPlate(numberPlate);   //车牌号
 			bean.setAbbreviation(abbreviation);		//车牌简称
 			bean.setCarType(carType);		//车类型
 			bean.setDoodgenAddress(doodgenAddress);
+			bean.setSourceOfCertification(sourceOfCertification); //来源
 			
 			BaseBean refBean = convenienceService.oneKeyDodgen(bean);
 			jsonMap.put("code", refBean.getCode());
