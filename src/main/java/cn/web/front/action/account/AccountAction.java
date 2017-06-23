@@ -36,6 +36,7 @@ import cn.account.bean.vo.BindDriverLicenseVo;
 import cn.account.bean.vo.LoginReturnBeanVo;
 import cn.account.bean.vo.ReadilyShootVo;
 import cn.account.bean.vo.TrafficQueryVo;
+import cn.account.bean.vo.UnbindTheOtherDriverUseMyCarVo;
 import cn.account.bean.vo.UnbindVehicleVo;
 import cn.account.bean.vo.UserBasicVo;
 import cn.account.service.IAccountService;
@@ -3030,6 +3031,94 @@ HttpServletRequest request,HttpServletResponse response){
 
 		} catch (Exception e) {
 			logger.error("车辆解绑异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+	
+	
+	
+	/**
+	 * 车主解绑车辆其他驾驶人
+	 * 
+	 * @param loginUser 登录账户
+	 * @param licensePlateNumber 车牌号码
+	 * @param licensePlateType 车牌种类
+	 * @param IDcard 其他使用人身份证号
+	 * @param userSource 认证来源
+	 * @param sourceOfCertification 申请途径
+	 * @param http://192.168.1.245:8080/web/user/unbindTheOtherDriverUseMyCar.html?loginUser=440301199002101119&numberPlateNumber=粤B701NR&plateType=02&IDcard=440301199002101119&userSource=C&sourceOfCertification=C
+	 * 
+	 * 
+	 */
+	@RequestMapping("unbindTheOtherDriverUseMyCar")
+	public void unbindTheOtherDriverUseMyCar(String loginUser, String numberPlateNumber, String plateType,String IDcard,String userSource ,
+			String sourceOfCertification) {
+
+		BaseBean baseBean = new BaseBean(); // 创建返回结果 
+		UnbindTheOtherDriverUseMyCarVo unbindTheOtherDriverUseMyCarVo = new UnbindTheOtherDriverUseMyCarVo();
+		try {
+			if (StringUtil.isBlank(loginUser)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("身份证明号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			} else {
+				unbindTheOtherDriverUseMyCarVo.setLoginUser(loginUser);
+			}
+
+			if (StringUtil.isBlank(numberPlateNumber)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("车牌号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			} else {
+				unbindTheOtherDriverUseMyCarVo.setNumberPlateNumber(numberPlateNumber);
+			}
+
+			if (StringUtil.isBlank(plateType)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("车牌种类不能为空!");
+				renderJSON(baseBean);
+				return;
+			} else {
+				unbindTheOtherDriverUseMyCarVo.setPlateType(plateType);
+			}
+			if (StringUtil.isBlank(IDcard)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("身份证号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			} else {
+				unbindTheOtherDriverUseMyCarVo.setIDcard(IDcard);
+			}
+			if (StringUtil.isBlank(sourceOfCertification)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("认证来源不能为空!");
+				renderJSON(baseBean);
+				return;
+			} else {
+				unbindTheOtherDriverUseMyCarVo.setSourceOfCertification(sourceOfCertification);
+			}
+
+			Map<String, String> map = accountService.unbindTheOtherDriverUseMyCar(unbindTheOtherDriverUseMyCarVo);
+			String code = map.get("code");
+			String msg = map.get("msg");
+			if("0000".equals(code)){
+        		baseBean.setCode(MsgCode.success);
+        		baseBean.setMsg(msg);
+        	}else{
+        		baseBean.setCode(MsgCode.businessError);
+        		if ("9999".equals(code)) {
+        			baseBean.setMsg("输入信息格式有误！");
+				}else{
+					baseBean.setMsg(msg);
+				}
+        	}
+
+		} catch (Exception e) {
+			logger.error("车主解绑车辆其他驾驶人异常:" + e);
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);

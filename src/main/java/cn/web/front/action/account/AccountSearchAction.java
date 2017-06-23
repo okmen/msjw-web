@@ -544,6 +544,8 @@ public class AccountSearchAction extends BaseAction {
                 		if ("0000".equals(code)) {
         					List<BindTheOtherDriversUseMyCarVo> list = (List<BindTheOtherDriversUseMyCarVo>) map.get("data");
         					bindTheVehicleVo.setList(list);				
+        				}else{
+        					bindTheVehicleVo.setList(null);
         					}
             		}catch(Exception e){
             			DealException(baseBean, e);
