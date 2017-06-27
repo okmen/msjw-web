@@ -61,49 +61,57 @@ public class WechatAction extends BaseAction {
 
 	@RequestMapping(value = "/doGet.html", method = RequestMethod.POST)
 	public void message(HttpServletRequest request, HttpServletResponse response){
+		long begin = System.currentTimeMillis();
+
+		// 获取post
+		Map<String, String> requestMap = WechatPostParamsUtil.parseXml(request);
+		String fromUserName = requestMap.get("FromUserName");
+		String toUserName = requestMap.get("ToUserName");
+		String msgType = requestMap.get("MsgType");
+		String event = requestMap.get("Event");
+		String content = requestMap.get("Content");
+		String msgId = requestMap.get("MsgId");
+		String eventKey = requestMap.get("EventKey");
+		String xml = requestMap.get("xml");
+		String keyStandard = requestMap.get("KeyStandard");
+
 		try {
-			long begin = System.currentTimeMillis();
-			
 			request.setCharacterEncoding("utf-8");
-			//获取post
-			Map<String, String> requestMap = WechatPostParamsUtil.parseXml(request);
-			String fromUserName = requestMap.get("FromUserName");
-	        String toUserName = requestMap.get("ToUserName");
-	        String msgType = requestMap.get("MsgType");
-	        String event = requestMap.get("Event"); 
-	        String content = requestMap.get("Content");
-	        String msgId = requestMap.get("MsgId");
-	        String eventKey = requestMap.get("EventKey");
-	        String xml = requestMap.get("xml");
-	        String keyStandard = requestMap.get("KeyStandard");
-	        
-	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_TYPE_SCAN.toLowerCase().equals(event)){
-	        	 logger.info("微信消息xml:"+xml);
-	        	 String pinganResult = "";
-	    		 if("code128".equals(keyStandard)){
-	    			 String url="http://code.stcpay.com:8088/ysth-traffic-front/weixin/msg.do"; 
-	    			 //发送报文到平安获得返回报文
-	    			 pinganResult=HttpRequest.sendPost(url, xml, 4900);
-	    			 logger.info("平安返回报文:"+pinganResult);
-	    		 }
-	    		 outString(response,pinganResult);		
-	    		 return;
-	        }
-			
-			IMessage mesasge = wechatService.processPostMessage(new WechatPostMessageModel(fromUserName, toUserName, msgType, event,content,msgId,eventKey));
-			if(null != mesasge){
+			if (IMessage.MESSAGE_TYPE_EVENT.equals(msgType)
+					&& IEvent.EVENT_TYPE_SCAN.toLowerCase().equals(event)) {
+				logger.info("微信消息xml:" + xml);
+				String pinganResult = "";
+				if ("code128".equals(keyStandard)) {
+					String url = "http://code.stcpay.com:8088/ysth-traffic-front/weixin/msg.do";
+					// 发送报文到平安获得返回报文
+					pinganResult = HttpRequest.sendPost(url, xml, 4900);
+					logger.info("平安返回报文:" + pinganResult);
+				}
+				outString(response, pinganResult);
+				return;
+			}
+
+			IMessage mesasge = wechatService
+					.processPostMessage(new WechatPostMessageModel(
+							fromUserName, toUserName, msgType, event, content,
+							msgId, eventKey));
+			if (null != mesasge) {
 				outString(response, mesasge.toXml());
-			} else{
+			} else {
 				outString(response, "success");
 			}
 			long end = System.currentTimeMillis();
-			
-			if(end-begin > 5000){
-				logger.info("doGet响应超过5秒 耗时:"+(end-begin)+",xml:"+xml);
+
+			if (end - begin > 1000) {
+				logger.info("doGet响应 耗时:" + (end - begin) + ",xml:" + xml);
 			}
-		} catch (IOException e) { 
+		} catch (IOException e) {
 			outString(response, "success");
-			logger.error("接收微信post消息异常",e);
+			logger.error("接收微信post消息异常", e);
+			long end = System.currentTimeMillis();
+			if (end - begin > 1000) {
+				logger.info("doGet响应 耗时:" + (end - begin) + ",xml:" + xml);
+			}
 		}
 	}
 	
@@ -146,7 +154,7 @@ public class WechatAction extends BaseAction {
 		}
 	}
 	
-	@RequestMapping(value = "/jfhfsgagsa.html", method = RequestMethod.GET) 
+/*	@RequestMapping(value = "/jfhfsgagsa.html", method = RequestMethod.GET) 
 	public void jfhfsgagsa(HttpServletRequest request, HttpServletResponse response){
 		try {
 			response.setCharacterEncoding("utf-8");
@@ -161,4 +169,5 @@ public class WechatAction extends BaseAction {
 			outString(response, "error");
 		}
 	}
-}
+*/
+	}
