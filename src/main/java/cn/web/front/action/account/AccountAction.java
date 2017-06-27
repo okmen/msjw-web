@@ -73,9 +73,9 @@ import cn.web.front.support.BaseAction;
 @RequestMapping(value="/user/")
 @SuppressWarnings(value="all")
 public class AccountAction extends BaseAction {
-    @Autowired
+   /* @Autowired
     @Qualifier("handleService")
-    private IHandleService handleService;
+    private IHandleService handleService;*/
     
     @Autowired
     @Qualifier("accountService")
@@ -1568,6 +1568,98 @@ public class AccountAction extends BaseAction {
     }
     
     /**
+     * 路况查询
+     * @param sourceOfCertification
+     * http://192.168.1.245:8080/web/user/trafficQuery.html?sourceOfCertification=C
+     */
+     @RequestMapping("trafficQuery")
+     public void trafficQuery(String sourceOfCertification){
+     	BaseBean baseBean = new BaseBean();	
+     	try{
+     		//创建返回结果
+ 			Map<String, Object> map = accountService.trafficQuery(sourceOfCertification);
+ 			String code = (String) map.get("code");
+ 			String msg = (String) map.get("msg");
+ 			if("0000".equals(code)){
+ 				List<TrafficQueryVo> list = (List<TrafficQueryVo>) map.get("data");
+         		baseBean.setCode(MsgCode.success);
+         		baseBean.setData(list);
+         	}else{
+         		baseBean.setCode(MsgCode.businessError);
+ 				baseBean.setMsg(msg);
+ 				baseBean.setData("");
+         	}
+ 			
+ 		} catch (Exception e) {
+ 			logger.error("路况查询异常:" + e);
+ 			DealException(baseBean, e);
+ 		}
+ 		renderJSON(baseBean);
+ 		logger.debug(JSON.toJSONString(baseBean));
+     }
+     
+     /**
+      * 单条路况查询
+      * @param zjz 事件编号
+      * @param sourceOfCertification
+      *  http://192.168.1.245:8080/web/user/detailsTrafficQuery.html?zjz=537535&sourceOfCertification=C
+      */
+      @RequestMapping("detailsTrafficQuery")
+ 	public void detailsTrafficQuery(String zjz, String sourceOfCertification) {
+ 		BaseBean baseBean = new BaseBean();
+ 		boolean falg = false;
+ 		try {
+ 			// 创建返回结果
+ 			Map<String, String> map = accountService.detailsTrafficQuery(zjz, sourceOfCertification);
+ 			String code = map.get("code");
+ 			String msg = map.get("msg");
+ 			if ("0000".equals(code)) {
+ 				String pic = map.get("data");
+ 				try {
+ 					Map<String, Object> tmap = accountService.trafficQuery(sourceOfCertification);
+ 					String tcode = (String) tmap.get("code");
+ 					String tmsg = (String) tmap.get("msg");
+ 					if ("0000".equals(tcode)) {
+ 						List<TrafficQueryVo> trafficQueryVos = (List<TrafficQueryVo>) tmap.get("data");
+ 						for (TrafficQueryVo trafficQueryVo : trafficQueryVos) {
+ 							if (zjz.equals(trafficQueryVo.getId())) {
+ 								falg =true;
+ 								trafficQueryVo.setPic(pic);
+ 								baseBean.setCode(MsgCode.success);
+ 								baseBean.setData(trafficQueryVo);
+ 							}
+ 						}
+ 					} else {
+ 						baseBean.setCode(MsgCode.businessError);
+ 						baseBean.setMsg(tmsg);
+ 						baseBean.setData("");
+ 					}
+
+ 				} catch (Exception e) {
+ 					logger.error("路况查询异常:" + e);
+ 					DealException(baseBean, e);
+ 				}
+ 				
+ 				if (!falg) {
+ 					baseBean.setCode(MsgCode.businessError);
+ 					baseBean.setMsg("未查询到相关信息");
+ 				}
+
+ 			} else {
+ 				baseBean.setCode(MsgCode.businessError);
+ 				baseBean.setMsg(msg);
+ 				baseBean.setData("");
+ 			}
+
+ 		} catch (Exception e) {
+ 			logger.error("单条路况查询异常:" + e);
+ 			DealException(baseBean, e);
+ 		}
+ 		renderJSON(baseBean);
+ 		logger.debug(JSON.toJSONString(baseBean));
+ 	}
+      
+    /**
      * 驾驶证年审 
      * @param identificationNO 身份证明类型
      * @param name 姓名                        
@@ -1590,7 +1682,7 @@ public class AccountAction extends BaseAction {
 	 * @param http://192.168.1.245:8080/web/user/driverLicenseAnnualVerification.html?identificationNO=A&name=张宇帆&IDcard=445222199209020034&mobilephone=15920050177&placeOfDomicile=深圳&receiverName=11&receiverNumber=15920050177&mailingAddress=深圳市宝安区&IDCardPhoto1=111&IDCardPhoto2=222&livePhoto1=111&livePhoto2=222 &educationDrawingtable=111&foreignersLiveTable=222&postalcode=1&loginUser=445222199209020034&sourceOfCertification=C&userSource=C
 
 	 * 
-     */
+     *//*
     @RequestMapping("driverLicenseAnnualVerification")
     public void driverLicenseAnnualVerification(String identificationNO ,String name ,String IDcard ,String mobilephone ,String placeOfDomicile ,String receiverName ,String receiverNumber ,String  mailingAddress ,String IDCardPhoto1 ,String IDCardPhoto2 ,String livePhoto1 ,String livePhoto2 ,String educationDrawingtable ,String foreignersLiveTable ,String postalcode ,String loginUser ,String sourceOfCertification ,String userSource,HttpServletRequest request,HttpServletResponse response){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
@@ -1773,7 +1865,7 @@ public class AccountAction extends BaseAction {
     }
     
     
-    /**
+    *//**
      * 驾驶证延期换证 
      * @param  name 姓名                  
 	 * @param  identificationNO 身份证明类型  
@@ -1794,7 +1886,7 @@ public class AccountAction extends BaseAction {
 	 * @param http://192.168.1.245:8080/web/user/renewalDriverLicense.html?name=张宇帆&identificationNO=A&IDcard=445222199209020034&driverLicense=445222199209020034&fileNumber=123456&delayDate=20170701&delayReason=gg&sourceOfCertification=C&loginUser=445222199209020034&IDCardPhoto1=111&IDCardPhoto2=222&driverLicensePhoto=111&delayphoto=111&receiverName=张宇帆&receiverNumber=15920050177&mailingAddress=深圳市宝安区       
         
 	 *         
-     */
+     *//*
     @RequestMapping("renewalDriverLicense")
     public void renewalDriverLicense(String name ,String identificationNO ,String IDcard ,String driverLicense ,String fileNumber ,String delayDate ,String delayReason,String sourceOfCertification,String loginUser ,String IDCardPhoto1,String IDCardPhoto2,String driverLicensePhoto,String delayphoto ,String receiverName ,String receiverNumber ,String  mailingAddress,HttpServletRequest request,HttpServletResponse response){
     	
@@ -1969,7 +2061,7 @@ public class AccountAction extends BaseAction {
     
     
 
-    /**
+    *//**
      * 驾驶证转入
      * @param  name 姓名                  
 	 * @param  identificationNO 身份证明类型  
@@ -1990,7 +2082,7 @@ public class AccountAction extends BaseAction {
 	 * @param http://192.168.1.245:8080/web/user/driverLicenseInto.html?name=张宇帆&identificationNO=A&IDcard=445222199209020034&driverLicense=445222199209020034&fileNumber=123456&issuingLicenceAuthority=藏A:拉萨市公安局&photoReturnNumberString=111&receiverName=张宇帆&receiverNumber=15920050177&mailingAddress=深圳市宝安区&sourceOfCertification=C&loginUser=445222199209020034&IDCardPhoto1=111&IDCardPhoto2=222&driverLicensePhoto=111&bodyConditionForm=222    
          
 	 *         
-     */
+     *//*
     @RequestMapping("driverLicenseInto")
     public void driverLicenseInto( String name ,String identificationNO ,String IDcard ,String driverLicense ,String fileNumber ,String  issuingLicenceAuthority ,String photoReturnNumberString ,String receiverName , String receiverNumber , String mailingAddress ,String sourceOfCertification ,String loginUser ,String IDCardPhoto1,String IDCardPhoto2,String driverLicensePhoto,String bodyConditionForm,HttpServletRequest request,HttpServletResponse response){
     	
@@ -2165,7 +2257,7 @@ public class AccountAction extends BaseAction {
     }                                                                          
                                                                          
                                                                                    
-    /**                                                                                
+    *//**                                                                                
      * 驾驶证自愿降级                                                          
      * @param   identificationNO;//身份证明名称                              
 	 * @param   loginUser;//认证用户身份证号                      
@@ -2185,7 +2277,7 @@ public class AccountAction extends BaseAction {
 	 * @param http://192.168.1.245:8080/web/user/driverLicenseVoluntaryDemotion.html?identificationNO=A&loginUser=445222199209020034&IDcard=445222199209020034&driverLicense=445222199209020034&name=张宇帆&photoReturnNumberString=11111&placeOfDomicile=深圳&receiverName=张宇帆&receiverNumber=15920050177&mailingAddress=深圳市宝安区&sourceOfCertification=C&userSource=C&IDCardPhoto1=111&IDCardPhoto2=222&driverLicensePhoto=111      
         
 	 *         
-     */
+     *//*
     @RequestMapping("driverLicenseVoluntaryDemotion")
     public void driverLicenseVoluntaryDemotion( String identificationNO ,String loginUser ,String IDcard ,String driverLicense ,String name ,String photoReturnNumberString ,String placeOfDomicile , String receiverName , String receiverNumber , String mailingAddress ,String sourceOfCertification ,String userSource ,String IDCardPhoto1,String IDCardPhoto2,String driverLicensePhoto,HttpServletRequest request,HttpServletResponse response){
     	
@@ -2355,7 +2447,7 @@ public class AccountAction extends BaseAction {
     
     
 
-    /**
+    *//**
      * 驾驶证补证
 	 * @param  repairReason 补证原因               
 	 * @param  identificationNO 身份证明名称        
@@ -2378,7 +2470,7 @@ public class AccountAction extends BaseAction {
 	 * @param  userSource 来源标志  
 	 * @param  http://192.168.1.245:8080/web/user/repairDriverLicense.html?repairReason=1&identificationNO=A&IDcard=445222199209020034&name=张宇帆&mobilephone=15920050177&IDCardPhoto1=111&IDCardPhoto2=222&photoReturnNumberString=111&foreignersLiveTable=111&placeOfDomicile=深圳&postalcode=1&receiverName=111&receiverNumber=15920050177&mailingAddress=深圳市宝安区&livePhoto1=111&livePhoto2=222&loginUser=445222199209020034&sourceOfCertification=C&userSource=C                    
            
-     */
+     *//*
     @RequestMapping("repairDriverLicense")
     public void repairDriverLicense(String repairReason ,String identificationNO ,String IDcard ,String name ,String mobilephone ,String IDCardPhoto1 ,String IDCardPhoto2 ,String photoReturnNumberString ,String foreignersLiveTable ,String placeOfDomicile,String postalcode ,String receiverName ,String receiverNumber ,String mailingAddress ,String livePhoto1 ,String livePhoto2 ,String loginUser ,String sourceOfCertification ,String userSource ,                           
 HttpServletRequest request,HttpServletResponse response){
@@ -2568,7 +2660,7 @@ HttpServletRequest request,HttpServletResponse response){
 		logger.debug(JSON.toJSONString(baseBean));
     }
     
-    /**
+    *//**
      * 驾驶证换证
 	 * @param  identificationNO 身份证明名称        
 	 * @param  IDcard 身份证明号码                  
@@ -2589,7 +2681,7 @@ HttpServletRequest request,HttpServletResponse response){
 	 * @param  userSource 来源标志  
 	 * @param  http://192.168.1.245:8080/web/user/replaceDriverLicense.html?identificationNO=A&IDcard=445222199209020034&name=张宇帆&mobilephone=15920050177&IDCardPhoto1=111&IDCardPhoto2=222&photoReturnNumberString=111&foreignersLiveTable=111&placeOfDomicile=深圳&receiverName=111&receiverNumber=15920050177&mailingAddress=深圳市宝安区&livePhoto1=111&livePhoto2=222&loginUser=445222199209020034&sourceOfCertification=C&userSource=C                    
            
-     */
+     *//*
     @RequestMapping("replaceDriverLicense")
     public void replaceDriverLicense(String identificationNO ,String IDcard ,String name ,String mobilephone ,String IDCardPhoto1 ,String IDCardPhoto2 ,String photoReturnNumberString ,String foreignersLiveTable ,String placeOfDomicile,String receiverName ,String receiverNumber ,String mailingAddress ,String livePhoto1 ,String livePhoto2 ,String loginUser ,String sourceOfCertification ,String userSource ,                           
     			HttpServletRequest request,HttpServletResponse response){
@@ -2780,7 +2872,7 @@ HttpServletRequest request,HttpServletResponse response){
     }
     
     
-    /**                                                                                
+    *//**                                                                                
      * 驾驶人联系方式变更                                                          
      * @param  name 姓名                                     
 	 * @param  gender 性别                        
@@ -2796,7 +2888,7 @@ HttpServletRequest request,HttpServletResponse response){
 	 * @param  driverLicensePhoto 驾驶证照片
 	 * @param http://192.168.1.245:8080/web/user/driverChangeContact.html?name=张宇帆&gender=1&identificationNO=A&IDcard=622822198502074110&driverLicense=622822198502074110&mailingAddress=深圳市宝安区&mobilephone=15920050177&loginUser=15920050177&userSource=C&IDCardPhoto1=111&IDCardPhoto2=222&driverLicensePhoto=111 
               
-     */
+     *//*
     @RequestMapping("driverChangeContact")
     public void driverChangeContact( String name ,String gender ,String identificationNO ,String IDcard ,String driverLicense ,String mailingAddress ,String mobilephone , String loginUser ,String userSource ,String IDCardPhoto1,String IDCardPhoto2,String driverLicensePhoto,HttpServletRequest request,HttpServletResponse response){
     	
@@ -2938,7 +3030,7 @@ HttpServletRequest request,HttpServletResponse response){
     }
     
     
-	/**
+	*//**
 	 * 车辆解绑
 	 * 
 	 * @param loginUser 登录账户
@@ -2950,7 +3042,7 @@ HttpServletRequest request,HttpServletResponse response){
 	 * @param http://192.168.1.245:8080/web/user/unbindVehicle.html?loginUser=440301199002101119&licensePlateNumber=粤B701NR&licensePlateType=02&identificationNO=A&IDcard=440301199002101119&sourceOfCertification=C
 	 * 
 	 * 
-	 */
+	 *//*
 	@RequestMapping("unbindVehicle")
 	public void unbindVehicle(String loginUser, String licensePlateNumber, String licensePlateType,String identificationNO,String IDcard,
 			String sourceOfCertification) {
@@ -3038,9 +3130,9 @@ HttpServletRequest request,HttpServletResponse response){
     
     
     
-    /**                                                                                
+    *//**                                                                                
      * 发证机关参数转换
-     */
+     *//*
     @RequestMapping("getIssuingLicenceAuthorityArray")
     public void getIssuingLicenceAuthorityArray(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();
@@ -3456,98 +3548,8 @@ HttpServletRequest request,HttpServletResponse response){
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
-    
-   /**
-    * 路况查询
-    * @param sourceOfCertification
-    * http://192.168.1.245:8080/web/user/trafficQuery.html?sourceOfCertification=C
     */
-    @RequestMapping("trafficQuery")
-    public void trafficQuery(String sourceOfCertification){
-    	BaseBean baseBean = new BaseBean();	
-    	try{
-    		//创建返回结果
-			Map<String, Object> map = accountService.trafficQuery(sourceOfCertification);
-			String code = (String) map.get("code");
-			String msg = (String) map.get("msg");
-			if("0000".equals(code)){
-				List<TrafficQueryVo> list = (List<TrafficQueryVo>) map.get("data");
-        		baseBean.setCode(MsgCode.success);
-        		baseBean.setData(list);
-        	}else{
-        		baseBean.setCode(MsgCode.businessError);
-				baseBean.setMsg(msg);
-				baseBean.setData("");
-        	}
-			
-		} catch (Exception e) {
-			logger.error("路况查询异常:" + e);
-			DealException(baseBean, e);
-		}
-		renderJSON(baseBean);
-		logger.debug(JSON.toJSONString(baseBean));
-    }
-    
-    /**
-     * 单条路况查询
-     * @param zjz 事件编号
-     * @param sourceOfCertification
-     *  http://192.168.1.245:8080/web/user/detailsTrafficQuery.html?zjz=537535&sourceOfCertification=C
-     */
-     @RequestMapping("detailsTrafficQuery")
-	public void detailsTrafficQuery(String zjz, String sourceOfCertification) {
-		BaseBean baseBean = new BaseBean();
-		boolean falg = false;
-		try {
-			// 创建返回结果
-			Map<String, String> map = accountService.detailsTrafficQuery(zjz, sourceOfCertification);
-			String code = map.get("code");
-			String msg = map.get("msg");
-			if ("0000".equals(code)) {
-				String pic = map.get("data");
-				try {
-					Map<String, Object> tmap = accountService.trafficQuery(sourceOfCertification);
-					String tcode = (String) tmap.get("code");
-					String tmsg = (String) tmap.get("msg");
-					if ("0000".equals(tcode)) {
-						List<TrafficQueryVo> trafficQueryVos = (List<TrafficQueryVo>) tmap.get("data");
-						for (TrafficQueryVo trafficQueryVo : trafficQueryVos) {
-							if (zjz.equals(trafficQueryVo.getId())) {
-								falg =true;
-								trafficQueryVo.setPic(pic);
-								baseBean.setCode(MsgCode.success);
-								baseBean.setData(trafficQueryVo);
-							}
-						}
-					} else {
-						baseBean.setCode(MsgCode.businessError);
-						baseBean.setMsg(tmsg);
-						baseBean.setData("");
-					}
-
-				} catch (Exception e) {
-					logger.error("路况查询异常:" + e);
-					DealException(baseBean, e);
-				}
-				
-				if (!falg) {
-					baseBean.setCode(MsgCode.businessError);
-					baseBean.setMsg("未查询到相关信息");
-				}
-
-			} else {
-				baseBean.setCode(MsgCode.businessError);
-				baseBean.setMsg(msg);
-				baseBean.setData("");
-			}
-
-		} catch (Exception e) {
-			logger.error("单条路况查询异常:" + e);
-			DealException(baseBean, e);
-		}
-		renderJSON(baseBean);
-		logger.debug(JSON.toJSONString(baseBean));
-	}
+   
     
 
 }
