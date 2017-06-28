@@ -3043,8 +3043,8 @@ HttpServletRequest request,HttpServletResponse response){
 	 * 车主解绑车辆其他驾驶人
 	 * 
 	 * @param loginUser 登录账户
-	 * @param numberPlateNumber 车牌号码
-	 * @param plateType 车牌种类
+	 * @param numberPlateNumber 号牌号码
+	 * @param plateType 号牌种类
 	 * @param IDcard 其他使用人身份证号
 	 * @param userSource 认证来源
 	 * @param sourceOfCertification 申请途径
