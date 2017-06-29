@@ -943,7 +943,7 @@ public class AccountAction extends BaseAction {
      */
     @RequestMapping(value = "readilyShoot",method = RequestMethod.POST)
     public void readilyShoot(String licensePlateNumber,String licensePlateType,String illegalActivitieOne, String illegalTime, String illegalSections, String reportImgOne, String reportImgTwo
-    		, String reportImgThree, String inputMan,String inputManName,String inputManPhone,String identityCard,String userSource,String openId,String wfxw1) {
+    		, String reportImgThree, String inputMan,String inputManName,String inputManPhone,String identityCard,String userSource,String openId,String wfxw1,String sourceOfCertification) {
     	String code=MsgCode.success;
  		StringBuffer sb = new StringBuffer("");
  		int imgNumber=0;//传入的图片数量
@@ -1033,6 +1033,12 @@ public class AccountAction extends BaseAction {
  		}else{
  			readilyShootVo.setUserSource(userSource);
  		}
+    	if(StringUtil.isBlank(sourceOfCertification)){
+ 			code=MsgCode.paramsError;
+ 			sb.append("sourceOfCertification为空  ");
+ 		}else{
+ 			readilyShootVo.setUserSource(userSource);
+ 		}
     	
     	if(StringUtil.isBlank(openId)){
  			code=MsgCode.paramsError;
@@ -1101,7 +1107,7 @@ public class AccountAction extends BaseAction {
     					}
     					int count = accountService.saveReadilyShoot(readilyShoot);
     					logger.info("saveReadilyShoot返回值：" + count);
-    					if(1 == count){
+    					if(1 == count && sourceOfCertification.equals("C")){
     						 //举报成功发送模板消息
         					try {
         						String templateId = "pFy7gcEYSklRmg32165BUBwM3PFbUbBSLe0IPw3ZuY4";
