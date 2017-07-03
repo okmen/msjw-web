@@ -58,6 +58,7 @@ import cn.sdk.exception.ResultCode;
 import cn.sdk.msg.MsgTemplate;
 import cn.sdk.thread.BilinThreadPool;
 import cn.sdk.util.MsgCode;
+import cn.sdk.util.SXStringUtils;
 import cn.sdk.util.StringUtil;
 import cn.web.front.action.account.task.AccountTask;
 import cn.web.front.action.account.task.AccountTaskExecute;
@@ -1057,9 +1058,10 @@ public class AccountAction extends BaseAction {
     				if(!MsgCode.success.equals(code)){
     					code=MsgCode.businessError;
     				}else{
-    					String reportSerialNumber = msg.substring(5, 20);
+    					String reportSerialNumber = SXStringUtils.deleteChineseCharactertoString(msg);
+    					reportSerialNumber = reportSerialNumber.replace(":", "");
+    					//String reportSerialNumber = msg.substring(5, 20);
 						String password = json.getString("cxyzm");
-						
     					Map<String, Object> modelMap = new HashMap<String, Object>();
     			     	modelMap.put("recordNumber", reportSerialNumber);
     			     	modelMap.put("queryPassword", password);
