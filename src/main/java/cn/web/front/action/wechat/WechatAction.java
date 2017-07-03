@@ -94,6 +94,7 @@ public class WechatAction extends BaseAction {
 			if(null != mesasge){
 				outString(response, mesasge.toXml());
 			} else{
+				response.setContentType("text/xml;charset=UTF-8");
 				outString(response, "success");
 			}
 			long end = System.currentTimeMillis();
@@ -101,7 +102,8 @@ public class WechatAction extends BaseAction {
 			if(end-begin > 5000){
 				logger.info("doGet响应超过5秒 耗时:"+(end-begin)+",xml:"+xml);
 			}
-		} catch (IOException e) { 
+		} catch (IOException e) {
+			response.setContentType("text/xml;charset=UTF-8");
 			outString(response, "success");
 			logger.error("接收微信post消息异常",e);
 		}
