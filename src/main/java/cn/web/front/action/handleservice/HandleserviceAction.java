@@ -1,5 +1,7 @@
 package cn.web.front.action.handleservice;
 
+import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSON;
 
+import cn.convenience.bean.ConvenienceBean;
+import cn.handle.bean.vo.ApplyCarTemporaryLicenceVo;
+import cn.handle.bean.vo.ApplyGatePassVo;
 import cn.handle.bean.vo.DriverChangeContactVo;
 import cn.handle.bean.vo.DriverLicenseAnnualVerificationVo;
 import cn.handle.bean.vo.DriverLicenseIntoVo;
@@ -21,9 +26,11 @@ import cn.handle.bean.vo.RenewalDriverLicenseVo;
 import cn.handle.bean.vo.RepairOrReplaceDriverLicenseVo;
 import cn.handle.service.IHandleService;
 import cn.sdk.bean.BaseBean;
+import cn.sdk.exception.WebServiceException;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
+import net.sf.json.JSONObject;
 
 /**
  * 办理类Action
@@ -1456,5 +1463,296 @@ HttpServletRequest request,HttpServletResponse response){
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
     }
+    
+    /**
+     * @Title: applyGatePass
+     * @Description: TODO(申请通行证-外地车)
+     * @param @param request
+     * @param @param response    参数
+     * @return void    返回类型
+     * @throws
+     */
+    @RequestMapping(value="/applyGatePass.html")
+	public void applyGatePass(HttpServletRequest request,HttpServletResponse response){
+    	BaseBean baseBean = new BaseBean();		//创建返回结果
+    	ApplyGatePassVo vo = new ApplyGatePassVo();
+    	
+		try {
+			String plateType = request.getParameter("plateType");   //号牌种类
+			String cartype = request.getParameter("cartype");  //车辆类型
+			String abbreviation = request.getParameter("abbreviation");  //车牌简称
+			String numberPlate = request.getParameter("numberPlate");  //车牌号码
+			String vin = request.getParameter("vin");  //车架号
+			String userName = request.getParameter("userName");  //车辆所有人
+			String mobilephone = request.getParameter("mobilephone");  //手机号码
+			String applyDate = request.getParameter("applyDate");  //申请日期
+			String remarks = request.getParameter("remarks");  //备注
+			
+			//验证号牌种类
+			if(StringUtil.isBlank(mobilephone)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("号牌种类不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			//验证车辆类型
+			if(StringUtil.isBlank(cartype)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("车辆类型不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			//验证车牌号码
+			if(StringUtil.isBlank(abbreviation) || StringUtil.isBlank(numberPlate)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("车牌号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			//验证车架号
+			if(StringUtil.isBlank(vin)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("车架号不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			//验证车辆所有人
+			if(StringUtil.isBlank(userName)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("车辆所有人不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			//验证手机
+			if(StringUtil.isBlank(mobilephone)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("手机号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			//验证申请日期
+			if(StringUtil.isBlank(applyDate)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("申请日期不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			vo.setAbbreviation(abbreviation); //车牌简称
+			vo.setNumberPlate(numberPlate); //车牌号码
+			vo.setPlateType(plateType); //号牌种类
+			vo.setCartype(cartype);  //车辆类型
+			vo.setVin(vin);  	//车架号后四位
+			vo.setUserName(userName);	//车辆所有人
+			vo.setMobilephone(mobilephone); //手机号码
+			vo.setApplyDate(applyDate);
+			vo.setRemarks(remarks);
+			
+			//接口调用
+			Map<String, String> map = handleService.applyGatePass(vo);
+			String code = map.get("code");
+			String msg = map.get("msg");
+			
+			if("0000".equals(code)){
+        		baseBean.setCode(MsgCode.success);
+        		baseBean.setMsg(msg);
+        	}else{
+        		baseBean.setCode(MsgCode.businessError);
+        		if ("9999".equals(code)) {
+        			baseBean.setMsg("输入信息格式有误！");
+				}else{
+					baseBean.setMsg(msg);
+				}
+        	}
+		} catch (Exception e) {
+			logger.error("申请通行证-外地车Action异常:"+e);
+			DealException(baseBean, e);
+			
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+    
+    /**
+     * @Title: applyCarTemporaryLicence
+     * @Description: TODO(申请机动车临牌)
+     * @param @param request
+     * @param @param response    参数
+     * @return void    返回类型
+     * @throws
+     */
+    @RequestMapping(value="/applyCarTemporaryLicence.html")
+	public void applyCarTemporaryLicence(HttpServletRequest request,HttpServletResponse response){
+    	BaseBean baseBean = new BaseBean();		//创建返回结果
+    	ApplyCarTemporaryLicenceVo vo = new ApplyCarTemporaryLicenceVo();
+    	
+		try {
+			String userName = request.getParameter("userName");   //姓名
+			String identityCard = request.getParameter("identityCard");  //身份证号
+			String mobilephone = request.getParameter("mobilephone");  //手机号码
+			String cartModels = request.getParameter("cartModels");  //车辆型号
+			String cartype = request.getParameter("cartype");  //车辆类型
+			String engineNumber = request.getParameter("engineNumber");  //发动机号
+			String vin = request.getParameter("vin");  //车架号
+			String carOrigin = request.getParameter("carOrigin");  //车辆产地 进口/国产
+			String placeOfDomicile = request.getParameter("placeOfDomicile");  //户籍所在地
+			String receiverName = request.getParameter("receiverName");  //收件人姓名
+			String receiverNumber = request.getParameter("receiverNumber");  //收件人号码
+			String receiverAddress = request.getParameter("receiverAddress");  //收件人地址
+			String PHOTO26 = request.getParameter("PHOTO26");  //购置发票图
+			String PHOTO27 = request.getParameter("PHOTO27");  //交强险单据
+			String PHOTO9 = request.getParameter("PHOTO9");  //身份证正面
+			String PHOTO10 = request.getParameter("PHOTO10");  //身份证反面
+			String PHOTO28 = request.getParameter("PHOTO28");  //机动车合格证
+			String PHOTO31 = request.getParameter("PHOTO31");  //境外人员临住表
+			String PHOTO29 = request.getParameter("PHOTO29");  //进口货物证明书
+			String sourceOfCertification = request.getParameter("sourceOfCertification");  	//来源
+			
+			//验证姓名
+			if(StringUtil.isBlank(userName)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("姓名不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			//验证identityCard
+			if(StringUtil.isBlank(identityCard)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("身份证号不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			//验证mobilephone
+			if(StringUtil.isBlank(mobilephone)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("手机号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			//验证cartModels
+			if(StringUtil.isBlank(cartModels)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("车辆型号不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			//验证cartype
+			if(StringUtil.isBlank(cartype)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("车辆类型不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			//验证engineNumber
+			if(StringUtil.isBlank(engineNumber)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("发动机号不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			//验证vin
+			if(StringUtil.isBlank(vin)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("车架号不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			//验证carOrigin
+			if(StringUtil.isBlank(carOrigin)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("车辆产地不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			//验证placeOfDomicile
+			if(StringUtil.isBlank(placeOfDomicile)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("户籍所在地不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			//验证receiverName
+			if(StringUtil.isBlank(receiverName)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("收件人姓名不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			//验证receiverNumber
+			if(StringUtil.isBlank(receiverNumber)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("收件人号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			//验证receiverAddress
+			if(StringUtil.isBlank(receiverAddress)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("收件人地址不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			vo.setUserName(userName);
+			vo.setIdentityCard(identityCard);
+			vo.setCartModels(cartModels);
+			vo.setCartype(cartype);
+			vo.setEngineNumber(engineNumber);
+			vo.setVin(vin);
+			vo.setCarOrigin(carOrigin);
+			vo.setReceiverName(receiverName);
+			vo.setReceiverAddress(receiverAddress);
+			vo.setReceiverNumber(receiverNumber);
+			vo.setPHOTO9(PHOTO9);
+			vo.setPHOTO10(PHOTO10);
+			vo.setPHOTO26(PHOTO26);
+			vo.setPHOTO27(PHOTO27);
+			vo.setPHOTO28(PHOTO28);
+			vo.setPHOTO29(PHOTO29);
+			vo.setPHOTO31(PHOTO31);
+			vo.setIp(getIp2(request));
+			vo.setSourceOfCertification(sourceOfCertification);
+			
+			//接口调用
+			Map<String, String> map = handleService.applyCarTemporaryLicence(vo);
+			String code = map.get("code");
+			String msg = map.get("msg");
+			
+			if("0000".equals(code)){
+        		baseBean.setCode(MsgCode.success);
+        		baseBean.setMsg(msg);
+        	}else{
+        		baseBean.setCode(MsgCode.businessError);
+        		if ("9999".equals(code)) {
+        			baseBean.setMsg("输入信息格式有误！");
+				}else{
+					baseBean.setMsg(msg);
+				}
+        	}
+		} catch (Exception e) {
+			logger.error("申请机动车临牌Action异常:"+e);
+			DealException(baseBean, e);
+			
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
     
 }
