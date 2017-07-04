@@ -64,6 +64,7 @@ public class HandleserviceAction extends BaseAction {
         		baseBean.setMsg("认证来源不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
+        		
         		return;
         	}
     		
