@@ -1,6 +1,7 @@
 package cn.web.front.action.handleservice;
 
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,8 +29,12 @@ import cn.handle.bean.vo.RenewalDriverLicenseVo;
 import cn.handle.bean.vo.RepairOrReplaceDriverLicenseVo;
 import cn.handle.bean.vo.VehicleDrivingLicenseVo;
 import cn.handle.service.IHandleService;
+import cn.message.model.wechat.TemplateDataModel;
+import cn.message.model.wechat.TemplateDataModel.Property;
+import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.WebServiceException;
+import cn.sdk.util.DateUtil2;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
@@ -47,6 +52,10 @@ public class HandleserviceAction extends BaseAction {
 	@Autowired
     @Qualifier("handleService")
     private IHandleService handleService;
+	
+	@Autowired
+    @Qualifier("templateMessageService")
+	ITemplateMessageService templateMessageService;
 	/**
 	 * 补领机动车行驶证
 	 * @param name 车主姓名/机动车所有人
@@ -1614,6 +1623,7 @@ HttpServletRequest request,HttpServletResponse response){
 			String mobilephone = request.getParameter("mobilephone");  //手机号码
 			String applyDate = request.getParameter("applyDate");  //申请日期
 			String remarks = request.getParameter("remarks");  //备注
+			String openId = request.getParameter("openId");  //openId
 			
 			//验证号牌种类
 			if(StringUtil.isBlank(mobilephone)){
@@ -1689,6 +1699,22 @@ HttpServletRequest request,HttpServletResponse response){
 			if("0000".equals(code)){
         		baseBean.setCode(MsgCode.success);
         		baseBean.setMsg(msg);
+        		
+        		//推送模板消息
+				try {
+					String templateId = "OHe4a5_6nqj3VuN3QKmKYKPiEk54Y_w3oYQRUn0I34o";
+					String url = "";
+					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
+					map1.put("keyword1", new TemplateDataModel().new Property("每月1天通行证申请","#212121"));
+					map1.put("keyword2", new TemplateDataModel().new Property(abbreviation+numberPlate,"#212121"));
+					map1.put("keyword3", new TemplateDataModel().new Property(applyDate,"#212121"));
+					map1.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map1);
+					logger.info("发送模板消息结果：" + flag);
+				} catch (Exception e) {
+					logger.error("发送模板消息  失败===", e);
+				}
         	}else{
         		baseBean.setCode(MsgCode.businessError);
         		if ("9999".equals(code)) {
@@ -1740,6 +1766,7 @@ HttpServletRequest request,HttpServletResponse response){
 			String PHOTO31 = request.getParameter("PHOTO31");  //境外人员临住表
 			String PHOTO29 = request.getParameter("PHOTO29");  //进口货物证明书
 			String sourceOfCertification = request.getParameter("sourceOfCertification");  	//来源
+			String openId = request.getParameter("openId");  //openId
 			
 			//验证姓名
 			if(StringUtil.isBlank(userName)){
@@ -1865,6 +1892,22 @@ HttpServletRequest request,HttpServletResponse response){
 			if("0000".equals(code)){
         		baseBean.setCode(MsgCode.success);
         		baseBean.setMsg(msg);
+        		
+        		//推送模板消息
+				try {
+					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_sqjdclpbl";
+					String url = "";
+					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
+					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
+					map1.put("keyword2", new TemplateDataModel().new Property("申请机动车临牌","#212121"));
+					map1.put("keyword3", new TemplateDataModel().new Property("待受理","#212121"));
+					map1.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map1);
+					logger.info("发送模板消息结果：" + flag);
+				} catch (Exception e) {
+					logger.error("发送模板消息  失败===", e);
+				}
         	}else{
         		baseBean.setCode(MsgCode.businessError);
         		if ("9999".equals(code)) {
