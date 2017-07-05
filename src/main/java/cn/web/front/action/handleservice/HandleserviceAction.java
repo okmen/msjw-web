@@ -75,6 +75,7 @@ public class HandleserviceAction extends BaseAction {
 	 * @param ip ip
 	 * @param sourceOfCertification 申请来源
 	 * @param foreignPeopleLivingOnTheTable 境外人员临住表
+	 * @param openId 微信openId
 	 * @param request
 	 * @param response
 	 * @throws Exception
@@ -83,11 +84,17 @@ public class HandleserviceAction extends BaseAction {
     public void complementTheMotorVehicleDrivingLicense(String name,String IDcard,String licensePlate,String licensePlateTpye,
     		String placeOfDomicile,String address,String receiverName,String receiverNumber,String mailingAddress,
     		String livePhoto1,String livePhoto2,String IDCardPhoto1, String IDCardPhoto2, String driverLicensePhoto,
-    		String ip,String sourceOfCertification,String foreignPeopleLivingOnTheTable, 
+    		String ip,String sourceOfCertification,String foreignPeopleLivingOnTheTable,String openId,
     		HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
     	VehicleDrivingLicenseVo vehicleDrivingLicenseVo = new VehicleDrivingLicenseVo();
     	try {
+    		if(StringUtils.isBlank(openId)){
+        		baseBean.setMsg("openId不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
     		if(StringUtils.isBlank(name)){
         		baseBean.setMsg("name不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
@@ -234,6 +241,20 @@ public class HandleserviceAction extends BaseAction {
         		baseBean.setCode(MsgCode.success);
         		baseBean.setMsg(msg);
         		//成功需要发送模板消息
+				try {
+					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_xszbhlbl";
+					String url = "";
+					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
+					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
+					map1.put("keyword2", new TemplateDataModel().new Property("补领机动车行驶证","#212121"));
+					map1.put("keyword3", new TemplateDataModel().new Property("待受理","#212121"));
+					map1.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map1);
+					logger.info("发送模板消息结果：" + flag);
+				} catch (Exception e) {
+					logger.error("发送模板消息  失败===", e);
+				}
         	}else{
         		baseBean.setCode(MsgCode.businessError);
         		baseBean.setMsg(msg);
