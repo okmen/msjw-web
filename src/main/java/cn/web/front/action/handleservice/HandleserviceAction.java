@@ -53,7 +53,7 @@ public class HandleserviceAction extends BaseAction {
 	 * @param IDcard 证件号码
 	 * @param licensePlate 号牌号码
 	 * @param licensePlateTpye 号牌种类
-	 * @param placeOfDomicile 户籍所在地
+	 * @param placeOfDomicile 户籍所在地 1深户，0外籍户口
 	 * @param address 住所详细地址
 	 * @param receiverName 收件人姓名
 	 * @param receiverNumber 收件人号码
@@ -119,14 +119,14 @@ public class HandleserviceAction extends BaseAction {
         	}else{
         		vehicleDrivingLicenseVo.setPlaceOfDomicile(placeOfDomicile);
         	}
-    		if(StringUtils.isBlank(address)){
+    		/*if(StringUtils.isBlank(address)){
         		baseBean.setMsg("address不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}else{
         		vehicleDrivingLicenseVo.setAddress(address);
-        	}
+        	}*/
     		if(StringUtils.isBlank(receiverName)){
         		baseBean.setMsg("receiverName不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
@@ -152,7 +152,7 @@ public class HandleserviceAction extends BaseAction {
         	}else{
         		vehicleDrivingLicenseVo.setMailingAddress(mailingAddress);
         	}
-    		if(StringUtils.isBlank(livePhoto1)){
+    		/*if(StringUtils.isBlank(livePhoto1)){
         		baseBean.setMsg("livePhoto1不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
@@ -167,7 +167,7 @@ public class HandleserviceAction extends BaseAction {
         		return;
         	}else{
         		vehicleDrivingLicenseVo.setLivePhoto2(livePhoto2);
-        	}
+        	}*/
     		if(StringUtils.isBlank(IDCardPhoto1)){
         		baseBean.setMsg("IDCardPhoto1不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
@@ -193,14 +193,15 @@ public class HandleserviceAction extends BaseAction {
         	}else{
         		vehicleDrivingLicenseVo.setDriverLicensePhoto(driverLicensePhoto);
         	}
-    		if(StringUtils.isBlank(ip)){
+    		/*if(StringUtils.isBlank(ip)){
         		baseBean.setMsg("ip不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}else{
         		vehicleDrivingLicenseVo.setIp(ip);
-        	}
+        	}*/
+    		ip = getIp2(request);
     		if(StringUtils.isBlank(sourceOfCertification)){
         		baseBean.setMsg("sourceOfCertification不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
@@ -209,14 +210,14 @@ public class HandleserviceAction extends BaseAction {
         	}else{
         		vehicleDrivingLicenseVo.setSourceOfCertification(sourceOfCertification);
         	}
-    		if(StringUtils.isBlank(foreignPeopleLivingOnTheTable)){
+    		/*if(StringUtils.isBlank(foreignPeopleLivingOnTheTable)){
         		baseBean.setMsg("foreignPeopleLivingOnTheTable不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}else{
         		vehicleDrivingLicenseVo.setForeignPeopleLivingOnTheTable(foreignPeopleLivingOnTheTable);
-        	}
+        	}*/
     		Map<String, Object> map = handleService.complementTheMotorVehicleDrivingLicense(vehicleDrivingLicenseVo);
     		String code = map.get("code").toString();
 			String msg = map.get("msg").toString();
