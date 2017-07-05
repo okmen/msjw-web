@@ -866,7 +866,7 @@ public class IllegalAction extends BaseAction {
 		}
 		if (StringUtil.isEmpty(sourceOfCertification)) {
 			base.setCode("0001");
-			base.setMsg("来源方式不能为空！");
+			base.setMsg("sourceOfCertification不能为空！");
 			renderJSON(base);
 		}
 		try {
