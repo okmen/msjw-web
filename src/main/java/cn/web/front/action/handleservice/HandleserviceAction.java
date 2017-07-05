@@ -26,6 +26,7 @@ import cn.handle.bean.vo.IocomotiveCarChangeContactVo;
 import cn.handle.bean.vo.IocomotiveCarReplaceVo;
 import cn.handle.bean.vo.RenewalDriverLicenseVo;
 import cn.handle.bean.vo.RepairOrReplaceDriverLicenseVo;
+import cn.handle.bean.vo.VehicleDrivingLicenseVo;
 import cn.handle.service.IHandleService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.WebServiceException;
@@ -48,66 +49,189 @@ public class HandleserviceAction extends BaseAction {
     private IHandleService handleService;
 	/**
 	 * 补领机动车行驶证
-	 * @param motorVehicleOwner 机动车所有人
-	 * @param identityCard 身份证明号码
-	 * @param numberPlateNumber 号牌号码
-	 * @param plateType  号牌种类
-	 * @param domicile 户籍所在地，1深户，0外籍户口
-	 * @param theRecipientName 收件人姓名
-	 * @param theRecipientAddress 收件人地址
-	 * @param theRecipientMobilephone 收件人手机
-	 * @param vehicle54Photo 车辆45°照片
-	 * @param residencePermitPositive 居住证正面图片
-	 * @param negativeResidencePermit 居住证反面图片
-	 * @param foreignPeopleLivingTable 境外人员临住表
-	 * @param sourceOfCertification 认证来源
+	 * @param name 车主姓名/机动车所有人
+	 * @param IDcard 证件号码
+	 * @param licensePlate 号牌号码
+	 * @param licensePlateTpye 号牌种类
+	 * @param placeOfDomicile 户籍所在地
+	 * @param address 住所详细地址
+	 * @param receiverName 收件人姓名
+	 * @param receiverNumber 收件人号码
+	 * @param mailingAddress 收件人地址
+	 * @param livePhoto1 居住证正面
+	 * @param livePhoto2 居住证反面
+	 * @param IDCardPhoto1 身份证（正面）
+	 * @param IDCardPhoto2 身份证（反面）
+	 * @param driverLicensePhoto 机动车登记证书
+	 * @param ip ip
+	 * @param sourceOfCertification 申请来源
+	 * @param foreignPeopleLivingOnTheTable 境外人员临住表
 	 * @param request
 	 * @param response
 	 * @throws Exception
 	 */
     @RequestMapping("complementTheMotorVehicleDrivingLicense")
-    public void complementTheMotorVehicleDrivingLicense(String motorVehicleOwner,String identityCard,String numberPlateNumber,String plateType,Integer domicile,String theRecipientName,String theRecipientAddress,String theRecipientMobilephone,String vehicle54Photo,String residencePermitPositive,String negativeResidencePermit,String foreignPeopleLivingTable, String sourceOfCertification , HttpServletRequest request,HttpServletResponse response) throws Exception{
+    public void complementTheMotorVehicleDrivingLicense(String name,String IDcard,String licensePlate,String licensePlateTpye,
+    		String placeOfDomicile,String address,String receiverName,String receiverNumber,String mailingAddress,
+    		String livePhoto1,String livePhoto2,String IDCardPhoto1, String IDCardPhoto2, String driverLicensePhoto,
+    		String ip,String sourceOfCertification,String foreignPeopleLivingOnTheTable, 
+    		HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
+    	VehicleDrivingLicenseVo vehicleDrivingLicenseVo = new VehicleDrivingLicenseVo();
     	try {
-    		if(StringUtils.isBlank(sourceOfCertification)){
-        		baseBean.setMsg("认证来源不能为空!");
+    		if(StringUtils.isBlank(name)){
+        		baseBean.setMsg("name不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
-        		
         		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setName(name);
+        	}
+    		if(StringUtils.isBlank(IDcard)){
+        		baseBean.setMsg("IDcard不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setIDcard(IDcard);
+        	}
+    		if(StringUtils.isBlank(licensePlate)){
+        		baseBean.setMsg("licensePlate不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setLicensePlate(licensePlate);
+        	}
+    		if(StringUtils.isBlank(licensePlateTpye)){
+        		baseBean.setMsg("licensePlateTpye不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setLicensePlateTpye(licensePlateTpye);
+        	}
+    		if(StringUtils.isBlank(placeOfDomicile)){
+        		baseBean.setMsg("placeOfDomicile不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setPlaceOfDomicile(placeOfDomicile);
+        	}
+    		if(StringUtils.isBlank(address)){
+        		baseBean.setMsg("address不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setAddress(address);
+        	}
+    		if(StringUtils.isBlank(receiverName)){
+        		baseBean.setMsg("receiverName不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setReceiverName(receiverName);
+        	}
+    		if(StringUtils.isBlank(receiverNumber)){
+        		baseBean.setMsg("receiverNumber不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setReceiverNumber(receiverNumber);
         	}
     		
-    		//验证码是否正确
-    		// 0-验证成功，1-验证失败，2-验证码失效
-    		int result = 0;
-    		/*int result = accountService.verificatioCode(mobilephone, validateCode);
-    		if(0 == result){
-            	baseBean.setMsg("验证通过");
-            	Map<String, String> map = accountService.resetPwd(identityCard, userName, mobilephone, sourceOfCertification);
-            	if(null != map){
-            		String code = map.get("code");
-            		String msg = map.get("msg");
-            		if(MsgCode.success.equals(code)){
-            			baseBean.setCode(MsgCode.success);
-            			baseBean.setMsg(msg);
-            		}else{
-            			baseBean.setCode(MsgCode.businessError);
-            			baseBean.setMsg(msg);
-            		}
-            	}
-    		}*/
-			if(1 == result){
-				baseBean.setCode(MsgCode.businessError);
-	        	baseBean.setMsg("验证码错误");	
-			 }
-			if(2 == result){
-				baseBean.setCode(MsgCode.businessError);
-	        	baseBean.setMsg("验证码失效,请重新获取");
-			}
+    		if(StringUtils.isBlank(mailingAddress)){
+        		baseBean.setMsg("mailingAddress不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setMailingAddress(mailingAddress);
+        	}
+    		if(StringUtils.isBlank(livePhoto1)){
+        		baseBean.setMsg("livePhoto1不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setLivePhoto1(livePhoto1);
+        	}
+    		if(StringUtils.isBlank(livePhoto2)){
+        		baseBean.setMsg("livePhoto2不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setLivePhoto2(livePhoto2);
+        	}
+    		if(StringUtils.isBlank(IDCardPhoto1)){
+        		baseBean.setMsg("IDCardPhoto1不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setIDCardPhoto1(IDCardPhoto1);
+        	}
+    		if(StringUtils.isBlank(IDCardPhoto2)){
+        		baseBean.setMsg("IDCardPhoto2不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setIDCardPhoto2(IDCardPhoto2);
+        	}
+    		
+    		if(StringUtils.isBlank(driverLicensePhoto)){
+        		baseBean.setMsg("driverLicensePhoto不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setDriverLicensePhoto(driverLicensePhoto);
+        	}
+    		if(StringUtils.isBlank(ip)){
+        		baseBean.setMsg("ip不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setIp(ip);
+        	}
+    		if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setSourceOfCertification(sourceOfCertification);
+        	}
+    		if(StringUtils.isBlank(foreignPeopleLivingOnTheTable)){
+        		baseBean.setMsg("foreignPeopleLivingOnTheTable不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setForeignPeopleLivingOnTheTable(foreignPeopleLivingOnTheTable);
+        	}
+    		Map<String, Object> map = handleService.complementTheMotorVehicleDrivingLicense(vehicleDrivingLicenseVo);
+    		String code = map.get("code").toString();
+			String msg = map.get("msg").toString();
+			if("0000".equals(code)){
+        		baseBean.setCode(MsgCode.success);
+        		baseBean.setMsg(msg);
+        		//成功需要发送模板消息
+        	}else{
+        		baseBean.setCode(MsgCode.businessError);
+        		baseBean.setMsg(msg);
+        	}
         	renderJSON(baseBean);
 		} catch (Exception e) {
 			DealException(baseBean, e);
-        	logger.error("resetPwd 错误", e);
+        	logger.error("complementTheMotorVehicleDrivingLicense 错误", e);
 		}
     	renderJSON(baseBean);
     	logger.debug(JSON.toJSONString(baseBean));
