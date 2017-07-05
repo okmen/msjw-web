@@ -59,18 +59,18 @@ public class HandleserviceAction extends BaseAction {
 	/**
 	 * 补领机动车行驶证
 	 * @param name 车主姓名/机动车所有人
-	 * @param IDcard 证件号码
-	 * @param licensePlate 号牌号码
-	 * @param licensePlateTpye 号牌种类
+	 * @param identityCard 证件号码
+	 * @param numberPlate 号牌号码
+	 * @param plateType 号牌种类
 	 * @param placeOfDomicile 户籍所在地 1深户，0外籍户口
 	 * @param address 住所详细地址
 	 * @param receiverName 收件人姓名
 	 * @param receiverNumber 收件人号码
-	 * @param mailingAddress 收件人地址
+	 * @param receiverAddress 收件人地址
 	 * @param livePhoto1 居住证正面
 	 * @param livePhoto2 居住证反面
-	 * @param IDCardPhoto1 身份证（正面）
-	 * @param IDCardPhoto2 身份证（反面）
+	 * @param PHOTO9 身份证（正面）
+	 * @param PHOTO10 身份证（反面）
 	 * @param driverLicensePhoto 机动车登记证书
 	 * @param ip ip
 	 * @param sourceOfCertification 申请来源
@@ -81,9 +81,9 @@ public class HandleserviceAction extends BaseAction {
 	 * @throws Exception
 	 */
     @RequestMapping("complementTheMotorVehicleDrivingLicense")
-    public void complementTheMotorVehicleDrivingLicense(String name,String IDcard,String licensePlate,String licensePlateTpye,
-    		String placeOfDomicile,String address,String receiverName,String receiverNumber,String mailingAddress,
-    		String livePhoto1,String livePhoto2,String IDCardPhoto1, String IDCardPhoto2, String driverLicensePhoto,
+    public void complementTheMotorVehicleDrivingLicense(String name,String identityCard,String numberPlate,String plateType,
+    		String placeOfDomicile,String address,String receiverName,String receiverNumber,String receiverAddress,
+    		String livePhoto1,String livePhoto2,String PHOTO9, String PHOTO10, String driverLicensePhoto,
     		String ip,String sourceOfCertification,String foreignPeopleLivingOnTheTable,String openId,
     		HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
@@ -103,29 +103,29 @@ public class HandleserviceAction extends BaseAction {
         	}else{
         		vehicleDrivingLicenseVo.setName(name);
         	}
-    		if(StringUtils.isBlank(IDcard)){
-        		baseBean.setMsg("IDcard不能为空!");
+    		if(StringUtils.isBlank(identityCard)){
+        		baseBean.setMsg("identityCard不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}else{
-        		vehicleDrivingLicenseVo.setIDcard(IDcard);
+        		vehicleDrivingLicenseVo.setIDcard(identityCard);
         	}
-    		if(StringUtils.isBlank(licensePlate)){
-        		baseBean.setMsg("licensePlate不能为空!");
+    		if(StringUtils.isBlank(numberPlate)){
+        		baseBean.setMsg("numberPlate不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}else{
-        		vehicleDrivingLicenseVo.setLicensePlate(licensePlate);
+        		vehicleDrivingLicenseVo.setLicensePlate(numberPlate);
         	}
-    		if(StringUtils.isBlank(licensePlateTpye)){
-        		baseBean.setMsg("licensePlateTpye不能为空!");
+    		if(StringUtils.isBlank(plateType)){
+        		baseBean.setMsg("plateType不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}else{
-        		vehicleDrivingLicenseVo.setLicensePlateTpye(licensePlateTpye);
+        		vehicleDrivingLicenseVo.setLicensePlateTpye(plateType);
         	}
     		if(StringUtils.isBlank(placeOfDomicile)){
         		baseBean.setMsg("placeOfDomicile不能为空!");
@@ -160,13 +160,13 @@ public class HandleserviceAction extends BaseAction {
         		vehicleDrivingLicenseVo.setReceiverNumber(receiverNumber);
         	}
     		
-    		if(StringUtils.isBlank(mailingAddress)){
-        		baseBean.setMsg("mailingAddress不能为空!");
+    		if(StringUtils.isBlank(receiverAddress)){
+        		baseBean.setMsg("receiverAddress不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}else{
-        		vehicleDrivingLicenseVo.setMailingAddress(mailingAddress);
+        		vehicleDrivingLicenseVo.setMailingAddress(receiverAddress);
         	}
     		/*if(StringUtils.isBlank(livePhoto1)){
         		baseBean.setMsg("livePhoto1不能为空!");
@@ -184,21 +184,21 @@ public class HandleserviceAction extends BaseAction {
         	}else{
         		vehicleDrivingLicenseVo.setLivePhoto2(livePhoto2);
         	}*/
-    		if(StringUtils.isBlank(IDCardPhoto1)){
-        		baseBean.setMsg("IDCardPhoto1不能为空!");
+    		if(StringUtils.isBlank(PHOTO9)){
+        		baseBean.setMsg("PHOTO9不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}else{
-        		vehicleDrivingLicenseVo.setIDCardPhoto1(IDCardPhoto1);
+        		vehicleDrivingLicenseVo.setIDCardPhoto1(PHOTO9);
         	}
-    		if(StringUtils.isBlank(IDCardPhoto2)){
-        		baseBean.setMsg("IDCardPhoto2不能为空!");
+    		if(StringUtils.isBlank(PHOTO10)){
+        		baseBean.setMsg("PHOTO10不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}else{
-        		vehicleDrivingLicenseVo.setIDCardPhoto2(IDCardPhoto2);
+        		vehicleDrivingLicenseVo.setIDCardPhoto2(PHOTO10);
         	}
     		
     		if(StringUtils.isBlank(driverLicensePhoto)){
