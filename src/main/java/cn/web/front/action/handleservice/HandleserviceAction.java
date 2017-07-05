@@ -1639,7 +1639,7 @@ HttpServletRequest request,HttpServletResponse response){
 			String cartype = request.getParameter("cartype");  //车辆类型
 			String abbreviation = request.getParameter("abbreviation");  //车牌简称
 			String numberPlate = request.getParameter("numberPlate");  //车牌号码
-			String vin = request.getParameter("vin");  //车架号
+			String vin = request.getParameter("behindTheFrame4Digits");  //车架号
 			String userName = request.getParameter("userName");  //车辆所有人
 			String mobilephone = request.getParameter("mobilephone");  //手机号码
 			String applyDate = request.getParameter("applyDate");  //申请日期
@@ -1773,7 +1773,7 @@ HttpServletRequest request,HttpServletResponse response){
 			String cartModels = request.getParameter("cartModels");  //车辆型号
 			String cartype = request.getParameter("cartype");  //车辆类型
 			String engineNumber = request.getParameter("engineNumber");  //发动机号
-			String vin = request.getParameter("vin");  //车架号
+			String vin = request.getParameter("behindTheFrame4Digits");  //车架号
 			String carOrigin = request.getParameter("carOrigin");  //车辆产地 进口/国产
 			String placeOfDomicile = request.getParameter("placeOfDomicile");  //户籍所在地
 			String receiverName = request.getParameter("receiverName");  //收件人姓名
