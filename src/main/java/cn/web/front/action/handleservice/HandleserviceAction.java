@@ -2126,7 +2126,7 @@ HttpServletRequest request,HttpServletResponse response){
     	IocomotiveCarReplaceVo iocomotiveCarReplaceVo = new IocomotiveCarReplaceVo();
     	try {
 	    	String name = request.getParameter("name");					//	车主姓名
-			String carOwnerIdentityCard = request.getParameter("carOwnerIdentityCard");					//	证件号码
+			String identificationNum = request.getParameter("identificationNum");					//	证件号码
 			String numberPlate = request.getParameter("numberPlate");			//	号牌号码
 			String plateType = request.getParameter("plateType");		//	号牌种类
 			String placeOfDomicile = request.getParameter("placeOfDomicile");			//	户籍所在地
@@ -2148,7 +2148,7 @@ HttpServletRequest request,HttpServletResponse response){
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(carOwnerIdentityCard)){
+			if(StringUtil.isBlank(identificationNum)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("证件号码不能为空!");
 				renderJSON(baseBean);
@@ -2228,7 +2228,7 @@ HttpServletRequest request,HttpServletResponse response){
 			}
 			String ip = getIp2(request);
 			iocomotiveCarReplaceVo.setName(name);					//	车主姓名
-			iocomotiveCarReplaceVo.setCarOwnerIdentityCard(carOwnerIdentityCard);					//	证件号码
+			iocomotiveCarReplaceVo.setIdentificationNum(identificationNum);					//	证件号码
 			iocomotiveCarReplaceVo.setNumberPlate(numberPlate);			//	号牌号码
 			iocomotiveCarReplaceVo.setPlateType(plateType);		//	号牌种类
 			iocomotiveCarReplaceVo.setPlaceOfDomicile(placeOfDomicile);			//	户籍所在地
