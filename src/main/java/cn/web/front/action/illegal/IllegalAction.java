@@ -29,11 +29,13 @@ import cn.illegal.bean.IllegalInfoBean;
 import cn.illegal.bean.IllegalInfoClaim;
 import cn.illegal.bean.IllegalInfoSheet;
 import cn.illegal.bean.IllegalProcessPointBean;
+import cn.illegal.bean.ReportingNoParking;
 import cn.illegal.bean.SubcribeBean;
 import cn.illegal.service.IIllegalService;
 import cn.message.model.wechat.WechatUserInfo;
 import cn.message.service.IWechatService;
 import cn.sdk.bean.BaseBean;
+import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
 
@@ -884,4 +886,224 @@ public class IllegalAction extends BaseAction {
 		}
 		renderJSON(base);
 	}
+	/**
+	 * 车辆临时停车违停申报
+	 * 
+	 * @param numberPlateNumber
+	 * @param plateType
+	 * @param IDcard
+	 * @param parkingSpot
+	 * @param parkingReason
+	 * @param scenePhoto
+	 * @param scenePhoto1
+	 * @param scenePhoto2
+	 * @param scenePhoto3
+	 * @param stopNoticePhoto
+	 * @param sourceOfCertification
+	 */
+	@RequestMapping(value = "reportingNoParking")
+	public void reportingNoParking(String numberPlateNumber, String plateType, String IDcard, String parkingSpot,
+			String parkingReason, String scenePhoto, String scenePhoto1, String scenePhoto2, String scenePhoto3,
+			String stopNoticePhoto, String sourceOfCertification) {
+		BaseBean base = new BaseBean();
+		ReportingNoParking reportingNoParking = new ReportingNoParking();
+		if (StringUtil.isBlank(numberPlateNumber)) {
+			base.setCode("0001");
+			base.setMsg("车牌号码不能为空！");
+			renderJSON(base);
+		} else {
+			reportingNoParking.setNumberPlateNumber(numberPlateNumber);
+		}
+		if (StringUtil.isBlank(plateType)) {
+			base.setCode("0001");
+			base.setMsg("车牌种类不能为空！");
+			renderJSON(base);
+		} else {
+			reportingNoParking.setPlateType(plateType);
+		}
+		if (StringUtil.isBlank(IDcard)) {
+			base.setCode("0001");
+			base.setMsg("星级用户身份证明号码不能为空！");
+			renderJSON(base);
+		} else {
+			reportingNoParking.setIDcard(IDcard);
+		}
+		if (StringUtil.isBlank(parkingSpot)) {
+			base.setCode("0001");
+			base.setMsg("停车地点不能为空！");
+			renderJSON(base);
+		} else {
+			reportingNoParking.setParkingSpot(parkingSpot);
+		}
+		if (StringUtil.isBlank(parkingReason)) {
+			base.setCode("0001");
+			base.setMsg("停车原因不能为空！");
+			renderJSON(base);
+		} else {
+			reportingNoParking.setParkingReason(parkingReason);
+		}
+		if (StringUtil.isBlank(scenePhoto)) {
+			base.setCode("0001");
+			base.setMsg("大场景1不能为空！");
+			renderJSON(base);
+		} else {
+			reportingNoParking.setScenePhoto(scenePhoto);
+		}
+		if (StringUtil.isBlank(scenePhoto1)) {
+			base.setCode("0001");
+			base.setMsg("大场景不能为空！");
+			renderJSON(base);
+		} else {
+			reportingNoParking.setScenePhoto1(scenePhoto1);
+		}
+		if (StringUtil.isBlank(scenePhoto2)) {
+			base.setCode("0001");
+			base.setMsg("前五米无车场景不能为空！");
+			renderJSON(base);
+		} else {
+			reportingNoParking.setScenePhoto2(scenePhoto2);
+		}
+		if (StringUtil.isBlank(scenePhoto3)) {
+			base.setCode("0001");
+			base.setMsg("后五米无车场景不能为空！");
+			renderJSON(base);
+		} else {
+			reportingNoParking.setScenePhoto3(scenePhoto3);
+		}
+		if (StringUtil.isBlank(stopNoticePhoto)) {
+			base.setCode("0001");
+			base.setMsg("停车告知单拍摄照片不能为空！");
+			renderJSON(base);
+		} else {
+			reportingNoParking.setStopNoticePhoto(stopNoticePhoto);
+		}
+		if (StringUtil.isBlank(sourceOfCertification)) {
+			base.setCode("0001");
+			base.setMsg("来源方式不能为空！");
+			renderJSON(base);
+		} else {
+			reportingNoParking.setSourceOfCertification(sourceOfCertification);
+		}
+		try {
+			Map<String, String> map = illegalService.reportingNoParking(reportingNoParking);
+			String code = map.get("code");
+			String msg = map.get("msg");
+			if ("0000".equals(code)) {
+				String cid = map.get("cid");
+				base.setData(cid);
+				base.setCode(MsgCode.success);
+				base.setMsg(msg);
+			} else {
+				base.setCode(MsgCode.businessError);
+				base.setMsg(msg);
+			}
+		} catch (Exception e) {
+			DealException(base, e);
+			logger.error("车辆临时停车违停申报异常：", e);
+		}
+
+		renderJSON(base);
+	}
+
+	/**
+	 * 单宗违停申报结果查询
+	 * 
+	 * @param orderNumber
+	 * @param numberPlateNumber
+	 * @param plateType
+	 * @param sourceOfCertification
+	 */
+	@RequestMapping(value = "singleQueryOfReportingNoParking")
+	public void singleQueryOfReportingNoParking(String orderNumber, String numberPlateNumber, String plateType,
+			String sourceOfCertification) {
+		BaseBean base = new BaseBean();
+		if (StringUtil.isBlank(orderNumber)) {
+			base.setCode("0001");
+			base.setMsg("序号不能为空！");
+			renderJSON(base);
+		}
+		if (StringUtil.isBlank(numberPlateNumber)) {
+			base.setCode("0001");
+			base.setMsg("车牌号码不能为空！");
+			renderJSON(base);
+		}
+		if (StringUtil.isBlank(plateType)) {
+			base.setCode("0001");
+			base.setMsg("车牌种类不能为空！");
+			renderJSON(base);
+		}
+		if (StringUtil.isBlank(sourceOfCertification)) {
+			base.setCode("0001");
+			base.setMsg("来源方式不能为空！");
+			renderJSON(base);
+		}
+		try {
+			Map<String, Object> map = illegalService.singleQueryOfReportingNoParking(orderNumber, numberPlateNumber,
+					plateType, sourceOfCertification);
+			String code = (String) map.get("code");
+			String msg = (String) map.get("msg");
+			if ("0000".equals(code)) {
+				base.setCode(MsgCode.success);
+				base.setData(map.get("data"));
+				base.setMsg(msg);
+			} else {
+				base.setCode(MsgCode.businessError);
+				base.setMsg(msg);
+			}
+		} catch (Exception e) {
+			DealException(base, e);
+			logger.error("单宗违停申报结果查询异常：", e);
+		}
+
+		renderJSON(base);
+	}
+
+	/**
+	 * 申报记录列表查询
+	 * 
+	 * @param orderNumber
+	 * @param numberPlateNumber
+	 * @param plateType
+	 * @param sourceOfCertification
+	 * http://192.168.1.243:8080/web/illegalHanding/recordOfReportingNoParking.html?numberPlateNumber=粤B6F7M1&plateType=02&sourceOfCertification=C
+	 */
+	@RequestMapping(value = "recordOfReportingNoParking")
+	public void recordOfReportingNoParking(String numberPlateNumber, String plateType, String sourceOfCertification) {
+		BaseBean base = new BaseBean();
+		if (StringUtil.isBlank(numberPlateNumber)) {
+			base.setCode("0001");
+			base.setMsg("车牌号码不能为空！");
+			renderJSON(base);
+		}
+		if (StringUtil.isBlank(plateType)) {
+			base.setCode("0001");
+			base.setMsg("车牌种类不能为空！");
+			renderJSON(base);
+		}
+		if (StringUtil.isBlank(sourceOfCertification)) {
+			base.setCode("0001");
+			base.setMsg("来源方式不能为空！");
+			renderJSON(base);
+		}
+		try {
+			Map<String, Object> map = illegalService.recordOfReportingNoParking(numberPlateNumber, plateType,
+					sourceOfCertification);
+			String code = (String) map.get("code");
+			String msg = (String) map.get("msg");
+			if ("0000".equals(code)) {
+				base.setCode(MsgCode.success);
+				base.setData(map.get("data"));
+				base.setMsg(msg);
+			} else {
+				base.setCode(MsgCode.businessError);
+				base.setMsg(msg);
+			}
+		} catch (Exception e) {
+			DealException(base, e);
+			logger.error("申报记录列表查询异常：", e);
+		}
+
+		renderJSON(base);
+	}
+	
 }

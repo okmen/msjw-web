@@ -3,6 +3,8 @@ package cn.web.front.action.handleservice;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import cn.convenience.bean.ConvenienceBean;
 import cn.handle.bean.vo.ApplyCarTemporaryLicenceVo;
@@ -36,11 +40,11 @@ import cn.message.model.wechat.TemplateDataModel.Property;
 import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.WebServiceException;
+import cn.sdk.util.DateUtil;
 import cn.sdk.util.DateUtil2;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
-import net.sf.json.JSONObject;
 
 /**
  * 办理类Action
@@ -2701,6 +2705,348 @@ HttpServletRequest request,HttpServletResponse response){
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
+   
+   /**
+	 * 机动车六年免检预约
+	 * 
+	 * @param numberPlate
+	 * @param name
+	 * @param personType
+	 * @param driveLicenseNumber
+	 * @param mobile
+	 * @param telno
+	 * @param receiverName
+	 * @param receiverNumber
+	 * @param postCode
+	 * @param receiverAddress
+	 * @param effectiveDate
+	 * @param terminationDate
+	 * @param inform
+	 * @param bookerName
+	 * @param bookerIdentityCard
+	 * @param bookerType
+	 * @param carTypeId
+	 * @param arg0
+	 * @param arg1
+	 * @param arg2
+	 * @param arg3
+	 * @param arg4
+	 */
+	@RequestMapping("createVehicleInspection")
+	public void createVehicleInspection(String numberPlate, String name, String personType, String driveLicenseNumber,
+			String mobilephone, String telno, String receiverName, String receiverNumber, String postCode,
+			String receiverAddress, String effectiveDate, String terminationDate, String inform, String bookerName,
+			String bookerIdentityCard, String bookerType, String carTypeId, String arg0, String arg1, String arg2,
+			String arg3, String arg4, String sourceOfCertification, String openId) {
+		BaseBean baseBean = new BaseBean();
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		if (StringUtil.isBlank(numberPlate)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("车牌号码不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			map.put("platNumber", numberPlate);
+		}
+		if (StringUtil.isBlank(name)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("机动车所有人不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			map.put("name", name);
+		}
+		if (StringUtil.isBlank(personType)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("申请人类型不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			map.put("personType", personType);
+		}
+		if (StringUtil.isBlank(driveLicenseNumber)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("行驶证编号不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			map.put("driveLicenseNumber", driveLicenseNumber);
+		}
+		if (StringUtil.isBlank(mobilephone)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("手机号码不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			map.put("mobile", mobilephone);
+		}
+		map.put("telno", telno);
+		if (StringUtil.isBlank(receiverName)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("收件人姓名不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			map.put("recipientsName", receiverName);
+		}
+		if (StringUtil.isBlank(receiverNumber)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("收件人电话不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			map.put("recipientsMobile", receiverNumber);
+		}
+		if (StringUtil.isBlank(postCode)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("邮政编码不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			map.put("postCode", postCode);
+		}
+		if (StringUtil.isBlank(receiverAddress)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("收件人地址不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			map.put("postAddr", receiverAddress);
+		}
+		if (StringUtil.isBlank(effectiveDate)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("保险生效日期不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			map.put("effectiveDate", effectiveDate);
+		}
+		if (StringUtil.isBlank(terminationDate)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("保险终止日期不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			map.put("terminationDate", terminationDate);
+		}
+		if (StringUtil.isBlank(inform)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("受理结果告知方式不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			map.put("inform", inform);
+		}
+		map.put("bookerName", bookerName);
+		map.put("bookerIdNumber", bookerIdentityCard);
+		map.put("bookerType", bookerType);
+		map.put("arg0", arg0);
+		map.put("arg1", arg1);
+		map.put("arg2", arg2);
+		map.put("arg3", arg3);
+		map.put("arg4", arg4);
+		if (StringUtil.isBlank(carTypeId)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("号牌类型Id不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			map.put("carTypeId", carTypeId);
+		}
 
+		try {
+			// 创建返回结果
+			JSONObject jsonObject = handleService.createVehicleInspection(map);
+			String code = jsonObject.getString("code");
+			String msg = jsonObject.getString("msg");
+			String result = jsonObject.getString("result");
+			if ("00".equals(code)) {
+				if (sourceOfCertification.equals("C")) {
+					try {
+						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
+						String url = "";
+						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
+								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("keyword1",
+								new TemplateDataModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
+						tmap.put("keyword2", new TemplateDataModel().new Property("六年免检预约申请", "#212121"));
+						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
+						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
+						logger.info("发送模板消息结果：" + flag);
+					} catch (Exception e) {
+						logger.error("发送模板消息  失败===", e);
+					}
+				}
+				baseBean.setCode("00");
+				baseBean.setData(result);
+				baseBean.setMsg(msg);
+			} else {
+				baseBean.setCode("01");
+				baseBean.setMsg(msg);
+				baseBean.setData(result);
+			}
+
+		} catch (Exception e) {
+			logger.error("预约六年免检异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+
+	/**
+	 * 获取车辆类型Id
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 */
+	@RequestMapping("getCarTypeId")
+	public void getCarTypeId(String arg0, String arg1, String code) {
+		BaseBean baseBean = new BaseBean();
+		boolean flag = false;
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		if (StringUtil.isBlank(code)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("车牌类型code不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		map.put("arg0", arg0);
+		map.put("arg1", arg1);
+		try {
+			// 创建返回结果
+			JSONObject jsonObject = handleService.getCarTypes(map);
+			String gcode = jsonObject.getString("code");
+			String msg = jsonObject.getString("msg");
+			if ("00".equals(gcode)) {
+				baseBean.setCode("00");
+				JSONObject json = jsonObject.getJSONObject("result");
+				JSONArray jsonArray = json.getJSONArray("CarTypeVO");
+				Iterator iterator = jsonArray.iterator();
+				while (iterator.hasNext()) {
+					JSONObject json2 = (JSONObject) iterator.next();
+					String carCode = json2.getString("code");
+					if (carCode.equals(code)) {
+						String id = json2.getString("id");
+						baseBean.setData(id);
+						flag = true;
+					}
+				}
+
+			} else {
+				baseBean.setCode("01");
+				baseBean.setMsg(msg);
+				baseBean.setData(jsonObject.getString("result"));
+			}
+
+			if (flag = false) {
+				baseBean.setCode("01");
+				baseBean.setMsg("查询车辆类型id失败");
+			}
+
+		} catch (Exception e) {
+			logger.error("预约六年免检异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+
+	/**
+	 * 取消机动车六年免检预约
+	 * 
+	 * @param bookNumber
+	 * @param numberPlate
+	 */
+	@RequestMapping("cancelVehicleInspection")
+	public void cancelVehicleInspection(String bookNumber, String numberPlate) {
+		BaseBean baseBean = new BaseBean();
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		
+		if (StringUtil.isBlank(bookNumber)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("车牌号码不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			map.put("bookNumber", bookNumber);
+		}
+		
+		if (StringUtil.isBlank(numberPlate)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("车牌号码不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			map.put("platNumber", numberPlate);
+		}
+		try {
+			// 创建返回结果
+			JSONObject jsonObject = handleService.cancelVehicleInspection(map);
+			String code = jsonObject.getString("code");
+			String msg = jsonObject.getString("msg");
+			String result = jsonObject.getString("result");
+			if ("00".equals(code)) {
+				baseBean.setCode("00");
+				baseBean.setData(result);
+				baseBean.setMsg(msg);
+			} else {
+				baseBean.setCode("01");
+				baseBean.setMsg(msg);
+				baseBean.setData(result);
+			}
+
+		} catch (Exception e) {
+			logger.error("取消六年免检预约异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+
+	/**
+	 * 获取机动车六年免检预约信息
+	 * 
+	 * @param bookNumber
+	 * @param platNumber
+	 * @param driveLicenseNumber
+	 */
+	@RequestMapping("getVehicleInspection")
+	public void getVehicleInspection(String bookNumber, String numberPlate, String driveLicenseNumber) {
+		BaseBean baseBean = new BaseBean();
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		if (StringUtil.isBlank(bookNumber)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("车牌号码不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			map.put("bookNumber", bookNumber);
+		}
+		map.put("platNumber", numberPlate);
+		map.put("driveLicenseNumber", driveLicenseNumber);
+		try {
+			// 创建返回结果
+			JSONObject jsonObject = handleService.getVehicleInspection(map);
+			String code = jsonObject.getString("code");
+			String msg = jsonObject.getString("msg");
+			if ("00".equals(code)) {
+				baseBean.setCode("00");
+				baseBean.setData(jsonObject.getJSONObject("result"));
+				baseBean.setMsg(msg);
+			} else {
+				baseBean.setCode("01");
+				baseBean.setMsg(msg);
+			}
+
+		} catch (Exception e) {
+			logger.error("获取六年免检预约信息异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
 }
 
