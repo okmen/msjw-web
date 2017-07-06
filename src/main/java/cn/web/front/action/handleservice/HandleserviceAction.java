@@ -33,6 +33,7 @@ import cn.handle.bean.vo.IocomotiveCarChangeContactVo;
 import cn.handle.bean.vo.IocomotiveCarReplaceVo;
 import cn.handle.bean.vo.RenewalDriverLicenseVo;
 import cn.handle.bean.vo.RepairOrReplaceDriverLicenseVo;
+import cn.handle.bean.vo.ReplaceMotorVehicleLicensePlateVo;
 import cn.handle.bean.vo.VehicleDrivingLicenseVo;
 import cn.handle.service.IHandleService;
 import cn.message.model.wechat.TemplateDataModel;
@@ -3048,5 +3049,157 @@ HttpServletRequest request,HttpServletResponse response){
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
+	
+	/** 
+	 * 补领机动车号牌
+	 * @Description TODO(补领机动车号牌)
+	 * @param vo 补领机动车号牌 申请信息
+	 */
+    @RequestMapping("replaceMotorVehicleLicensePlate")
+    public void replaceMotorVehicleLicensePlate(ReplaceMotorVehicleLicensePlateVo vo){
+    	BaseBean baseBean = new BaseBean();
+    	try {
+    		if(StringUtils.isBlank(vo.getName())){
+        		baseBean.setMsg("车主姓名不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+    		if(StringUtils.isBlank(vo.getIdentityCard())){
+        		baseBean.setMsg("证件号码不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+    		if(StringUtils.isBlank(vo.getCarOwnerIdentityCard())){
+    			baseBean.setMsg("车主证件号码不能为空!");
+    			baseBean.setCode(MsgCode.paramsError);
+    			renderJSON(baseBean);
+    			return;
+    		}
+    		if(StringUtils.isBlank(vo.getNumberPlate())){
+        		baseBean.setMsg("号牌号码不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+    		if(StringUtils.isBlank(vo.getPlateType())){
+        		baseBean.setMsg("号牌种类不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+    		if(StringUtils.isBlank(vo.getPlaceOfDomicile())){
+        		baseBean.setMsg("户籍所在地不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		//1外籍户口
+        		if("1".equals(vo.getPlaceOfDomicile())){
+            		/*if(StringUtils.isBlank(vo.getJZZA())){//居住证正面图片
+            			baseBean.setMsg("居住证正面图片不能为空!");
+                		baseBean.setCode(MsgCode.paramsError);
+                		renderJSON(baseBean);
+                		return;
+            		}
+            		if(StringUtils.isBlank(vo.getJZZB())){//居住证反面图片
+            			baseBean.setMsg("居住证反面图片不能为空!");
+                		baseBean.setCode(MsgCode.paramsError);
+                		renderJSON(baseBean);
+                		return;
+            		}*/
+            		//赋值居住证号码
+        			vo.setResidenceNo(vo.getIdentityCard());//居住证号码与身份证号码一样
+        			
+        			if(StringUtils.isBlank(vo.getPHOTO31())){//境外人员临住表
+        				baseBean.setMsg("境外人员临住表不能为空!");
+                		baseBean.setCode(MsgCode.paramsError);
+                		renderJSON(baseBean);
+                		return;
+            		}
+        		}
+        	}
+    		if(StringUtils.isBlank(vo.getReceiverName())){
+        		baseBean.setMsg("收件人姓名不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+    		if(StringUtils.isBlank(vo.getReceiverNumber())){
+    			baseBean.setMsg("收件人手机不能为空!");
+    			baseBean.setCode(MsgCode.paramsError);
+    			renderJSON(baseBean);
+    			return;
+    		}
+    		if(StringUtils.isBlank(vo.getReceiverAddress())){
+    			baseBean.setMsg("收件人地址不能为空!");
+    			baseBean.setCode(MsgCode.paramsError);
+    			renderJSON(baseBean);
+    			return;
+    		}
+    		if(StringUtils.isBlank(vo.getPHOTO9())){
+        		baseBean.setMsg("身份证（正面）不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+    		if(StringUtils.isBlank(vo.getPHOTO10())){
+        		baseBean.setMsg("身份证（反面）不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+    		if(StringUtils.isBlank(vo.getDJZSFYJ())){
+        		baseBean.setMsg("机动车登记证书不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+    		if(StringUtils.isBlank(vo.getIp())){
+        		baseBean.setMsg("外网录入ip不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+    		if(StringUtils.isBlank(vo.getSourceOfCertification())){
+        		baseBean.setMsg("申请来源不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+    		
+    		//设置登录用户身份证号码
+    		if(StringUtils.isBlank(vo.getLoginUserIdentityCard())){
+        		vo.setLoginUserIdentityCard(vo.getIdentityCard());
+        	}
+    		
+    		baseBean = handleService.replaceMotorVehicleLicensePlate(vo);
+    		
+    		//申请成功发送微信模板消息
+    		if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(vo.getSourceOfCertification())){
+				try {
+					String openId = vo.getOpenId();
+					String templateId = "pFy7gcEYSklRmg32165BUBwM3PFbUbBSLe0IPw3ZuY4";
+					String url = "";
+					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+					map.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
+					map.put("keyword1", new TemplateDataModel().new Property(DateUtil.formatDateTime(new Date()),"#212121"));
+					map.put("keyword2", new TemplateDataModel().new Property("补领机动车号牌申请","#212121"));
+					map.put("keyword3", new TemplateDataModel().new Property("待受理","#212121"));
+					map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
+					logger.info("发送模板消息结果：" + flag);
+				} catch (Exception e) {
+					logger.error("发送模板消息  失败===", e);
+				}
+			}
+		} catch (Exception e) {
+			DealException(baseBean, e);
+        	logger.error("replaceMotorVehicleLicensePlate Action异常", e);
+		}
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
+    }
 }
 
