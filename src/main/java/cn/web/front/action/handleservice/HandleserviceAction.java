@@ -71,7 +71,7 @@ public class HandleserviceAction extends BaseAction {
 	 * @param livePhoto2 居住证反面
 	 * @param PHOTO9 身份证（正面）
 	 * @param PHOTO10 身份证（反面）
-	 * @param driverLicensePhoto 机动车登记证书
+	 * @param DJZSFYJ 机动车登记证书
 	 * @param ip ip
 	 * @param sourceOfCertification 申请来源
 	 * @param foreignPeopleLivingOnTheTable 境外人员临住表
@@ -83,12 +83,20 @@ public class HandleserviceAction extends BaseAction {
     @RequestMapping("complementTheMotorVehicleDrivingLicense")
     public void complementTheMotorVehicleDrivingLicense(String name,String identityCard,String numberPlate,String plateType,
     		String placeOfDomicile,String address,String receiverName,String receiverNumber,String receiverAddress,
-    		String livePhoto1,String livePhoto2,String PHOTO9, String PHOTO10, String driverLicensePhoto,
-    		String ip,String sourceOfCertification,String foreignPeopleLivingOnTheTable,String openId,
+    		String livePhoto1,String livePhoto2,String PHOTO9, String PHOTO10, String DJZSFYJ,
+    		String ip,String sourceOfCertification,String foreignPeopleLivingOnTheTable,String openId,String XSZZP,
     		HttpServletRequest request,HttpServletResponse response) throws Exception{
     	BaseBean baseBean = new BaseBean();
     	VehicleDrivingLicenseVo vehicleDrivingLicenseVo = new VehicleDrivingLicenseVo();
     	try {
+    		if(StringUtils.isBlank(XSZZP)){
+        		baseBean.setMsg("XSZZP不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}else{
+        		vehicleDrivingLicenseVo.setXSZZP(XSZZP);
+        	}
     		if(StringUtils.isBlank(openId)){
         		baseBean.setMsg("openId不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
@@ -201,13 +209,13 @@ public class HandleserviceAction extends BaseAction {
         		vehicleDrivingLicenseVo.setIDCardPhoto2(PHOTO10);
         	}
     		
-    		if(StringUtils.isBlank(driverLicensePhoto)){
-        		baseBean.setMsg("driverLicensePhoto不能为空!");
+    		if(StringUtils.isBlank(DJZSFYJ)){
+        		baseBean.setMsg("DJZSFYJ不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}else{
-        		vehicleDrivingLicenseVo.setDriverLicensePhoto(driverLicensePhoto);
+        		vehicleDrivingLicenseVo.setDriverLicensePhoto(DJZSFYJ);
         	}
     		/*if(StringUtils.isBlank(ip)){
         		baseBean.setMsg("ip不能为空!");
