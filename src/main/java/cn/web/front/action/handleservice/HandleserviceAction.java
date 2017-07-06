@@ -1965,12 +1965,12 @@ HttpServletRequest request,HttpServletResponse response){
 	*/
 	@RequestMapping("iocomotiveCarChangeContact")
 	public void iocomotiveCarChangeContact(HttpServletRequest request,HttpServletResponse response){
-		// http://192.168.1.136:8080/web/handleservice/iocomotiveCarChangeContact.html?name=张三测试&identificationNo=A&identityCard=445222199209020034&licensePlate=2222&licensePlateTpye=A&placeOfDomicile=0&VIN=1212&mobilephone=13123212232&mailingAddress=深圳市南山区&IDCardPhoto1=323&IDCardPhoto2=2132&driverLicensePhoto=3123321&sourceOfCertification=C
 		BaseBean baseBean = new BaseBean();		//创建返回结果
+		IocomotiveCarChangeContactVo iocomotiveCarChangeContactVo = new IocomotiveCarChangeContactVo();
 		try {
 			String name = request.getParameter("name"); //车主姓名
 			String identificationNo = request.getParameter("identificationNo"); //证件种类
-			String identityCard = request.getParameter("identityCard"); //证件号码
+			String identificationNum = request.getParameter("identificationNum"); //证件号码
 			String numberPlate = request.getParameter("numberPlate"); //号牌号码
 			String plateType = request.getParameter("plateType"); //号牌种类
 			String placeOfDomicile = request.getParameter("placeOfDomicile"); //户籍所在地
@@ -1981,7 +1981,8 @@ HttpServletRequest request,HttpServletResponse response){
 			String PHOTO10 = request.getParameter("PHOTO10");//身份证（反面）
 			String JDCXSZ = request.getParameter("JDCXSZ"); //机动车行驶证照片
 			String sourceOfCertification = request.getParameter("sourceOfCertification");//申请来源
-			IocomotiveCarChangeContactVo iocomotiveCarChangeContactVo = new IocomotiveCarChangeContactVo();
+			String openId = request.getParameter("openId");  //openId
+			
 			if(StringUtil.isBlank(name)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("车主姓名不能为空!");
@@ -1994,7 +1995,7 @@ HttpServletRequest request,HttpServletResponse response){
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(identityCard)){
+			if(StringUtil.isBlank(identificationNum)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("证件号码不能为空!");
 				renderJSON(baseBean);
@@ -2063,7 +2064,7 @@ HttpServletRequest request,HttpServletResponse response){
 			String ip = getIp2(request);
 			iocomotiveCarChangeContactVo.setName(name);
 			iocomotiveCarChangeContactVo.setIdentificationNo(identificationNo);
-			iocomotiveCarChangeContactVo.setIdentityCard(identityCard);
+			iocomotiveCarChangeContactVo.setIdentificationNum(identificationNum);
 			iocomotiveCarChangeContactVo.setNumberPlate(numberPlate);
 			iocomotiveCarChangeContactVo.setPlateType(plateType);
 			iocomotiveCarChangeContactVo.setPlaceOfDomicile(placeOfDomicile);
@@ -2081,6 +2082,22 @@ HttpServletRequest request,HttpServletResponse response){
 			if("0000".equals(code)){
         		baseBean.setCode(MsgCode.success);
         		baseBean.setMsg(msg);
+        		
+        		//推送模板消息
+				try {
+					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
+					String url = "";
+					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
+					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
+					map1.put("keyword2", new TemplateDataModel().new Property("机动车联系方式变更","#212121"));
+					map1.put("keyword3", new TemplateDataModel().new Property("待受理","#212121"));
+					map1.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map1);
+					logger.info("发送模板消息结果：" + flag);
+				} catch (Exception e) {
+					logger.error("发送模板消息  失败===", e);
+				}
         	}else{
         		baseBean.setCode(MsgCode.businessError);
         		if ("9999".equals(code)) {
@@ -2105,7 +2122,6 @@ HttpServletRequest request,HttpServletResponse response){
      */
     @RequestMapping("iocomotiveCarReplace")
     public void iocomotiveCarReplace(HttpServletRequest request,HttpServletResponse response){
-    	// http://192.168.1.136:8080/web/handleservice/iocomotiveCarReplace.html?name=张三测试&IDcard=445222199209020034&licensePlate=2222&licensePlateTpye=A&placeOfDomicile=0&address=深圳市南山区&receiverName=张三&receiverNumber=13512452362&mailingAddress=深圳市南山区&livePhoto1=saas&livePhoto2=dsfds&IDCardPhoto1=dfdsfff&IDCardPhoto2=asqwe&driverLicensePhoto=fdfsfds&sourceOfCertification=C
     	BaseBean baseBean = new BaseBean();		//创建返回结果
     	IocomotiveCarReplaceVo iocomotiveCarReplaceVo = new IocomotiveCarReplaceVo();
     	try {
@@ -2124,7 +2140,8 @@ HttpServletRequest request,HttpServletResponse response){
 			String PHOTO10 = request.getParameter("PHOTO10");			//	身份证（反面）
 			String DJZSFYJ = request.getParameter("DJZSFYJ");		//	机动车登记证书
 			String sourceOfCertification = request.getParameter("sourceOfCertification");	//	申请来源
-    	
+			String openId = request.getParameter("openId");  //openId
+			
 			if(StringUtil.isBlank(name)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("车主姓名不能为空!");
@@ -2232,6 +2249,21 @@ HttpServletRequest request,HttpServletResponse response){
 			if("0000".equals(code)){
         		baseBean.setCode(MsgCode.success);
         		baseBean.setMsg(msg);
+        		
+        		try {
+					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_xszbhlbl";
+					String url = "";
+					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
+					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
+					map1.put("keyword2", new TemplateDataModel().new Property("换领机动车行驶证","#212121"));
+					map1.put("keyword3", new TemplateDataModel().new Property("待受理","#212121"));
+					map1.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map1);
+					logger.info("发送模板消息结果：" + flag);
+				} catch (Exception e) {
+					logger.error("发送模板消息  失败===", e);
+				}
         	}else{
         		baseBean.setCode(MsgCode.businessError);
         		if ("9999".equals(code)) {
