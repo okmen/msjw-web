@@ -189,6 +189,12 @@ public class EastHotelAppointmentAction extends BaseAction {
     			renderJSON(baseBean);
     			return;
     		}
+    		if(StringUtils.isBlank(hotelName)){
+    			baseBean.setCode(MsgCode.paramsError);
+    			baseBean.setMsg("酒店名称不能为空!");
+    			renderJSON(baseBean);
+    			return;
+    		}
     		
     		List<HotelApptInfoVo> list = JSON.parseArray(apptInfoList, HotelApptInfoVo.class);
     		
@@ -257,23 +263,16 @@ public class EastHotelAppointmentAction extends BaseAction {
     			if(resultList != null && resultList.size() > 0){
     				for (HotelApptResultVo resultVo : resultList) {
     					if("1".equals(resultVo.getResult())){//预约结果 0-失败，1-成功
-    						for (HotelApptInfoVo apptInfo : list) {
-    							if(resultVo.getPlateNo().equals(apptInfo.getPlateNo())){
-    								if(StringUtils.isBlank(hotelName)){
-    									hotelName = "酒店";
-    								}
-    								String msgContent = MsgTemplate.getEastHotelApptSuccessMsgTemplate(hotelName, apptInfo.getApptDate(), apptInfo.getApptInterval(), apptInfo.getApptDistrict());
-    								boolean flag = mobileMessageService.sendMessage(apptInfo.getMobilePhone(), msgContent);
-    								if(flag){
-    									logger.info("发送短信提醒成功:" + msgContent);
-    								}else{
-    									logger.info("发送短信提醒失败:" + msgContent);
-    								}
-    								
-    								list.remove(apptInfo);//从list中移除
-    								break;	//跳出循环
-    							}
-    						}
+    						//根据预约id查询预约信息
+    						BaseBean detailBean = activityService.getApptInfoDetailByApptId(resultVo.getApptId());
+    						ApptInfoDetailVo detail = (ApptInfoDetailVo) detailBean.getData();
+							String msgContent = MsgTemplate.getEastHotelApptSuccessMsgTemplate(hotelName, detail.getApptDate(), detail.getApptInterval(), detail.getApptDistrict());
+							boolean flag = mobileMessageService.sendMessage(detail.getMobilePhone(), msgContent);
+							if(flag){
+								logger.info("发送短信提醒成功:" + msgContent);
+							}else{
+								logger.info("发送短信提醒失败:" + msgContent);
+							}
     					}
     				}
     			}
@@ -401,7 +400,15 @@ public class EastHotelAppointmentAction extends BaseAction {
 				baseBean.setMsg("取消原因不能为空!");
 				renderJSON(baseBean);
 				return;
+			}else{
+				if(cancelReason.length() > 100){
+					baseBean.setCode(MsgCode.paramsError);
+					baseBean.setMsg("取消原因不能超过100个字符，请重新输入！");
+					renderJSON(baseBean);
+					return;
+				}
 			}
+			
 			baseBean = activityService.cancelHotelApptInfo(apptId, cancelReason, sourceOfCertification);
 			
 		} catch (Exception e) {
