@@ -65,7 +65,7 @@ public class HandleserviceAction extends BaseAction {
 	/**
 	 * 补领机动车行驶证
 	 * @param name 车主姓名/机动车所有人
-	 * @param identityCard 证件号码
+	 * @param identificationNum 证件号码
 	 * @param numberPlate 号牌号码
 	 * @param plateType 号牌种类
 	 * @param placeOfDomicile 户籍所在地 1深户，0外籍户口
@@ -87,7 +87,7 @@ public class HandleserviceAction extends BaseAction {
 	 * @throws Exception
 	 */
     @RequestMapping("complementTheMotorVehicleDrivingLicense")
-    public void complementTheMotorVehicleDrivingLicense(String name,String identityCard,String numberPlate,String plateType,
+    public void complementTheMotorVehicleDrivingLicense(String name,String identificationNum,String numberPlate,String plateType,
     		String placeOfDomicile,String address,String receiverName,String receiverNumber,String receiverAddress,
     		String livePhoto1,String livePhoto2,String PHOTO9, String PHOTO10, String DJZSFYJ,
     		String ip,String sourceOfCertification,String foreignPeopleLivingOnTheTable,String openId,String XSZZP,
@@ -117,13 +117,13 @@ public class HandleserviceAction extends BaseAction {
         	}else{
         		vehicleDrivingLicenseVo.setName(name);
         	}
-    		if(StringUtils.isBlank(identityCard)){
-        		baseBean.setMsg("identityCard不能为空!");
+    		if(StringUtils.isBlank(identificationNum)){
+        		baseBean.setMsg("identificationNum不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}else{
-        		vehicleDrivingLicenseVo.setIDcard(identityCard);
+        		vehicleDrivingLicenseVo.setIDcard(identificationNum);
         	}
     		if(StringUtils.isBlank(numberPlate)){
         		baseBean.setMsg("numberPlate不能为空!");
