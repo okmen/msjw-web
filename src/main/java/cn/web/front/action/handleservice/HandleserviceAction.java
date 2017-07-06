@@ -1957,29 +1957,29 @@ HttpServletRequest request,HttpServletResponse response){
 	/**
 	 * 机动车联系方式变更
 	* @author lifangyong
-	* @param name 车主姓名
-	* @param identificationNo 证件种类
-	* @param identityCard 证件号码
-	* @param licensePlate 号牌号码
-	* @param licensePlateTpye 号牌种类
-	* @param placeOfDomicile 户籍所在地
-	* @param VIN 车架号
-	* @param mobilephone 变更号码
-	* @param mailingAddress 地址
-	* @param IDCardPhoto1 身份证（正面）
-	* @param IDCardPhoto2 身份证（反面）
-	* @param driverLicensePhoto 机动车登记证书（当户籍选择境外人员时显示）·境外人员临住表
-	* @param sourceOfCertification 申请来源
 	* @param request
 	* @param response
 	* @param 
 	*/
 	@RequestMapping("iocomotiveCarChangeContact")
-	public void iocomotiveCarChangeContact( String name,String identificationNo,String identityCard,String licensePlate,String licensePlateTpye,String placeOfDomicile,String VIN,String mobilephone,String mailingAddress,String IDCardPhoto1,String IDCardPhoto2,String driverLicensePhoto,String sourceOfCertification,HttpServletRequest request,HttpServletResponse response){
+	public void iocomotiveCarChangeContact(HttpServletRequest request,HttpServletResponse response){
 		// http://192.168.1.136:8080/web/handleservice/iocomotiveCarChangeContact.html?name=张三测试&identificationNo=A&identityCard=445222199209020034&licensePlate=2222&licensePlateTpye=A&placeOfDomicile=0&VIN=1212&mobilephone=13123212232&mailingAddress=深圳市南山区&IDCardPhoto1=323&IDCardPhoto2=2132&driverLicensePhoto=3123321&sourceOfCertification=C
 		BaseBean baseBean = new BaseBean();		//创建返回结果
-		IocomotiveCarChangeContactVo iocomotiveCarChangeContactVo = new IocomotiveCarChangeContactVo();
 		try {
+			String name = request.getParameter("name"); //车主姓名
+			String identificationNo = request.getParameter("identificationNo"); //证件种类
+			String identityCard = request.getParameter("identityCard"); //证件号码
+			String numberPlate = request.getParameter("numberPlate"); //号牌号码
+			String plateType = request.getParameter("plateType"); //号牌种类
+			String placeOfDomicile = request.getParameter("placeOfDomicile"); //户籍所在地
+			String behindTheFrame4Digits = request.getParameter("behindTheFrame4Digits"); //车架号
+			String mobilephone = request.getParameter("mobilephone"); //变更号码
+			String receiverAddress = request.getParameter("receiverAddress"); //地址
+			String PHOTO9 = request.getParameter("PHOTO9"); //身份证（正面）
+			String PHOTO10 = request.getParameter("PHOTO10");//身份证（反面）
+			String JDCXSZ = request.getParameter("JDCXSZ"); //机动车行驶证照片
+			String sourceOfCertification = request.getParameter("sourceOfCertification");//申请来源
+			IocomotiveCarChangeContactVo iocomotiveCarChangeContactVo = new IocomotiveCarChangeContactVo();
 			if(StringUtil.isBlank(name)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("车主姓名不能为空!");
@@ -1998,13 +1998,13 @@ HttpServletRequest request,HttpServletResponse response){
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(licensePlate)){
+			if(StringUtil.isBlank(numberPlate)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("号牌号码不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(licensePlateTpye)){
+			if(StringUtil.isBlank(plateType)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("号牌种类不能为空!");
 				renderJSON(baseBean);
@@ -2016,33 +2016,39 @@ HttpServletRequest request,HttpServletResponse response){
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(VIN)){
+			if(StringUtil.isBlank(behindTheFrame4Digits)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("车架号不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(mailingAddress)){
+			if(StringUtil.isBlank(mobilephone)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("电话号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(receiverAddress)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人地址不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(IDCardPhoto1)){
+			if(StringUtil.isBlank(PHOTO9)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证（正面）不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(IDCardPhoto2)){
+			if(StringUtil.isBlank(PHOTO10)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证（反面）不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(driverLicensePhoto)){
+			if(StringUtil.isBlank(JDCXSZ)){
 				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("机动车登记证书不能为空!");
+				baseBean.setMsg("机动车行驶证照片不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
@@ -2056,15 +2062,15 @@ HttpServletRequest request,HttpServletResponse response){
 			iocomotiveCarChangeContactVo.setName(name);
 			iocomotiveCarChangeContactVo.setIdentificationNo(identificationNo);
 			iocomotiveCarChangeContactVo.setIdentityCard(identityCard);
-			iocomotiveCarChangeContactVo.setLicensePlate(licensePlate);
-			iocomotiveCarChangeContactVo.setLicensePlateTpye(licensePlateTpye);
+			iocomotiveCarChangeContactVo.setNumberPlate(numberPlate);
+			iocomotiveCarChangeContactVo.setPlateType(plateType);
 			iocomotiveCarChangeContactVo.setPlaceOfDomicile(placeOfDomicile);
-			iocomotiveCarChangeContactVo.setVIN(VIN);
+			iocomotiveCarChangeContactVo.setBehindTheFrame4Digits(behindTheFrame4Digits);
 			iocomotiveCarChangeContactVo.setMobilephone(mobilephone);
-			iocomotiveCarChangeContactVo.setMailingAddress(mailingAddress);
-			iocomotiveCarChangeContactVo.setIDCardPhoto1(IDCardPhoto1);
-			iocomotiveCarChangeContactVo.setIDCardPhoto2(IDCardPhoto2);
-			iocomotiveCarChangeContactVo.setDriverLicensePhoto(driverLicensePhoto);
+			iocomotiveCarChangeContactVo.setReceiverAddress(receiverAddress);
+			iocomotiveCarChangeContactVo.setPHOTO9(PHOTO9);
+			iocomotiveCarChangeContactVo.setPHOTO10(PHOTO10);
+			iocomotiveCarChangeContactVo.setJDCXSZ(JDCXSZ);
 			iocomotiveCarChangeContactVo.setSourceOfCertification(sourceOfCertification);
 			iocomotiveCarChangeContactVo.setIp(ip);
 			Map<String, String> map = handleService.iocomotiveCarChangeContact(iocomotiveCarChangeContactVo);
@@ -2092,49 +2098,50 @@ HttpServletRequest request,HttpServletResponse response){
     /**
      * 换领机动车行驶证
      * @author lifangyong
-     * @param name 车主姓名
-     * @param IDcard 证件号码
-     * @param licensePlate 号牌号码
-     * @param licensePlateTpye 号牌种类
-     * @param placeOfDomicile 户籍所在地
-     * @param address 住所详细地址
-     * @param receiverName 收件人姓名
-     * @param receiverNumber 收件人号码
-     * @param mailingAddress 收件人地址
-     * @param livePhoto1 居住证正面
-     * @param livePhoto2 居住证反面
-     * @param IDCardPhoto1 身份证（正面）
-     * @param IDCardPhoto2 身份证（反面）
-     * @param driverLicensePhoto 机动车登记证书
-     * @param sourceOfCertification 申请来源
      * @param request
      * @param response
      */
     @RequestMapping("iocomotiveCarReplace")
-    public void iocomotiveCarReplace(String name, String IDcard, String licensePlate, String licensePlateTpye, String placeOfDomicile, String address, String receiverName, String receiverNumber, String mailingAddress, String livePhoto1, String livePhoto2, String IDCardPhoto1, String IDCardPhoto2, String driverLicensePhoto, String sourceOfCertification, HttpServletRequest request,HttpServletResponse response){
+    public void iocomotiveCarReplace(HttpServletRequest request,HttpServletResponse response){
     	// http://192.168.1.136:8080/web/handleservice/iocomotiveCarReplace.html?name=张三测试&IDcard=445222199209020034&licensePlate=2222&licensePlateTpye=A&placeOfDomicile=0&address=深圳市南山区&receiverName=张三&receiverNumber=13512452362&mailingAddress=深圳市南山区&livePhoto1=saas&livePhoto2=dsfds&IDCardPhoto1=dfdsfff&IDCardPhoto2=asqwe&driverLicensePhoto=fdfsfds&sourceOfCertification=C
     	BaseBean baseBean = new BaseBean();		//创建返回结果
     	IocomotiveCarReplaceVo iocomotiveCarReplaceVo = new IocomotiveCarReplaceVo();
-		try {
+    	try {
+	    	String name = request.getParameter("name");					//	车主姓名
+			String carOwnerIdentityCard = request.getParameter("carOwnerIdentityCard");					//	证件号码
+			String numberPlate = request.getParameter("numberPlate");			//	号牌号码
+			String plateType = request.getParameter("plateType");		//	号牌种类
+			String placeOfDomicile = request.getParameter("placeOfDomicile");			//	户籍所在地
+			String address = request.getParameter("address");					//	住所详细地址
+			String receiverName = request.getParameter("receiverName");			//	收件人姓名
+			String receiverNumber = request.getParameter("receiverNumber");			//	收件人号码
+			String receiverAddress = request.getParameter("receiverAddress");			//	收件人地址
+			String JZZA = request.getParameter("JZZA");				//	居住证正面
+			String JZZB = request.getParameter("JZZB");				//	居住证反面
+			String PHOTO9 = request.getParameter("PHOTO9");			//	身份证（正面）
+			String PHOTO10 = request.getParameter("PHOTO10");			//	身份证（反面）
+			String DJZSFYJ = request.getParameter("DJZSFYJ");		//	机动车登记证书
+			String sourceOfCertification = request.getParameter("sourceOfCertification");	//	申请来源
+    	
 			if(StringUtil.isBlank(name)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("车主姓名不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(IDcard)){
+			if(StringUtil.isBlank(carOwnerIdentityCard)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("证件号码不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(licensePlate)){
+			if(StringUtil.isBlank(numberPlate)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("号牌号码不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(licensePlateTpye)){
+			if(StringUtil.isBlank(plateType)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("号牌种类不能为空!");
 				renderJSON(baseBean);
@@ -2158,37 +2165,37 @@ HttpServletRequest request,HttpServletResponse response){
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(mailingAddress)){
+			if(StringUtil.isBlank(receiverAddress)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人地址不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(livePhoto1)){
+			if(StringUtil.isBlank(JZZA)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("居住证（正面）不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(livePhoto2)){
+			if(StringUtil.isBlank(JZZB)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("居住证（反面）不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(IDCardPhoto1)){
+			if(StringUtil.isBlank(PHOTO9)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证（正面）不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(IDCardPhoto2)){
+			if(StringUtil.isBlank(PHOTO10)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证（反面）不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(driverLicensePhoto)){
+			if(StringUtil.isBlank(DJZSFYJ)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("机动车登记证书不能为空!");
 				renderJSON(baseBean);
@@ -2202,19 +2209,19 @@ HttpServletRequest request,HttpServletResponse response){
 			}
 			String ip = getIp2(request);
 			iocomotiveCarReplaceVo.setName(name);					//	车主姓名
-			iocomotiveCarReplaceVo.setIDcard(IDcard);					//	证件号码
-			iocomotiveCarReplaceVo.setLicensePlate(licensePlate);			//	号牌号码
-			iocomotiveCarReplaceVo.setLicensePlateTpye(licensePlateTpye);		//	号牌种类
+			iocomotiveCarReplaceVo.setCarOwnerIdentityCard(carOwnerIdentityCard);					//	证件号码
+			iocomotiveCarReplaceVo.setNumberPlate(numberPlate);			//	号牌号码
+			iocomotiveCarReplaceVo.setPlateType(plateType);		//	号牌种类
 			iocomotiveCarReplaceVo.setPlaceOfDomicile(placeOfDomicile);			//	户籍所在地
 			iocomotiveCarReplaceVo.setAddress(address);					//	住所详细地址
 			iocomotiveCarReplaceVo.setReceiverName(receiverName);			//	收件人姓名
 			iocomotiveCarReplaceVo.setReceiverNumber(receiverNumber);			//	收件人号码
-			iocomotiveCarReplaceVo.setMailingAddress(mailingAddress);			//	收件人地址
-			iocomotiveCarReplaceVo.setLivePhoto1(livePhoto1);				//	居住证正面
-			iocomotiveCarReplaceVo.setLivePhoto2(livePhoto2);				//	居住证反面
-			iocomotiveCarReplaceVo.setIDCardPhoto1(IDCardPhoto1);			//	身份证（正面）
-			iocomotiveCarReplaceVo.setIDCardPhoto2(IDCardPhoto2);			//	身份证（反面）
-			iocomotiveCarReplaceVo.setDriverLicensePhoto(driverLicensePhoto);		//	机动车登记证书
+			iocomotiveCarReplaceVo.setReceiverAddress(receiverAddress);			//	收件人地址
+			iocomotiveCarReplaceVo.setJZZA(JZZA);				//	居住证正面
+			iocomotiveCarReplaceVo.setJZZB(JZZB);				//	居住证反面
+			iocomotiveCarReplaceVo.setPHOTO9(PHOTO9);			//	身份证（正面）
+			iocomotiveCarReplaceVo.setPHOTO10(PHOTO10);			//	身份证（反面）
+			iocomotiveCarReplaceVo.setDJZSFYJ(DJZSFYJ);		//	机动车登记证书
 			iocomotiveCarReplaceVo.setSourceOfCertification(sourceOfCertification); //  申请来源
 			iocomotiveCarReplaceVo.setIp(ip);//	ip
 			Map<String, String> map = handleService.iocomotiveCarReplace(iocomotiveCarReplaceVo);
