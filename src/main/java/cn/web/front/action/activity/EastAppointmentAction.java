@@ -120,10 +120,11 @@ public class EastAppointmentAction extends BaseAction {
     	
 		try {
 			//查询可预约日期
-			baseBean = activityService.getNormalApptDate(sourceOfCertification);
+			BaseBean dateBean = activityService.getNormalApptDate(sourceOfCertification);
+			String code = dateBean.getCode();
 			
-			if(baseBean.getData() != null){
-				String dateStr = baseBean.getData().toString();
+			if(MsgCode.success.equals(code)){
+				String dateStr = dateBean.getData().toString();
 				BaseBean refBean = null;
 				String[] apptDates = dateStr.split(",");		//多个日期用逗号分隔	2017-06-10,2017-06-11
 				
@@ -150,6 +151,9 @@ public class EastAppointmentAction extends BaseAction {
 				
 				baseBean.setData(list);
 				baseBean.setCode(refBean.getCode());
+			}else{
+				baseBean.setCode(code);
+				baseBean.setMsg(dateBean.getMsg());
 			}
 			
 			logger.info("获取预约场次信息返回web数据:" + JSON.toJSONString(baseBean));
@@ -260,7 +264,7 @@ public class EastAppointmentAction extends BaseAction {
     			}
     			
     			String code = baseBean.getCode();	//状态码
-    			if("0000".equals(code)){
+    			if(MsgCode.success.equals(code)){//0000
     				//预约成功,发送短信提醒
     				String msgContent = MsgTemplate.getEastApptSuccessMsgTemplate(info.getApptDate(), info.getApptInterval(), info.getApptDistrict());
     	    		boolean flag = mobileMessageService.sendMessage(info.getMobilePhone(), msgContent);
@@ -269,7 +273,7 @@ public class EastAppointmentAction extends BaseAction {
     	    		}else{
     	    			logger.info("发送短信提醒失败:" + msgContent);
     	    		}
-    			}else{
+    			}else if(MsgCode.paramsError.equals(code)){//0001
     				//预约失败,发送短信提醒
     				String msgContent = MsgTemplate.getEastApptFailMsgTemplate(baseBean.getMsg(), info.getApptDate(), info.getApptInterval(), info.getApptDistrict());
     	    		boolean flag = mobileMessageService.sendMessage(info.getMobilePhone(), msgContent);
@@ -417,7 +421,7 @@ public class EastAppointmentAction extends BaseAction {
 			baseBean = activityService.cancelNormalApptInfo(apptId, cancelReason, sourceOfCertification);
 			
 			String code = baseBean.getCode();
-			if("0000".equals(code)){
+			if(MsgCode.success.equals(code)){
 				//取消预约成功,发送短信提醒
 				String msgContent = MsgTemplate.getEastApptCancelMsgNotice();
 	    		boolean flag = mobileMessageService.sendMessage(mobilePhone, msgContent);
@@ -455,8 +459,9 @@ public class EastAppointmentAction extends BaseAction {
 			
 			//查询可预约日期
 			BaseBean dateBean = activityService.getNormalApptDate(sourceOfCertification);
+			String code = dateBean.getCode();
 			
-			if(dateBean.getData() != null){
+			if(MsgCode.success.equals(code)){//0000
 				String dateStr = dateBean.getData().toString();
 				String[] apptDates = dateStr.split(",");		//多个日期用逗号分隔	2017-06-10,2017-06-11
 				for (String apptDate : apptDates) {
@@ -483,13 +488,16 @@ public class EastAppointmentAction extends BaseAction {
 						//}
 						baseBean.setCode(refBean.getCode());
 						baseBean.setData(list);
+					}else{
+						baseBean.setCode(MsgCode.paramsError);
+						baseBean.setMsg("非节假日时段，无需预约！");
+						renderJSON(baseBean);
+						return;
 					}
 				}
-			}
-			//当前日期不是节假日
-			if(baseBean.getData() == null){
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("非节假日时段，无需预约！");
+			}else{
+				baseBean.setCode(code);
+				baseBean.setMsg(dateBean.getMsg());
 			}
 			
 			logger.info("获取临时预约场次信息返回web数据:" + JSON.toJSONString(baseBean));
@@ -577,7 +585,7 @@ public class EastAppointmentAction extends BaseAction {
     			baseBean = activityService.addTempApptInfo(info, sourceOfCertification, openId);
     			
     			String code = baseBean.getCode();	//状态码
-    			if("0000".equals(code)){
+    			if(MsgCode.success.equals(code)){//0000
     				//预约成功,发送短信提醒
     				String msgContent = MsgTemplate.getEastApptSuccessMsgTemplate(info.getApptDate(), info.getApptInterval(), info.getApptDistrict());
     	    		boolean flag = mobileMessageService.sendMessage(info.getMobilePhone(), msgContent);
@@ -586,7 +594,7 @@ public class EastAppointmentAction extends BaseAction {
     	    		}else{
     	    			logger.info("发送短信提醒失败:" + msgContent);
     	    		}
-    			}else{
+    			}else if(MsgCode.paramsError.equals(code)){//0001
     				//预约失败,发送短信提醒
     				String msgContent = MsgTemplate.getEastApptFailMsgTemplate(baseBean.getMsg(), info.getApptDate(), info.getApptInterval(), info.getApptDistrict());
     	    		boolean flag = mobileMessageService.sendMessage(info.getMobilePhone(), msgContent);
