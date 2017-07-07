@@ -3112,7 +3112,7 @@ HttpServletRequest request,HttpServletResponse response){
 	 * @param vo 补领机动车号牌 申请信息
 	 */
     @RequestMapping("replaceMotorVehicleLicensePlate")
-    public void replaceMotorVehicleLicensePlate(ReplaceMotorVehicleLicensePlateVo vo){
+    public void replaceMotorVehicleLicensePlate(ReplaceMotorVehicleLicensePlateVo vo, HttpServletRequest request){
     	BaseBean baseBean = new BaseBean();
     	try {
     		if(StringUtils.isBlank(vo.getName())){
@@ -3150,10 +3150,18 @@ HttpServletRequest request,HttpServletResponse response){
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
-        	}else{
+        	}
+    		/*else{
+        		//0深户
+        		if("0".equals(vo.getPlaceOfDomicile())){
+        			vo.setResidenceNo("");//居住证号码
+        			vo.setJZZA("");//居住证正面图片
+        			vo.setJZZB("");//居住证反面图片
+        			vo.setPHOTO31("");//境外人员临住表
+        		}
         		//1外籍户口
-        		if("1".equals(vo.getPlaceOfDomicile())){
-            		/*if(StringUtils.isBlank(vo.getJZZA())){//居住证正面图片
+        		else if("1".equals(vo.getPlaceOfDomicile())){
+            		if(StringUtils.isBlank(vo.getJZZA())){//居住证正面图片
             			baseBean.setMsg("居住证正面图片不能为空!");
                 		baseBean.setCode(MsgCode.paramsError);
                 		renderJSON(baseBean);
@@ -3164,7 +3172,7 @@ HttpServletRequest request,HttpServletResponse response){
                 		baseBean.setCode(MsgCode.paramsError);
                 		renderJSON(baseBean);
                 		return;
-            		}*/
+            		}
             		//赋值居住证号码
         			vo.setResidenceNo(vo.getIdentityCard());//居住证号码与身份证号码一样
         			
@@ -3175,7 +3183,20 @@ HttpServletRequest request,HttpServletResponse response){
                 		return;
             		}
         		}
-        	}
+        	}*/
+    		if(StringUtils.isBlank(vo.getResidenceNo())){//居住证号码
+    			vo.setResidenceNo("");
+    		}
+    		if(StringUtils.isBlank(vo.getJZZA())){//居住证正面图片
+    			vo.setJZZA("");
+    		}
+    		if(StringUtils.isBlank(vo.getJZZB())){//居住证反面图片
+    			vo.setJZZB("");
+    		}
+			if(StringUtils.isBlank(vo.getPHOTO31())){//境外人员临住表
+				vo.setPHOTO31("");
+    		}
+    		
     		if(StringUtils.isBlank(vo.getReceiverName())){
         		baseBean.setMsg("收件人姓名不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
@@ -3194,6 +3215,12 @@ HttpServletRequest request,HttpServletResponse response){
     			renderJSON(baseBean);
     			return;
     		}
+    		
+    		//住所地址,可为空
+    		if(StringUtils.isBlank(vo.getAddress())){
+    			vo.setAddress("");
+    		}
+    		
     		if(StringUtils.isBlank(vo.getPHOTO9())){
         		baseBean.setMsg("身份证（正面）不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
@@ -3212,19 +3239,15 @@ HttpServletRequest request,HttpServletResponse response){
         		renderJSON(baseBean);
         		return;
         	}
-    		if(StringUtils.isBlank(vo.getIp())){
-        		baseBean.setMsg("外网录入ip不能为空!");
-        		baseBean.setCode(MsgCode.paramsError);
-        		renderJSON(baseBean);
-        		return;
-        	}
     		if(StringUtils.isBlank(vo.getSourceOfCertification())){
-        		baseBean.setMsg("申请来源不能为空!");
-        		baseBean.setCode(MsgCode.paramsError);
-        		renderJSON(baseBean);
-        		return;
-        	}
+    			baseBean.setMsg("申请来源不能为空!");
+    			baseBean.setCode(MsgCode.paramsError);
+    			renderJSON(baseBean);
+    			return;
+    		}
     		
+    		//设置外网ip
+    		vo.setIp(getIp2(request));
     		//设置登录用户身份证号码
     		if(StringUtils.isBlank(vo.getLoginUserIdentityCard())){
         		vo.setLoginUserIdentityCard(vo.getIdentityCard());
