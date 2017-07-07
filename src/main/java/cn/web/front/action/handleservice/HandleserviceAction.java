@@ -2838,9 +2838,21 @@ HttpServletRequest request,HttpServletResponse response){
 		} else {
 			map.put("inform", inform);
 		}
-		map.put("bookerName", bookerName);
-		map.put("bookerIdNumber", bookerIdentityCard);
-		map.put("bookerType", bookerType);
+		if (StringUtil.isBlank(bookerName)) {
+			map.put("bookerName", "");
+		} else {
+			map.put("bookerName", bookerName);
+		}
+		if (StringUtil.isBlank(bookerIdentityCard)) {
+			map.put("bookerIdNumber", "");
+		} else {
+			map.put("bookerIdNumber", bookerIdentityCard);
+		}
+		if (StringUtil.isBlank(bookerType)) {
+			map.put("bookerType", "");
+		} else {
+			map.put("bookerType", bookerType);
+		}
 		if (StringUtil.isBlank(carTypeId)) {
 			baseBean.setCode(MsgCode.paramsError);
 			baseBean.setMsg("号牌类型Id不能为空!");
@@ -2849,11 +2861,32 @@ HttpServletRequest request,HttpServletResponse response){
 		} else {
 			map.put("carTypeId", carTypeId);
 		}
-		map.put("arg0", arg0);
-		map.put("arg1", arg1);
-		map.put("arg2", arg2);
-		map.put("arg3", arg3);
-		map.put("arg4", arg4);
+		if (StringUtil.isBlank(arg0)) {
+			map.put("arg0", "");
+		} else {
+			map.put("arg0", arg0);
+		}
+		if (StringUtil.isBlank(arg0)) {
+			map.put("arg1", "");
+		} else {
+			map.put("arg1", arg1);
+		}
+		if (StringUtil.isBlank(arg2)) {
+			map.put("arg2", "");
+		} else {
+			map.put("arg2", arg2);
+		}
+		if (StringUtil.isBlank(arg3)) {
+			map.put("arg3", "");
+		} else {
+			map.put("arg3", arg3);
+		}
+		if (StringUtil.isBlank(arg4)) {
+			map.put("arg4", "");
+		} else {
+			map.put("arg4", arg4);
+		}
+		
 
 		try {
 			// 创建返回结果
