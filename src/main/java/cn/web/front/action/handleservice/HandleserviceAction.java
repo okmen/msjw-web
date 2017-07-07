@@ -1974,7 +1974,7 @@ HttpServletRequest request,HttpServletResponse response){
 		IocomotiveCarChangeContactVo iocomotiveCarChangeContactVo = new IocomotiveCarChangeContactVo();
 		try {
 			String name = request.getParameter("name"); //车主姓名
-			String identificationNo = request.getParameter("identificationNo"); //证件种类
+			String identificationNO = request.getParameter("identificationNO"); //证件种类
 			String identificationNum = request.getParameter("identificationNum"); //证件号码
 			String numberPlate = request.getParameter("numberPlate"); //号牌号码
 			String plateType = request.getParameter("plateType"); //号牌种类
@@ -1994,7 +1994,7 @@ HttpServletRequest request,HttpServletResponse response){
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(identificationNo)){
+			if(StringUtil.isBlank(identificationNO)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("证件种类不能为空!");
 				renderJSON(baseBean);
@@ -2068,7 +2068,7 @@ HttpServletRequest request,HttpServletResponse response){
 			}
 			String ip = getIp2(request);
 			iocomotiveCarChangeContactVo.setName(name);
-			iocomotiveCarChangeContactVo.setIdentificationNo(identificationNo);
+			iocomotiveCarChangeContactVo.setIdentificationNO(identificationNO);
 			iocomotiveCarChangeContactVo.setIdentificationNum(identificationNum);
 			iocomotiveCarChangeContactVo.setNumberPlate(numberPlate);
 			iocomotiveCarChangeContactVo.setPlateType(plateType);
