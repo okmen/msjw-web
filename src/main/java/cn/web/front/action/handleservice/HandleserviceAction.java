@@ -1655,7 +1655,7 @@ HttpServletRequest request,HttpServletResponse response){
 			String abbreviation = request.getParameter("abbreviation");  //车牌简称
 			String numberPlate = request.getParameter("numberPlate");  //车牌号码
 			String vin = request.getParameter("behindTheFrame4Digits");  //车架号
-			String userName = request.getParameter("userName");  //车辆所有人
+			String userName = request.getParameter("name");  //车辆所有人
 			String mobilephone = request.getParameter("mobilephone");  //手机号码
 			String applyDate = request.getParameter("applyDate");  //申请日期
 			String remarks = request.getParameter("remarks");  //备注
