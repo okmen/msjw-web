@@ -2841,11 +2841,6 @@ HttpServletRequest request,HttpServletResponse response){
 		map.put("bookerName", bookerName);
 		map.put("bookerIdNumber", bookerIdentityCard);
 		map.put("bookerType", bookerType);
-		map.put("arg0", arg0);
-		map.put("arg1", arg1);
-		map.put("arg2", arg2);
-		map.put("arg3", arg3);
-		map.put("arg4", arg4);
 		if (StringUtil.isBlank(carTypeId)) {
 			baseBean.setCode(MsgCode.paramsError);
 			baseBean.setMsg("号牌类型Id不能为空!");
@@ -2854,6 +2849,11 @@ HttpServletRequest request,HttpServletResponse response){
 		} else {
 			map.put("carTypeId", carTypeId);
 		}
+		map.put("arg0", arg0);
+		map.put("arg1", arg1);
+		map.put("arg2", arg2);
+		map.put("arg3", arg3);
+		map.put("arg4", arg4);
 
 		try {
 			// 创建返回结果
