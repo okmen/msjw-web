@@ -1963,11 +1963,11 @@ HttpServletRequest request,HttpServletResponse response){
     
 	/**
 	 * 机动车联系方式变更
-	* @author lifangyong
-	* @param request
-	* @param response
-	* @param 
-	*/
+	 * @author lifangyong
+	 * @param request
+	 * @param response
+	 * @param 
+	 */
 	@RequestMapping("iocomotiveCarChangeContact")
 	public void iocomotiveCarChangeContact(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
@@ -1977,7 +1977,7 @@ HttpServletRequest request,HttpServletResponse response){
 			String identificationNO = request.getParameter("identificationNO"); //证件种类
 			String identificationNum = request.getParameter("identificationNum"); //证件号码
 			String numberPlate = request.getParameter("numberPlate"); //号牌号码
-			String plateType = request.getParameter("plateType"); //号牌种类
+			String cartype = request.getParameter("cartype"); //车辆种类
 			String placeOfDomicile = request.getParameter("placeOfDomicile"); //户籍所在地
 			String behindTheFrame4Digits = request.getParameter("behindTheFrame4Digits"); //车架号
 			String mobilephone = request.getParameter("mobilephone"); //变更号码
@@ -2012,7 +2012,7 @@ HttpServletRequest request,HttpServletResponse response){
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(plateType)){
+			if(StringUtil.isBlank(cartype)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("号牌种类不能为空!");
 				renderJSON(baseBean);
@@ -2067,11 +2067,13 @@ HttpServletRequest request,HttpServletResponse response){
 				return;
 			}
 			String ip = getIp2(request);
+			//String ip = "192.168.2.152";
+			//logger.info("ip:"+ip);
 			iocomotiveCarChangeContactVo.setName(name);
 			iocomotiveCarChangeContactVo.setIdentificationNO(identificationNO);
 			iocomotiveCarChangeContactVo.setIdentificationNum(identificationNum);
 			iocomotiveCarChangeContactVo.setNumberPlate(numberPlate);
-			iocomotiveCarChangeContactVo.setPlateType(plateType);
+			iocomotiveCarChangeContactVo.setCartype(cartype);
 			iocomotiveCarChangeContactVo.setPlaceOfDomicile(placeOfDomicile);
 			iocomotiveCarChangeContactVo.setBehindTheFrame4Digits(behindTheFrame4Digits);
 			iocomotiveCarChangeContactVo.setMobilephone(mobilephone);
@@ -2081,6 +2083,7 @@ HttpServletRequest request,HttpServletResponse response){
 			iocomotiveCarChangeContactVo.setJDCXSZ(JDCXSZ);
 			iocomotiveCarChangeContactVo.setSourceOfCertification(sourceOfCertification);
 			iocomotiveCarChangeContactVo.setIp(ip);
+			
 			Map<String, String> map = handleService.iocomotiveCarChangeContact(iocomotiveCarChangeContactVo);
 			String code = map.get("code");
 			String msg = map.get("msg");
@@ -2133,7 +2136,7 @@ HttpServletRequest request,HttpServletResponse response){
 	    	String name = request.getParameter("name");					//	车主姓名
 			String identificationNum = request.getParameter("identificationNum");					//	证件号码
 			String numberPlate = request.getParameter("numberPlate");			//	号牌号码
-			String plateType = request.getParameter("plateType");		//	号牌种类
+			String cartype = request.getParameter("cartype");		//	号牌种类
 			String placeOfDomicile = request.getParameter("placeOfDomicile");			//	户籍所在地
 			String address = request.getParameter("address");					//	住所详细地址
 			String receiverName = request.getParameter("receiverName");			//	收件人姓名
@@ -2165,7 +2168,7 @@ HttpServletRequest request,HttpServletResponse response){
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(plateType)){
+			if(StringUtil.isBlank(cartype)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("号牌种类不能为空!");
 				renderJSON(baseBean);
@@ -2235,7 +2238,7 @@ HttpServletRequest request,HttpServletResponse response){
 			iocomotiveCarReplaceVo.setName(name);					//	车主姓名
 			iocomotiveCarReplaceVo.setIdentificationNum(identificationNum);					//	证件号码
 			iocomotiveCarReplaceVo.setNumberPlate(numberPlate);			//	号牌号码
-			iocomotiveCarReplaceVo.setPlateType(plateType);		//	号牌种类
+			iocomotiveCarReplaceVo.setCartype(cartype);		//	车辆种类
 			iocomotiveCarReplaceVo.setPlaceOfDomicile(placeOfDomicile);			//	户籍所在地
 			iocomotiveCarReplaceVo.setAddress(address);					//	住所详细地址
 			iocomotiveCarReplaceVo.setReceiverName(receiverName);			//	收件人姓名
