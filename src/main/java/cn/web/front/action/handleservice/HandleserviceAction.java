@@ -3062,8 +3062,17 @@ HttpServletRequest request,HttpServletResponse response){
 		} else {
 			map.put("bookNumber", bookNumber);
 		}
-		map.put("platNumber", numberPlate);
-		map.put("driveLicenseNumber", driveLicenseNumber);
+		
+		if (StringUtil.isBlank(bookNumber)) {
+			map.put("platNumber", "");
+		}else{
+			map.put("platNumber", numberPlate);
+		}
+		if (StringUtil.isBlank(bookNumber)) {
+			map.put("driveLicenseNumber", "");
+		}else{
+			map.put("driveLicenseNumber", driveLicenseNumber);
+		}
 		try {
 			// 创建返回结果
 			JSONObject jsonObject = handleService.getVehicleInspection(map);
