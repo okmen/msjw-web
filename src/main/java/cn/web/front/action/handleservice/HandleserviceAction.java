@@ -2316,12 +2316,14 @@ HttpServletRequest request,HttpServletResponse response){
 			
 			String idCardImgPositive = request.getParameter("PHOTO9");  //身份证正面
 			String idCardImgNegative = request.getParameter("PHOTO10");  //身份证反面
-			String idCarImgTable = request.getParameter("idCarImgTable");  //机动车登机证书
+			String idCarImgTable = request.getParameter("DJZSFYJ");  //机动车登机证书
 
 			String sourceOfCertification = request.getParameter("sourceOfCertification");  	//来源
 			
 			String foreignersLiveTable=request.getParameter("PHOTO31");
-			
+			String JZZA=request.getParameter("JZZA");
+			String JZZB=request.getParameter("JZZB");
+			String openId = request.getParameter("openId");  //openId
 
 			
 			//验证identityCard
@@ -2443,6 +2445,8 @@ HttpServletRequest request,HttpServletResponse response){
 			vo.setIp(getIp2(request));
 			vo.setSourceOfCertification(sourceOfCertification);
 			vo.setForeignersLiveTable(foreignersLiveTable);
+			vo.setJZZA(JZZA);
+			vo.setJZZB(JZZB);
 			
 			
 			//接口调用
@@ -2451,16 +2455,31 @@ HttpServletRequest request,HttpServletResponse response){
 			String msg = map.get("msg");
 			
 			if("0000".equals(code)){
-       		baseBean.setCode(MsgCode.success);
-       		baseBean.setMsg(msg);
-       	}else{
-       		baseBean.setCode(MsgCode.businessError);
-       		if ("9999".equals(code)) {
-       			baseBean.setMsg("输入信息格式有误！");
-				}else{
-					baseBean.setMsg(msg);
+				baseBean.setCode(MsgCode.success);
+        		baseBean.setMsg(msg);
+        		//成功需要发送模板消息
+				try {
+					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_xszbhlbl";
+					String url = "";
+					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
+					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
+					map1.put("keyword2", new TemplateDataModel().new Property("补领机动车行驶证","#212121"));
+					map1.put("keyword3", new TemplateDataModel().new Property("待受理","#212121"));
+					map1.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map1);
+					logger.info("发送模板消息结果：" + flag);
+				} catch (Exception e) {
+					logger.error("发送模板消息  失败===", e);
 				}
-       	}
+	       	}else{
+	       		baseBean.setCode(MsgCode.businessError);
+	       		if ("9999".equals(code)) {
+	       			baseBean.setMsg("输入信息格式有误！");
+					}else{
+						baseBean.setMsg(msg);
+					}
+	       	}
 		} catch (Exception e) {
 			logger.error("补换检验合格标志Action异常:"+e);
 			DealException(baseBean, e);
@@ -2493,7 +2512,7 @@ HttpServletRequest request,HttpServletResponse response){
 			String recipientAddress = request.getParameter("receiverAddress");  //收件人地址
 			
 			String licensePlateNo = request.getParameter("numberPlate");  //车牌号
-			String licensePlateType = request.getParameter("plateType");  //车牌类型
+			String licensePlateType = request.getParameter("cartype");  //车辆类型
 
 			String sourceOfCertification = request.getParameter("sourceOfCertification");  	//来源
 			
@@ -2502,7 +2521,7 @@ HttpServletRequest request,HttpServletResponse response){
 			
 			String associatedAgency = request.getParameter("associatedAgency");  //委托机构
 			String postalcode = request.getParameter("postCode");  //邮政编码
-			String identifyingCode = request.getParameter("identifyingCode");  //验证码
+
 			
 			//验证proprietorship
 			if(StringUtil.isBlank(proprietorship)){
@@ -2556,7 +2575,7 @@ HttpServletRequest request,HttpServletResponse response){
 			//验证licensePlateType
 			if(StringUtil.isBlank(licensePlateType)){
 				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("车牌类型不能为空!");
+				baseBean.setMsg("车辆类型不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
@@ -2593,13 +2612,7 @@ HttpServletRequest request,HttpServletResponse response){
 				return;
 			}
 			
-			//验证identifyingCode
-			if(StringUtil.isBlank(identifyingCode)){
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("验证码不能为空!");
-				renderJSON(baseBean);
-				return;
-			}
+	
 						
 			//验证sourceOfCertification
 			if(StringUtil.isBlank(sourceOfCertification)){
