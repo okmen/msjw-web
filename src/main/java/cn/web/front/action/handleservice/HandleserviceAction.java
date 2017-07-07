@@ -3063,12 +3063,12 @@ HttpServletRequest request,HttpServletResponse response){
 			map.put("bookNumber", bookNumber);
 		}
 		
-		if (StringUtil.isBlank(bookNumber)) {
+		if (StringUtil.isBlank(numberPlate)) {
 			map.put("platNumber", "");
 		}else{
 			map.put("platNumber", numberPlate);
 		}
-		if (StringUtil.isBlank(bookNumber)) {
+		if (StringUtil.isBlank(driveLicenseNumber)) {
 			map.put("driveLicenseNumber", "");
 		}else{
 			map.put("driveLicenseNumber", driveLicenseNumber);
