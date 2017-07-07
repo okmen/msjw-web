@@ -2067,8 +2067,6 @@ HttpServletRequest request,HttpServletResponse response){
 				return;
 			}
 			String ip = getIp2(request);
-			//String ip = "192.168.2.152";
-			//logger.info("ip:"+ip);
 			iocomotiveCarChangeContactVo.setName(name);
 			iocomotiveCarChangeContactVo.setIdentificationNO(identificationNO);
 			iocomotiveCarChangeContactVo.setIdentificationNum(identificationNum);
@@ -2136,7 +2134,7 @@ HttpServletRequest request,HttpServletResponse response){
 	    	String name = request.getParameter("name");					//	车主姓名
 			String identificationNum = request.getParameter("identificationNum");					//	证件号码
 			String numberPlate = request.getParameter("numberPlate");			//	号牌号码
-			String cartype = request.getParameter("cartype");		//	号牌种类
+			String plateType = request.getParameter("plateType");		//	号牌种类
 			String placeOfDomicile = request.getParameter("placeOfDomicile");			//	户籍所在地
 			String address = request.getParameter("address");					//	住所详细地址
 			String receiverName = request.getParameter("receiverName");			//	收件人姓名
@@ -2168,7 +2166,7 @@ HttpServletRequest request,HttpServletResponse response){
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(cartype)){
+			if(StringUtil.isBlank(plateType)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("号牌种类不能为空!");
 				renderJSON(baseBean);
@@ -2198,7 +2196,7 @@ HttpServletRequest request,HttpServletResponse response){
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(JZZA)){
+			/*if(StringUtil.isBlank(JZZA)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("居住证（正面）不能为空!");
 				renderJSON(baseBean);
@@ -2209,7 +2207,7 @@ HttpServletRequest request,HttpServletResponse response){
 				baseBean.setMsg("居住证（反面）不能为空!");
 				renderJSON(baseBean);
 				return;
-			}
+			}*/
 			if(StringUtil.isBlank(PHOTO9)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证（正面）不能为空!");
@@ -2238,7 +2236,7 @@ HttpServletRequest request,HttpServletResponse response){
 			iocomotiveCarReplaceVo.setName(name);					//	车主姓名
 			iocomotiveCarReplaceVo.setIdentificationNum(identificationNum);					//	证件号码
 			iocomotiveCarReplaceVo.setNumberPlate(numberPlate);			//	号牌号码
-			iocomotiveCarReplaceVo.setCartype(cartype);		//	车辆种类
+			iocomotiveCarReplaceVo.setPlateType(plateType);		//	车辆种类
 			iocomotiveCarReplaceVo.setPlaceOfDomicile(placeOfDomicile);			//	户籍所在地
 			iocomotiveCarReplaceVo.setAddress(address);					//	住所详细地址
 			iocomotiveCarReplaceVo.setReceiverName(receiverName);			//	收件人姓名
