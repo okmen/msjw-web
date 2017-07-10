@@ -2471,6 +2471,7 @@ HttpServletRequest request,HttpServletResponse response){
 			Map<String, String> map = handleService.replaceInspectionMark(vo);
 			String code = map.get("code");
 			String msg = map.get("msg");
+			String number=map.get("number");
 			
 			if("0000".equals(code)){
 				baseBean.setCode(MsgCode.success);
@@ -2478,11 +2479,12 @@ HttpServletRequest request,HttpServletResponse response){
         		//成功需要发送模板消息
 				try {
 					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_xszbhlbl";
-					String url = "";
+					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.replaceInspectionMark, number, DateUtil2.date2str(new Date()));
+					String url = HandleTemplateVo.getUrl(handleTemplateVo,baseUrl);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
 					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
-					map1.put("keyword2", new TemplateDataModel().new Property("补领机动车行驶证","#212121"));
+					map1.put("keyword2", new TemplateDataModel().new Property("检验合格标志","#212121"));
 					map1.put("keyword3", new TemplateDataModel().new Property("待受理","#212121"));
 					map1.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map1);
@@ -2539,6 +2541,8 @@ HttpServletRequest request,HttpServletResponse response){
 			
 			String associatedAgency = request.getParameter("associatedAgency");  //委托机构
 			String postalcode = request.getParameter("postCode");  //邮政编码
+			String openId = request.getParameter("openId");  //openId
+			
 
 			
 			//验证proprietorship
@@ -2658,10 +2662,27 @@ HttpServletRequest request,HttpServletResponse response){
 			Map<String, String> map = handleService.inspectionDeclaration(vo);
 			String code = map.get("code");
 			String msg = map.get("msg");
+			String number=map.get("number");
 			
 			if("0000".equals(code)){
-       		baseBean.setCode(MsgCode.success);
-       		baseBean.setMsg(msg);
+				baseBean.setCode(MsgCode.success);
+        		baseBean.setMsg(msg);
+        		//成功需要发送模板消息
+				try {
+					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_xszbhlbl";
+					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.inspectionDeclaration, number, DateUtil2.date2str(new Date()));
+					String url = HandleTemplateVo.getUrl(handleTemplateVo,baseUrl);
+					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
+					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
+					map1.put("keyword2", new TemplateDataModel().new Property("机动车委托异地年审","#212121"));
+					map1.put("keyword3", new TemplateDataModel().new Property("待受理","#212121"));
+					map1.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map1);
+					logger.info("发送模板消息结果：" + flag);
+				} catch (Exception e) {
+					logger.error("发送模板消息  失败===", e);
+				}
 	       	}else{
 	       		baseBean.setCode(MsgCode.businessError);
 	       		if ("9999".equals(code)) {
