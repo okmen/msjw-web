@@ -2919,7 +2919,8 @@ HttpServletRequest request,HttpServletResponse response){
 				if (sourceOfCertification.equals("C")) {
 					try {
 						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
-						String url = "";
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.createVehicleInspection, result, DateUtil2.date2str(new Date()));
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,baseUrl);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
