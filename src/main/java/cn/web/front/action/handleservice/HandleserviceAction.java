@@ -1,6 +1,5 @@
 package cn.web.front.action.handleservice;
 
-import java.io.PrintWriter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,7 +19,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import cn.convenience.bean.ConvenienceBean;
 import cn.handle.bean.vo.ApplyCarTemporaryLicenceVo;
 import cn.handle.bean.vo.ApplyGatePassVo;
 import cn.handle.bean.vo.ApplyInspectionMarkVo;
@@ -29,6 +27,7 @@ import cn.handle.bean.vo.DriverChangeContactVo;
 import cn.handle.bean.vo.DriverLicenseAnnualVerificationVo;
 import cn.handle.bean.vo.DriverLicenseIntoVo;
 import cn.handle.bean.vo.DriverLicenseVoluntaryDemotionVo;
+import cn.handle.bean.vo.HandleTemplateVo;
 import cn.handle.bean.vo.IocomotiveCarChangeContactVo;
 import cn.handle.bean.vo.IocomotiveCarReplaceVo;
 import cn.handle.bean.vo.RenewalDriverLicenseVo;
@@ -37,13 +36,13 @@ import cn.handle.bean.vo.ReplaceMotorVehicleLicensePlateVo;
 import cn.handle.bean.vo.VehicleDrivingLicenseVo;
 import cn.handle.service.IHandleService;
 import cn.message.model.wechat.TemplateDataModel;
-import cn.message.model.wechat.TemplateDataModel.Property;
 import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
-import cn.sdk.exception.WebServiceException;
+import cn.sdk.bean.BusinessType;
 import cn.sdk.util.DateUtil;
 import cn.sdk.util.DateUtil2;
 import cn.sdk.util.MsgCode;
+import cn.sdk.util.SXStringUtils;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
 
@@ -56,6 +55,8 @@ import cn.web.front.support.BaseAction;
 @RequestMapping(value="/handleservice/")
 @SuppressWarnings(value="all")
 public class HandleserviceAction extends BaseAction {
+	public static String baseUrl = "/appointSuccess?";
+	
 	@Autowired
     @Qualifier("handleService")
     private IHandleService handleService;
@@ -253,12 +254,18 @@ public class HandleserviceAction extends BaseAction {
     		String code = map.get("code").toString();
 			String msg = map.get("msg").toString();
 			if("0000".equals(code)){
+				String waterNumber = "";
+				waterNumber = SXStringUtils.deleteChineseCharactertoString(msg);
+				waterNumber = waterNumber.replace("，", "");
+				waterNumber = waterNumber.replace("：", "");
+				waterNumber = waterNumber.replace("。", "");
         		baseBean.setCode(MsgCode.success);
         		baseBean.setMsg(msg);
         		//成功需要发送模板消息
 				try {
 					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_xszbhlbl";
-					String url = "";
+					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.complementTheMotorVehicleDrivingLicense, waterNumber, DateUtil2.date2str(new Date()));
+					String url = HandleTemplateVo.getUrl(handleTemplateVo,baseUrl);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
 					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
