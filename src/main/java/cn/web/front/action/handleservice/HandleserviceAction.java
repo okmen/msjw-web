@@ -2094,13 +2094,19 @@ HttpServletRequest request,HttpServletResponse response){
 			String code = map.get("code");
 			String msg = map.get("msg");
 			if("0000".equals(code)){
+				String waterNumber = "";
+				waterNumber = SXStringUtils.deleteChineseCharactertoString(msg);
+				waterNumber = waterNumber.replace("，", "");
+				waterNumber = waterNumber.replace("：", "");
+				waterNumber = waterNumber.replace("。", "");
         		baseBean.setCode(MsgCode.success);
         		baseBean.setMsg(msg);
         		
         		//推送模板消息
 				try {
 					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
-					String url = "";
+					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.iocomotiveCarChangeContact, waterNumber, DateUtil2.date2str(new Date()));
+					String url = HandleTemplateVo.getUrl(handleTemplateVo,baseUrl);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
 					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
@@ -2261,12 +2267,18 @@ HttpServletRequest request,HttpServletResponse response){
 			String code = map.get("code");
 			String msg = map.get("msg");
 			if("0000".equals(code)){
+				String waterNumber = "";
+				waterNumber = SXStringUtils.deleteChineseCharactertoString(msg);
+				waterNumber = waterNumber.replace("，", "");
+				waterNumber = waterNumber.replace("：", "");
+				waterNumber = waterNumber.replace("。", "");
         		baseBean.setCode(MsgCode.success);
         		baseBean.setMsg(msg);
         		
         		try {
 					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_xszbhlbl";
-					String url = "";
+					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.iocomotiveCarReplace, waterNumber, DateUtil2.date2str(new Date()));
+					String url = HandleTemplateVo.getUrl(handleTemplateVo,baseUrl);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
 					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
