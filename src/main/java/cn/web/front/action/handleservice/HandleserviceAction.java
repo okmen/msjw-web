@@ -2927,11 +2927,11 @@ HttpServletRequest request,HttpServletResponse response){
 						logger.error("发送模板消息  失败===", e);
 					}
 				}
-				baseBean.setCode("00");
+				baseBean.setCode("0000");
 				baseBean.setData(result);
 				baseBean.setMsg(msg);
 			} else {
-				baseBean.setCode("01");
+				baseBean.setCode("0001");
 				baseBean.setMsg(msg);
 				baseBean.setData(result);
 			}
@@ -2961,15 +2961,23 @@ HttpServletRequest request,HttpServletResponse response){
 			renderJSON(baseBean);
 			return;
 		}
-		map.put("arg0", arg0);
-		map.put("arg1", arg1);
+		if (StringUtil.isBlank(arg0)) {
+			map.put("arg0", "");
+		}else{
+			map.put("arg0", arg0);
+		}
+		if (StringUtil.isBlank(arg0)) {
+			map.put("arg1", "");
+		}else{
+			map.put("arg1", arg1);
+		}
 		try {
 			// 创建返回结果
 			JSONObject jsonObject = handleService.getCarTypes(map);
 			String gcode = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
 			if ("00".equals(gcode)) {
-				baseBean.setCode("00");
+				baseBean.setCode("0000");
 				JSONObject json = jsonObject.getJSONObject("result");
 				JSONArray jsonArray = json.getJSONArray("CarTypeVO");
 				Iterator iterator = jsonArray.iterator();
@@ -2984,13 +2992,13 @@ HttpServletRequest request,HttpServletResponse response){
 				}
 
 			} else {
-				baseBean.setCode("01");
+				baseBean.setCode("0001");
 				baseBean.setMsg(msg);
 				baseBean.setData(jsonObject.getString("result"));
 			}
 
 			if (flag = false) {
-				baseBean.setCode("01");
+				baseBean.setCode("0001");
 				baseBean.setMsg("查询车辆类型id失败");
 			}
 
@@ -3037,11 +3045,11 @@ HttpServletRequest request,HttpServletResponse response){
 			String msg = jsonObject.getString("msg");
 			String result = jsonObject.getString("result");
 			if ("00".equals(code)) {
-				baseBean.setCode("00");
+				baseBean.setCode("0000");
 				baseBean.setData(result);
 				baseBean.setMsg(msg);
 			} else {
-				baseBean.setCode("01");
+				baseBean.setCode("0001");
 				baseBean.setMsg(msg);
 				baseBean.setData(result);
 			}
@@ -3090,11 +3098,11 @@ HttpServletRequest request,HttpServletResponse response){
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
 			if ("00".equals(code)) {
-				baseBean.setCode("00");
+				baseBean.setCode("0000");
 				baseBean.setData(jsonObject.getJSONObject("result"));
 				baseBean.setMsg(msg);
 			} else {
-				baseBean.setCode("01");
+				baseBean.setCode("0001");
 				baseBean.setMsg(msg);
 			}
 
