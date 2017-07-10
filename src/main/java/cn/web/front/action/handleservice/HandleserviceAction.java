@@ -3200,40 +3200,14 @@ HttpServletRequest request,HttpServletResponse response){
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
-        	}
-    		/*else{
-        		//0深户
-        		if("0".equals(vo.getPlaceOfDomicile())){
-        			vo.setResidenceNo("");//居住证号码
-        			vo.setJZZA("");//居住证正面图片
-        			vo.setJZZB("");//居住证反面图片
-        			vo.setPHOTO31("");//境外人员临住表
-        		}
+        	}else{
         		//1外籍户口
-        		else if("1".equals(vo.getPlaceOfDomicile())){
-            		if(StringUtils.isBlank(vo.getJZZA())){//居住证正面图片
-            			baseBean.setMsg("居住证正面图片不能为空!");
-                		baseBean.setCode(MsgCode.paramsError);
-                		renderJSON(baseBean);
-                		return;
-            		}
-            		if(StringUtils.isBlank(vo.getJZZB())){//居住证反面图片
-            			baseBean.setMsg("居住证反面图片不能为空!");
-                		baseBean.setCode(MsgCode.paramsError);
-                		renderJSON(baseBean);
-                		return;
-            		}
-            		//赋值居住证号码
-        			vo.setResidenceNo(vo.getIdentityCard());//居住证号码与身份证号码一样
-        			
-        			if(StringUtils.isBlank(vo.getPHOTO31())){//境外人员临住表
-        				baseBean.setMsg("境外人员临住表不能为空!");
-                		baseBean.setCode(MsgCode.paramsError);
-                		renderJSON(baseBean);
-                		return;
-            		}
+        		if("1".equals(vo.getPlaceOfDomicile())){
+        			//设置居住证号码,居住证号码与身份证号码一样
+        			vo.setResidenceNo(vo.getIdentityCard());
         		}
-        	}*/
+        	}
+    		
     		if(StringUtils.isBlank(vo.getResidenceNo())){//居住证号码
     			vo.setResidenceNo("");
     		}
@@ -3308,13 +3282,16 @@ HttpServletRequest request,HttpServletResponse response){
     		//申请成功发送微信模板消息
     		if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(vo.getSourceOfCertification())){
 				try {
+					String msg = baseBean.getMsg();
+					String waterNumber = msg.substring(msg.indexOf("：")+1, msg.indexOf("。"));
+					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.replaceMotorVehicleLicensePlate, waterNumber, DateUtil2.date2str(new Date()));
+					String url = HandleTemplateVo.getUrl(handleTemplateVo, baseUrl);
 					String openId = vo.getOpenId();
-					String templateId = "pFy7gcEYSklRmg32165BUBwM3PFbUbBSLe0IPw3ZuY4";
-					String url = "";
+					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
 					map.put("keyword1", new TemplateDataModel().new Property(DateUtil.formatDateTime(new Date()),"#212121"));
-					map.put("keyword2", new TemplateDataModel().new Property("补领机动车号牌申请","#212121"));
+					map.put("keyword2", new TemplateDataModel().new Property("补领机动车号牌","#212121"));
 					map.put("keyword3", new TemplateDataModel().new Property("待受理","#212121"));
 					map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
