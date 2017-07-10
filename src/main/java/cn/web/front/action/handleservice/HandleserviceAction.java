@@ -253,7 +253,7 @@ public class HandleserviceAction extends BaseAction {
     		Map<String, Object> map = handleService.complementTheMotorVehicleDrivingLicense(vehicleDrivingLicenseVo);
     		String code = map.get("code").toString();
 			String msg = map.get("msg").toString();
-			if("0000".equals(code)){
+			if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(sourceOfCertification)){
 				String waterNumber = "";
 				waterNumber = SXStringUtils.deleteChineseCharactertoString(msg);
 				waterNumber = waterNumber.replace("，", "");
@@ -277,7 +277,7 @@ public class HandleserviceAction extends BaseAction {
 				} catch (Exception e) {
 					logger.error("发送模板消息  失败===", e);
 				}
-        	}else{
+			}else{
         		baseBean.setCode(MsgCode.businessError);
         		baseBean.setMsg(msg);
         	}
