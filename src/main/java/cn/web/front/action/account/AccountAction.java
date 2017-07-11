@@ -35,6 +35,7 @@ import cn.account.bean.vo.BindCarVo;
 import cn.account.bean.vo.BindDriverLicenseVo;
 import cn.account.bean.vo.LoginReturnBeanVo;
 import cn.account.bean.vo.ReadilyShootVo;
+import cn.account.bean.vo.ReauthenticationVo;
 import cn.account.bean.vo.TrafficQueryVo;
 import cn.account.bean.vo.UnbindTheOtherDriverUseMyCarVo;
 import cn.account.bean.vo.UnbindVehicleVo;
@@ -2273,4 +2274,87 @@ public class AccountAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
+     
+     
+    /**
+     * 重新认证 
+     * @param identityCard
+     * @param mobilephone
+     * @param authenticationType
+     * @param sourceOfCertification
+     * @param photo6
+     * @param photo9
+     */
+     @RequestMapping("reauthentication")
+     public void reauthentication(String identityCard , String mobilephone ,String authenticationType ,String sourceOfCertification ,String photo6 ,String photo9) {
+     	BaseBean baseBean = new BaseBean();
+     	ReauthenticationVo reauthenticationVo = new ReauthenticationVo();
+     	if(StringUtil.isBlank(identityCard)){
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("身份证号不能为空!");
+			renderJSON(baseBean);
+			return;
+		}else{
+			reauthenticationVo.setIdentityCard(identityCard);
+		}
+     	if(StringUtil.isBlank(mobilephone)){
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("移动电话不能为空!");
+			renderJSON(baseBean);
+			return;
+		}else{
+			reauthenticationVo.setMobilephone(mobilephone);
+		}
+     	if(StringUtil.isBlank(authenticationType)){
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("认证类型不能为空!");
+			renderJSON(baseBean);
+			return;
+		}else{
+			reauthenticationVo.setAuthenticationType(authenticationType);
+		}
+     	if(StringUtil.isBlank(sourceOfCertification)){
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("来源标志不能为空!");
+			renderJSON(baseBean);
+			return;
+		}else{
+			reauthenticationVo.setSourceOfCertification(sourceOfCertification);
+		}
+     	if(StringUtil.isBlank(photo6)){
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("当事人手持身份证照片不能为空!");
+			renderJSON(baseBean);
+			return;
+		}else{
+			reauthenticationVo.setPhoto6(photo6);
+		}
+     	if(StringUtil.isBlank(photo9)){
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("车主身份证正面照片不能为空!");
+			renderJSON(baseBean);
+			return;
+		}else{
+			reauthenticationVo.setPhoto9(photo9);
+		}
+     	try{
+     		//创建返回结果
+ 			Map<String, String> map = accountService.reauthentication(reauthenticationVo);
+ 			String code = (String) map.get("code");
+ 			String msg = (String) map.get("msg");
+ 			if("0000".equals(code)){
+         		baseBean.setCode(MsgCode.success);
+         		baseBean.setMsg(msg);
+         	}else{
+         		baseBean.setCode(MsgCode.businessError);
+ 				baseBean.setMsg(msg);
+         	}
+ 			
+ 		} catch (Exception e) {
+ 			logger.error("重新认证异常:" + e);
+ 			DealException(baseBean, e);
+ 		}
+ 		renderJSON(baseBean);
+ 		logger.debug(JSON.toJSONString(baseBean));
+     }
 }

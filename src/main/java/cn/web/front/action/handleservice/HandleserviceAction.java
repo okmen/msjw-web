@@ -2790,7 +2790,7 @@ HttpServletRequest request,HttpServletResponse response){
 	 */
 	@RequestMapping("createVehicleInspection")
 	public void createVehicleInspection(String numberPlate, String name, String personType, String driveLicenseNumber,
-			String mobilephone, String telno, String receiverName, String receiverNumber, String postCode,
+			String mobilephone, String validateCode ,String telno, String receiverName, String receiverNumber, String postCode,
 			String receiverAddress, String effectiveDate, String terminationDate, String inform, String bookerName,
 			String bookerIdentityCard, String bookerType, String carTypeId, String arg0, String arg1, String arg2,
 			String arg3, String arg4, String sourceOfCertification, String openId) {
@@ -2942,7 +2942,7 @@ HttpServletRequest request,HttpServletResponse response){
 			map.put("arg4", arg4);
 		}
 		
-
+		
 		try {
 			// 创建返回结果
 			JSONObject jsonObject = handleService.createVehicleInspection(map);
@@ -2954,6 +2954,7 @@ HttpServletRequest request,HttpServletResponse response){
 					try {
 						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.createVehicleInspection, result, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,baseUrl);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
