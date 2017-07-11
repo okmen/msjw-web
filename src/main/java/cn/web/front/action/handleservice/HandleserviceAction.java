@@ -1743,10 +1743,11 @@ HttpServletRequest request,HttpServletResponse response){
         		baseBean.setCode(MsgCode.success);
         		baseBean.setMsg(msg);
         		
+        		HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.applyGatePass, plateType, abbreviation + numberPlate, mobilephone, applyDate);
+				baseBean.setData(handleTemplateVo);
         		//推送模板消息
 				try {
 					String templateId = "OHe4a5_6nqj3VuN3QKmKYKPiEk54Y_w3oYQRUn0I34o";
-					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.applyGatePass, plateType, abbreviation + numberPlate, mobilephone, applyDate);
 					String url = HandleTemplateVo.getUrl(handleTemplateVo, baseUrl);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
@@ -1937,10 +1938,12 @@ HttpServletRequest request,HttpServletResponse response){
         		baseBean.setCode(MsgCode.success);
         		baseBean.setMsg(msg);
         		
+        		HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.applyCarTemporaryLicence, map.get("number"), DateUtil2.date2str(new Date()));
+				baseBean.setData(handleTemplateVo);
         		//推送模板消息
 				try {
 					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_sqjdclpbl";
-					String url = "";
+					String url = HandleTemplateVo.getUrl(handleTemplateVo, baseUrl);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
 					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
