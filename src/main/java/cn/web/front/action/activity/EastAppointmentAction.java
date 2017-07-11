@@ -132,9 +132,12 @@ public class EastAppointmentAction extends BaseAction {
 				for (String apptDate : apptDates) {
 					//根据预约日期获取配额信息
 					refBean = activityService.getQuotaInfoByApptDate(apptDate, apptDistrict, sourceOfCertification);
-					ApptDistrictAndTimeVo vo = (ApptDistrictAndTimeVo) refBean.getData();;
-					if(vo != null){
+					if(MsgCode.success.equals(refBean.getCode())){
+						ApptDistrictAndTimeVo vo = (ApptDistrictAndTimeVo) refBean.getData();
 						list.add(vo);	//封装片区及时间段信息
+					}else{
+						renderJSON(refBean);
+						return;
 					}
 				}
 				
@@ -142,7 +145,7 @@ public class EastAppointmentAction extends BaseAction {
 					for (String apptDate : apptDates) {
 						//根据预约日期获取配额信息
 						refBean = activityService.getQuotaInfoByApptDate(apptDate, apptDistrict, sourceOfCertification);
-						ApptDistrictAndTimeVo vo = (ApptDistrictAndTimeVo) refBean.getData();;
+						ApptDistrictAndTimeVo vo = (ApptDistrictAndTimeVo) refBean.getData();
 						if(vo != null){
 							list.add(vo);	//封装片区及时间段信息
 						}
@@ -456,7 +459,7 @@ public class EastAppointmentAction extends BaseAction {
     	
 		try {
 			String curDate = DateUtil2.date2dayStr(new Date());	//当前日期	格式yyyy-MM-dd
-			
+
 			//查询可预约日期
 			BaseBean dateBean = activityService.getNormalApptDate(sourceOfCertification);
 			String code = dateBean.getCode();
@@ -471,9 +474,8 @@ public class EastAppointmentAction extends BaseAction {
 						//for (String apptDistrict : apptDistricts) {	//暂时只有梅沙片区
 							//根据预约日期获取配额信息
 							refBean = activityService.getQuotaInfoByApptDate(apptDate, apptDistrict, sourceOfCertification);
-							ApptDistrictAndTimeVo vo = (ApptDistrictAndTimeVo) refBean.getData();
-							
-							if(vo != null){
+							if(MsgCode.success.equals(refBean.getCode())){
+								ApptDistrictAndTimeVo vo = (ApptDistrictAndTimeVo) refBean.getData();
 								//上午,下午设置
 								String strTwelve = apptDate + " " + "12:00:00";//可预约当天12点整,区别上,下午
 								Date dateTwelve = DateUtil2.str2date(strTwelve);
@@ -484,16 +486,22 @@ public class EastAppointmentAction extends BaseAction {
 								}
 								
 								list.add(vo);	//封装片区及时间段信息
+							}else{
+								renderJSON(refBean);
+								return;
 							}
 						//}
 						baseBean.setCode(refBean.getCode());
 						baseBean.setData(list);
-					}else{
-						baseBean.setCode(MsgCode.paramsError);
-						baseBean.setMsg("非节假日时段，无需预约！");
 						renderJSON(baseBean);
 						return;
 					}
+				}
+				if(list.size() == 0 || baseBean.getData() == null){
+					baseBean.setCode(MsgCode.paramsError);
+					baseBean.setMsg("非节假日时段，无需预约！");
+					renderJSON(baseBean);
+					return;
 				}
 			}else{
 				baseBean.setCode(code);
