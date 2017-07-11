@@ -55,7 +55,7 @@ import cn.web.front.support.BaseAction;
 @RequestMapping(value="/handleservice/")
 @SuppressWarnings(value="all")
 public class HandleserviceAction extends BaseAction {
-	public static String baseUrl = "/appointSuccess?";
+	public static String baseUrl = "http://szjj.u-road.com/h5/#/appointSuccess?";
 	
 	@Autowired
     @Qualifier("handleService")
@@ -262,9 +262,10 @@ public class HandleserviceAction extends BaseAction {
         		baseBean.setCode(MsgCode.success);
         		baseBean.setMsg(msg);
         		//成功需要发送模板消息
+        		HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.complementTheMotorVehicleDrivingLicense, waterNumber, DateUtil2.date2str(new Date()));
+        		baseBean.setData(handleTemplateVo);
 				try {
 					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_xszbhlbl";
-					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.complementTheMotorVehicleDrivingLicense, waterNumber, DateUtil2.date2str(new Date()));
 					String url = HandleTemplateVo.getUrl(handleTemplateVo,baseUrl);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
