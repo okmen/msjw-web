@@ -3290,7 +3290,7 @@ HttpServletRequest request,HttpServletResponse response){
     		if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(vo.getSourceOfCertification())){
 				try {
 					String msg = baseBean.getMsg();
-					String waterNumber = msg.substring(msg.indexOf("：")+1, msg.indexOf("。"));//截取流水号
+					String waterNumber = baseBean.getData().toString();
 					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.replaceMotorVehicleLicensePlate, waterNumber, DateUtil2.date2str(new Date()));
 					baseBean.setData(handleTemplateVo);
 					String url = HandleTemplateVo.getUrl(handleTemplateVo, handleService.getTemplateSendUrl());
