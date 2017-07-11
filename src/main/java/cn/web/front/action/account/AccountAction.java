@@ -2345,6 +2345,7 @@ public class AccountAction extends BaseAction {
  			if("0000".equals(code)){
          		baseBean.setCode(MsgCode.success);
          		baseBean.setMsg(msg);
+         		baseBean.setData(map.get("data"));
          	}else{
          		baseBean.setCode(MsgCode.businessError);
  				baseBean.setMsg(msg);
