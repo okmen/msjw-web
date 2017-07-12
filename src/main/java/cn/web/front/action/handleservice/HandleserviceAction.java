@@ -1501,7 +1501,7 @@ public class HandleserviceAction extends BaseAction {
 	 * @param userName
 	 * @param gender
 	 * @param identificationNO
-	 * @param identityCard
+	 * @param identificationNum
 	 * @param driverLicense
 	 * @param receiverAddress
 	 * @param mobilephone
@@ -1514,7 +1514,7 @@ public class HandleserviceAction extends BaseAction {
 	 * @param response
 	 */
 	@RequestMapping("driverChangeContact")
-	public void driverChangeContact(String userName, String gender, String identificationNO, String identityCard,
+	public void driverChangeContact(String userName, String gender, String identificationNO, String identificationNum,
 			String driverLicense, String receiverAddress, String mobilephone, String loginUser, String userSource,
 			String PHOTO9, String PHOTO10, String JSZZP, HttpServletRequest request, HttpServletResponse response) {
 
@@ -1558,13 +1558,13 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverChangeContactVo.setLoginUser(loginUser);
 			}
-			if (StringUtil.isBlank(identityCard)) {
+			if (StringUtil.isBlank(identificationNum)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明号码不能为空!");
 				renderJSON(baseBean);
 				return;
 			} else {
-				driverChangeContactVo.setIDcard(identityCard);
+				driverChangeContactVo.setIDcard(identificationNum);
 			}
 			if (StringUtil.isBlank(driverLicense)) {
 				baseBean.setCode(MsgCode.paramsError);
