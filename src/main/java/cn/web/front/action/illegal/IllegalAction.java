@@ -136,23 +136,27 @@ public class IllegalAction extends BaseAction {
 			   base.setCode("0001");
 			   base.setMsg("licensePlateNo不能为空！");
 			   renderJSON(base);
+			   return;
 		   }
 		   if(StringUtil.isEmpty(licensePlateType)){
 			   base.setCode("0001");
 			   base.setMsg("licensePlateType不能为空！");
 			   renderJSON(base);
+			   return;
 		   }
 		   
 		   if(StringUtil.isEmpty(sourceOfCertification)){
 			   base.setCode("0001");
 			   base.setMsg("sourceOfCertification不能为空！");
 			   renderJSON(base);
+			   return;
 		   }
 		   
 		   if(StringUtil.isEmpty(openId)){
 			   base.setCode("0001");
 			   base.setMsg("未获取到openId！");
 			   renderJSON(base);
+			   return;
 		   }
    
 		   //判断客户是否已同步
@@ -220,23 +224,27 @@ public class IllegalAction extends BaseAction {
 			   base.setCode("0001");
 			   base.setMsg("drivingLicenceNo不能为空！");
 			   renderJSON(base);
+			   return;
 		   }
 		   if(StringUtil.isEmpty(recordNo)){
 			   base.setCode("0001");
 			   base.setMsg("recordNo不能为空！");
 			   renderJSON(base);
+			   return;
 		   }
 
 		   if(StringUtil.isEmpty(sourceOfCertification)){
 			   base.setCode("0001");
 			   base.setMsg("sourceOfCertification不能为空！");
 			   renderJSON(base);
+			   return;
 		   }
 	
 		   if(StringUtil.isEmpty(openId)){
 			   base.setCode("0001");
 			   base.setMsg("未获取到openId！");
 			   renderJSON(base);
+			   return;
 		   }
 		 //判断客户是否已同步
 		   String isReg=illegalService.isRegisterUser(openId);
@@ -356,23 +364,27 @@ public class IllegalAction extends BaseAction {
 			   base.setCode("0001");
 			   base.setMsg("车牌号不能为空！");
 			   renderJSON(base);
+			   return;
 		   }
 		   if(StringUtil.isEmpty(licensePlateType)){
 			   base.setCode("0001");
 			   base.setMsg("车牌类型不能为空！");
 			   renderJSON(base);
+			   return;
 		   }
 
 		   if(StringUtil.isEmpty(sourceOfCertification)){
 			   base.setCode("0001");
 			   base.setMsg("来源方式不能为空！");
 			   renderJSON(base);
+			   return;
 		   }
 	
 		   if(StringUtil.isEmpty(openId)){
 			   base.setCode("0001");
 			   base.setMsg("未获取到openId！");
 			   renderJSON(base);
+			   return;
 		   }
 		   //判断客户是否已同步
 		   String isReg=illegalService.isRegisterUser(openId);
@@ -426,6 +438,7 @@ public class IllegalAction extends BaseAction {
 				   base.setCode(msgCode);
 				   base.setMsg(msg);
 				   renderJSON(base);
+				   return;
 			   }
 		   }
 		   
@@ -477,11 +490,13 @@ public class IllegalAction extends BaseAction {
 			   base.setCode("0001");
 			   base.setMsg("违法编号不能为空！");
 			   renderJSON(base);
+			   return;
 		   }
 		   if(StringUtil.isEmpty(openId)){
 			   base.setCode("0001");
 			   base.setMsg("未获取到openId！");
 			   renderJSON(base);
+			   return;
 		   }
 		   IllegalInfoSheet bean=illegalService.trafficIllegalClaim(illegalNo,openId);
 		   if(bean==null){
@@ -568,16 +583,19 @@ public class IllegalAction extends BaseAction {
 			   base.setCode("0001");
 			   base.setMsg("缴款编号不能为空！");
 			   renderJSON(base);
+			   return;
 		   }
 		   if(StringUtil.isEmpty(licensePlateNo)){
 			   base.setCode("0001");
 			   base.setMsg("车牌号不能为空！");
 			   renderJSON(base);
+			   return;
 		   }
 		   if(StringUtil.isEmpty(openId)){
 			   base.setCode("0001");
 			   base.setMsg("未获取到openId！");
 			   renderJSON(base);
+			   return;
 		   }
 		
 	 		String url=illegalService.toQueryPunishmentPage(billNo,licensePlateNo,mobilephone,openId);
@@ -636,6 +654,7 @@ public class IllegalAction extends BaseAction {
 			   base.setCode("0001");
 			   base.setMsg("违法站点编号不能为空！");
 			   renderJSON(base);
+			   return;
 		   }
         	 
            Map map=illegalService.toGetSubscribeSorts(cldbmid);
@@ -668,16 +687,19 @@ public class IllegalAction extends BaseAction {
  			   base.setCode("0001");
  			   base.setMsg("SNM编号不能为空！");
  			   renderJSON(base);
+ 			  return;
  		    }
     		if(StringUtil.isEmpty(cldbmid)){
  			   base.setCode("0001");
  			   base.setMsg("违法站点编号不能为空！");
  			   renderJSON(base);
+ 			  return;
  		    }
     		if(StringUtil.isEmpty(cczb_id)){
  			   base.setCode("0001");
  			   base.setMsg("预约场次编号不能为空！");
  			   renderJSON(base);
+ 			  return;
  		    }
  
     		base= illegalService.toChangeSubscribe(snm, cldbmid, cczb_id, custInfo, carInfo, sourceOfCertification);
@@ -703,6 +725,7 @@ public class IllegalAction extends BaseAction {
 	    		bean.setCode("0001");
 	    		bean.setMsg("预约流水号不能为空！");
 	 			renderJSON(bean);
+	 			return;
 	 		}
 	    	bean=illegalService.toCancleSubscribe(subscribeNo);
 		} catch (Exception e) {
@@ -727,11 +750,13 @@ public class IllegalAction extends BaseAction {
 		   base.setCode("0001");
 		   base.setMsg("车牌号不能为空！");
 		   renderJSON(base);
+		   return;
 	   }
  	   if(StringUtil.isEmpty(mobilephone)){
 		   base.setCode("0001");
 		   base.setMsg("手机号不能为空！");
 		   renderJSON(base);
+		   return;
 	   }
 	
  	   int type=0;
@@ -741,6 +766,7 @@ public class IllegalAction extends BaseAction {
 			base.setCode("0001");
 			base.setMsg("车牌号类型异常！");
 			renderJSON(base);
+			return;
 		}
  	   
 	   try {
@@ -773,12 +799,14 @@ public class IllegalAction extends BaseAction {
 			   base.setCode("0001");
 			   base.setMsg("身份证不能为空！");
 			   renderJSON(base);
+			   return;
 		}
 
 	 	if(StringUtil.isEmpty(sourceOfCertification)){
 			   base.setCode("0001");
 			   base.setMsg("来源方式不能为空！");
 			   renderJSON(base);
+			   return;
 		}
     		AppealInfoBean bean=new AppealInfoBean(info.getBillNo(), info.getLicensePlateNo(),info.getLicensePlateType(), info.getIllegalTime(), info.getIllegalAddress(),
     	    		info.getIllegalDesc(), info.getAgency(), info.getClaimant(),
@@ -804,11 +832,13 @@ public class IllegalAction extends BaseAction {
 		   base.setCode("0001");
 		   base.setMsg("身份证不能为空！");
 		   renderJSON(base);
+		   return;
 		}
 		if(StringUtil.isEmpty(sourceOfCertification)){
 			   base.setCode("0001");
 			   base.setMsg("来源方式不能为空！");
 			   renderJSON(base);
+			   return;
 		}
  	  try {
  		 List<AppealInfoBack> list= illegalService.trafficIllegalAppealFeedback(identityCard, sourceOfCertification);
