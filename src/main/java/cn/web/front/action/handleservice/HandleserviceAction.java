@@ -476,6 +476,9 @@ public class HandleserviceAction extends BaseAction {
 			String code = map.get("code");
 			String msg = map.get("msg");
 			if ("0000".equals(code)) {
+				String waterNumber = map.get("waterNumber");
+				HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, "");
+				baseBean.setData(handleTemplateVo);
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(msg);
 			} else {
@@ -669,6 +672,9 @@ public class HandleserviceAction extends BaseAction {
 			String code = map.get("code");
 			String msg = map.get("msg");
 			if ("0000".equals(code)) {
+				String waterNumber = map.get("waterNumber");
+				HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, "");
+				baseBean.setData(handleTemplateVo);
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(msg);
 			} else {
@@ -866,6 +872,9 @@ public class HandleserviceAction extends BaseAction {
 			String code = map.get("code");
 			String msg = map.get("msg");
 			if ("0000".equals(code)) {
+				String waterNumber = map.get("waterNumber");
+				HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, "");
+				baseBean.setData(handleTemplateVo);
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(msg);
 			} else {
@@ -1054,6 +1063,9 @@ public class HandleserviceAction extends BaseAction {
 			String code = map.get("code");
 			String msg = map.get("msg");
 			if ("0000".equals(code)) {
+				String waterNumber = map.get("waterNumber");
+				HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, "");
+				baseBean.setData(handleTemplateVo);
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(msg);
 			} else {
@@ -1266,6 +1278,9 @@ public class HandleserviceAction extends BaseAction {
 			String code = map.get("code");
 			String msg = map.get("msg");
 			if ("0000".equals(code)) {
+				String waterNumber = map.get("waterNumber");
+				HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, "");
+				baseBean.setData(handleTemplateVo);
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(msg);
 			} else {
@@ -1476,6 +1491,9 @@ public class HandleserviceAction extends BaseAction {
 			String code = map.get("code");
 			String msg = map.get("msg");
 			if ("0000".equals(code)) {
+				String waterNumber = map.get("waterNumber");
+				HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, "");
+				baseBean.setData(handleTemplateVo);
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(msg);
 			} else {
@@ -1631,6 +1649,9 @@ public class HandleserviceAction extends BaseAction {
 			String code = map.get("code");
 			String msg = map.get("msg");
 			if ("0000".equals(code)) {
+				String waterNumber = map.get("waterNumber");
+				HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, "");
+				baseBean.setData(handleTemplateVo);
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(msg);
 			} else {

@@ -1032,21 +1032,25 @@ public class IllegalAction extends BaseAction {
 			base.setCode("0001");
 			base.setMsg("序号不能为空！");
 			renderJSON(base);
+			return;
 		}
 		if (StringUtil.isBlank(numberPlateNumber)) {
 			base.setCode("0001");
 			base.setMsg("车牌号码不能为空！");
 			renderJSON(base);
+			return;
 		}
 		if (StringUtil.isBlank(plateType)) {
 			base.setCode("0001");
 			base.setMsg("车牌种类不能为空！");
 			renderJSON(base);
+			return;
 		}
 		if (StringUtil.isBlank(sourceOfCertification)) {
 			base.setCode("0001");
 			base.setMsg("来源方式不能为空！");
 			renderJSON(base);
+			return;
 		}
 		try {
 			Map<String, Object> map = illegalService.singleQueryOfReportingNoParking(orderNumber, numberPlateNumber,
@@ -1085,16 +1089,19 @@ public class IllegalAction extends BaseAction {
 			base.setCode("0001");
 			base.setMsg("车牌号码不能为空！");
 			renderJSON(base);
+			return;
 		}
 		if (StringUtil.isBlank(plateType)) {
 			base.setCode("0001");
 			base.setMsg("车牌种类不能为空！");
 			renderJSON(base);
+			return;
 		}
 		if (StringUtil.isBlank(sourceOfCertification)) {
 			base.setCode("0001");
 			base.setMsg("来源方式不能为空！");
 			renderJSON(base);
+			return;
 		}
 		try {
 			Map<String, Object> map = illegalService.recordOfReportingNoParking(numberPlateNumber, plateType,
