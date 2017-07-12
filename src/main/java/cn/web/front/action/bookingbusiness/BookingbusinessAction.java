@@ -1,20 +1,19 @@
 package cn.web.front.action.bookingbusiness;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
+import cn.booking.business.bean.CarTypeVO;
 import cn.booking.business.bean.IdTypeVO;
 import cn.booking.business.bean.OrgVO;
 import cn.booking.business.service.IBookingBusinessService;
@@ -55,10 +54,10 @@ public class BookingbusinessAction extends BaseAction {
 			return;
 		}
 		try {
-			List<IdTypeVO> idTypeVOs = bookingBusinessService.getCarTypes();
-			if (null != idTypeVOs) {
+			List<CarTypeVO> carTypeVOs = bookingBusinessService.getCarTypes();
+			if (null != carTypeVOs) {
 				baseBean.setCode(MsgCode.success);
-				for (IdTypeVO idTypeVO : idTypeVOs) {
+				for (CarTypeVO idTypeVO : carTypeVOs) {
 					String code2 = idTypeVO.getCode();
 					String id = idTypeVO.getId();
 					if (code.equals(code2)) {
@@ -364,5 +363,4 @@ public class BookingbusinessAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
-
 }
