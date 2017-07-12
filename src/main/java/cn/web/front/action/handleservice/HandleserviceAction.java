@@ -288,181 +288,186 @@ public class HandleserviceAction extends BaseAction {
     	renderJSON(baseBean);
     	logger.debug(JSON.toJSONString(baseBean));
     }
-    /**
-     * 驾驶证年审 
-     * @param identificationNO 身份证明类型
-     * @param name 姓名                        
-	 * @param IDcard 身份证号                       
-	 * @param mobilephone 电话                    
-	 * @param placeOfDomicile 户籍所在地             
-	 * @param receiverName 收件人姓名                
-	 * @param receiverNumber 收件人号码              
-	 * @param mailingAddress 收件人地址             
-	 * @param IDCardPhoto1 身份证正面照片              
-	 * @param IDCardPhoto2 身份证反面照片              
-	 * @param livePhoto1 居住证正面照片                
-	 * @param livePhoto2 居住证反面照片                
-	 * @param educationDrawingtable 审验教育培训表[图片] 
-	 * @param foreignersLiveTable 境外人员临住表 
-	 * @param postalcode 邮编号码       
-	 * @param loginUser 认证用户身份证号码               
-	 * @param sourceOfCertification 认证来源        
-	 * @param userSource 申报途径（A移动APP C微信Z支付宝E邮政）
-	 * @param http://192.168.1.245:8080/web/user/driverLicenseAnnualVerification.html?identificationNO=A&name=张宇帆&IDcard=445222199209020034&mobilephone=15920050177&placeOfDomicile=深圳&receiverName=11&receiverNumber=15920050177&mailingAddress=深圳市宝安区&IDCardPhoto1=111&IDCardPhoto2=222&livePhoto1=111&livePhoto2=222 &educationDrawingtable=111&foreignersLiveTable=222&postalcode=1&loginUser=445222199209020034&sourceOfCertification=C&userSource=C
+
+	/**
+	 * 驾驶证年审
 	 * 
-     */
-    @RequestMapping("driverLicenseAnnualVerification")
-    public void driverLicenseAnnualVerification(String identificationNO ,String name ,String IDcard ,String mobilephone ,String placeOfDomicile ,String receiverName ,String receiverNumber ,String  mailingAddress ,String IDCardPhoto1 ,String IDCardPhoto2 ,String livePhoto1 ,String livePhoto2 ,String educationDrawingtable ,String foreignersLiveTable ,String postalcode ,String loginUser ,String sourceOfCertification ,String userSource,HttpServletRequest request,HttpServletResponse response){
-    	BaseBean baseBean = new BaseBean();		//创建返回结果
+	 * @param identificationNO
+	 * @param userName
+	 * @param identityCard
+	 * @param mobilephone
+	 * @param placeOfDomicile
+	 * @param receiverName
+	 * @param receiverNumber
+	 * @param receiverAddress
+	 * @param PHOTO9
+	 * @param PHOTO10
+	 * @param JZZA
+	 * @param JZZB
+	 * @param SHJYPXB
+	 * @param PHOTO31
+	 * @param postCode
+	 * @param loginUser
+	 * @param sourceOfCertification
+	 * @param userSource
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping("driverLicenseAnnualVerification")
+	public void driverLicenseAnnualVerification(String identificationNO, String userName, String identityCard,
+			String mobilephone, String placeOfDomicile, String receiverName, String receiverNumber,
+			String receiverAddress, String PHOTO9, String PHOTO10, String JZZA, String JZZB, String SHJYPXB,
+			String PHOTO31, String postCode, String loginUser, String sourceOfCertification, String userSource,
+			HttpServletRequest request, HttpServletResponse response) {
+		BaseBean baseBean = new BaseBean(); // 创建返回结果
 		DriverLicenseAnnualVerificationVo driverLicenseAnnualVerificationVo = new DriverLicenseAnnualVerificationVo();
 		String businessType = "N";
 		driverLicenseAnnualVerificationVo.setBusinessType(businessType);
 		try {
-			if(StringUtil.isBlank(identificationNO)){
+			if (StringUtil.isBlank(identificationNO)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明类型!不能为空");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseAnnualVerificationVo.setIdentificationNO(identificationNO);
 			}
-			
-			driverLicenseAnnualVerificationVo.setPostalcode(postalcode);
-			
-			if(StringUtil.isBlank(name)){
+
+			driverLicenseAnnualVerificationVo.setPostalcode(postCode);
+
+			if (StringUtil.isBlank(userName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("姓名不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseAnnualVerificationVo.setName(name);
+			} else {
+				driverLicenseAnnualVerificationVo.setName(userName);
 			}
-			
-			if(StringUtil.isBlank(IDcard)){
+
+			if (StringUtil.isBlank(identityCard)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证号不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseAnnualVerificationVo.setIDcard(IDcard);
+			} else {
+				driverLicenseAnnualVerificationVo.setIDcard(identityCard);
 			}
-			if(StringUtil.isBlank(mobilephone)){
+			if (StringUtil.isBlank(mobilephone)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("电话不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseAnnualVerificationVo.setMobilephone(mobilephone);
 			}
-			if(StringUtil.isBlank(placeOfDomicile)){
+			if (StringUtil.isBlank(placeOfDomicile)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("户籍所在地不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseAnnualVerificationVo.setPlaceOfDomicile(placeOfDomicile);
 				if ("3".equals(placeOfDomicile)) {
-					if(StringUtil.isBlank(foreignersLiveTable)){
+					if (StringUtil.isBlank(PHOTO31)) {
 						baseBean.setCode(MsgCode.paramsError);
 						baseBean.setMsg("境外人员临住表不能为空!");
 						renderJSON(baseBean);
 						return;
-					}else{
-						driverLicenseAnnualVerificationVo.setForeignersLiveTable(foreignersLiveTable);
+					} else {
+						driverLicenseAnnualVerificationVo.setForeignersLiveTable(PHOTO31);
 					}
 				}
-				
+
 			}
-			if(StringUtil.isBlank(receiverName)){
+			if (StringUtil.isBlank(receiverName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人姓名不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseAnnualVerificationVo.setReceiverName(receiverName);
 			}
-			if(StringUtil.isBlank(receiverNumber)){
+			if (StringUtil.isBlank(receiverNumber)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseAnnualVerificationVo.setReceiverNumber(receiverNumber);
 			}
-			if(StringUtil.isBlank(mailingAddress)){
+			if (StringUtil.isBlank(receiverAddress)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人地址不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseAnnualVerificationVo.setMailingAddress(mailingAddress);
+			} else {
+				driverLicenseAnnualVerificationVo.setMailingAddress(receiverAddress);
 			}
-			if(StringUtil.isBlank(IDCardPhoto1)){
+			if (StringUtil.isBlank(PHOTO9)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证正面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseAnnualVerificationVo.setIDCardPhoto1(IDCardPhoto1);
+			} else {
+				driverLicenseAnnualVerificationVo.setIDCardPhoto1(PHOTO9);
 			}
-			if(StringUtil.isBlank(IDCardPhoto2)){
+			if (StringUtil.isBlank(PHOTO10)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证反面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseAnnualVerificationVo.setIDCardPhoto2(IDCardPhoto2);
+			} else {
+				driverLicenseAnnualVerificationVo.setIDCardPhoto2(PHOTO10);
 			}
-			
-			if(StringUtil.isBlank(livePhoto1)){
+
+			if (StringUtil.isBlank(JZZA)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("居住证正面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseAnnualVerificationVo.setLivePhoto1(livePhoto1);
+			} else {
+				driverLicenseAnnualVerificationVo.setLivePhoto1(JZZA);
 			}
-			if(StringUtil.isBlank(livePhoto2)){
+			if (StringUtil.isBlank(JZZB)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("居住证反面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseAnnualVerificationVo.setLivePhoto2(livePhoto2);
+			} else {
+				driverLicenseAnnualVerificationVo.setLivePhoto2(JZZB);
 			}
-			if(StringUtil.isBlank(educationDrawingtable)){
+			if (StringUtil.isBlank(SHJYPXB)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("教育审核表不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseAnnualVerificationVo.setEducationDrawingtable(educationDrawingtable);
+			} else {
+				driverLicenseAnnualVerificationVo.setEducationDrawingtable(SHJYPXB);
 			}
-			
-			
-			if(StringUtil.isBlank(loginUser)){
+
+			if (StringUtil.isBlank(loginUser)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("登录用户不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseAnnualVerificationVo.setLoginUser(loginUser);
 			}
-			
-			if(StringUtil.isBlank(sourceOfCertification)){
+
+			if (StringUtil.isBlank(sourceOfCertification)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("认证来源不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseAnnualVerificationVo.setSourceOfCertification(sourceOfCertification);
 			}
-			if(StringUtil.isBlank(userSource)){
+			if (StringUtil.isBlank(userSource)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("userSource 错误!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseAnnualVerificationVo.setUserSource(userSource);
 			}
 			String ip = getIp2(request);
@@ -470,1178 +475,1181 @@ public class HandleserviceAction extends BaseAction {
 			Map<String, String> map = handleService.driverLicenseAnnualVerification(driverLicenseAnnualVerificationVo);
 			String code = map.get("code");
 			String msg = map.get("msg");
-			if("0000".equals(code)){
-        		baseBean.setCode(MsgCode.success);
-        		baseBean.setMsg(msg);
-        	}else{
-        		baseBean.setCode(MsgCode.businessError);
-        		if ("9999".equals(code)) {
-        			baseBean.setMsg("输入信息格式有误！");
-				}else{
+			if ("0000".equals(code)) {
+				baseBean.setCode(MsgCode.success);
+				baseBean.setMsg(msg);
+			} else {
+				baseBean.setCode(MsgCode.businessError);
+				if ("9999".equals(code)) {
+					baseBean.setMsg("输入信息格式有误！");
+				} else {
 					baseBean.setMsg(msg);
 				}
-        	}
+			}
 		} catch (Exception e) {
 			logger.error("驾驶证年审异常:" + e);
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
-    }
-    /**
-     * 驾驶证延期换证 
-     * @param  name 姓名                  
-	 * @param  identificationNO 身份证明类型  
-	 * @param  IDcard  身份证号     
-	 * @param  driverLicense 驾驶证号         
-	 * @param  fileNumber 档案编号          
-	 * @param  delayDate 延期日期           
-	 * @param  delayReason 延期原因         
-	 * @param  sourceOfCertification 来源标志
-	 * @param  loginUser 登录账户           
-	 * @param  IDCardPhoto1 身份证正面照片     
-	 * @param  IDCardPhoto2 身份证反面照片     
-	 * @param  driverLicensePhoto 驾驶证照片 
-	 * @param  delayPhoto 延期证明照片
-	 * @param receiverName 收件人姓名         
-     * @param receiverNumber 收件人号码       
-     * @param mailingAddress 收件人地址       
-	 * @param http://192.168.1.245:8080/web/user/renewalDriverLicense.html?name=张宇帆&identificationNO=A&IDcard=445222199209020034&driverLicense=445222199209020034&fileNumber=123456&delayDate=20170701&delayReason=gg&sourceOfCertification=C&loginUser=445222199209020034&IDCardPhoto1=111&IDCardPhoto2=222&driverLicensePhoto=111&delayphoto=111&receiverName=张宇帆&receiverNumber=15920050177&mailingAddress=深圳市宝安区
-	 *         
-     */
-    @RequestMapping("renewalDriverLicense")
-    public void renewalDriverLicense(String name ,String identificationNO ,String IDcard ,String driverLicense ,String fileNumber ,String delayDate ,String delayReason,String sourceOfCertification,String loginUser ,String IDCardPhoto1,String IDCardPhoto2,String driverLicensePhoto,String delayphoto ,String receiverName ,String receiverNumber ,String  mailingAddress,HttpServletRequest request,HttpServletResponse response){
-    	BaseBean baseBean = new BaseBean();		//创建返回结果
-    	RenewalDriverLicenseVo renewalDriverLicenseVo = new RenewalDriverLicenseVo();
-    	String businessType = "Y";
-    	renewalDriverLicenseVo.setBusinessType(businessType);
+	}
+
+	/**
+	 * 驾驶证延期换证
+	 * 
+	 * @param userName
+	 * @param identificationNO
+	 * @param identityCard
+	 * @param driverLicense
+	 * @param fileNumber
+	 * @param delayDate
+	 * @param delayReason
+	 * @param sourceOfCertification
+	 * @param loginUser
+	 * @param PHOTO9
+	 * @param PHOTO10
+	 * @param JSZZP
+	 * @param YQZMZP
+	 * @param receiverName
+	 * @param receiverNumber
+	 * @param receiverAddress
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping("renewalDriverLicense")
+	public void renewalDriverLicense(String userName, String identificationNO, String identityCard,
+			String driverLicense, String fileNumber, String delayDate, String delayReason, String sourceOfCertification,
+			String loginUser, String PHOTO9, String PHOTO10, String JSZZP, String YQZMZP, String receiverName,
+			String receiverNumber, String receiverAddress, HttpServletRequest request, HttpServletResponse response) {
+		BaseBean baseBean = new BaseBean(); // 创建返回结果
+		RenewalDriverLicenseVo renewalDriverLicenseVo = new RenewalDriverLicenseVo();
+		String businessType = "Y";
+		renewalDriverLicenseVo.setBusinessType(businessType);
 		try {
-			if(StringUtil.isBlank(name)){
+			if (StringUtil.isBlank(userName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("姓名不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				renewalDriverLicenseVo.setName(name);
+			} else {
+				renewalDriverLicenseVo.setName(userName);
 			}
-			
-			if(StringUtil.isBlank(identificationNO)){
+
+			if (StringUtil.isBlank(identificationNO)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明类型 错误!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				renewalDriverLicenseVo.setIdentificationNO(identificationNO);
 			}
-			
-			if(StringUtil.isBlank(IDcard)){
+
+			if (StringUtil.isBlank(identityCard)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证号不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				renewalDriverLicenseVo.setIDcard(IDcard);
+			} else {
+				renewalDriverLicenseVo.setIDcard(identityCard);
 			}
-			
-			if(StringUtil.isBlank(driverLicense)){
+
+			if (StringUtil.isBlank(driverLicense)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("驾驶证号不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				renewalDriverLicenseVo.setDriverLicense(driverLicense);
 			}
-			if(StringUtil.isBlank(fileNumber)){
+			if (StringUtil.isBlank(fileNumber)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("档案编号不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				renewalDriverLicenseVo.setFileNumber(fileNumber);
 			}
-			if(StringUtil.isBlank(delayDate)){
+			if (StringUtil.isBlank(delayDate)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("延期日期不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				renewalDriverLicenseVo.setDelayDate(delayDate);
 			}
-			if(StringUtil.isBlank(delayReason)){
+			if (StringUtil.isBlank(delayReason)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("延期原因不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				renewalDriverLicenseVo.setDelayReason(delayReason);
 			}
-			if(StringUtil.isBlank(sourceOfCertification)){
+			if (StringUtil.isBlank(sourceOfCertification)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("来源标志不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				renewalDriverLicenseVo.setSourceOfCertification(sourceOfCertification);
 			}
-			
-			if(StringUtil.isBlank(loginUser)){
+
+			if (StringUtil.isBlank(loginUser)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("来源标志不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				renewalDriverLicenseVo.setLoginUser(loginUser);
 			}
-			
-			if(StringUtil.isBlank(IDCardPhoto1)){
+
+			if (StringUtil.isBlank(PHOTO9)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证正面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				renewalDriverLicenseVo.setIDCardPhoto1(IDCardPhoto1);
+			} else {
+				renewalDriverLicenseVo.setIDCardPhoto1(PHOTO9);
 			}
-			if(StringUtil.isBlank(IDCardPhoto2)){
+			if (StringUtil.isBlank(PHOTO10)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证反面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				renewalDriverLicenseVo.setIDCardPhoto2(IDCardPhoto2);
+			} else {
+				renewalDriverLicenseVo.setIDCardPhoto2(PHOTO10);
 			}
-			
-			if(StringUtil.isBlank(driverLicensePhoto)){
+
+			if (StringUtil.isBlank(JSZZP)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("驾驶证照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				renewalDriverLicenseVo.setDriverLicensePhoto(driverLicensePhoto);
+			} else {
+				renewalDriverLicenseVo.setDriverLicensePhoto(JSZZP);
 			}
-			
-			if(StringUtil.isBlank(delayphoto)){
+
+			if (StringUtil.isBlank(YQZMZP)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("延期证明照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				renewalDriverLicenseVo.setDelayPhoto(delayphoto);
+			} else {
+				renewalDriverLicenseVo.setDelayPhoto(YQZMZP);
 			}
-			
-			if(StringUtil.isBlank(receiverName)){
+
+			if (StringUtil.isBlank(receiverName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人姓名不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				renewalDriverLicenseVo.setReceiverName(receiverName);
 			}
-			if(StringUtil.isBlank(receiverNumber)){
+			if (StringUtil.isBlank(receiverNumber)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				renewalDriverLicenseVo.setReceiverNumber(receiverNumber);
 			}
-			if(StringUtil.isBlank(mailingAddress)){
+			if (StringUtil.isBlank(receiverAddress)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人地址不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				renewalDriverLicenseVo.setMailingAddress(mailingAddress);
+			} else {
+				renewalDriverLicenseVo.setMailingAddress(receiverAddress);
 			}
-			
+
 			String ip = getIp2(request);
 			renewalDriverLicenseVo.setIp(ip);
 			Map<String, String> map = handleService.renewalDriverLicense(renewalDriverLicenseVo);
 			String code = map.get("code");
 			String msg = map.get("msg");
-			if("0000".equals(code)){
-        		baseBean.setCode(MsgCode.success);
-        		baseBean.setMsg(msg);
-        	}else{
-        		baseBean.setCode(MsgCode.businessError);
-        		if ("9999".equals(code)) {
-        			baseBean.setMsg("输入信息格式有误！");
-				}else{
+			if ("0000".equals(code)) {
+				baseBean.setCode(MsgCode.success);
+				baseBean.setMsg(msg);
+			} else {
+				baseBean.setCode(MsgCode.businessError);
+				if ("9999".equals(code)) {
+					baseBean.setMsg("输入信息格式有误！");
+				} else {
 					baseBean.setMsg(msg);
 				}
-        	}
-			
+			}
+
 		} catch (Exception e) {
 			logger.error("驾驶证延期领证异常:" + e);
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
-    }
-    
-    
+	}
 
-    /**
-     * 驾驶证转入
-     * @param  name 姓名                  
-	 * @param  identificationNO 身份证明类型  
-	 * @param  IDcard  身份证号  
-	 * @param  driverLicense  驾驶证号             
-	 * @param  fileNumber 档案编号          
-	 * @param  issuingLicenceAuthority 发证机关           
-	 * @param  photoReturnNumberString 相片回执编号        
-	 * @param  receiverName 收件人姓名         
-	 * @param  receiverNumber 收件人号码       
-	 * @param  mailingAddress 收件人地址       
-	 * @param  sourceOfCertification 来源标志
-	 * @param  loginUser 登录账户           
-	 * @param  IDCardPhoto1 身份证正面照片     
-	 * @param  IDCardPhoto2 身份证反面照片     
-	 * @param  driverLicensePhoto 驾驶证照片 
-	 * @param  bodyConditionForm 身体条件申请表
-	 * @param http://192.168.1.245:8080/web/user/driverLicenseInto.html?name=张宇帆&identificationNO=A&IDcard=445222199209020034&driverLicense=445222199209020034&fileNumber=123456&issuingLicenceAuthority=藏A:拉萨市公安局&photoReturnNumberString=111&receiverName=张宇帆&receiverNumber=15920050177&mailingAddress=深圳市宝安区&sourceOfCertification=C&loginUser=445222199209020034&IDCardPhoto1=111&IDCardPhoto2=222&driverLicensePhoto=111&bodyConditionForm=222    
-         
-	 *         
-     */
-    @RequestMapping("driverLicenseInto")
-    public void driverLicenseInto( String name ,String identificationNO ,String IDcard ,String driverLicense ,String fileNumber ,String  issuingLicenceAuthority ,String photoReturnNumberString ,String receiverName , String receiverNumber , String mailingAddress ,String sourceOfCertification ,String loginUser ,String IDCardPhoto1,String IDCardPhoto2,String driverLicensePhoto,String bodyConditionForm,HttpServletRequest request,HttpServletResponse response){
-    	
-    	BaseBean baseBean = new BaseBean();		//创建返回结果
-    	DriverLicenseIntoVo driverLicenseIntoVo = new DriverLicenseIntoVo();
-    	String businessType = "Z";
-    	driverLicenseIntoVo.setBusinessType(businessType);
+	/**
+	 * 驾驶证转入
+	 * 
+	 * @param userName
+	 * @param identificationNO
+	 * @param identityCard
+	 * @param driverLicense
+	 * @param fileNumber
+	 * @param issuingLicenceAuthority
+	 * @param photoReturnNumberString
+	 * @param receiverName
+	 * @param receiverNumber
+	 * @param receiverAddress
+	 * @param sourceOfCertification
+	 * @param loginUser
+	 * @param PHOTO9
+	 * @param PHOTO10
+	 * @param JSZZP
+	 * @param STTJSQB
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping("driverLicenseInto")
+	public void driverLicenseInto(String userName, String identificationNO, String identityCard, String driverLicense,
+			String fileNumber, String issuingLicenceAuthority, String photoReturnNumberString, String receiverName,
+			String receiverNumber, String receiverAddress, String sourceOfCertification, String loginUser,
+			String PHOTO9, String PHOTO10, String JSZZP, String STTJSQB, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		BaseBean baseBean = new BaseBean(); // 创建返回结果
+		DriverLicenseIntoVo driverLicenseIntoVo = new DriverLicenseIntoVo();
+		String businessType = "Z";
+		driverLicenseIntoVo.setBusinessType(businessType);
 		try {
-			
 
-			if(StringUtil.isBlank(name)){
+			if (StringUtil.isBlank(userName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("姓名不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseIntoVo.setName(name);
+			} else {
+				driverLicenseIntoVo.setName(userName);
 			}
-			
-			if(StringUtil.isBlank(identificationNO)){
+
+			if (StringUtil.isBlank(identificationNO)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明类型不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseIntoVo.setIdentificationNO(identificationNO);
 			}
-			
-			if(StringUtil.isBlank(IDcard)){
+
+			if (StringUtil.isBlank(identityCard)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseIntoVo.setIDcard(IDcard);
+			} else {
+				driverLicenseIntoVo.setIDcard(identityCard);
 			}
-			
-			if(StringUtil.isBlank(driverLicense)){
+
+			if (StringUtil.isBlank(driverLicense)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseIntoVo.setDriverLicense(driverLicense);
 			}
-			
-			if(StringUtil.isBlank(fileNumber)){
+
+			if (StringUtil.isBlank(fileNumber)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("档案编号不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseIntoVo.setFileNumber(fileNumber);
 			}
-			if(StringUtil.isBlank(issuingLicenceAuthority)){
+			if (StringUtil.isBlank(issuingLicenceAuthority)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("发证机关不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseIntoVo.setIssuingLicenceAuthority(issuingLicenceAuthority);
 			}
-			if(StringUtil.isBlank(photoReturnNumberString)){
+			if (StringUtil.isBlank(photoReturnNumberString)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("相片回执编号不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseIntoVo.setPhotoReturnNumberString(photoReturnNumberString);
 			}
-			if(StringUtil.isBlank(receiverName)){
+			if (StringUtil.isBlank(receiverName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人姓名不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseIntoVo.setReceiverName(receiverName);
 			}
-			if(StringUtil.isBlank(receiverNumber)){
+			if (StringUtil.isBlank(receiverNumber)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseIntoVo.setReceiverNumber(receiverNumber);
 			}
-			if(StringUtil.isBlank(mailingAddress)){
+			if (StringUtil.isBlank(receiverAddress)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人地址不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseIntoVo.setMailingAddress(mailingAddress);
+			} else {
+				driverLicenseIntoVo.setMailingAddress(receiverAddress);
 			}
-			if(StringUtil.isBlank(sourceOfCertification)){
+			if (StringUtil.isBlank(sourceOfCertification)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("来源标志不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseIntoVo.setSourceOfCertification(sourceOfCertification);
 			}
-			
-			if(StringUtil.isBlank(loginUser)){
+
+			if (StringUtil.isBlank(loginUser)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("登录用户不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseIntoVo.setLoginUser(loginUser);
 			}
-			
-			if(StringUtil.isBlank(IDCardPhoto1)){
+
+			if (StringUtil.isBlank(PHOTO9)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证正面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseIntoVo.setIDCardPhoto1(IDCardPhoto1);
+			} else {
+				driverLicenseIntoVo.setIDCardPhoto1(PHOTO9);
 			}
-			if(StringUtil.isBlank(IDCardPhoto2)){
+			if (StringUtil.isBlank(PHOTO10)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证反面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseIntoVo.setIDCardPhoto2(IDCardPhoto2);
+			} else {
+				driverLicenseIntoVo.setIDCardPhoto2(PHOTO10);
 			}
-			
-			if(StringUtil.isBlank(driverLicensePhoto)){
+
+			if (StringUtil.isBlank(JSZZP)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("驾驶证照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseIntoVo.setDriverLicensePhoto(driverLicensePhoto);
+			} else {
+				driverLicenseIntoVo.setDriverLicensePhoto(JSZZP);
 			}
-			
-			if(StringUtil.isBlank(bodyConditionForm)){
+
+			if (StringUtil.isBlank(STTJSQB)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身体条件申请表不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseIntoVo.setBodyConditionForm(bodyConditionForm);
+			} else {
+				driverLicenseIntoVo.setBodyConditionForm(STTJSQB);
 			}
-			
-			
+
 			String ip = getIp2(request);
 			driverLicenseIntoVo.setIp(ip);
 			Map<String, String> map = handleService.driverLicenseInto(driverLicenseIntoVo);
 			String code = map.get("code");
 			String msg = map.get("msg");
-			if("0000".equals(code)){
-        		baseBean.setCode(MsgCode.success);
-        		baseBean.setMsg(msg);
-        	}else{
-        		baseBean.setCode(MsgCode.businessError);
-        		if ("9999".equals(code)) {
-        			baseBean.setMsg("输入信息格式有误！");
-				}else{
+			if ("0000".equals(code)) {
+				baseBean.setCode(MsgCode.success);
+				baseBean.setMsg(msg);
+			} else {
+				baseBean.setCode(MsgCode.businessError);
+				if ("9999".equals(code)) {
+					baseBean.setMsg("输入信息格式有误！");
+				} else {
 					baseBean.setMsg(msg);
 				}
-        	}
-			
+			}
+
 		} catch (Exception e) {
 			logger.error("驾驶证转入异常:" + e);
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
-    }                                                                          
-                                                                         
-                                                                                   
-    /**                                                                                
-     * 驾驶证自愿降级                                                          
-     * @param   identificationNO;//身份证明名称                              
-	 * @param   loginUser;//认证用户身份证号                      
-	 * @param   IDcard;//申请人身份证号 
-	 * @param   driverLicense;//驾驶证号码                             
-	 * @param   name;//申请人姓名                                          
-	 * @param   photoReturnNumberString;//相片回执号                            
-	 * @param   placeOfDomicile;//户籍所在地                                   
-	 * @param   receiverName;//收件人姓名                                  
-	 * @param   receiverNumber;//收件人号码                                 
-	 * @param   mailingAddress;//联系住所地址                                  
-	 * @param   sourceOfCertification;//用户认证来源                          
-	 * @param   userSource;//申请来源                                        
-	 * @param   IDCardPhoto1;//身份证正面图片                       
-	 * @param   IDCardPhoto2;//身份证背面图片                                 
-	 * @param   driverLicensePhoto;//驾驶证图片     
-	 * @param http://192.168.1.245:8080/web/user/driverLicenseVoluntaryDemotion.html?identificationNO=A&loginUser=445222199209020034&IDcard=445222199209020034&driverLicense=445222199209020034&name=张宇帆&photoReturnNumberString=11111&placeOfDomicile=深圳&receiverName=张宇帆&receiverNumber=15920050177&mailingAddress=深圳市宝安区&sourceOfCertification=C&userSource=C&IDCardPhoto1=111&IDCardPhoto2=222&driverLicensePhoto=111      
-        
-	 *         
-     */
-    @RequestMapping("driverLicenseVoluntaryDemotion")
-    public void driverLicenseVoluntaryDemotion( String identificationNO ,String loginUser ,String IDcard ,String driverLicense ,String name ,String photoReturnNumberString ,String placeOfDomicile , String receiverName , String receiverNumber , String mailingAddress ,String sourceOfCertification ,String userSource ,String IDCardPhoto1,String IDCardPhoto2,String driverLicensePhoto,HttpServletRequest request,HttpServletResponse response){
-    	
-    	BaseBean baseBean = new BaseBean();		//创建返回结果
-    	DriverLicenseVoluntaryDemotionVo driverLicenseVoluntaryDemotionVo = new DriverLicenseVoluntaryDemotionVo();
-    	String businessType = "J";
-    	driverLicenseVoluntaryDemotionVo.setBusinessType(businessType);
-		try {
-			
+	}
 
-			if(StringUtil.isBlank(name)){
+	/**
+	 * 驾驶证自愿降级
+	 * 
+	 * @param identificationNO
+	 * @param loginUser
+	 * @param identityCard
+	 * @param driverLicense
+	 * @param userName
+	 * @param photoReturnNumberString
+	 * @param placeOfDomicile
+	 * @param receiverName
+	 * @param receiverNumber
+	 * @param receiverAddress
+	 * @param sourceOfCertification
+	 * @param userSource
+	 * @param PHOTO9
+	 * @param PHOTO10
+	 * @param JSZZP
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping("driverLicenseVoluntaryDemotion")
+	public void driverLicenseVoluntaryDemotion(String identificationNO, String loginUser, String identityCard,
+			String driverLicense, String userName, String photoReturnNumberString, String placeOfDomicile,
+			String receiverName, String receiverNumber, String receiverAddress, String sourceOfCertification,
+			String userSource, String PHOTO9, String PHOTO10, String JSZZP, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		BaseBean baseBean = new BaseBean(); // 创建返回结果
+		DriverLicenseVoluntaryDemotionVo driverLicenseVoluntaryDemotionVo = new DriverLicenseVoluntaryDemotionVo();
+		String businessType = "J";
+		driverLicenseVoluntaryDemotionVo.setBusinessType(businessType);
+		try {
+
+			if (StringUtil.isBlank(userName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("姓名不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseVoluntaryDemotionVo.setName(name);
+			} else {
+				driverLicenseVoluntaryDemotionVo.setName(userName);
 			}
-			
-			if(StringUtil.isBlank(identificationNO)){
+
+			if (StringUtil.isBlank(identificationNO)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明类型不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseVoluntaryDemotionVo.setIdentificationNO(identificationNO);
 			}
-			
-			
-			if(StringUtil.isBlank(loginUser)){
+
+			if (StringUtil.isBlank(loginUser)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("认证用户身份证号不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseVoluntaryDemotionVo.setLoginUser(loginUser);
 			}
-			if(StringUtil.isBlank(IDcard)){
+			if (StringUtil.isBlank(identityCard)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseVoluntaryDemotionVo.setIDcard(IDcard);
+			} else {
+				driverLicenseVoluntaryDemotionVo.setIDcard(identityCard);
 			}
-			
-			if(StringUtil.isBlank(driverLicense)){
+
+			if (StringUtil.isBlank(driverLicense)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("驾驶证号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseVoluntaryDemotionVo.setDriverLicense(driverLicense);
 			}
-			
-			if(StringUtil.isBlank(userSource)){
+
+			if (StringUtil.isBlank(userSource)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("申请来源不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseVoluntaryDemotionVo.setUserSource(userSource);
 			}
-			
-			
-			if(StringUtil.isBlank(photoReturnNumberString)){
+
+			if (StringUtil.isBlank(photoReturnNumberString)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("相片回执编号不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseVoluntaryDemotionVo.setPhotoReturnNumberString(photoReturnNumberString);
 			}
-			if(StringUtil.isBlank(receiverName)){
+			if (StringUtil.isBlank(receiverName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人姓名不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseVoluntaryDemotionVo.setReceiverName(receiverName);
 			}
-			if(StringUtil.isBlank(receiverNumber)){
+			if (StringUtil.isBlank(receiverNumber)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseVoluntaryDemotionVo.setReceiverNumber(receiverNumber);
 			}
-			if(StringUtil.isBlank(mailingAddress)){
+			if (StringUtil.isBlank(receiverAddress)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人地址不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseVoluntaryDemotionVo.setMailingAddress(mailingAddress);
+			} else {
+				driverLicenseVoluntaryDemotionVo.setMailingAddress(receiverAddress);
 			}
-			if(StringUtil.isBlank(sourceOfCertification)){
+			if (StringUtil.isBlank(sourceOfCertification)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("来源标志不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseVoluntaryDemotionVo.setSourceOfCertification(sourceOfCertification);
 			}
-			
-			if(StringUtil.isBlank(IDCardPhoto1)){
+
+			if (StringUtil.isBlank(PHOTO9)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证正面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseVoluntaryDemotionVo.setIDCardPhoto1(IDCardPhoto1);
+			} else {
+				driverLicenseVoluntaryDemotionVo.setIDCardPhoto1(PHOTO9);
 			}
-			if(StringUtil.isBlank(IDCardPhoto2)){
+			if (StringUtil.isBlank(PHOTO10)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证反面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseVoluntaryDemotionVo.setIDCardPhoto2(IDCardPhoto2);
+			} else {
+				driverLicenseVoluntaryDemotionVo.setIDCardPhoto2(PHOTO10);
 			}
-			
-			if(StringUtil.isBlank(driverLicensePhoto)){
+
+			if (StringUtil.isBlank(JSZZP)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("驾驶证照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverLicenseVoluntaryDemotionVo.setDriverLicensePhoto(driverLicensePhoto);
+			} else {
+				driverLicenseVoluntaryDemotionVo.setDriverLicensePhoto(JSZZP);
 			}
-			
-			if(StringUtil.isBlank(placeOfDomicile)){
+
+			if (StringUtil.isBlank(placeOfDomicile)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("户籍所在地不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverLicenseVoluntaryDemotionVo.setPlaceOfDomicile(placeOfDomicile);
 			}
-			
-			
+
 			String ip = getIp2(request);
 			driverLicenseVoluntaryDemotionVo.setIp(ip);
 			Map<String, String> map = handleService.driverLicenseVoluntaryDemotion(driverLicenseVoluntaryDemotionVo);
 			String code = map.get("code");
 			String msg = map.get("msg");
-			if("0000".equals(code)){
-        		baseBean.setCode(MsgCode.success);
-        		baseBean.setMsg(msg);
-        	}else{
-        		baseBean.setCode(MsgCode.businessError);
-        		if ("9999".equals(code)) {
-        			baseBean.setMsg("输入信息格式有误！");
-				}else{
+			if ("0000".equals(code)) {
+				baseBean.setCode(MsgCode.success);
+				baseBean.setMsg(msg);
+			} else {
+				baseBean.setCode(MsgCode.businessError);
+				if ("9999".equals(code)) {
+					baseBean.setMsg("输入信息格式有误！");
+				} else {
 					baseBean.setMsg(msg);
 				}
-        	}
-			
+			}
+
 		} catch (Exception e) {
 			logger.error("驾驶证自愿降级异常:" + e);
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
-    }
-    
-    /**
-     * 驾驶证补证
-	 * @param  repairReason 补证原因               
-	 * @param  identificationNO 身份证明名称        
-	 * @param  IDcard 身份证明号码                  
-	 * @param  name 姓名    
-	 * @param  mobilephone 电话                        
-	 * @param  IDCardPhoto1 身份证正面图片                
-	 * @param  IDCardPhoto2 身份证背面图片           
-	 * @param  photoReturnNumberString 相片回执编号 
-	 * @param  foreignersLiveTable 境外人员临住表    
-	 * @param  placeOfDomicile 户籍所在地          
-	 * @param  postalcode 邮政编码                
-	 * @param  receiverName 收件人姓名             
-	 * @param  receiverNumber 收件人手机号码         
-	 * @param  mailingAddress 联系住所地址          
-	 * @param  livePhoto1 居住证正面图片                  
-	 * @param  livePhoto2 居住证背面图片            
-	 * @param  loginUser 认证用户身份证号码                 
-	 * @param  sourceOfCertification 认证来源          
-	 * @param  userSource 来源标志  
-	 * @param  http://192.168.1.245:8080/web/user/repairDriverLicense.html?repairReason=1&identificationNO=A&IDcard=445222199209020034&name=张宇帆&mobilephone=15920050177&IDCardPhoto1=111&IDCardPhoto2=222&photoReturnNumberString=111&foreignersLiveTable=111&placeOfDomicile=深圳&postalcode=1&receiverName=111&receiverNumber=15920050177&mailingAddress=深圳市宝安区&livePhoto1=111&livePhoto2=222&loginUser=445222199209020034&sourceOfCertification=C&userSource=C                    
-           
-     */
-    @RequestMapping("repairDriverLicense")
-    public void repairDriverLicense(String repairReason ,String identificationNO ,String IDcard ,String name ,String mobilephone ,String IDCardPhoto1 ,String IDCardPhoto2 ,String photoReturnNumberString ,String foreignersLiveTable ,String placeOfDomicile,String postalcode ,String receiverName ,String receiverNumber ,String mailingAddress ,String livePhoto1 ,String livePhoto2 ,String loginUser ,String sourceOfCertification ,String userSource ,                           
-HttpServletRequest request,HttpServletResponse response){
-    	
-    	BaseBean baseBean = new BaseBean();		//创建返回结果
-    	RepairOrReplaceDriverLicenseVo repairOrReplaceDriverLicenseVo = new RepairOrReplaceDriverLicenseVo();
-    	
+	}
+
+	/**
+	 * 驾驶证补证
+	 * 
+	 * @param repairReason
+	 * @param identificationNO
+	 * @param identityCard
+	 * @param userName
+	 * @param mobilephone
+	 * @param PHOTO9
+	 * @param PHOTO10
+	 * @param photoReturnNumberString
+	 * @param PHOTO31
+	 * @param placeOfDomicile
+	 * @param postCode
+	 * @param receiverName
+	 * @param receiverNumber
+	 * @param receiverAddress
+	 * @param JZZA
+	 * @param JZZB
+	 * @param loginUser
+	 * @param sourceOfCertification
+	 * @param userSource
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping("repairDriverLicense")
+	public void repairDriverLicense(String repairReason, String identificationNO, String identityCard, String userName,
+			String mobilephone, String PHOTO9, String PHOTO10, String photoReturnNumberString, String PHOTO31,
+			String placeOfDomicile, String postCode, String receiverName, String receiverNumber, String receiverAddress,
+			String JZZA, String JZZB, String loginUser, String sourceOfCertification, String userSource,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		BaseBean baseBean = new BaseBean(); // 创建返回结果
+		RepairOrReplaceDriverLicenseVo repairOrReplaceDriverLicenseVo = new RepairOrReplaceDriverLicenseVo();
+
 		try {
 			String businessType = "B";
 			repairOrReplaceDriverLicenseVo.setBusinessType(businessType);
-			
-			if(StringUtil.isBlank(name)){
+
+			if (StringUtil.isBlank(userName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("姓名不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				repairOrReplaceDriverLicenseVo.setName(name);
+			} else {
+				repairOrReplaceDriverLicenseVo.setName(userName);
 			}
-			
-			if(StringUtil.isBlank(mobilephone)){
+
+			if (StringUtil.isBlank(mobilephone)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("电话号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				repairOrReplaceDriverLicenseVo.setMobilephone(mobilephone);
 			}
-			
-			
-			
-			if(StringUtil.isBlank(identificationNO)){
+
+			if (StringUtil.isBlank(identificationNO)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明类型不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				repairOrReplaceDriverLicenseVo.setIdentificationNO(identificationNO);
 			}
-			
-			
-			if(StringUtil.isBlank(loginUser)){
+
+			if (StringUtil.isBlank(loginUser)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("认证用户身份证号不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				repairOrReplaceDriverLicenseVo.setLoginUser(loginUser);
 			}
-			if(StringUtil.isBlank(IDcard)){
+			if (StringUtil.isBlank(identityCard)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				repairOrReplaceDriverLicenseVo.setIDcard(IDcard);
+			} else {
+				repairOrReplaceDriverLicenseVo.setIDcard(identityCard);
 			}
-			
-			if(StringUtil.isBlank(userSource)){
+
+			if (StringUtil.isBlank(userSource)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("申请来源不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				repairOrReplaceDriverLicenseVo.setUserSource(userSource);
 			}
-			
-			
-			if(StringUtil.isBlank(photoReturnNumberString)){
+
+			if (StringUtil.isBlank(photoReturnNumberString)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("相片回执编号不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				repairOrReplaceDriverLicenseVo.setPhotoReturnNumberString(photoReturnNumberString);
 			}
-			if(StringUtil.isBlank(receiverName)){
+			if (StringUtil.isBlank(receiverName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人姓名不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				repairOrReplaceDriverLicenseVo.setReceiverName(receiverName);
 			}
-			if(StringUtil.isBlank(receiverNumber)){
+			if (StringUtil.isBlank(receiverNumber)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				repairOrReplaceDriverLicenseVo.setReceiverNumber(receiverNumber);
 			}
-			if(StringUtil.isBlank(mailingAddress)){
+			if (StringUtil.isBlank(receiverAddress)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人地址不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				repairOrReplaceDriverLicenseVo.setMailingAddress(mailingAddress);
+			} else {
+				repairOrReplaceDriverLicenseVo.setMailingAddress(receiverAddress);
 			}
-			if(StringUtil.isBlank(sourceOfCertification)){
+			if (StringUtil.isBlank(sourceOfCertification)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("来源标志不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				repairOrReplaceDriverLicenseVo.setSourceOfCertification(sourceOfCertification);
 			}
-			
-			if(StringUtil.isBlank(IDCardPhoto1)){
+
+			if (StringUtil.isBlank(PHOTO9)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证正面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				repairOrReplaceDriverLicenseVo.setIDCardPhoto1(IDCardPhoto1);
+			} else {
+				repairOrReplaceDriverLicenseVo.setIDCardPhoto1(PHOTO9);
 			}
-			if(StringUtil.isBlank(IDCardPhoto2)){
+			if (StringUtil.isBlank(PHOTO10)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证反面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				repairOrReplaceDriverLicenseVo.setIDCardPhoto2(IDCardPhoto2);
+			} else {
+				repairOrReplaceDriverLicenseVo.setIDCardPhoto2(PHOTO10);
 			}
-			
-			if(StringUtil.isBlank(livePhoto1)){
+
+			if (StringUtil.isBlank(JZZA)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("居住证正面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				repairOrReplaceDriverLicenseVo.setLivePhoto1(livePhoto1);
+			} else {
+				repairOrReplaceDriverLicenseVo.setLivePhoto1(JZZA);
 			}
-			if(StringUtil.isBlank(livePhoto2)){
+			if (StringUtil.isBlank(JZZB)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("居住证反面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				repairOrReplaceDriverLicenseVo.setLivePhoto2(livePhoto2);
+			} else {
+				repairOrReplaceDriverLicenseVo.setLivePhoto2(JZZB);
 			}
-			
-			
-			if(StringUtil.isBlank(placeOfDomicile)){
+
+			if (StringUtil.isBlank(placeOfDomicile)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("户籍所在地不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				if ("3".equals(placeOfDomicile)) {
-					if(StringUtil.isBlank(foreignersLiveTable)){
+					if (StringUtil.isBlank(PHOTO31)) {
 						baseBean.setCode(MsgCode.paramsError);
 						baseBean.setMsg("境外人员临住表不能为空!");
 						renderJSON(baseBean);
 						return;
-					}else{
-						repairOrReplaceDriverLicenseVo.setForeignersLiveTable(foreignersLiveTable);
+					} else {
+						repairOrReplaceDriverLicenseVo.setForeignersLiveTable(PHOTO31);
 					}
 				}
 				repairOrReplaceDriverLicenseVo.setPlaceOfDomicile(placeOfDomicile);
 			}
 			repairOrReplaceDriverLicenseVo.setRepairReason(repairReason);
-			repairOrReplaceDriverLicenseVo.setPostalcode(postalcode);
+			repairOrReplaceDriverLicenseVo.setPostalcode(postCode);
 			String ip = getIp2(request);
 			repairOrReplaceDriverLicenseVo.setIp(ip);
 			Map<String, String> map = handleService.repairDriverLicense(repairOrReplaceDriverLicenseVo);
 			String code = map.get("code");
 			String msg = map.get("msg");
-			if("0000".equals(code)){
-        		baseBean.setCode(MsgCode.success);
-        		baseBean.setMsg(msg);
-        	}else{
-        		baseBean.setCode(MsgCode.businessError);
-        		if ("9999".equals(code)) {
-        			baseBean.setMsg("输入信息格式有误！");
-				}else{
+			if ("0000".equals(code)) {
+				baseBean.setCode(MsgCode.success);
+				baseBean.setMsg(msg);
+			} else {
+				baseBean.setCode(MsgCode.businessError);
+				if ("9999".equals(code)) {
+					baseBean.setMsg("输入信息格式有误！");
+				} else {
 					baseBean.setMsg(msg);
 				}
-        	}
-			
+			}
+
 		} catch (Exception e) {
 			logger.error("驾驶证补证异常:" + e);
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
-    }
-    
-    /**
-     * 驾驶证换证
-	 * @param  identificationNO 身份证明名称        
-	 * @param  IDcard 身份证明号码                  
-	 * @param  name 姓名    
-	 * @param  mobilephone 电话                        
-	 * @param  IDCardPhoto1 身份证正面图片                
-	 * @param  IDCardPhoto2 身份证背面图片           
-	 * @param  photoReturnNumberString 相片回执编号 
-	 * @param  foreignersLiveTable 境外人员临住表    
-	 * @param  placeOfDomicile 户籍所在地          
-	 * @param  receiverName 收件人姓名             
-	 * @param  receiverNumber 收件人手机号码         
-	 * @param  mailingAddress 联系住所地址          
-	 * @param  livePhoto1 居住证正面图片                  
-	 * @param  livePhoto2 居住证背面图片            
-	 * @param  loginUser 认证用户身份证号码                 
-	 * @param  sourceOfCertification 认证来源          
-	 * @param  userSource 来源标志  
-	 * @param  http://192.168.1.245:8080/web/user/replaceDriverLicense.html?identificationNO=A&IDcard=445222199209020034&name=张宇帆&mobilephone=15920050177&IDCardPhoto1=111&IDCardPhoto2=222&photoReturnNumberString=111&foreignersLiveTable=111&placeOfDomicile=深圳&receiverName=111&receiverNumber=15920050177&mailingAddress=深圳市宝安区&livePhoto1=111&livePhoto2=222&loginUser=445222199209020034&sourceOfCertification=C&userSource=C                    
-           
-     */
-    @RequestMapping("replaceDriverLicense")
-    public void replaceDriverLicense(String identificationNO ,String IDcard ,String name ,String mobilephone ,String IDCardPhoto1 ,String IDCardPhoto2 ,String photoReturnNumberString ,String foreignersLiveTable ,String placeOfDomicile,String receiverName ,String receiverNumber ,String mailingAddress ,String livePhoto1 ,String livePhoto2 ,String loginUser ,String sourceOfCertification ,String userSource ,                           
-    			HttpServletRequest request,HttpServletResponse response){
-    	
-    	BaseBean baseBean = new BaseBean();		//创建返回结果
-    	RepairOrReplaceDriverLicenseVo repairOrReplaceDriverLicenseVo = new RepairOrReplaceDriverLicenseVo();
-    	
+	}
+
+	/**
+	 * 驾驶证换证
+	 * 
+	 * @param identificationNO
+	 * @param identityCard
+	 * @param userName
+	 * @param mobilephone
+	 * @param PHOTO9
+	 * @param PHOTO10
+	 * @param photoReturnNumberString
+	 * @param PHOTO31
+	 * @param placeOfDomicile
+	 * @param receiverName
+	 * @param receiverNumber
+	 * @param receiverAddress
+	 * @param JZZA
+	 * @param JZZB
+	 * @param loginUser
+	 * @param sourceOfCertification
+	 * @param userSource
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping("replaceDriverLicense")
+	public void replaceDriverLicense(String identificationNO, String identityCard, String userName, String mobilephone,
+			String PHOTO9, String PHOTO10, String photoReturnNumberString, String PHOTO31, String placeOfDomicile,
+			String receiverName, String receiverNumber, String receiverAddress, String JZZA, String JZZB,
+			String loginUser, String sourceOfCertification, String userSource, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		BaseBean baseBean = new BaseBean(); // 创建返回结果
+		RepairOrReplaceDriverLicenseVo repairOrReplaceDriverLicenseVo = new RepairOrReplaceDriverLicenseVo();
+
 		try {
-			
+
 			String businessType = "H";
 			repairOrReplaceDriverLicenseVo.setBusinessType(businessType);
-			
-			
-			if(StringUtil.isBlank(name)){
+
+			if (StringUtil.isBlank(userName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("姓名不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				repairOrReplaceDriverLicenseVo.setName(name);
+			} else {
+				repairOrReplaceDriverLicenseVo.setName(userName);
 			}
-			
-			if(StringUtil.isBlank(mobilephone)){
+
+			if (StringUtil.isBlank(mobilephone)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("电话号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				repairOrReplaceDriverLicenseVo.setMobilephone(mobilephone);
 			}
-			
-			
-			if(StringUtil.isBlank(identificationNO)){
+
+			if (StringUtil.isBlank(identificationNO)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明类型不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				repairOrReplaceDriverLicenseVo.setIdentificationNO(identificationNO);
 			}
-			
-			
-			if(StringUtil.isBlank(loginUser)){
+
+			if (StringUtil.isBlank(loginUser)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("认证用户身份证号不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				repairOrReplaceDriverLicenseVo.setLoginUser(loginUser);
 			}
-			if(StringUtil.isBlank(IDcard)){
+			if (StringUtil.isBlank(identityCard)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				repairOrReplaceDriverLicenseVo.setIDcard(IDcard);
+			} else {
+				repairOrReplaceDriverLicenseVo.setIDcard(identityCard);
 			}
-			
-			if(StringUtil.isBlank(userSource)){
+
+			if (StringUtil.isBlank(userSource)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("申请来源不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				repairOrReplaceDriverLicenseVo.setUserSource(userSource);
 			}
-			
-			
-			if(StringUtil.isBlank(photoReturnNumberString)){
+
+			if (StringUtil.isBlank(photoReturnNumberString)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("相片回执编号不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				repairOrReplaceDriverLicenseVo.setPhotoReturnNumberString(photoReturnNumberString);
 			}
-			if(StringUtil.isBlank(receiverName)){
+			if (StringUtil.isBlank(receiverName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人姓名不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				repairOrReplaceDriverLicenseVo.setReceiverName(receiverName);
 			}
-			if(StringUtil.isBlank(receiverNumber)){
+			if (StringUtil.isBlank(receiverNumber)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				repairOrReplaceDriverLicenseVo.setReceiverNumber(receiverNumber);
 			}
-			if(StringUtil.isBlank(mailingAddress)){
+			if (StringUtil.isBlank(receiverAddress)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人地址不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				repairOrReplaceDriverLicenseVo.setMailingAddress(mailingAddress);
+			} else {
+				repairOrReplaceDriverLicenseVo.setMailingAddress(receiverAddress);
 			}
-			if(StringUtil.isBlank(sourceOfCertification)){
+			if (StringUtil.isBlank(sourceOfCertification)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("来源标志不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				repairOrReplaceDriverLicenseVo.setSourceOfCertification(sourceOfCertification);
 			}
-			
-			if(StringUtil.isBlank(IDCardPhoto1)){
+
+			if (StringUtil.isBlank(PHOTO9)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证正面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				repairOrReplaceDriverLicenseVo.setIDCardPhoto1(IDCardPhoto1);
+			} else {
+				repairOrReplaceDriverLicenseVo.setIDCardPhoto1(PHOTO9);
 			}
-			if(StringUtil.isBlank(IDCardPhoto2)){
+			if (StringUtil.isBlank(PHOTO10)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证反面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				repairOrReplaceDriverLicenseVo.setIDCardPhoto2(IDCardPhoto2);
+			} else {
+				repairOrReplaceDriverLicenseVo.setIDCardPhoto2(PHOTO10);
 			}
-			
-			if(StringUtil.isBlank(livePhoto1)){
+
+			if (StringUtil.isBlank(JZZA)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("居住证正面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				repairOrReplaceDriverLicenseVo.setLivePhoto1(livePhoto1);
+			} else {
+				repairOrReplaceDriverLicenseVo.setLivePhoto1(JZZA);
 			}
-			if(StringUtil.isBlank(livePhoto2)){
+			if (StringUtil.isBlank(JZZB)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("居住证反面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				repairOrReplaceDriverLicenseVo.setLivePhoto2(livePhoto2);
+			} else {
+				repairOrReplaceDriverLicenseVo.setLivePhoto2(JZZB);
 			}
-			
-			
-			if(StringUtil.isBlank(placeOfDomicile)){
+
+			if (StringUtil.isBlank(placeOfDomicile)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("户籍所在地不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				if ("3".equals(placeOfDomicile)) {
-					if(StringUtil.isBlank(foreignersLiveTable)){
+					if (StringUtil.isBlank(PHOTO31)) {
 						baseBean.setCode(MsgCode.paramsError);
 						baseBean.setMsg("境外人员临住表不能为空!");
 						renderJSON(baseBean);
 						return;
-					}else{
-						repairOrReplaceDriverLicenseVo.setForeignersLiveTable(foreignersLiveTable);
+					} else {
+						repairOrReplaceDriverLicenseVo.setForeignersLiveTable(PHOTO31);
 					}
 				}
 				repairOrReplaceDriverLicenseVo.setPlaceOfDomicile(placeOfDomicile);
 			}
-			
+
 			String ip = getIp2(request);
 			repairOrReplaceDriverLicenseVo.setIp(ip);
 			Map<String, String> map = handleService.replaceDriverLicense(repairOrReplaceDriverLicenseVo);
 			String code = map.get("code");
 			String msg = map.get("msg");
-			if("0000".equals(code)){
-        		baseBean.setCode(MsgCode.success);
-        		baseBean.setMsg(msg);
-        	}else{
-        		baseBean.setCode(MsgCode.businessError);
-        		if ("9999".equals(code)) {
-        			baseBean.setMsg("输入信息格式有误！");
-				}else{
+			if ("0000".equals(code)) {
+				baseBean.setCode(MsgCode.success);
+				baseBean.setMsg(msg);
+			} else {
+				baseBean.setCode(MsgCode.businessError);
+				if ("9999".equals(code)) {
+					baseBean.setMsg("输入信息格式有误！");
+				} else {
 					baseBean.setMsg(msg);
 				}
-        	}
-			
+			}
+
 		} catch (Exception e) {
 			logger.error("驾驶证换证异常:" + e);
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
-    }
-    
-    
-    /**                                                                                
-     * 驾驶人联系方式变更                                                          
-     * @param  name 姓名                                     
-	 * @param  gender 性别                        
-	 * @param  identificationNO 身份证明名称             
-	 * @param  IDcard 身份证明号码   
-	 * @param  driverLicense 驾驶证号码                          
-	 * @param  mailingAddress 联系住所地址                          
-	 * @param  mobilephone 手机号码                              
-	 * @param  loginUser 登录账户                            
-	 * @param  userSource 申请来源                            
-	 * @param  IDCardPhoto1 身份证正面照片                          
-	 * @param  IDCardPhoto2 身份证反面照片                         
-	 * @param  driverLicensePhoto 驾驶证照片
-	 * @param http://192.168.1.245:8080/web/user/driverChangeContact.html?name=张宇帆&gender=1&identificationNO=A&IDcard=622822198502074110&driverLicense=622822198502074110&mailingAddress=深圳市宝安区&mobilephone=15920050177&loginUser=15920050177&userSource=C&IDCardPhoto1=111&IDCardPhoto2=222&driverLicensePhoto=111 
-              
-     */
-    @RequestMapping("driverChangeContact")
-    public void driverChangeContact( String name ,String gender ,String identificationNO ,String IDcard ,String driverLicense ,String mailingAddress ,String mobilephone , String loginUser ,String userSource ,String IDCardPhoto1,String IDCardPhoto2,String driverLicensePhoto,HttpServletRequest request,HttpServletResponse response){
-    	
-    	BaseBean baseBean = new BaseBean();		//创建返回结果
-    	DriverChangeContactVo driverChangeContactVo = new DriverChangeContactVo();
-    	String businessType = "L";
-    	driverChangeContactVo.setBusinessType(businessType);
+	}
+
+	/**
+	 * 驾驶人联系方式变更
+	 * 
+	 * @param userName
+	 * @param gender
+	 * @param identificationNO
+	 * @param identityCard
+	 * @param driverLicense
+	 * @param receiverAddress
+	 * @param mobilephone
+	 * @param loginUser
+	 * @param userSource
+	 * @param PHOTO9
+	 * @param PHOTO10
+	 * @param JSZZP
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping("driverChangeContact")
+	public void driverChangeContact(String userName, String gender, String identificationNO, String identityCard,
+			String driverLicense, String receiverAddress, String mobilephone, String loginUser, String userSource,
+			String PHOTO9, String PHOTO10, String JSZZP, HttpServletRequest request, HttpServletResponse response) {
+
+		BaseBean baseBean = new BaseBean(); // 创建返回结果
+		DriverChangeContactVo driverChangeContactVo = new DriverChangeContactVo();
+		String businessType = "L";
+		driverChangeContactVo.setBusinessType(businessType);
 		try {
-			if(StringUtil.isBlank(name)){
+			if (StringUtil.isBlank(userName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("姓名不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverChangeContactVo.setName(name);
+			} else {
+				driverChangeContactVo.setName(userName);
 			}
-			
-			if(StringUtil.isBlank(gender)){
+
+			if (StringUtil.isBlank(gender)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("性别不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverChangeContactVo.setGender(gender);
 			}
-			
-			if(StringUtil.isBlank(identificationNO)){
+
+			if (StringUtil.isBlank(identificationNO)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明类型不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverChangeContactVo.setIdentificationNO(identificationNO);
 			}
-			
-			
-			if(StringUtil.isBlank(loginUser)){
+
+			if (StringUtil.isBlank(loginUser)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("认证用户身份证号不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverChangeContactVo.setLoginUser(loginUser);
 			}
-			if(StringUtil.isBlank(IDcard)){
+			if (StringUtil.isBlank(identityCard)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverChangeContactVo.setIDcard(IDcard);
+			} else {
+				driverChangeContactVo.setIDcard(identityCard);
 			}
-			if(StringUtil.isBlank(driverLicense)){
+			if (StringUtil.isBlank(driverLicense)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("驾驶证号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverChangeContactVo.setDriverLicense(driverLicense);
 			}
-			
-			if(StringUtil.isBlank(mobilephone)){
+
+			if (StringUtil.isBlank(mobilephone)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("电话号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverChangeContactVo.setMobilephone(mobilephone);
 			}
-			if(StringUtil.isBlank(userSource)){
+			if (StringUtil.isBlank(userSource)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("申请来源不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
+			} else {
 				driverChangeContactVo.setUserSource(userSource);
 			}
-			if(StringUtil.isBlank(mailingAddress)){
+			if (StringUtil.isBlank(receiverAddress)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("联系地址地址不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverChangeContactVo.setMailingAddress(mailingAddress);
+			} else {
+				driverChangeContactVo.setMailingAddress(receiverAddress);
 			}
-			
-			if(StringUtil.isBlank(IDCardPhoto1)){
+
+			if (StringUtil.isBlank(PHOTO9)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证正面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverChangeContactVo.setIDCardPhoto1(IDCardPhoto1);
+			} else {
+				driverChangeContactVo.setIDCardPhoto1(PHOTO9);
 			}
-			if(StringUtil.isBlank(IDCardPhoto2)){
+			if (StringUtil.isBlank(PHOTO10)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证反面照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverChangeContactVo.setIDCardPhoto2(IDCardPhoto2);
+			} else {
+				driverChangeContactVo.setIDCardPhoto2(PHOTO10);
 			}
-			if(StringUtil.isBlank(driverLicensePhoto)){
+			if (StringUtil.isBlank(JSZZP)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("驾驶证照片不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				driverChangeContactVo.setDriverLicensePhoto(driverLicensePhoto);
+			} else {
+				driverChangeContactVo.setDriverLicensePhoto(JSZZP);
 			}
-			
+
 			String ip = getIp2(request);
 			driverChangeContactVo.setIp(ip);
 			Map<String, String> map = handleService.driverChangeContact(driverChangeContactVo);
 			String code = map.get("code");
 			String msg = map.get("msg");
-			if("0000".equals(code)){
-        		baseBean.setCode(MsgCode.success);
-        		baseBean.setMsg(msg);
-        	}else{
-        		baseBean.setCode(MsgCode.businessError);
-        		if ("9999".equals(code)) {
-        			baseBean.setMsg("输入信息格式有误！");
-				}else{
+			if ("0000".equals(code)) {
+				baseBean.setCode(MsgCode.success);
+				baseBean.setMsg(msg);
+			} else {
+				baseBean.setCode(MsgCode.businessError);
+				if ("9999".equals(code)) {
+					baseBean.setMsg("输入信息格式有误！");
+				} else {
 					baseBean.setMsg(msg);
 				}
-        	}
-			
+			}
+
 		} catch (Exception e) {
 			logger.error("驾驶人联系方式变更异常:" + e);
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
-    }
-    
+	}
+
     /**
      * @Title: applyGatePass
      * @Description: TODO(申请通行证-外地车)
@@ -3316,6 +3324,68 @@ HttpServletRequest request,HttpServletResponse response){
     	logger.debug(JSON.toJSONString(baseBean));
     }
     
-    
+	/**
+	 * 首违免罚查询
+	 * 
+	 * @param numberPlate
+	 * @param plateType
+	 * @param illegalNumber
+	 * @param queryType
+	 */
+	@RequestMapping("getResultOfFirstIllegalImpunity")
+	public void getResultOfFirstIllegalImpunity(String numberPlate, String plateType, String illegalNumber,
+			String queryType) {
+		BaseBean baseBean = new BaseBean();
+		if (StringUtil.isBlank(queryType)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("查询类型不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			if ("1".equals(queryType)) {
+
+				if (StringUtil.isBlank(numberPlate)) {
+					baseBean.setCode(MsgCode.paramsError);
+					baseBean.setMsg("车牌号码不能为空!");
+					renderJSON(baseBean);
+					return;
+				}
+				if (StringUtil.isBlank(plateType)) {
+					baseBean.setCode(MsgCode.paramsError);
+					baseBean.setMsg("车牌类型不能为空!");
+					renderJSON(baseBean);
+					return;
+				}
+			} else if ("2".equals(queryType)) {
+
+				if (StringUtil.isBlank(illegalNumber)) {
+					baseBean.setCode(MsgCode.paramsError);
+					baseBean.setMsg("流水号不能为空!");
+					renderJSON(baseBean);
+					return;
+				}
+			}
+		}
+		try {
+			// 创建返回结果
+			Map<String, Object> map = handleService.getResultOfFirstIllegalImpunity(numberPlate, plateType,
+					illegalNumber, queryType);
+			String code = (String) map.get("code");
+			String msg = (String) map.get("msg");
+			if ("0000".equals(code)) {
+				baseBean.setCode("0000");
+				baseBean.setData(map.get("data"));
+			} else {
+				baseBean.setCode("0001");
+				baseBean.setMsg(msg);
+			}
+
+		} catch (Exception e) {
+			logger.error("首违免罚查询异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
 }
 
