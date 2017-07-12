@@ -2360,15 +2360,11 @@ public class AccountAction extends BaseAction {
  		logger.debug(JSON.toJSONString(baseBean));
      }
      
-     
      /**
-      * 重新认证 
-      * @param identityCard
-      * @param mobilephone
-      * @param authenticationType
-      * @param sourceOfCertification
-      * @param photo6
-      * @param photo9
+      * 查询星级用户认证
+      * @param identityCard 身份证
+      * @param sourceOfCertification 认证来源
+      * http://localhost/web/user/getIdentificationOfAuditResults.html?identityCard=440301199002101119&sourceOfCertification=C
       */
       @RequestMapping("getIdentificationOfAuditResults")
       public void getIdentificationOfAuditResults(String identityCard ,String sourceOfCertification) {
