@@ -2,7 +2,9 @@ package cn.web.front.action.activity;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -301,11 +303,21 @@ public class EastHotelAppointmentAction extends BaseAction {
     		//apptDate为空,默认查询最近可预约日期
     		if(StringUtils.isBlank(apptDate)){
     			BaseBean dateBean = activityService.getNormalApptDate("C");
-    			String[] dates = dateBean.getData().toString().split(",");
-    			apptDate = dates[0];
+    			if(MsgCode.success.equals(dateBean.getCode())){
+    				String[] dates = dateBean.getData().toString().split(",");
+    				if(dates != null && dates.length > 0){
+    					for (String date : dates) {
+    						baseBean = activityService.getHotelApptHistoryByDate(vo, date);
+    						if(MsgCode.success.equals(baseBean.getCode())){
+    							break;
+    						}
+    					}
+    				}
+    			}
+    		}else{
+    			baseBean = activityService.getHotelApptHistoryByDate(vo, apptDate);
     		}
     		
-    		baseBean = activityService.getHotelApptHistoryByDate(vo, apptDate);
     		
     	} catch (Exception e) {
     		logger.error("获取酒店预约信息列表Action异常:" + e);
