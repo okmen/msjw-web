@@ -33,6 +33,7 @@ import cn.account.bean.ReadilyShoot;
 import cn.account.bean.UserBind;
 import cn.account.bean.vo.BindCarVo;
 import cn.account.bean.vo.BindDriverLicenseVo;
+import cn.account.bean.vo.IdentificationOfAuditResultsVo;
 import cn.account.bean.vo.LoginReturnBeanVo;
 import cn.account.bean.vo.ReadilyShootVo;
 import cn.account.bean.vo.ReauthenticationVo;
@@ -2358,4 +2359,49 @@ public class AccountAction extends BaseAction {
  		renderJSON(baseBean);
  		logger.debug(JSON.toJSONString(baseBean));
      }
+     
+     
+     /**
+      * 重新认证 
+      * @param identityCard
+      * @param mobilephone
+      * @param authenticationType
+      * @param sourceOfCertification
+      * @param photo6
+      * @param photo9
+      */
+      @RequestMapping("getIdentificationOfAuditResults")
+      public void getIdentificationOfAuditResults(String identityCard ,String sourceOfCertification) {
+      	BaseBean baseBean = new BaseBean();
+      	if(StringUtil.isBlank(identityCard)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("identityCard 不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(sourceOfCertification)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("sourceOfCertification 不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	try{
+      		//创建返回结果
+      		IdentificationOfAuditResultsVo identificationOfAuditResultsVo = accountService.getIdentificationOfAuditResults(identityCard, sourceOfCertification);
+  			if(null != identificationOfAuditResultsVo){
+  				baseBean.setCode(MsgCode.success);
+          		baseBean.setMsg("");
+          		baseBean.setData(identificationOfAuditResultsVo);
+  			}else{
+          		baseBean.setCode(MsgCode.businessError);
+  				baseBean.setMsg("未查询到数据，请确认您的输入信息是否正确！");
+          	}
+  		} catch (Exception e) {
+  			logger.error("getIdentificationOfAuditResults:" + e);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  		logger.debug(JSON.toJSONString(baseBean));
+      }
+     
 }
