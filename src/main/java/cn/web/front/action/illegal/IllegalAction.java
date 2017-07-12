@@ -911,6 +911,7 @@ public class IllegalAction extends BaseAction {
 			base.setCode("0001");
 			base.setMsg("车牌号码不能为空！");
 			renderJSON(base);
+			return;
 		} else {
 			reportingNoParking.setNumberPlateNumber(numberPlateNumber);
 		}
@@ -918,6 +919,7 @@ public class IllegalAction extends BaseAction {
 			base.setCode("0001");
 			base.setMsg("车牌种类不能为空！");
 			renderJSON(base);
+			return;
 		} else {
 			reportingNoParking.setPlateType(plateType);
 		}
@@ -925,6 +927,7 @@ public class IllegalAction extends BaseAction {
 			base.setCode("0001");
 			base.setMsg("星级用户身份证明号码不能为空！");
 			renderJSON(base);
+			return;
 		} else {
 			reportingNoParking.setIDcard(IDcard);
 		}
@@ -932,6 +935,7 @@ public class IllegalAction extends BaseAction {
 			base.setCode("0001");
 			base.setMsg("停车地点不能为空！");
 			renderJSON(base);
+			return;
 		} else {
 			reportingNoParking.setParkingSpot(parkingSpot);
 		}
@@ -939,6 +943,7 @@ public class IllegalAction extends BaseAction {
 			base.setCode("0001");
 			base.setMsg("停车原因不能为空！");
 			renderJSON(base);
+			return;
 		} else {
 			reportingNoParking.setParkingReason(parkingReason);
 		}
@@ -946,6 +951,7 @@ public class IllegalAction extends BaseAction {
 			base.setCode("0001");
 			base.setMsg("大场景1不能为空！");
 			renderJSON(base);
+			return;
 		} else {
 			reportingNoParking.setScenePhoto(scenePhoto);
 		}
@@ -953,6 +959,7 @@ public class IllegalAction extends BaseAction {
 			base.setCode("0001");
 			base.setMsg("大场景不能为空！");
 			renderJSON(base);
+			return;
 		} else {
 			reportingNoParking.setScenePhoto1(scenePhoto1);
 		}
@@ -960,6 +967,7 @@ public class IllegalAction extends BaseAction {
 			base.setCode("0001");
 			base.setMsg("前五米无车场景不能为空！");
 			renderJSON(base);
+			return;
 		} else {
 			reportingNoParking.setScenePhoto2(scenePhoto2);
 		}
@@ -967,6 +975,7 @@ public class IllegalAction extends BaseAction {
 			base.setCode("0001");
 			base.setMsg("后五米无车场景不能为空！");
 			renderJSON(base);
+			return;
 		} else {
 			reportingNoParking.setScenePhoto3(scenePhoto3);
 		}
@@ -974,6 +983,7 @@ public class IllegalAction extends BaseAction {
 			base.setCode("0001");
 			base.setMsg("停车告知单拍摄照片不能为空！");
 			renderJSON(base);
+			return;
 		} else {
 			reportingNoParking.setStopNoticePhoto(stopNoticePhoto);
 		}
@@ -981,6 +991,7 @@ public class IllegalAction extends BaseAction {
 			base.setCode("0001");
 			base.setMsg("来源方式不能为空！");
 			renderJSON(base);
+			return;
 		} else {
 			reportingNoParking.setSourceOfCertification(sourceOfCertification);
 		}
