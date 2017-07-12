@@ -2675,15 +2675,19 @@ public class HandleserviceAction extends BaseAction {
 			Map<String, String> map = handleService.inspectionDeclaration(vo);
 			String code = map.get("code");
 			String msg = map.get("msg");
-			String number=map.get("number");
 			
 			if("0000".equals(code)){
+				String waterNumber = "";
+				waterNumber = SXStringUtils.deleteChineseCharactertoString(msg);
+				waterNumber = waterNumber.replace("，", "");
+				waterNumber = waterNumber.replace("：", "");
+				waterNumber = waterNumber.replace("。", "");
 				baseBean.setCode(MsgCode.success);
         		baseBean.setMsg(msg);
         		//成功需要发送模板消息
 				try {
 					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_xszbhlbl";
-					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.inspectionDeclaration, number, DateUtil2.date2str(new Date()));
+					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.inspectionDeclaration, waterNumber, DateUtil2.date2str(new Date()));
 					baseBean.setData(handleTemplateVo);
 					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
