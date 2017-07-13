@@ -3577,6 +3577,7 @@ public class HandleserviceAction extends BaseAction {
 					renderJSON(baseBean);
 					return;
 				}
+				illegalNumber="";
 			}else{
 				if(StringUtil.isBlank(illegalNumber)) {
 					baseBean.setCode(MsgCode.paramsError);
@@ -3584,6 +3585,8 @@ public class HandleserviceAction extends BaseAction {
 					renderJSON(baseBean);
 					return;
 				}
+				numberPlate="";
+				plateType = "";
 			}
 		}
 		try {
