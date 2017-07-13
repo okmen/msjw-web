@@ -2587,6 +2587,13 @@ public class HandleserviceAction extends BaseAction {
 				return;
 			}
 			
+			//此接口特殊转化，前台（1，深户，0外籍）   警司通（0，深户，1，外籍）
+			if("0".equals(placeOfDomicile)){
+				placeOfDomicile="1";				
+			}else if("1".equals(placeOfDomicile)){
+				placeOfDomicile="0";
+			}
+			
 			//验证licensePlateNo
 			if(StringUtil.isBlank(licensePlateNo)){
 				baseBean.setCode(MsgCode.paramsError);
@@ -2622,10 +2629,13 @@ public class HandleserviceAction extends BaseAction {
 			//验证recipientPhone
 			if(StringUtil.isBlank(recipientPhone)){
 				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("户籍所在地不能为空!");
+				baseBean.setMsg("收件人联系方式不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
+			
+			
+			
 			
 			//验证idCardImgPositive
 			if(StringUtil.isBlank(idCardImgPositive)){
