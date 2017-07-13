@@ -1078,7 +1078,7 @@ public class AccountAction extends BaseAction {
     			     	}
     			     	List<String> imgs = new ArrayList<String>();
     			     	try {
-    			     		imgs = fileService.writeImgReadilyShoot(reportSerialNumber, base64Imgs);
+    			     		imgs = fileService.writeImgReadilyShoot(reportSerialNumber, base64Imgs,illegalTime);
 						} catch (Exception e) {
 							logger.error("写图片到225服务器  失败", e);
 						}
