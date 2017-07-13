@@ -317,7 +317,7 @@ public class HandleserviceAction extends BaseAction {
 	public void driverLicenseAnnualVerification(String identificationNO, String userName, String identityCard,
 			String mobilephone, String placeOfDomicile, String receiverName, String receiverNumber,
 			String receiverAddress, String PHOTO9, String PHOTO10, String JZZA, String JZZB, String SHJYPXB,
-			String PHOTO31, String postCode, String loginUser, String sourceOfCertification, String userSource,
+			String PHOTO31, String postCode, String loginUser, String sourceOfCertification, String userSource,String openId ,
 			HttpServletRequest request, HttpServletResponse response) {
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
 		DriverLicenseAnnualVerificationVo driverLicenseAnnualVerificationVo = new DriverLicenseAnnualVerificationVo();
@@ -470,6 +470,12 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseAnnualVerificationVo.setUserSource(userSource);
 			}
+			if (StringUtil.isBlank(openId)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("openId 不能为空!");
+				renderJSON(baseBean);
+				return;
+			} 
 			String ip = getIp2(request);
 			driverLicenseAnnualVerificationVo.setIp(ip);
 			Map<String, String> map = handleService.driverLicenseAnnualVerification(driverLicenseAnnualVerificationVo);
@@ -477,10 +483,30 @@ public class HandleserviceAction extends BaseAction {
 			String msg = map.get("msg");
 			if ("0000".equals(code)) {
 				String waterNumber = map.get("waterNumber");
-				HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, "");
-				baseBean.setData(handleTemplateVo);
-				baseBean.setCode(MsgCode.success);
+				baseBean.setCode("0000");
 				baseBean.setMsg(msg);
+				if (sourceOfCertification.equals("C")) {
+					try {
+						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseAnnualVerification, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
+								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("keyword1",
+								new TemplateDataModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
+						tmap.put("keyword2", new TemplateDataModel().new Property("驾驶证年审申请", "#212121"));
+						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
+						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
+						logger.info("发送模板消息结果：" + flag);
+					} catch (Exception e) {
+						logger.error("发送模板消息  失败===", e);
+					}
+				}else{
+					baseBean.setData(waterNumber);
+				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
 				if ("9999".equals(code)) {
@@ -523,7 +549,7 @@ public class HandleserviceAction extends BaseAction {
 	public void renewalDriverLicense(String userName, String identificationNO, String identityCard,
 			String driverLicense, String fileNumber, String delayDate, String delayReason, String sourceOfCertification,
 			String loginUser, String PHOTO9, String PHOTO10, String JSZZP, String YQZMZP, String receiverName,
-			String receiverNumber, String receiverAddress, HttpServletRequest request, HttpServletResponse response) {
+			String receiverNumber, String receiverAddress, String openId ,HttpServletRequest request, HttpServletResponse response) {
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
 		RenewalDriverLicenseVo renewalDriverLicenseVo = new RenewalDriverLicenseVo();
 		String businessType = "Y";
@@ -665,7 +691,12 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				renewalDriverLicenseVo.setMailingAddress(receiverAddress);
 			}
-
+			if (StringUtil.isBlank(openId)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("openId 不能为空!");
+				renderJSON(baseBean);
+				return;
+			} 
 			String ip = getIp2(request);
 			renewalDriverLicenseVo.setIp(ip);
 			Map<String, String> map = handleService.renewalDriverLicense(renewalDriverLicenseVo);
@@ -673,10 +704,30 @@ public class HandleserviceAction extends BaseAction {
 			String msg = map.get("msg");
 			if ("0000".equals(code)) {
 				String waterNumber = map.get("waterNumber");
-				HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, "");
-				baseBean.setData(handleTemplateVo);
-				baseBean.setCode(MsgCode.success);
+				baseBean.setCode("0000");
 				baseBean.setMsg(msg);
+				if (sourceOfCertification.equals("C")) {
+					try {
+						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.renewalDriverLicense, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
+								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("keyword1",
+								new TemplateDataModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
+						tmap.put("keyword2", new TemplateDataModel().new Property("驾驶证延期换证申请", "#212121"));
+						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
+						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
+						logger.info("发送模板消息结果：" + flag);
+					} catch (Exception e) {
+						logger.error("发送模板消息  失败===", e);
+					}
+				}else{
+					baseBean.setData(waterNumber);
+				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
 				if ("9999".equals(code)) {
@@ -720,7 +771,7 @@ public class HandleserviceAction extends BaseAction {
 	public void driverLicenseInto(String userName, String identificationNO, String identityCard, String driverLicense,
 			String fileNumber, String issuingLicenceAuthority, String photoReturnNumberString, String receiverName,
 			String receiverNumber, String receiverAddress, String sourceOfCertification, String loginUser,
-			String PHOTO9, String PHOTO10, String JSZZP, String STTJSQB, HttpServletRequest request,
+			String PHOTO9, String PHOTO10, String JSZZP, String STTJSQB, String openId ,HttpServletRequest request,
 			HttpServletResponse response) {
 
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
@@ -865,7 +916,12 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseIntoVo.setBodyConditionForm(STTJSQB);
 			}
-
+			if (StringUtil.isBlank(openId)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("openId 不能为空!");
+				renderJSON(baseBean);
+				return;
+			} 
 			String ip = getIp2(request);
 			driverLicenseIntoVo.setIp(ip);
 			Map<String, String> map = handleService.driverLicenseInto(driverLicenseIntoVo);
@@ -873,10 +929,30 @@ public class HandleserviceAction extends BaseAction {
 			String msg = map.get("msg");
 			if ("0000".equals(code)) {
 				String waterNumber = map.get("waterNumber");
-				HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, "");
-				baseBean.setData(handleTemplateVo);
-				baseBean.setCode(MsgCode.success);
+				baseBean.setCode("0000");
 				baseBean.setMsg(msg);
+				if (sourceOfCertification.equals("C")) {
+					try {
+						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseInto, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
+								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("keyword1",
+								new TemplateDataModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
+						tmap.put("keyword2", new TemplateDataModel().new Property("驾驶证转入申请", "#212121"));
+						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
+						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
+						logger.info("发送模板消息结果：" + flag);
+					} catch (Exception e) {
+						logger.error("发送模板消息  失败===", e);
+					}
+				}else{
+					baseBean.setData(waterNumber);
+				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
 				if ("9999".equals(code)) {
@@ -919,7 +995,7 @@ public class HandleserviceAction extends BaseAction {
 	public void driverLicenseVoluntaryDemotion(String identificationNO, String loginUser, String identityCard,
 			String driverLicense, String userName, String photoReturnNumberString, String placeOfDomicile,
 			String receiverName, String receiverNumber, String receiverAddress, String sourceOfCertification,
-			String userSource, String PHOTO9, String PHOTO10, String JSZZP, HttpServletRequest request,
+			String userSource, String PHOTO9, String PHOTO10, String JSZZP, String openId ,HttpServletRequest request,
 			HttpServletResponse response) {
 
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
@@ -1056,7 +1132,12 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseVoluntaryDemotionVo.setPlaceOfDomicile(placeOfDomicile);
 			}
-
+			if (StringUtil.isBlank(openId)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("openId 不能为空!");
+				renderJSON(baseBean);
+				return;
+			} 
 			String ip = getIp2(request);
 			driverLicenseVoluntaryDemotionVo.setIp(ip);
 			Map<String, String> map = handleService.driverLicenseVoluntaryDemotion(driverLicenseVoluntaryDemotionVo);
@@ -1064,9 +1145,30 @@ public class HandleserviceAction extends BaseAction {
 			String msg = map.get("msg");
 			if ("0000".equals(code)) {
 				String waterNumber = map.get("waterNumber");
-				HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, "");
-				baseBean.setData(handleTemplateVo);
-				baseBean.setCode(MsgCode.success);
+				baseBean.setCode("0000");
+				baseBean.setMsg(msg);
+				if (sourceOfCertification.equals("C")) {
+					try {
+						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseVoluntaryDemotion, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
+								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("keyword1",
+								new TemplateDataModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
+						tmap.put("keyword2", new TemplateDataModel().new Property("驾驶证自愿降级申请", "#212121"));
+						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
+						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
+						logger.info("发送模板消息结果：" + flag);
+					} catch (Exception e) {
+						logger.error("发送模板消息  失败===", e);
+					}
+				}else{
+					baseBean.setData(waterNumber);
+				}
 				baseBean.setMsg(msg);
 			} else {
 				baseBean.setCode(MsgCode.businessError);
@@ -1114,7 +1216,7 @@ public class HandleserviceAction extends BaseAction {
 	public void repairDriverLicense(String repairReason, String identificationNO, String identityCard, String userName,
 			String mobilephone, String PHOTO9, String PHOTO10, String photoReturnNumberString, String PHOTO31,
 			String placeOfDomicile, String postCode, String receiverName, String receiverNumber, String receiverAddress,
-			String JZZA, String JZZB, String loginUser, String sourceOfCertification, String userSource,
+			String JZZA, String JZZB, String loginUser, String sourceOfCertification, String userSource,String openId ,
 			HttpServletRequest request, HttpServletResponse response) {
 
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
@@ -1272,6 +1374,12 @@ public class HandleserviceAction extends BaseAction {
 			}
 			repairOrReplaceDriverLicenseVo.setRepairReason(repairReason);
 			repairOrReplaceDriverLicenseVo.setPostalcode(postCode);
+			if (StringUtil.isBlank(openId)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("openId 不能为空!");
+				renderJSON(baseBean);
+				return;
+			} 
 			String ip = getIp2(request);
 			repairOrReplaceDriverLicenseVo.setIp(ip);
 			Map<String, String> map = handleService.repairDriverLicense(repairOrReplaceDriverLicenseVo);
@@ -1279,10 +1387,30 @@ public class HandleserviceAction extends BaseAction {
 			String msg = map.get("msg");
 			if ("0000".equals(code)) {
 				String waterNumber = map.get("waterNumber");
-				HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, "");
-				baseBean.setData(handleTemplateVo);
-				baseBean.setCode(MsgCode.success);
+				baseBean.setCode("0000");
 				baseBean.setMsg(msg);
+				if (sourceOfCertification.equals("C")) {
+					try {
+						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.repairDriverLicense, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
+								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("keyword1",
+								new TemplateDataModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
+						tmap.put("keyword2", new TemplateDataModel().new Property("驾驶证补证申请", "#212121"));
+						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
+						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
+						logger.info("发送模板消息结果：" + flag);
+					} catch (Exception e) {
+						logger.error("发送模板消息  失败===", e);
+					}
+				}else{
+					baseBean.setData(waterNumber);
+				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
 				if ("9999".equals(code)) {
@@ -1327,7 +1455,7 @@ public class HandleserviceAction extends BaseAction {
 	public void replaceDriverLicense(String identificationNO, String identityCard, String userName, String mobilephone,
 			String PHOTO9, String PHOTO10, String photoReturnNumberString, String PHOTO31, String placeOfDomicile,
 			String receiverName, String receiverNumber, String receiverAddress, String JZZA, String JZZB,
-			String loginUser, String sourceOfCertification, String userSource, HttpServletRequest request,
+			String loginUser, String sourceOfCertification, String userSource, String openId ,HttpServletRequest request,
 			HttpServletResponse response) {
 
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
@@ -1484,7 +1612,12 @@ public class HandleserviceAction extends BaseAction {
 				}
 				repairOrReplaceDriverLicenseVo.setPlaceOfDomicile(placeOfDomicile);
 			}
-
+			if (StringUtil.isBlank(openId)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("openId 不能为空!");
+				renderJSON(baseBean);
+				return;
+			} 
 			String ip = getIp2(request);
 			repairOrReplaceDriverLicenseVo.setIp(ip);
 			Map<String, String> map = handleService.replaceDriverLicense(repairOrReplaceDriverLicenseVo);
@@ -1492,10 +1625,30 @@ public class HandleserviceAction extends BaseAction {
 			String msg = map.get("msg");
 			if ("0000".equals(code)) {
 				String waterNumber = map.get("waterNumber");
-				HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, "");
-				baseBean.setData(handleTemplateVo);
-				baseBean.setCode(MsgCode.success);
+				baseBean.setCode("0000");
 				baseBean.setMsg(msg);
+				if (sourceOfCertification.equals("C")) {
+					try {
+						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.replaceDriverLicense, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
+								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("keyword1",
+								new TemplateDataModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
+						tmap.put("keyword2", new TemplateDataModel().new Property("驾驶证换证申请", "#212121"));
+						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
+						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
+						logger.info("发送模板消息结果：" + flag);
+					} catch (Exception e) {
+						logger.error("发送模板消息  失败===", e);
+					}
+				}else{
+					baseBean.setData(waterNumber);
+				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
 				if ("9999".equals(code)) {
@@ -1534,7 +1687,7 @@ public class HandleserviceAction extends BaseAction {
 	@RequestMapping("driverChangeContact")
 	public void driverChangeContact(String userName, String gender, String identificationNO, String identificationNum,
 			String driverLicense, String receiverAddress, String mobilephone, String loginUser, String userSource,
-			String PHOTO9, String PHOTO10, String JSZZP, HttpServletRequest request, HttpServletResponse response) {
+			String PHOTO9, String PHOTO10, String JSZZP, String openId ,HttpServletRequest request, HttpServletResponse response) {
 
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
 		DriverChangeContactVo driverChangeContactVo = new DriverChangeContactVo();
@@ -1642,7 +1795,12 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverChangeContactVo.setDriverLicensePhoto(JSZZP);
 			}
-
+			if (StringUtil.isBlank(openId)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("openId 不能为空!");
+				renderJSON(baseBean);
+				return;
+			} 
 			String ip = getIp2(request);
 			driverChangeContactVo.setIp(ip);
 			Map<String, String> map = handleService.driverChangeContact(driverChangeContactVo);
@@ -1650,10 +1808,30 @@ public class HandleserviceAction extends BaseAction {
 			String msg = map.get("msg");
 			if ("0000".equals(code)) {
 				String waterNumber = map.get("waterNumber");
-				HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, "");
-				baseBean.setData(handleTemplateVo);
-				baseBean.setCode(MsgCode.success);
+				baseBean.setCode("0000");
 				baseBean.setMsg(msg);
+				if (userSource.equals("C")) {
+					try {
+						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseAnnualVerification, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
+								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("keyword1",
+								new TemplateDataModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
+						tmap.put("keyword2", new TemplateDataModel().new Property("驾驶人联系方式变更申请", "#212121"));
+						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
+						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
+						logger.info("发送模板消息结果：" + flag);
+					} catch (Exception e) {
+						logger.error("发送模板消息  失败===", e);
+					}
+				}else{
+					baseBean.setData(waterNumber);
+				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
 				if ("9999".equals(code)) {
@@ -2989,6 +3167,8 @@ public class HandleserviceAction extends BaseAction {
 			String msg = jsonObject.getString("msg");
 			String result = jsonObject.getString("result");
 			if ("00".equals(code)) {
+				baseBean.setCode("0000");
+				baseBean.setMsg(msg);
 				if (sourceOfCertification.equals("C")) {
 					try {
 						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
@@ -3008,10 +3188,9 @@ public class HandleserviceAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
+				}else{
+					baseBean.setData(result);
 				}
-				baseBean.setCode("0000");
-				baseBean.setData(result);
-				baseBean.setMsg(msg);
 			} else {
 				baseBean.setCode("0001");
 				baseBean.setMsg(msg);
