@@ -374,7 +374,7 @@ public class AccountAction extends BaseAction {
     }
     
     /**
-     * 
+     * 免密登录
      * http://192.168.1.163/web/user/getLoginInfoByLoginName.html?loginName=18603017278&sourceOfCertification=Z
      * @param sourceOfCertification 认证来源 支付宝Z
      * @param loginName 手机号/身份证
