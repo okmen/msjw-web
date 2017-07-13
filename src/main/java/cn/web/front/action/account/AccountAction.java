@@ -43,19 +43,12 @@ import cn.account.bean.vo.UnbindVehicleVo;
 import cn.account.bean.vo.UserBasicVo;
 import cn.account.service.IAccountService;
 import cn.file.service.IFileService;
-import cn.handle.bean.vo.DriverChangeContactVo;
-import cn.handle.bean.vo.DriverLicenseAnnualVerificationVo;
-import cn.handle.bean.vo.DriverLicenseIntoVo;
-import cn.handle.bean.vo.DriverLicenseVoluntaryDemotionVo;
-import cn.handle.bean.vo.RenewalDriverLicenseVo;
-import cn.handle.bean.vo.RepairOrReplaceDriverLicenseVo;
-import cn.handle.service.IHandleService;
-import cn.illegal.bean.IllegalInfoBean;
 import cn.illegal.service.IIllegalService;
 import cn.message.model.wechat.TemplateDataModel;
 import cn.message.service.IMobileMessageService;
 import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
+import cn.sdk.bean.StVo;
 import cn.sdk.exception.ResultCode;
 import cn.sdk.msg.MsgTemplate;
 import cn.sdk.thread.BilinThreadPool;
@@ -942,8 +935,9 @@ public class AccountAction extends BaseAction {
      * @date 2017年4月20日 下午3:06:02
      */
     @RequestMapping(value = "readilyShoot",method = RequestMethod.POST)
-    public void readilyShoot(String licensePlateNumber,String licensePlateType,String illegalActivitieOne, String illegalTime, String illegalSections, String reportImgOne, String reportImgTwo
-    		, String reportImgThree, String inputMan,String inputManName,String inputManPhone,String identityCard,String userSource,String openId,String wfxw1,String sourceOfCertification) {
+    public void readilyShoot(String licensePlateNumber,String licensePlateType,String illegalActivitieOne, String illegalTime, String illegalSections, 
+    		String reportImgOne, String reportImgTwo,String reportImgThree,String reportImgOneT1,String reportImgOneT2,String reportImgOneT3,
+    		String inputMan,String inputManName,String inputManPhone,String identityCard,String userSource,String openId,String wfxw1,String sourceOfCertification) {
     	String code=MsgCode.success;
  		StringBuffer sb = new StringBuffer("");
  		int imgNumber=0;//传入的图片数量
@@ -1066,19 +1060,22 @@ public class AccountAction extends BaseAction {
     			     	modelMap.put("queryPassword", password);
     			     	basebean.setData(modelMap);
     			     	
-    			     	List<String> base64Imgs = new ArrayList<String>();
+    			     	List<StVo> base64Imgs = new ArrayList<StVo>();
     			     	if(StringUtils.isNotBlank(reportImgOne)){
-    			     		base64Imgs.add(reportImgOne);
+    			     		StVo stVo1 = new StVo(reportImgOne, reportImgOneT1);
+    			     		base64Imgs.add(stVo1);
     			     	}
     			     	if(StringUtils.isNotBlank(reportImgTwo)){
-    			     		base64Imgs.add(reportImgTwo);
+    			     		StVo stVo2 = new StVo(reportImgTwo,reportImgOneT2);
+    			     		base64Imgs.add(stVo2);
     			     	}
     			     	if(StringUtils.isNotBlank(reportImgThree)){
-    			     		base64Imgs.add(reportImgThree);
+    			     		StVo stVo3 = new StVo(reportImgThree,reportImgOneT3);
+    			     		base64Imgs.add(stVo3);
     			     	}
     			     	List<String> imgs = new ArrayList<String>();
     			     	try {
-    			     		imgs = fileService.writeImgReadilyShoot(reportSerialNumber, base64Imgs,illegalTime);
+    			     		imgs = fileService.writeImgReadilyShoot(reportSerialNumber, base64Imgs);
 						} catch (Exception e) {
 							logger.error("写图片到225服务器  失败", e);
 						}

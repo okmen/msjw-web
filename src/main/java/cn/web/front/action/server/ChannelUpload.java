@@ -30,6 +30,7 @@ import cn.file.service.IFileService;
 import cn.message.service.IMobileMessageService;
 import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
+import cn.sdk.bean.StVo;
 import cn.sdk.encryption.RSAEncrypt;
 import cn.sdk.encryption.RSASignature;
 import cn.sdk.util.MsgCode;
@@ -86,7 +87,7 @@ public class ChannelUpload extends BaseAction{
     @RequestMapping(value = "readilyShoot")
     public void readilyShoot(String licensePlateNumber,String licensePlateType,String illegalActivitieOne, String illegalTime, String illegalSections,
     		String reportImgOne, String reportImgTwo,String reportImgThree, String inputMan,String inputManName,String inputManPhone,
-    		String identityCard,String userSource,String openId,String wfxw1,String sign,String encode) {
+    		String identityCard,String userSource,String openId,String wfxw1,String sign,String encode,String reportImgOneT1,String reportImgOneT2,String reportImgOneT3) {
     	String code=MsgCode.success;
  		StringBuffer sb = new StringBuffer("");
  		int imgNumber=0;//传入的图片数量
@@ -225,19 +226,22 @@ public class ChannelUpload extends BaseAction{
      			     	modelMap.put("queryPassword", password);
      			     	basebean.setData(modelMap);
      			     	
-     			     	List<String> base64Imgs = new ArrayList<String>();
-     			     	if(StringUtils.isNotBlank(reportImgOne)){
-     			     		base64Imgs.add(reportImgOne);
-     			     	}
-     			     	if(StringUtils.isNotBlank(reportImgTwo)){
-     			     		base64Imgs.add(reportImgTwo);
-     			     	}
-     			     	if(StringUtils.isNotBlank(reportImgThree)){
-     			     		base64Imgs.add(reportImgThree);
-     			     	}
+     			     	List<StVo> base64Imgs = new ArrayList<StVo>();
+    			     	if(StringUtils.isNotBlank(reportImgOne)){
+    			     		StVo stVo1 = new StVo(reportImgOne, reportImgOneT1);
+    			     		base64Imgs.add(stVo1);
+    			     	}
+    			     	if(StringUtils.isNotBlank(reportImgTwo)){
+    			     		StVo stVo2 = new StVo(reportImgTwo,reportImgOneT2);
+    			     		base64Imgs.add(stVo2);
+    			     	}
+    			     	if(StringUtils.isNotBlank(reportImgThree)){
+    			     		StVo stVo3 = new StVo(reportImgThree,reportImgOneT3);
+    			     		base64Imgs.add(stVo3);
+    			     	}
      			     	List<String> imgs = new ArrayList<String>();
      			     	try {
-     			     		imgs = fileService.writeImgReadilyShoot(reportSerialNumber, base64Imgs,illegalTime);
+     			     		imgs = fileService.writeImgReadilyShoot(reportSerialNumber, base64Imgs);
  						} catch (Exception e) {
  							logger.error("写图片到225服务器  失败", e);
  						}
