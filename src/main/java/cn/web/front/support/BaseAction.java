@@ -19,9 +19,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.sdk.bean.BaseBean;
+import cn.sdk.bean.ErrorBean;
 import cn.sdk.exception.HttpPingAnException;
 import cn.sdk.exception.WebServiceException;
 import cn.sdk.util.MsgCode;
+import cn.sdk.util.StringUtil;
+import cn.sdk.util.SzgaMsgCode;
 
 /**
  * action基类，提供logger成员变量、公共方法以及用户封装返回消息的方法
@@ -165,4 +168,23 @@ public class BaseAction extends cn.web.front.common.BaseAction {
         return request.getRemoteAddr();
     }
     
+    /**
+     * 校验参数非空
+     * @param request
+     * @param response
+     * @param params
+     */
+    protected boolean checkParamNotNull(HttpServletRequest request,HttpServletResponse response,String...params){
+    	if(null != params){
+    		for (int i = 0; i < params.length; i++) {
+        		String key = params[i];
+        		String value = request.getParameter(key);
+        		if(StringUtil.isBlank(value)){
+    				outString(response, new ErrorBean(SzgaMsgCode.PRARAM_ERROR, key+"不能为空").toJson());
+    				return false;
+    			}
+    		}
+    	}
+    	return true;
+    }
 }
