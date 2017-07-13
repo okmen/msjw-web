@@ -2380,11 +2380,11 @@ public class AccountAction extends BaseAction {
  		}
       	try{
       		//创建返回结果
-      		IdentificationOfAuditResultsVo identificationOfAuditResultsVo = accountService.getIdentificationOfAuditResults(identityCard, sourceOfCertification);
-  			if(null != identificationOfAuditResultsVo){
+      		List<IdentificationOfAuditResultsVo> identificationOfAuditResultsVos = accountService.getIdentificationOfAuditResults(identityCard, sourceOfCertification);
+  			if(null != identificationOfAuditResultsVos){
   				baseBean.setCode(MsgCode.success);
           		baseBean.setMsg("");
-          		baseBean.setData(identificationOfAuditResultsVo);
+          		baseBean.setData(identificationOfAuditResultsVos);
   			}else{
           		baseBean.setCode(MsgCode.businessError);
   				baseBean.setMsg("未查询到数据，请确认您的输入信息是否正确！");
