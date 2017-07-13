@@ -3593,18 +3593,16 @@ public class HandleserviceAction extends BaseAction {
 			// 创建返回结果
 			Map<String, Object> map = handleService.getResultOfFirstIllegalImpunity(numberPlate, plateType,
 					illegalNumber, queryType);
-			if (null!=map) {
-				String code = (String) map.get("code");
-				String msg = (String) map.get("msg");
-				if ("0000".equals(code)) {
-					baseBean.setCode("0000");
-					baseBean.setData(map.get("data"));
-				} else {
-					baseBean.setCode("0001");
-					baseBean.setMsg(msg);
-				}
+			String code = (String) map.get("code");
+			String msg = (String) map.get("msg");
+			if ("0000".equals(code)) {
+				baseBean.setCode("0000");
+				baseBean.setData(map.get("data"));
+			} else {
+				baseBean.setCode("0001");
+				baseBean.setMsg(msg);
 			}
-			
+
 		} catch (Exception e) {
 			logger.error("首违免罚查询异常:" + e);
 			DealException(baseBean, e);
