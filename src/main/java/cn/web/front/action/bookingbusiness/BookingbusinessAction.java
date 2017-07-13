@@ -1,14 +1,10 @@
 package cn.web.front.action.bookingbusiness;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -20,13 +16,13 @@ import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.CarTypeVO;
 import cn.booking.business.bean.CreateVehicleInfoVo;
+import cn.booking.business.bean.DriveInfoVO;
 import cn.booking.business.bean.IdTypeVO;
 import cn.booking.business.bean.OrgVO;
+import cn.booking.business.bean.SmsInfoVO;
+import cn.booking.business.bean.VehicleInfoVO;
 import cn.booking.business.service.IBookingBusinessService;
-import cn.message.model.wechat.TemplateDataModel;
-import cn.message.model.wechat.TemplateDataModel.Property;
 import cn.sdk.bean.BaseBean;
-import cn.sdk.bean.BusinessType;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
@@ -46,6 +42,125 @@ public class BookingbusinessAction extends BaseAction {
 	@Qualifier("bookingBusinessService")
 	private IBookingBusinessService bookingBusinessService;
 
+	/**
+	 * 取消预约
+	 * @param businessType 业务类型 必填 ‘1’驾驶证业务 ‘2’机动车业务
+	 * @param bookNumber  预约号
+	 * @param mobile 手机号
+	 */
+	@RequestMapping("cancel")
+	public void cancel(String businessType, String bookNumber, String mobile) {
+		BaseBean baseBean = new BaseBean();
+		boolean flag = false;
+		if (StringUtil.isBlank(businessType)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("businessType 不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(bookNumber)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("bookNumber 不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(mobile)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("mobile 不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		try {
+			SmsInfoVO smsInfoVO = bookingBusinessService.cancel(businessType, bookNumber, mobile);
+			if(null != smsInfoVO && "00".equals(smsInfoVO.getCode())){
+				//成功
+				baseBean.setCode(MsgCode.success);
+				baseBean.setMsg("");
+				baseBean.setData(smsInfoVO);
+			}else{
+				baseBean.setCode(MsgCode.businessError);
+				baseBean.setMsg(smsInfoVO.getMsg());
+			}
+		} catch (Exception e) {
+			logger.error("cancel异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+	/**
+	 * 获取驾驶证预约信息
+	 * @param bookerNumber 预约号 必填
+	 * @param idNumber 证件号码 必填
+	 * @param businessTypeId 业务类型ID
+	 * @param organizationId 预约单位ID
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("getDriveInfo")
+	public void getDriveInfo(String bookerNumber, String idNumber, String businessTypeId, String organizationId) {
+		BaseBean baseBean = new BaseBean();
+		if (StringUtil.isBlank(bookerNumber)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("bookerNumber 不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(idNumber)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("idNumber 不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		try {
+			DriveInfoVO driveInfoVO = bookingBusinessService.getDriveInfo(bookerNumber, idNumber, businessTypeId, organizationId);
+			baseBean.setCode(MsgCode.success);
+			baseBean.setMsg("");
+			baseBean.setData(driveInfoVO);
+		} catch (Exception e) {
+			logger.error("getDriveInfo异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+	/**
+	 * 获取机动车预约信息 
+	 * @param bookerNumber 预约号  必填
+	 * @param idNumber 证件号码  必填
+	 * @param platNumber 车牌号
+	 * @param businessTypeId 业务类型ID
+	 * @param organizationId 预约单位ID
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("getVehicleInfo")
+	public void getVehicleInfo(String bookerNumber,String idNumber,String platNumber,String businessTypeId,String organizationId) {
+		BaseBean baseBean = new BaseBean();
+		if (StringUtil.isBlank(bookerNumber)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("bookerNumber 不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(idNumber)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("idNumber 不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		try {
+			VehicleInfoVO vehicleInfoVO = bookingBusinessService.getVehicleInfo(bookerNumber, idNumber, platNumber, businessTypeId, organizationId);
+			baseBean.setCode(MsgCode.success);
+			baseBean.setMsg("");
+			baseBean.setData(vehicleInfoVO);
+		}  catch (Exception e) {
+			logger.error("getVehicleInfo异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
 	/**
 	 * 获取车辆类型Id
 	 * 
