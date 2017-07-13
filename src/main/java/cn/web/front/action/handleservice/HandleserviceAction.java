@@ -3564,23 +3564,21 @@ public class HandleserviceAction extends BaseAction {
 			renderJSON(baseBean);
 			return;
 		} else {
-			if ("1".equals(queryType)) {
-
-				if (StringUtil.isBlank(numberPlate)) {
+			if("1".equals(queryType)) {
+				if(StringUtil.isBlank(numberPlate)) {
 					baseBean.setCode(MsgCode.paramsError);
 					baseBean.setMsg("车牌号码不能为空!");
 					renderJSON(baseBean);
 					return;
 				}
-				if (StringUtil.isBlank(plateType)) {
+				if(StringUtil.isBlank(plateType)) {
 					baseBean.setCode(MsgCode.paramsError);
 					baseBean.setMsg("车牌类型不能为空!");
 					renderJSON(baseBean);
 					return;
 				}
-			} else if ("2".equals(queryType)) {
-
-				if (StringUtil.isBlank(illegalNumber)) {
+			}else{
+				if(StringUtil.isBlank(illegalNumber)) {
 					baseBean.setCode(MsgCode.paramsError);
 					baseBean.setMsg("流水号不能为空!");
 					renderJSON(baseBean);
