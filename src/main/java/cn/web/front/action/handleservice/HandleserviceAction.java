@@ -3430,10 +3430,13 @@ public class HandleserviceAction extends BaseAction {
         		renderJSON(baseBean);
         		return;
         	}else{
-        		//1外籍户口
+        		//户籍所在地代号转换::前端表示1-深户,0-外籍; 警视通表示0-深户,1-外籍
         		if("1".equals(vo.getPlaceOfDomicile())){
-        			//设置居住证号码,居住证号码与身份证号码一样
-        			vo.setResidenceNo(vo.getIdentityCard());
+        			vo.setPlaceOfDomicile("0");//前端传1-深户 转换为 警视通0-深户
+        		}else if("0".equals(vo.getPlaceOfDomicile())){
+        			vo.setPlaceOfDomicile("1");//前端传0-外籍 转换为 警视通1-外籍
+        			
+        			vo.setResidenceNo(vo.getIdentityCard());//设置居住证号码,居住证号码与身份证号码一样
         		}
         	}
     		
@@ -3512,7 +3515,12 @@ public class HandleserviceAction extends BaseAction {
     		if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(vo.getSourceOfCertification())){
 				try {
 					String msg = baseBean.getMsg();
-					String waterNumber = baseBean.getData().toString();
+					String waterNumber = "";
+					if(baseBean.getData() != null){
+						waterNumber = baseBean.getData().toString();
+					}else{
+						waterNumber = msg.substring(msg.indexOf("：")+1, msg.indexOf("。"));//截取流水号
+					}
 					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.replaceMotorVehicleLicensePlate, waterNumber, DateUtil2.date2str(new Date()));
 					baseBean.setData(handleTemplateVo);
 					String url = HandleTemplateVo.getUrl(handleTemplateVo, handleService.getTemplateSendUrl());
