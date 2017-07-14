@@ -50,7 +50,7 @@ public class BookingbusinessAction extends BaseAction {
 	 * @param mobile 手机号
 	 */
 	@RequestMapping("cancel")
-	public void cancel(String businessType, String bookNumber, String mobile) {
+	public void cancel(String businessType, String bookerNumber, String mobile) {
 		BaseBean baseBean = new BaseBean();
 		boolean flag = false;
 		if (StringUtil.isBlank(businessType)) {
@@ -59,9 +59,9 @@ public class BookingbusinessAction extends BaseAction {
 			renderJSON(baseBean);
 			return;
 		}
-		if (StringUtil.isBlank(bookNumber)) {
+		if (StringUtil.isBlank(bookerNumber)) {
 			baseBean.setCode(MsgCode.paramsError);
-			baseBean.setMsg("bookNumber 不能为空!");
+			baseBean.setMsg("bookerNumber 不能为空!");
 			renderJSON(baseBean);
 			return;
 		}
@@ -72,15 +72,16 @@ public class BookingbusinessAction extends BaseAction {
 			return;
 		}
 		try {
-			SmsInfoVO smsInfoVO = bookingBusinessService.cancel(businessType, bookNumber, mobile);
+			SmsInfoVO smsInfoVO = bookingBusinessService.cancel(businessType, bookerNumber, mobile);
 			if(null != smsInfoVO && "00".equals(smsInfoVO.getCode())){
 				//成功
 				baseBean.setCode(MsgCode.success);
-				baseBean.setMsg("");
-				baseBean.setData(smsInfoVO);
+				baseBean.setMsg(smsInfoVO.getMsg());
+				baseBean.setData(smsInfoVO.getResult());
 			}else{
 				baseBean.setCode(MsgCode.businessError);
 				baseBean.setMsg(smsInfoVO.getMsg());
+				baseBean.setData(smsInfoVO.getResult());
 			}
 		} catch (Exception e) {
 			logger.error("cancel异常:" + e);
@@ -188,11 +189,12 @@ public class BookingbusinessAction extends BaseAction {
 					if (code.equals(code2)) {
 						flag = true;
 						baseBean.setData(id);
+						baseBean.setMsg("查询成功");
 					}
 				}
 				if (flag = false) {
 					baseBean.setCode(MsgCode.businessError);
-					baseBean.setMsg("查询车辆类型id失败");
+					baseBean.setMsg("未找到该车辆类型对应的id");
 				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
@@ -246,11 +248,12 @@ public class BookingbusinessAction extends BaseAction {
 					if (code.equals(code2)) {
 						flag = true;
 						baseBean.setData(id);
+						baseBean.setMsg("查询成功");
 					}
 				}
-				if (flag = false) {
+				if (flag == false) {
 					baseBean.setCode(MsgCode.businessError);
-					baseBean.setMsg("查询业务类型id失败");
+					baseBean.setMsg("未找到该业务类型对应的id");
 				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
@@ -300,15 +303,16 @@ public class BookingbusinessAction extends BaseAction {
 					if (code.equals(code2)) {
 						flag = true;
 						baseBean.setData(id);
+						baseBean.setMsg("查询成功");
 					}
 				}
-				if (flag = false) {
+				if (flag == false) {
 					baseBean.setCode(MsgCode.businessError);
-					baseBean.setMsg("查询车辆类型id失败");
+					baseBean.setMsg("未找到该证件类型对应的id");
 				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				baseBean.setMsg("查询车辆类型id失败");
+				baseBean.setMsg("查询证件类型id失败");
 			}
 		} catch (Exception e) {
 			logger.error("获取证件种类id异常:" + e);
@@ -464,7 +468,7 @@ public class BookingbusinessAction extends BaseAction {
 			renderJSON(baseBean);
 			return;
 		}
-		if (StringUtil.isBlank(businessTypeId)) {
+		if (StringUtil.isBlank(optlittleCar)) {
 			baseBean.setCode(MsgCode.paramsError);
 			baseBean.setMsg("optlittleCar不能为空!");
 			renderJSON(baseBean);
@@ -490,8 +494,8 @@ public class BookingbusinessAction extends BaseAction {
 	}
 	
 	/**
-	 * @Title: createVehicleInfo_JD06
-	 * @Description: TODO(换领机动车登记证书)
+	 * @Title:
+	 * @Description: TODO(预约信息写入)
 	 * @param @param request
 	 * @param @param response    参数
 	 * @return void    返回类型
