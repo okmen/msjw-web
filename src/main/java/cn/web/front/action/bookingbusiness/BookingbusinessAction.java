@@ -501,12 +501,12 @@ public class BookingbusinessAction extends BaseAction {
 	 * @return void    返回类型
 	 * @throws
 	 */
-	@RequestMapping(value="/createVehicleInfo_JD06.html")
-	public void createVehicleInfo_JD06(HttpServletRequest request,HttpServletResponse response){
+	@RequestMapping(value="/createVehicleInfo.html")
+	public void createVehicleInfo(HttpServletRequest request,HttpServletResponse response){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
     	
     	String orgId = request.getParameter("orgId");   //预约地点id    e4e48584399473d201399b0c4ad62b39
-		String businessTypeId = request.getParameter("businessTypeId");  //业务类型ID   4028828239a4a4c60139a4fb36ef0007
+    	String businessTypeId = request.getParameter("businessTypeId"); //预约类型ID
 		String name = request.getParameter("name");  //姓名
 		String idTypeId = request.getParameter("idTypeId");  //证件种类ID  e4e48584399473d20139947f125e2b2c
 		String idNumber = request.getParameter("idNumber");  //证件号码  622822198502074112
@@ -519,40 +519,39 @@ public class BookingbusinessAction extends BaseAction {
 		String bookerName = request.getParameter("bookerName");  //预约人姓名
 		String bookerIdNumber = request.getParameter("bookerIdNumber");  //预约人身份证号码
 		String bookerType = request.getParameter("bookerType");  //预约方式
-		String rzjs = request.getParameter("rzjs");  //认证角色
-		String optlittleCar = request.getParameter("optlittleCar");  //车辆产地
-		String indexType = request.getParameter("indexType");  //指标类型
-		String indexNo = request.getParameter("indexNo");  //指标号/公证号/车辆识别代号
 		String useCharater = request.getParameter("useCharater");  //使用性质
-		String arg0 = request.getParameter("arg0");  //车辆型号
-		String arg1 = request.getParameter("arg1");  //手机号码
 		String arg2 = request.getParameter("arg2");  //短信验证码
 		
-		
 		try {
+			//校验参数
+			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
+					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
+					"bookerType","useCharater","arg2");
+			if(!bool) return;
+			
 			CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
-			vo.setOrgId("e4e48584399473d201399b0c4ad62b39");  //预约地点Id
-			vo.setBusinessTypeId("4028828239a4a4c60139a4fb36ef0007");  //业务类型id
-			vo.setName("测试"); //姓名
-			vo.setIdTypeId("e4e48584399473d20139947f125e2b2c");		//证件种类id
-			vo.setIdNumber("622822198502074112"); //证件号码
-			vo.setMobile("17688758320");	//手机号码
-			vo.setAppointmentDate("2017-07-24");  //预约日期
-			vo.setAppointmentTime("12:00-17:00");	//预约时间
-			vo.setCarTypeId("e4e48584399473d20139947fff4e2b2e"); 	//号牌种类  小型汽车（蓝色）
-			vo.setCarFrame("5563"); 	//车架号
-			vo.setPlatNumber("粤B6A42Q");   //车牌号或车架号
-			vo.setBookerName("测试");  //预约人姓名
-			vo.setBookerIdNumber("622822198502074112"); //预约人身份证号码
-			vo.setBookerType("0"); 	//预约方式
-			vo.setOptlittleCar(""); 	//车辆产地
-			vo.setIndexType(""); 	//指标类型
-			vo.setIndexNo(""); 		//指标号/公证号/车辆识别代号
-			vo.setUseCharater("123"); 	//使用性质
-			vo.setArg0("DH");  //车辆型号
-			vo.setArg1("17688758320"); 	//手机号码
-			vo.setArg2("464032");	 	//短信验证码
-			vo.setRzjs("11");
+			vo.setOrgId(orgId);  //预约地点Id
+			vo.setBusinessTypeId(businessTypeId);  //业务类型id
+			vo.setName(name); //姓名
+			vo.setIdTypeId(idTypeId);		//证件种类id
+			vo.setIdNumber(idNumber); //证件号码
+			vo.setMobile(mobile);	//手机号码
+			vo.setAppointmentDate(appointmentDate);  //预约日期
+			vo.setAppointmentTime(appointmentTime);	//预约时间
+			vo.setCarTypeId(carTypeId); 	//车辆类型 号牌种类  小型汽车（蓝色）
+			vo.setCarFrame(carFrame); 	//车架号
+			vo.setPlatNumber(platNumber);   //车牌号或车架号
+			vo.setBookerName(bookerName);  //预约人姓名
+			vo.setBookerIdNumber(bookerIdNumber); //预约人身份证号码
+			vo.setBookerType(bookerType); 	//预约方式  ‘0’ 非代办(本人)，’1’ 普通代办 ‘2’专业代办
+			vo.setOptlittleCar(""); 	//车辆产地  可为空
+			vo.setIndexType(""); 	//指标类型   可为空
+			vo.setIndexNo(""); 		//指标号/公证号/车辆识别代号  可为空
+			vo.setUseCharater(useCharater); 	//使用性质
+			vo.setArg0("");  //车辆型号  可为空
+			vo.setArg1(mobile); 	//手机号码
+			vo.setArg2(arg2);	 	//短信验证码
+			vo.setRzjs("");    //可为空
 			
 			//接口调用
 			BaseBean refBean = bookingBusinessService.createVehicleInfo(vo);
@@ -572,6 +571,7 @@ public class BookingbusinessAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
+	
 	/**
 	 * 机动车打刻原车发动机号码变更备案
 	 * @author lifangyong
