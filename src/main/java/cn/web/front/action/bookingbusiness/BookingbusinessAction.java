@@ -127,9 +127,13 @@ public class BookingbusinessAction extends BaseAction {
 		}
 		try {
 			DriveInfoVO driveInfoVO = bookingBusinessService.getDriveInfo(bookerNumber, idNumber, businessTypeId, organizationId);
-			baseBean.setCode(MsgCode.success);
-			baseBean.setMsg("");
-			baseBean.setData(driveInfoVO);
+			if(driveInfoVO != null){
+				baseBean.setCode(MsgCode.success);
+				baseBean.setData(driveInfoVO);
+			}else{
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("未查询到相关信息");
+			}
 		} catch (Exception e) {
 			logger.error("getDriveInfo异常:" + e);
 			DealException(baseBean, e);
@@ -503,6 +507,88 @@ public class BookingbusinessAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
+	
+	/**
+	 * 发送短信验证码 
+	 * Description TODO(发送短信验证码)
+	 * @param mobile 获取短信验证码的手机号
+	 * @param idType 本次预约所填写的证件种类ID,由于六年免检没有证件种类，请传”0”
+	 * @param lx 1:驾驶证业务  2:机动车业务（六年免检业务传3）  3:其他（包括六年免检业务）
+	 * @param ip 用户客户端IP
+	 * @param bookerType ‘0’非代办（或本人） ‘1’普通代办 ‘2’专业代办（企业代办）
+	 * @param bookerName 代办人姓名： 0’非代办（或本人）情况请传本次预约业务填写的姓名
+	 * @param bookerIdNumber 代办人身份证号码： 0’非代办（或本人）情况请传本次预约业务填写的证件号码
+	 * @param idNumber 本次预约业务填写的证件号码
+	 * @param codes 本次预约的具体业务类型（例如：JD01）
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("simpleSendMessage")
+	public void simpleSendMessage(String mobile,String idType,String lx,String bookerType,String bookerName,String bookerIdNumber,String idNumber,String codes,HttpServletRequest request){
+		BaseBean baseBean = new BaseBean();
+		
+		try{
+			if (StringUtil.isBlank(mobile)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("手机号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if (StringUtil.isBlank(idType)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("证件种类ID不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if (StringUtil.isBlank(lx)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("业务类型不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if (StringUtil.isBlank(bookerName)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("姓名不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if (StringUtil.isBlank(idNumber)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("证件号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if (StringUtil.isBlank(codes)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("业务代码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
+			if (StringUtil.isBlank(bookerType)) {
+				bookerType = "0";
+				bookerIdNumber = idNumber;
+			}
+			String ip = getIp2(request);
+			
+			SmsInfoVO vo = bookingBusinessService.simpleSendMessage(mobile, idType, lx, ip, bookerType, bookerName, bookerIdNumber, idNumber, codes);
+			if(vo != null && "00".equals(vo.getCode())){
+				baseBean.setCode(MsgCode.success);
+				baseBean.setMsg("验证码已发送");
+			}else{
+				baseBean.setCode(MsgCode.businessError);
+				baseBean.setMsg(vo.getMsg());
+			}
+			
+		} catch (Exception e) {
+			logger.error("发送短信验证码Action异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+
+	
 	
 	/**
 	 * @Title:
@@ -1698,12 +1784,7 @@ public class BookingbusinessAction extends BaseAction {
 			String arg3 = request.getParameter("arg3");
 			String arg4 = request.getParameter("arg4");
 			String arg5 = request.getParameter("arg5");
-			if(StringUtil.isBlank(orgId)){
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("预约地点Id不能为空!");
-				renderJSON(baseBean);
-				return;
-			}
+			
 			if(StringUtil.isBlank(businessTypeId)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("业务类型Id不能为空!");
@@ -1712,7 +1793,7 @@ public class BookingbusinessAction extends BaseAction {
 			}
 			if(StringUtil.isBlank(name)){
 				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("姓名不能为空!");
+				baseBean.setMsg("车主姓名不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
@@ -1722,15 +1803,27 @@ public class BookingbusinessAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
+			if(StringUtil.isBlank(idNumber)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("证件号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
 			if(StringUtil.isBlank(mobile)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("手机号码不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(idNumber)){
+			if(StringUtil.isBlank(arg1)){
 				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("证件号码不能为空!");
+				baseBean.setMsg("短信验证码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(orgId)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("预约地点ID不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
@@ -1746,18 +1839,7 @@ public class BookingbusinessAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(arg0)){
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("手机号码不能为空!");
-				renderJSON(baseBean);
-				return;
-			}
-			if(StringUtil.isBlank(arg1)){
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("短信验证码不能为空!");
-				renderJSON(baseBean);
-				return;
-			}
+			
 			if (StringUtil.isBlank(bookerName)) {
 				bookerName ="";
 			}
@@ -1785,7 +1867,7 @@ public class BookingbusinessAction extends BaseAction {
 			createDriveinfoVo.setIdTypeId(idTypeId);
 			createDriveinfoVo.setMobile(mobile);
 			createDriveinfoVo.setIdNumber(idNumber);
-			createDriveinfoVo.setArg0(arg0);
+			createDriveinfoVo.setArg0(mobile);
 			createDriveinfoVo.setArg1(arg1);
 			createDriveinfoVo.setAppointmentDate(appointmentDate);
 			createDriveinfoVo.setAppointmentTime(appointmentTime);
@@ -1799,13 +1881,20 @@ public class BookingbusinessAction extends BaseAction {
 			//接口调用
 			BaseBean refBean = bookingBusinessService.createDriveinfo(createDriveinfoVo);
 			
-			if("00".equals(refBean.getCode())){
+			String code = refBean.getCode();
+			if("00".equals(code)){
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(refBean.getMsg());
 				baseBean.setData(refBean.getData());
+			}else if("01".equals(code)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg(refBean.getMsg());
+			}else if("03".equals(code)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg(refBean.getData().toString());
 			}else{
 				baseBean.setCode(MsgCode.businessError);
-				baseBean.setMsg(refBean.getData().toString());
+				baseBean.setMsg(refBean.getMsg());
 			}
 		} catch (Exception e) {
 			logger.error("【预约类服务】临时机动车驾驶许可申领Action异常:"+e);
@@ -1824,10 +1913,24 @@ public class BookingbusinessAction extends BaseAction {
 	public void createTemporaryLicenseVehicleInfo(CreateTemporaryLicenseVehicleInfoVo vo){
 		BaseBean baseBean = new BaseBean();
 		
-		
-		//var d=base_url+"Business/Appointment/sendMessage",o={phone:e,idType:t,businessType:i,bookerType:0,bookerName:a,idNumber:r,bookerIdNumber:"",codes:code}
-		//phone=15818534918&idType=e4e48584399473d20139947f125e2b2c&businessType=2&bookerType=0&bookerName=%E6%B5%8B%E8%AF%95&idNumber=622822198502074110&bookerIdNumber=&codes=JD34
-		//先经过发送短信验证
+		if (StringUtil.isBlank(vo.getName())) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("车主姓名不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(vo.getIdNumber())) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("证件号码不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(vo.getMobile())) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("手机号码不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
 		if (StringUtil.isBlank(vo.getArg1())) {
 			baseBean.setCode(MsgCode.paramsError);
 			baseBean.setMsg("验证码不能为空!");
