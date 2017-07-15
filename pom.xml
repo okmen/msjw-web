@@ -329,7 +329,7 @@
 		<!-- 办理类业务 -->
 		<dependency>
 			<groupId>${choumei.services.groupId}</groupId>
-			<artifactId>handle-service-center-api</artifactId>
+			<artifactId>handle-center-api</artifactId>
 			<version>${cn.services.version}</version>
 		</dependency>
 		<!-- 预约类业务 -->
