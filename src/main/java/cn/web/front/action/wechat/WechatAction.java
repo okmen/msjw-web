@@ -151,7 +151,7 @@ public class WechatAction extends BaseAction {
 	@RequestMapping(value = "/getJsapiTicket.html", method = RequestMethod.GET) 
 	public void getJsapiTicket(HttpServletRequest request, HttpServletResponse response){
 		try {
-			response.setCharacterEncoding("utf-8"); 
+			response.setCharacterEncoding("utf-8");  
 			String ticket = wechatService.getJsapiTicket();
 			outString(response, ticket);
 		} catch (Exception e) {
