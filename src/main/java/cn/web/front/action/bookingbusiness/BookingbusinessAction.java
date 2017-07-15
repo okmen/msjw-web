@@ -1767,7 +1767,11 @@ public class BookingbusinessAction extends BaseAction {
 			
 		} catch (Exception e) {
 			logger.error("核发临牌Action异常:" + e);
-=======
+		}	
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+	/**
 	 * 获取驾驶证预约信息
 	 * @param request
 	 * @param response
@@ -1812,17 +1816,14 @@ public class BookingbusinessAction extends BaseAction {
         	}
 		} catch (Exception e) {
 			logger.error("【预约类服务】获取驾驶证预约 信息Action异常:"+e);
->>>>>>> Stashed changes
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
-<<<<<<< Updated upstream
 	}
 	
-=======
-    }
->>>>>>> Stashed changes
+
+
 	
 	
 	/**
