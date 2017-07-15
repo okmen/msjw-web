@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.CarTypeVO;
 import cn.booking.business.bean.CreateDriveinfoVo;
+import cn.booking.business.bean.CreateTemporaryLicenseVehicleInfoVo;
 import cn.booking.business.bean.CreateVehicleInfoVo;
 import cn.booking.business.bean.DriveInfoVO;
 import cn.booking.business.bean.IdTypeVO;
@@ -1437,6 +1439,294 @@ public class BookingbusinessAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
     }
+	
+	/**
+	 * 临时机动车驾驶许可申领
+	 * @Description TODO(临时机动车驾驶许可申领)
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping("createDriveinfo_ZJ16")
+	public void createDriveinfo_ZJ16(HttpServletRequest request,HttpServletResponse response){
+		BaseBean baseBean = new BaseBean();		//创建返回结果
+		CreateDriveinfoVo createDriveinfoVo = new CreateDriveinfoVo();
+		try {
+			String orgId = request.getParameter("orgId");
+			String businessTypeId = request.getParameter("businessTypeId");
+			String name = request.getParameter("name");
+			String idTypeId = request.getParameter("idTypeId");
+			String idNumber = request.getParameter("idNumber");
+			String mobile = request.getParameter("mobile");
+			String appointmentDate = request.getParameter("appointmentDate");
+			String appointmentTime = request.getParameter("appointmentTime");
+			String bookerName = request.getParameter("bookerName");
+			String bookerIdNumber = request.getParameter("bookerIdNumber");
+			String bookerType = request.getParameter("bookerType");
+			String arg0 = request.getParameter("arg0");
+			String arg1 = request.getParameter("arg1");
+			String arg2 = request.getParameter("arg2");
+			String arg3 = request.getParameter("arg3");
+			String arg4 = request.getParameter("arg4");
+			String arg5 = request.getParameter("arg5");
+			if(StringUtil.isBlank(orgId)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("预约地点Id不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(businessTypeId)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("业务类型Id不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(name)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("姓名不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(idTypeId)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("证件种类ID不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(mobile)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("手机号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(idNumber)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("证件号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(appointmentDate)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("预约日期不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(appointmentTime)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("预约时间不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(arg0)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("手机号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(arg1)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("短信验证码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if (StringUtil.isBlank(bookerName)) {
+				bookerName ="";
+			}
+			if (StringUtil.isBlank(bookerIdNumber)) {
+				bookerIdNumber = "";
+			}
+			if (StringUtil.isBlank(bookerType)) {
+				bookerType = "";
+			}
+			if (StringUtil.isBlank(arg2)) {
+				arg2 = "";
+			}
+			if (StringUtil.isBlank(arg3)) {
+				arg3 = "";
+			}
+			if (StringUtil.isBlank(arg4)) {
+				arg4 = "";
+			}
+			if (StringUtil.isBlank(arg5)) {
+				arg5 = "";
+			}
+			createDriveinfoVo.setOrgId(orgId);
+			createDriveinfoVo.setBusinessTypeId(businessTypeId);
+			createDriveinfoVo.setName(name);
+			createDriveinfoVo.setIdTypeId(idTypeId);
+			createDriveinfoVo.setMobile(mobile);
+			createDriveinfoVo.setIdNumber(idNumber);
+			createDriveinfoVo.setArg0(arg0);
+			createDriveinfoVo.setArg1(arg1);
+			createDriveinfoVo.setAppointmentDate(appointmentDate);
+			createDriveinfoVo.setAppointmentTime(appointmentTime);
+			createDriveinfoVo.setBookerName(bookerName);
+			createDriveinfoVo.setBookerIdNumber(bookerIdNumber);
+			createDriveinfoVo.setBookerType(bookerType);
+			createDriveinfoVo.setArg2(arg2);
+			createDriveinfoVo.setArg3(arg3);
+			createDriveinfoVo.setArg4(arg4);
+			createDriveinfoVo.setArg5(arg5);
+			//接口调用
+			BaseBean refBean = bookingBusinessService.createDriveinfo(createDriveinfoVo);
+			
+			if("00".equals(refBean.getCode())){
+				baseBean.setCode(MsgCode.success);
+				baseBean.setMsg(refBean.getMsg());
+				baseBean.setData(refBean.getData());
+			}else{
+				baseBean.setCode(MsgCode.businessError);
+				baseBean.setMsg(refBean.getData().toString());
+			}
+		} catch (Exception e) {
+			logger.error("【预约类服务】临时机动车驾驶许可申领Action异常:"+e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug("【预约类服务】临时机动车驾驶许可申领Action返回结果:" + JSON.toJSONString(baseBean));
+	}
+	
+	/**
+	 * 核发临牌
+	 * @Description: TODO(核发临牌)
+	 * @param vo 核发临牌Vo
+	 */
+	@RequestMapping("createTemporaryLicenseVehicleInfo")
+	public void createTemporaryLicenseVehicleInfo(CreateTemporaryLicenseVehicleInfoVo vo){
+		BaseBean baseBean = new BaseBean();
+		
+		
+		//var d=base_url+"Business/Appointment/sendMessage",o={phone:e,idType:t,businessType:i,bookerType:0,bookerName:a,idNumber:r,bookerIdNumber:"",codes:code}
+		//phone=15818534918&idType=e4e48584399473d20139947f125e2b2c&businessType=2&bookerType=0&bookerName=%E6%B5%8B%E8%AF%95&idNumber=622822198502074110&bookerIdNumber=&codes=JD34
+		//先经过发送短信验证
+		if (StringUtil.isBlank(vo.getArg1())) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("验证码不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(vo.getAdress())) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("居住地址不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(vo.getChineseBrand())) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("中文品牌不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		
+		String passengerNumber = vo.getPassengerNumber();
+		if (StringUtil.isBlank(passengerNumber)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("载客人数不能为空!");
+			renderJSON(baseBean);
+			return;
+		} else {
+			//请确保载客人数是数值的字符串：“整数值”
+			if(!StringUtils.isNumeric(passengerNumber) || passengerNumber.length() > 3){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("载客人数只能为纯数字（最多3位）");
+				renderJSON(baseBean);
+				return;
+			}
+		}
+		
+		if (StringUtil.isBlank(vo.getEngineNumber())) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("发动机号不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(vo.getCarTypeId())) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("车辆类型ID不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(vo.getVehicleType())) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("车辆型号不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		/*if (StringUtil.isBlank(vo.getUseCharater())) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("使用性质不能为空!");
+			renderJSON(baseBean);
+			return;
+		}*/
+		if (StringUtil.isBlank(vo.getCarFrame())) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("车身架号不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(vo.getOrgId())) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("预约地点ID不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(vo.getAppointmentDate())) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("预约日期不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(vo.getAppointmentTime())) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("预约时间不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		
+		if (StringUtil.isBlank(vo.getBusinessTypeId())) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("业务类型ID不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isNotBlank(vo.getMobile())) {
+			vo.setArg0(vo.getMobile());
+		}
+		
+		try {
+			baseBean = bookingBusinessService.createTemporaryLicenseVehicleInfo(vo);
+			
+			/*//预约成功发送微信模板消息
+			if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(vo.getSourceOfCertification())){
+				try {
+					String waterNumber = baseBean.getData().toString();
+					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.xxxxxxxxxxxxxxx, waterNumber, DateUtil2.date2str(new Date()));
+					baseBean.setData(handleTemplateVo);
+					String url = HandleTemplateVo.getUrl(handleTemplateVo, bookingBusinessService.getTemplateSendUrl());
+					String openId = vo.getOpenId();
+					String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
+					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+					map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
+					map.put("businessType", new TemplateDataModel().new Property("机动车业务","#212121"));
+					map.put("business", new TemplateDataModel().new Property("核发临牌","#212121"));
+					map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
+					map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
+					map.put("address", new TemplateDataModel().new Property(organizationName,"#212121"));
+					map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
+					logger.info("发送模板消息结果：" + flag);
+				} catch (Exception e) {
+					logger.error("发送模板消息  失败===", e);
+				}
+			}*/
+			
+		} catch (Exception e) {
+			logger.error("核发临牌Action异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+	
 	
 	
 }
