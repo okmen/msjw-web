@@ -700,12 +700,8 @@ public class BookingbusinessAction extends BaseAction {
 			String bookerName = request.getParameter("bookerName");
 			String bookerIdNumber = request.getParameter("bookerIdNumber");
 			String bookerType = request.getParameter("bookerType");
-			String arg0 = request.getParameter("arg0");
-			String arg1 = request.getParameter("arg1");
-			String arg2 = request.getParameter("arg2");
-			String arg3 = request.getParameter("arg3");
-			String arg4 = request.getParameter("arg4");
-			String arg5 = request.getParameter("arg5");
+			String bookerMobile = request.getParameter("bookerMobile");
+			String msgNumber = request.getParameter("msgNumber");
 			String sourceOfCertification = request.getParameter("sourceOfCertification");
 			String openId = request.getParameter("openId");
 			if(StringUtil.isBlank(orgId)){
@@ -756,13 +752,13 @@ public class BookingbusinessAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(arg0)){
+			if(StringUtil.isBlank(bookerMobile)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("手机号码不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(arg1)){
+			if(StringUtil.isBlank(msgNumber)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("短信验证码不能为空!");
 				renderJSON(baseBean);
@@ -777,35 +773,19 @@ public class BookingbusinessAction extends BaseAction {
 			if (StringUtil.isBlank(bookerType)) {
 				bookerType = "";
 			}
-			if (StringUtil.isBlank(arg2)) {
-				arg2 = "";
-			}
-			if (StringUtil.isBlank(arg3)) {
-				arg3 = "";
-			}
-			if (StringUtil.isBlank(arg4)) {
-				arg4 = "";
-			}
-			if (StringUtil.isBlank(arg5)) {
-				arg5 = "";
-			}
 			createDriveinfoVo.setOrgId(orgId);
 			createDriveinfoVo.setBusinessTypeId(businessTypeId);
 			createDriveinfoVo.setName(name);
 			createDriveinfoVo.setIdTypeId(idTypeId);
 			createDriveinfoVo.setMobile(mobile);
 			createDriveinfoVo.setIdNumber(idNumber);
-			createDriveinfoVo.setArg0(arg0);
-			createDriveinfoVo.setArg1(arg1);
+			createDriveinfoVo.setBookerMobile(bookerMobile);
+			createDriveinfoVo.setMsgNumber(msgNumber);
 			createDriveinfoVo.setAppointmentDate(appointmentDate);
 			createDriveinfoVo.setAppointmentTime(appointmentTime);
 			createDriveinfoVo.setBookerName(bookerName);
 			createDriveinfoVo.setBookerIdNumber(bookerIdNumber);
 			createDriveinfoVo.setBookerType(bookerType);
-			createDriveinfoVo.setArg2(arg2);
-			createDriveinfoVo.setArg3(arg3);
-			createDriveinfoVo.setArg4(arg4);
-			createDriveinfoVo.setArg5(arg5);
 			//接口调用
 			BaseBean refBean = bookingBusinessService.createDriveinfo(createDriveinfoVo);
 			String code = refBean.getCode();
@@ -881,12 +861,8 @@ public class BookingbusinessAction extends BaseAction {
 			String bookerName = request.getParameter("bookerName");
 			String bookerIdNumber = request.getParameter("bookerIdNumber");
 			String bookerType = request.getParameter("bookerType");
-			String arg0 = request.getParameter("arg0");
-			String arg1 = request.getParameter("arg1");
-			String arg2 = request.getParameter("arg2");
-			String arg3 = request.getParameter("arg3");
-			String arg4 = request.getParameter("arg4");
-			String arg5 = request.getParameter("arg5");
+			String bookerMobile = request.getParameter("bookerMobile");
+			String msgNumber = request.getParameter("msgNumber");
 			String sourceOfCertification = request.getParameter("sourceOfCertification");
 			String openId = request.getParameter("openId");
 			if(StringUtil.isBlank(orgId)){
@@ -937,13 +913,13 @@ public class BookingbusinessAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(arg0)){
+			if(StringUtil.isBlank(bookerMobile)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("手机号码不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(arg1)){
+			if(StringUtil.isBlank(msgNumber)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("短信验证码不能为空!");
 				renderJSON(baseBean);
@@ -958,35 +934,19 @@ public class BookingbusinessAction extends BaseAction {
 			if (StringUtil.isBlank(bookerType)) {
 				bookerType = "";
 			}
-			if (StringUtil.isBlank(arg2)) {
-				arg2 = "";
-			}
-			if (StringUtil.isBlank(arg3)) {
-				arg3 = "";
-			}
-			if (StringUtil.isBlank(arg4)) {
-				arg4 = "";
-			}
-			if (StringUtil.isBlank(arg5)) {
-				arg5 = "";
-			}
 			createDriveinfoVo.setOrgId(orgId);
 			createDriveinfoVo.setBusinessTypeId(businessTypeId);
 			createDriveinfoVo.setName(name);
 			createDriveinfoVo.setIdTypeId(idTypeId);
 			createDriveinfoVo.setMobile(mobile);
 			createDriveinfoVo.setIdNumber(idNumber);
-			createDriveinfoVo.setArg0(arg0);
-			createDriveinfoVo.setArg1(arg1);
+			createDriveinfoVo.setBookerMobile(bookerMobile);
+			createDriveinfoVo.setMsgNumber(msgNumber);
 			createDriveinfoVo.setAppointmentDate(appointmentDate);
 			createDriveinfoVo.setAppointmentTime(appointmentTime);
 			createDriveinfoVo.setBookerName(bookerName);
 			createDriveinfoVo.setBookerIdNumber(bookerIdNumber);
 			createDriveinfoVo.setBookerType(bookerType);
-			createDriveinfoVo.setArg2(arg2);
-			createDriveinfoVo.setArg3(arg3);
-			createDriveinfoVo.setArg4(arg4);
-			createDriveinfoVo.setArg5(arg5);
 			//接口调用
 			BaseBean refBean = bookingBusinessService.createDriveinfo(createDriveinfoVo);
 			String code = refBean.getCode();
@@ -1062,12 +1022,8 @@ public class BookingbusinessAction extends BaseAction {
 			String bookerName = request.getParameter("bookerName");
 			String bookerIdNumber = request.getParameter("bookerIdNumber");
 			String bookerType = request.getParameter("bookerType");
-			String arg0 = request.getParameter("arg0");
-			String arg1 = request.getParameter("arg1");
-			String arg2 = request.getParameter("arg2");
-			String arg3 = request.getParameter("arg3");
-			String arg4 = request.getParameter("arg4");
-			String arg5 = request.getParameter("arg5");
+			String bookerMobile = request.getParameter("bookerMobile");
+			String msgNumber = request.getParameter("msgNumber");
 			String sourceOfCertification = request.getParameter("sourceOfCertification");
 			String openId = request.getParameter("openId");
 			if(StringUtil.isBlank(orgId)){
@@ -1118,13 +1074,13 @@ public class BookingbusinessAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(arg0)){
+			if(StringUtil.isBlank(bookerMobile)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("手机号码不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(arg1)){
+			if(StringUtil.isBlank(msgNumber)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("短信验证码不能为空!");
 				renderJSON(baseBean);
@@ -1139,35 +1095,19 @@ public class BookingbusinessAction extends BaseAction {
 			if (StringUtil.isBlank(bookerType)) {
 				bookerType = "";
 			}
-			if (StringUtil.isBlank(arg2)) {
-				arg2 = "";
-			}
-			if (StringUtil.isBlank(arg3)) {
-				arg3 = "";
-			}
-			if (StringUtil.isBlank(arg4)) {
-				arg4 = "";
-			}
-			if (StringUtil.isBlank(arg5)) {
-				arg5 = "";
-			}
 			createDriveinfoVo.setOrgId(orgId);
 			createDriveinfoVo.setBusinessTypeId(businessTypeId);
 			createDriveinfoVo.setName(name);
 			createDriveinfoVo.setIdTypeId(idTypeId);
 			createDriveinfoVo.setMobile(mobile);
 			createDriveinfoVo.setIdNumber(idNumber);
-			createDriveinfoVo.setArg0(arg0);
-			createDriveinfoVo.setArg1(arg1);
+			createDriveinfoVo.setBookerMobile(bookerMobile);
+			createDriveinfoVo.setMsgNumber(msgNumber);
 			createDriveinfoVo.setAppointmentDate(appointmentDate);
 			createDriveinfoVo.setAppointmentTime(appointmentTime);
 			createDriveinfoVo.setBookerName(bookerName);
 			createDriveinfoVo.setBookerIdNumber(bookerIdNumber);
 			createDriveinfoVo.setBookerType(bookerType);
-			createDriveinfoVo.setArg2(arg2);
-			createDriveinfoVo.setArg3(arg3);
-			createDriveinfoVo.setArg4(arg4);
-			createDriveinfoVo.setArg5(arg5);
 			//接口调用
 			BaseBean refBean = bookingBusinessService.createDriveinfo(createDriveinfoVo);
 			String code = refBean.getCode();
@@ -1229,7 +1169,7 @@ public class BookingbusinessAction extends BaseAction {
 	 */
 	@RequestMapping("createDriveinfo_ZJ20")
     public void createDriveinfo_ZJ20(HttpServletRequest request,HttpServletResponse response){
-    	BaseBean baseBean = new BaseBean();		//创建返回结果
+		BaseBean baseBean = new BaseBean();		//创建返回结果
     	CreateDriveinfoVo createDriveinfoVo = new CreateDriveinfoVo();
     	try {
 	    	String orgId = request.getParameter("orgId");
@@ -1243,12 +1183,8 @@ public class BookingbusinessAction extends BaseAction {
 			String bookerName = request.getParameter("bookerName");
 			String bookerIdNumber = request.getParameter("bookerIdNumber");
 			String bookerType = request.getParameter("bookerType");
-			String arg0 = request.getParameter("arg0");
-			String arg1 = request.getParameter("arg1");
-			String arg2 = request.getParameter("arg2");
-			String arg3 = request.getParameter("arg3");
-			String arg4 = request.getParameter("arg4");
-			String arg5 = request.getParameter("arg5");
+			String bookerMobile = request.getParameter("bookerMobile");
+			String msgNumber = request.getParameter("msgNumber");
 			String sourceOfCertification = request.getParameter("sourceOfCertification");
 			String openId = request.getParameter("openId");
 			if(StringUtil.isBlank(orgId)){
@@ -1299,13 +1235,13 @@ public class BookingbusinessAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(arg0)){
+			if(StringUtil.isBlank(bookerMobile)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("手机号码不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(arg1)){
+			if(StringUtil.isBlank(msgNumber)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("短信验证码不能为空!");
 				renderJSON(baseBean);
@@ -1320,35 +1256,19 @@ public class BookingbusinessAction extends BaseAction {
 			if (StringUtil.isBlank(bookerType)) {
 				bookerType = "";
 			}
-			if (StringUtil.isBlank(arg2)) {
-				arg2 = "";
-			}
-			if (StringUtil.isBlank(arg3)) {
-				arg3 = "";
-			}
-			if (StringUtil.isBlank(arg4)) {
-				arg4 = "";
-			}
-			if (StringUtil.isBlank(arg5)) {
-				arg5 = "";
-			}
 			createDriveinfoVo.setOrgId(orgId);
 			createDriveinfoVo.setBusinessTypeId(businessTypeId);
 			createDriveinfoVo.setName(name);
 			createDriveinfoVo.setIdTypeId(idTypeId);
 			createDriveinfoVo.setMobile(mobile);
 			createDriveinfoVo.setIdNumber(idNumber);
-			createDriveinfoVo.setArg0(arg0);
-			createDriveinfoVo.setArg1(arg1);
+			createDriveinfoVo.setBookerMobile(bookerMobile);
+			createDriveinfoVo.setMsgNumber(msgNumber);
 			createDriveinfoVo.setAppointmentDate(appointmentDate);
 			createDriveinfoVo.setAppointmentTime(appointmentTime);
 			createDriveinfoVo.setBookerName(bookerName);
 			createDriveinfoVo.setBookerIdNumber(bookerIdNumber);
 			createDriveinfoVo.setBookerType(bookerType);
-			createDriveinfoVo.setArg2(arg2);
-			createDriveinfoVo.setArg3(arg3);
-			createDriveinfoVo.setArg4(arg4);
-			createDriveinfoVo.setArg5(arg5);
 			//接口调用
 			BaseBean refBean = bookingBusinessService.createDriveinfo(createDriveinfoVo);
 			String code = refBean.getCode();
@@ -1368,7 +1288,7 @@ public class BookingbusinessAction extends BaseAction {
 						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
 						tmap.put("keyword1",
 								new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()), "#212121"));
-						tmap.put("keyword2", new TemplateDataModel().new Property("其他业务(驾驶证)预约", "#212121"));
+						tmap.put("keyword2", new TemplateDataModel().new Property("其他业务(驾驶证)", "#212121"));
 						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
@@ -1424,12 +1344,8 @@ public class BookingbusinessAction extends BaseAction {
 			String bookerName = request.getParameter("bookerName");
 			String bookerIdNumber = request.getParameter("bookerIdNumber");
 			String bookerType = request.getParameter("bookerType");
-			String arg0 = request.getParameter("arg0");
-			String arg1 = request.getParameter("arg1");
-			String arg2 = request.getParameter("arg2");
-			String arg3 = request.getParameter("arg3");
-			String arg4 = request.getParameter("arg4");
-			String arg5 = request.getParameter("arg5");
+			String bookerMobile = request.getParameter("bookerMobile");
+			String msgNumber = request.getParameter("msgNumber");
 			String sourceOfCertification = request.getParameter("sourceOfCertification");
 			String openId = request.getParameter("openId");
 			if(StringUtil.isBlank(orgId)){
@@ -1480,13 +1396,13 @@ public class BookingbusinessAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(arg0)){
+			if(StringUtil.isBlank(bookerMobile)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("手机号码不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(arg1)){
+			if(StringUtil.isBlank(msgNumber)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("短信验证码不能为空!");
 				renderJSON(baseBean);
@@ -1501,35 +1417,19 @@ public class BookingbusinessAction extends BaseAction {
 			if (StringUtil.isBlank(bookerType)) {
 				bookerType = "";
 			}
-			if (StringUtil.isBlank(arg2)) {
-				arg2 = "";
-			}
-			if (StringUtil.isBlank(arg3)) {
-				arg3 = "";
-			}
-			if (StringUtil.isBlank(arg4)) {
-				arg4 = "";
-			}
-			if (StringUtil.isBlank(arg5)) {
-				arg5 = "";
-			}
 			createDriveinfoVo.setOrgId(orgId);
 			createDriveinfoVo.setBusinessTypeId(businessTypeId);
 			createDriveinfoVo.setName(name);
 			createDriveinfoVo.setIdTypeId(idTypeId);
 			createDriveinfoVo.setMobile(mobile);
 			createDriveinfoVo.setIdNumber(idNumber);
-			createDriveinfoVo.setArg0(arg0);
-			createDriveinfoVo.setArg1(arg1);
+			createDriveinfoVo.setBookerMobile(bookerMobile);
+			createDriveinfoVo.setMsgNumber(msgNumber);
 			createDriveinfoVo.setAppointmentDate(appointmentDate);
 			createDriveinfoVo.setAppointmentTime(appointmentTime);
 			createDriveinfoVo.setBookerName(bookerName);
 			createDriveinfoVo.setBookerIdNumber(bookerIdNumber);
 			createDriveinfoVo.setBookerType(bookerType);
-			createDriveinfoVo.setArg2(arg2);
-			createDriveinfoVo.setArg3(arg3);
-			createDriveinfoVo.setArg4(arg4);
-			createDriveinfoVo.setArg5(arg5);
 			//接口调用
 			BaseBean refBean = bookingBusinessService.createDriveinfo(createDriveinfoVo);
 			String code = refBean.getCode();
@@ -1605,12 +1505,8 @@ public class BookingbusinessAction extends BaseAction {
 			String bookerName = request.getParameter("bookerName");
 			String bookerIdNumber = request.getParameter("bookerIdNumber");
 			String bookerType = request.getParameter("bookerType");
-			String arg0 = request.getParameter("arg0");
-			String arg1 = request.getParameter("arg1");
-			String arg2 = request.getParameter("arg2");
-			String arg3 = request.getParameter("arg3");
-			String arg4 = request.getParameter("arg4");
-			String arg5 = request.getParameter("arg5");
+			String bookerMobile = request.getParameter("bookerMobile");
+			String msgNumber = request.getParameter("msgNumber");
 			String sourceOfCertification = request.getParameter("sourceOfCertification");
 			String openId = request.getParameter("openId");
 			if(StringUtil.isBlank(orgId)){
@@ -1661,13 +1557,13 @@ public class BookingbusinessAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(arg0)){
+			if(StringUtil.isBlank(bookerMobile)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("手机号码不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(arg1)){
+			if(StringUtil.isBlank(msgNumber)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("短信验证码不能为空!");
 				renderJSON(baseBean);
@@ -1682,35 +1578,19 @@ public class BookingbusinessAction extends BaseAction {
 			if (StringUtil.isBlank(bookerType)) {
 				bookerType = "";
 			}
-			if (StringUtil.isBlank(arg2)) {
-				arg2 = "";
-			}
-			if (StringUtil.isBlank(arg3)) {
-				arg3 = "";
-			}
-			if (StringUtil.isBlank(arg4)) {
-				arg4 = "";
-			}
-			if (StringUtil.isBlank(arg5)) {
-				arg5 = "";
-			}
 			createDriveinfoVo.setOrgId(orgId);
 			createDriveinfoVo.setBusinessTypeId(businessTypeId);
 			createDriveinfoVo.setName(name);
 			createDriveinfoVo.setIdTypeId(idTypeId);
 			createDriveinfoVo.setMobile(mobile);
 			createDriveinfoVo.setIdNumber(idNumber);
-			createDriveinfoVo.setArg0(arg0);
-			createDriveinfoVo.setArg1(arg1);
+			createDriveinfoVo.setBookerMobile(bookerMobile);
+			createDriveinfoVo.setMsgNumber(msgNumber);
 			createDriveinfoVo.setAppointmentDate(appointmentDate);
 			createDriveinfoVo.setAppointmentTime(appointmentTime);
 			createDriveinfoVo.setBookerName(bookerName);
 			createDriveinfoVo.setBookerIdNumber(bookerIdNumber);
 			createDriveinfoVo.setBookerType(bookerType);
-			createDriveinfoVo.setArg2(arg2);
-			createDriveinfoVo.setArg3(arg3);
-			createDriveinfoVo.setArg4(arg4);
-			createDriveinfoVo.setArg5(arg5);
 			//接口调用
 			BaseBean refBean = bookingBusinessService.createDriveinfo(createDriveinfoVo);
 			String code = refBean.getCode();
@@ -1774,10 +1654,10 @@ public class BookingbusinessAction extends BaseAction {
 	@RequestMapping("createDriveinfo_ZJ16")
 	public void createDriveinfo_ZJ16(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
-		CreateDriveinfoVo createDriveinfoVo = new CreateDriveinfoVo();
-		try {
-			String orgId = request.getParameter("orgId");
-			String businessTypeId = request.getParameter("businessTypeId");
+    	CreateDriveinfoVo createDriveinfoVo = new CreateDriveinfoVo();
+    	try {
+	    	String orgId = request.getParameter("orgId");
+	    	String businessTypeId = request.getParameter("businessTypeId");
 			String name = request.getParameter("name");
 			String idTypeId = request.getParameter("idTypeId");
 			String idNumber = request.getParameter("idNumber");
@@ -1787,13 +1667,16 @@ public class BookingbusinessAction extends BaseAction {
 			String bookerName = request.getParameter("bookerName");
 			String bookerIdNumber = request.getParameter("bookerIdNumber");
 			String bookerType = request.getParameter("bookerType");
-			String arg0 = request.getParameter("arg0");
-			String arg1 = request.getParameter("arg1");
-			String arg2 = request.getParameter("arg2");
-			String arg3 = request.getParameter("arg3");
-			String arg4 = request.getParameter("arg4");
-			String arg5 = request.getParameter("arg5");
-			
+			String bookerMobile = request.getParameter("bookerMobile");
+			String msgNumber = request.getParameter("msgNumber");
+			String sourceOfCertification = request.getParameter("sourceOfCertification");
+			String openId = request.getParameter("openId");
+			if(StringUtil.isBlank(orgId)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("预约地点Id不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
 			if(StringUtil.isBlank(businessTypeId)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("业务类型Id不能为空!");
@@ -1802,7 +1685,7 @@ public class BookingbusinessAction extends BaseAction {
 			}
 			if(StringUtil.isBlank(name)){
 				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("车主姓名不能为空!");
+				baseBean.setMsg("姓名不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
@@ -1812,27 +1695,15 @@ public class BookingbusinessAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(idNumber)){
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("证件号码不能为空!");
-				renderJSON(baseBean);
-				return;
-			}
 			if(StringUtil.isBlank(mobile)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("手机号码不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(arg1)){
+			if(StringUtil.isBlank(idNumber)){
 				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("短信验证码不能为空!");
-				renderJSON(baseBean);
-				return;
-			}
-			if(StringUtil.isBlank(orgId)){
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("预约地点ID不能为空!");
+				baseBean.setMsg("证件号码不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
@@ -1848,7 +1719,18 @@ public class BookingbusinessAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			
+			if(StringUtil.isBlank(bookerMobile)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("手机号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(msgNumber)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("短信验证码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
 			if (StringUtil.isBlank(bookerName)) {
 				bookerName ="";
 			}
@@ -1858,35 +1740,19 @@ public class BookingbusinessAction extends BaseAction {
 			if (StringUtil.isBlank(bookerType)) {
 				bookerType = "";
 			}
-			if (StringUtil.isBlank(arg2)) {
-				arg2 = "";
-			}
-			if (StringUtil.isBlank(arg3)) {
-				arg3 = "";
-			}
-			if (StringUtil.isBlank(arg4)) {
-				arg4 = "";
-			}
-			if (StringUtil.isBlank(arg5)) {
-				arg5 = "";
-			}
 			createDriveinfoVo.setOrgId(orgId);
 			createDriveinfoVo.setBusinessTypeId(businessTypeId);
 			createDriveinfoVo.setName(name);
 			createDriveinfoVo.setIdTypeId(idTypeId);
 			createDriveinfoVo.setMobile(mobile);
 			createDriveinfoVo.setIdNumber(idNumber);
-			createDriveinfoVo.setArg0(mobile);
-			createDriveinfoVo.setArg1(arg1);
+			createDriveinfoVo.setBookerMobile(bookerMobile);
+			createDriveinfoVo.setMsgNumber(msgNumber);
 			createDriveinfoVo.setAppointmentDate(appointmentDate);
 			createDriveinfoVo.setAppointmentTime(appointmentTime);
 			createDriveinfoVo.setBookerName(bookerName);
 			createDriveinfoVo.setBookerIdNumber(bookerIdNumber);
 			createDriveinfoVo.setBookerType(bookerType);
-			createDriveinfoVo.setArg2(arg2);
-			createDriveinfoVo.setArg3(arg3);
-			createDriveinfoVo.setArg4(arg4);
-			createDriveinfoVo.setArg5(arg5);
 			//接口调用
 			BaseBean refBean = bookingBusinessService.createDriveinfo(createDriveinfoVo);
 			
