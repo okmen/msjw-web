@@ -2659,8 +2659,8 @@ public class BookingbusinessAction extends BaseAction {
 
 		for (String key : map.keySet()) {
 			CarModelVo carModelVo = new CarModelVo();
-			carModelVo.setName(map.get(key));
-			carModelVo.setCode(key);
+			carModelVo.setStr(map.get(key));
+			carModelVo.setId(key);
 			JSONObject json = (JSONObject) JSONObject.toJSON(carModelVo);
 			list.add(json);
 		}
