@@ -818,20 +818,9 @@ public class BookingbusinessAction extends BaseAction {
 				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				if ("9999".equals(code)) {
-					baseBean.setMsg("输入信息格式有误！");
-				} else {
-					baseBean.setMsg(msg);
-				}
+				baseBean.setMsg(msg);
 			}
-			if("00".equals(refBean.getCode())){
-        		baseBean.setCode(MsgCode.success);
-        		baseBean.setMsg(refBean.getMsg());
-        		baseBean.setData(refBean.getData());
-        	}else{
-        		baseBean.setCode(MsgCode.businessError);
-        		baseBean.setMsg(refBean.getMsg());
-        	}
+
 		} catch (Exception e) {
 			logger.error("【预约类服务】驾驶证预约 Action异常:"+e);
 			DealException(baseBean, e);
@@ -979,20 +968,8 @@ public class BookingbusinessAction extends BaseAction {
 				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				if ("9999".equals(code)) {
-					baseBean.setMsg("输入信息格式有误！");
-				} else {
-					baseBean.setMsg(msg);
-				}
+				baseBean.setMsg(msg);
 			}
-			if("00".equals(refBean.getCode())){
-        		baseBean.setCode(MsgCode.success);
-        		baseBean.setMsg(refBean.getMsg());
-        		baseBean.setData(refBean.getData());
-        	}else{
-        		baseBean.setCode(MsgCode.businessError);
-        		baseBean.setMsg(refBean.getMsg());
-        	}
 		} catch (Exception e) {
 			logger.error("【预约类服务】驾驶证预约 Action异常:"+e);
 			DealException(baseBean, e);
@@ -1140,20 +1117,8 @@ public class BookingbusinessAction extends BaseAction {
 				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				if ("9999".equals(code)) {
-					baseBean.setMsg("输入信息格式有误！");
-				} else {
-					baseBean.setMsg(msg);
-				}
+				baseBean.setMsg(msg);
 			}
-			if("00".equals(refBean.getCode())){
-        		baseBean.setCode(MsgCode.success);
-        		baseBean.setMsg(refBean.getMsg());
-        		baseBean.setData(refBean.getData());
-        	}else{
-        		baseBean.setCode(MsgCode.businessError);
-        		baseBean.setMsg(refBean.getMsg());
-        	}
 		} catch (Exception e) {
 			logger.error("【预约类服务】驾驶证预约 Action异常:"+e);
 			DealException(baseBean, e);
@@ -1301,20 +1266,8 @@ public class BookingbusinessAction extends BaseAction {
 				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				if ("9999".equals(code)) {
-					baseBean.setMsg("输入信息格式有误！");
-				} else {
-					baseBean.setMsg(msg);
-				}
+				baseBean.setMsg(msg);
 			}
-			if("00".equals(refBean.getCode())){
-        		baseBean.setCode(MsgCode.success);
-        		baseBean.setMsg(refBean.getMsg());
-        		baseBean.setData(refBean.getData());
-        	}else{
-        		baseBean.setCode(MsgCode.businessError);
-        		baseBean.setMsg(refBean.getMsg());
-        	}
 		} catch (Exception e) {
 			logger.error("【预约类服务】驾驶证预约 Action异常:"+e);
 			DealException(baseBean, e);
@@ -1462,20 +1415,8 @@ public class BookingbusinessAction extends BaseAction {
 				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				if ("9999".equals(code)) {
-					baseBean.setMsg("输入信息格式有误！");
-				} else {
-					baseBean.setMsg(msg);
-				}
+				baseBean.setMsg(msg);
 			}
-			if("00".equals(refBean.getCode())){
-        		baseBean.setCode(MsgCode.success);
-        		baseBean.setMsg(refBean.getMsg());
-        		baseBean.setData(refBean.getData());
-        	}else{
-        		baseBean.setCode(MsgCode.businessError);
-        		baseBean.setMsg(refBean.getMsg());
-        	}
 		} catch (Exception e) {
 			logger.error("【预约类服务】驾驶证预约 Action异常:"+e);
 			DealException(baseBean, e);
@@ -1623,20 +1564,8 @@ public class BookingbusinessAction extends BaseAction {
 				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				if ("9999".equals(code)) {
-					baseBean.setMsg("输入信息格式有误！");
-				} else {
-					baseBean.setMsg(msg);
-				}
+				baseBean.setMsg(msg);
 			}
-			if("00".equals(refBean.getCode())){
-        		baseBean.setCode(MsgCode.success);
-        		baseBean.setMsg(refBean.getMsg());
-        		baseBean.setData(refBean.getData());
-        	}else{
-        		baseBean.setCode(MsgCode.businessError);
-        		baseBean.setMsg(refBean.getMsg());
-        	}
 		} catch (Exception e) {
 			logger.error("【预约类服务】驾驶证预约 Action异常:"+e);
 			DealException(baseBean, e);
