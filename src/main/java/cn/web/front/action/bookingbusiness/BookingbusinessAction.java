@@ -1,6 +1,9 @@
 package cn.web.front.action.bookingbusiness;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,10 +16,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.alibaba.dubbo.common.json.JSONArray;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 import cn.handle.bean.vo.HandleTemplateVo;
+import cn.account.bean.IssuingLicenceAuthority;
 import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
+import cn.booking.business.bean.CarModelVo;
 import cn.booking.business.bean.CarTypeVO;
 import cn.booking.business.bean.CreateDriveinfoVo;
 import cn.booking.business.bean.CreateTemporaryLicenseVehicleInfoVo;
@@ -31,6 +39,7 @@ import cn.message.model.wechat.TemplateDataModel;
 import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.bean.BusinessType;
+import cn.sdk.util.DateUtil2;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
@@ -808,14 +817,14 @@ public class BookingbusinessAction extends BaseAction {
 				if (sourceOfCertification.equals("C")) {
 					try {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, appointmentDate+appointmentTime);
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(2, "", waterNumber, DateUtil2.date2dayStr(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,"");
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
 						tmap.put("keyword1",
-								new TemplateDataModel().new Property(appointmentDate+appointmentTime, "#212121"));
+								new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()), "#212121"));
 						tmap.put("keyword2", new TemplateDataModel().new Property("持军队、武装警察部队机动车驾驶证申领", "#212121"));
 						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
@@ -989,14 +998,14 @@ public class BookingbusinessAction extends BaseAction {
 				if (sourceOfCertification.equals("C")) {
 					try {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, appointmentDate+appointmentTime);
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(2, "", waterNumber, DateUtil2.date2dayStr(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,"");
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
 						tmap.put("keyword1",
-								new TemplateDataModel().new Property(appointmentDate+appointmentTime, "#212121"));
+								new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()), "#212121"));
 						tmap.put("keyword2", new TemplateDataModel().new Property("香港机动车驾驶证免试换证", "#212121"));
 						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
@@ -1170,14 +1179,14 @@ public class BookingbusinessAction extends BaseAction {
 				if (sourceOfCertification.equals("C")) {
 					try {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, appointmentDate+appointmentTime);
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(2, "", waterNumber, DateUtil2.date2dayStr(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,"");
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
 						tmap.put("keyword1",
-								new TemplateDataModel().new Property(appointmentDate+appointmentTime, "#212121"));
+								new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()), "#212121"));
 						tmap.put("keyword2", new TemplateDataModel().new Property("持境外驾驶证申请换证", "#212121"));
 						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
@@ -1351,14 +1360,14 @@ public class BookingbusinessAction extends BaseAction {
 				if (sourceOfCertification.equals("C")) {
 					try {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, appointmentDate+appointmentTime);
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(2, "", waterNumber, DateUtil2.date2dayStr(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,"");
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
 						tmap.put("keyword1",
-								new TemplateDataModel().new Property(appointmentDate+appointmentTime, "#212121"));
+								new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()), "#212121"));
 						tmap.put("keyword2", new TemplateDataModel().new Property("其他业务(驾驶证)预约", "#212121"));
 						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
@@ -1532,14 +1541,14 @@ public class BookingbusinessAction extends BaseAction {
 				if (sourceOfCertification.equals("C")) {
 					try {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, appointmentDate+appointmentTime);
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(2, "", waterNumber, DateUtil2.date2dayStr(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,"");
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
 						tmap.put("keyword1",
-								new TemplateDataModel().new Property(appointmentDate+appointmentTime, "#212121"));
+								new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()), "#212121"));
 						tmap.put("keyword2", new TemplateDataModel().new Property("恢复驾驶资格（逾期一年以上未换证类）", "#212121"));
 						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
@@ -1713,14 +1722,14 @@ public class BookingbusinessAction extends BaseAction {
 				if (sourceOfCertification.equals("C")) {
 					try {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "", waterNumber, appointmentDate+appointmentTime);
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(2, "", waterNumber, DateUtil2.date2dayStr(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,"");
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
 						tmap.put("keyword1",
-								new TemplateDataModel().new Property(appointmentDate+appointmentTime, "#212121"));
+								new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()), "#212121"));
 						tmap.put("keyword2", new TemplateDataModel().new Property("恢复驾驶资格（逾期一年以上未体检类）", "#212121"));
 						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
@@ -2111,7 +2120,7 @@ public class BookingbusinessAction extends BaseAction {
 	}
 	
 	/**
-	 * 获取驾驶证预约信息
+	 * 取消驾驶证预约
 	 * @param request
 	 * @param response
 	 */
@@ -2122,6 +2131,8 @@ public class BookingbusinessAction extends BaseAction {
 	    	String mobile = request.getParameter("mobile");
 	    	String businessType = request.getParameter("businessType");
 			String bookerNumber = request.getParameter("bookerNumber");
+			String sourceOfCertification = request.getParameter("sourceOfCertification");
+			String openId = request.getParameter("openId");
 			if(StringUtil.isBlank(mobile)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("手机号不能为空!");
@@ -2146,15 +2157,38 @@ public class BookingbusinessAction extends BaseAction {
 			SmsInfoVO smsInfoVO = bookingBusinessService.cancel(businessType, bookerNumber, mobile); 
 			
 			if("00".equals(smsInfoVO.getCode())){
-        		baseBean.setCode(MsgCode.success);
-        		baseBean.setMsg(smsInfoVO.getMsg());
-        		baseBean.setData(smsInfoVO);
+				String waterNumber  = smsInfoVO.getResult();
+				String msg = smsInfoVO.getMsg();
+				baseBean.setCode(MsgCode.success);
+				baseBean.setMsg(msg);
+				if (sourceOfCertification.equals("C")) {
+					try {
+						String templateId = "nR0-6Nfw9VvmEEcq8Kih24j1Q5X0e7ozbM5dqkV1BXo";
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(2, "", waterNumber, DateUtil2.date2dayStr(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,"");
+						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
+								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("keyword1",
+								new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()), "#212121"));
+						tmap.put("keyword2", new TemplateDataModel().new Property("取消驾驶证预约业务", "#212121"));
+						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
+						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
+						logger.info("发送模板消息结果：" + flag);
+					} catch (Exception e) {
+						logger.error("发送模板消息  失败===", e);
+					}
+				}else{
+					baseBean.setData(waterNumber);
+				}
         	}else{
         		baseBean.setCode(MsgCode.businessError);
         		baseBean.setMsg(smsInfoVO.getMsg());
         	}
 		} catch (Exception e) {
-			logger.error("【预约类服务】驾驶证预约 信息Action异常:"+e);
+			logger.error("【预约类服务】取消驾驶证预约业务Action异常:"+e);
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
@@ -2463,6 +2497,178 @@ public class BookingbusinessAction extends BaseAction {
 			logger.error("【预约类服务】出租客运车辆使用性质变更Action异常:"+e);
 			DealException(baseBean, e);
 		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+	
+	
+	
+	@RequestMapping("getCarModelArray")
+	public void getCarModelArray(){
+		BaseBean baseBean = new BaseBean();		//创建返回结果
+		Map<String, String> map = new LinkedHashMap<>();
+		JSONArray jsonArray = new JSONArray();
+		map.put("K31", "小型普通客车");
+		map.put("K32", "小型越野客车");
+		map.put("K33", "小型轿车");
+		map.put("K34", "小型专用客车");
+		map.put("K41", "微型普通客车");
+		map.put("K42", "微型越野客车");
+		map.put("K43", "微型轿车");
+		map.put("M11", "普通正三轮摩托车");
+		map.put("M12", "轻便正三轮摩托车");
+		map.put("M13", "正三轮载客摩托车");
+		map.put("M14", "正三轮载货摩托车");
+		map.put("M15", "侧三轮摩托车");
+		map.put("M21", "普通二轮摩托车");
+		map.put("M22", "轻便二轮摩托车");
+		map.put("N11", "三轮汽车");
+		map.put("K11", "大型普通客车");
+		map.put("K12", "大型双层客车");
+		map.put("K13", "大型卧铺客车");
+		map.put("K14", "大型铰接客车");
+		map.put("K15", "大型越野客车");
+		map.put("K16", "大型轿车");
+		map.put("K17", "大型专用客车");
+		map.put("K21", "中型普通客车");
+		map.put("K22", "中型双层客车");
+		map.put("K23", "中型卧铺客车");
+		map.put("K24", "中型铰接客车");
+		map.put("K25", "中型越野客车");
+		map.put("K26", "中型轿车");
+		map.put("K27", "中型专用客车");
+		map.put("B11", "重型普通半挂车");
+		map.put("B12", "重型厢式半挂车");
+		map.put("B13", "重型罐式半挂车");
+		map.put("B14", "重型平板半挂车");
+		map.put("B15", "重型集装箱半挂车");
+		map.put("B16", "重型自卸半挂车");
+		map.put("B17", "重型特殊结构半挂车");
+		map.put("B18", "重型仓栅式半挂车");
+		map.put("B19", "重型旅居半挂车");
+		map.put("B1A", "重型专项作业半挂车");
+		map.put("B1B", "重型低平板半挂车");
+		map.put("B21", "中型普通半挂车");
+		map.put("B22", "中型厢式半挂车");
+		map.put("B23", "中型罐式半挂车");
+		map.put("B24", "中型平板半挂车");
+		map.put("B25", "中型集装箱半挂车");
+		map.put("B26", "中型自卸半挂车");
+		map.put("B27", "中型特殊结构半挂车");
+		map.put("B28", "中型仓栅式半挂车");
+		map.put("B29", "中型旅居半挂车");
+		map.put("B2A", "中型专项作业半挂车");
+		map.put("B2B", "中型低平板半挂车");
+		map.put("B31", "轻型普通半挂车");
+		map.put("B32", "轻型厢式半挂车");
+		map.put("B33", "轻型罐式半挂车");
+		map.put("B34", "轻型平板半挂车");
+		map.put("B35", "轻型自卸半挂车");
+		map.put("B36", "轻型仓栅式半挂车");
+		map.put("B37", "轻型旅居半挂车");
+		map.put("B38", "轻型专项作业半挂车");
+		map.put("B39", "轻型低平板半挂车");
+		map.put("D11", "无轨电车");
+		map.put("D12", "有轨电车");
+		map.put("G11", "重型普通全挂车");
+		map.put("G12", "重型厢式全挂车");
+		map.put("G13", "重型罐式全挂车");
+		map.put("G14", "重型平板全挂车");
+		map.put("G15", "重型集装箱全挂车");
+		map.put("G16", "重型自卸全挂车");
+		map.put("G17", "重型仓栅式全挂车");
+		map.put("G18", "重型旅居全挂车");
+		map.put("G19", "重型专项作业全挂车");
+		map.put("G21", "中型普通全挂车");
+		map.put("G22", "中型厢式全挂车");
+		map.put("G23", "中型罐式全挂车");
+		map.put("G24", "中型平板全挂车");
+		map.put("G25", "中型集装箱全挂车");
+		map.put("G26", "中型自卸全挂车");
+		map.put("G27", "中型仓栅式全挂车");
+		map.put("G28", "中型旅居全挂车");
+		map.put("G29", "中型专项作业全挂车");
+		map.put("G31", "轻型普通全挂车");
+		map.put("G32", "轻型厢式全挂车");
+		map.put("G33", "轻型罐式全挂车");
+		map.put("G34", "轻型平板全挂车");
+		map.put("G35", "轻型自卸全挂车");
+		map.put("G36", "轻型仓栅式全挂车");
+		map.put("G37", "轻型旅居全挂车");
+		map.put("G38", "轻型专项作业全挂车");
+		map.put("H11", "重型普通货车");
+		map.put("H12", "重型厢式货车");
+		map.put("H13", "重型封闭货车");
+		map.put("H14", "重型罐式货车");
+		map.put("H15", "重型平板货车");
+		map.put("H16", "重型集装厢车");
+		map.put("H17", "重型自卸货车");
+		map.put("H18", "重型特殊结构货车");
+		map.put("H19", "重型仓栅式货车");
+		map.put("H21", "中型普通货车");
+		map.put("H22", "中型厢式货车");
+		map.put("H23", "中型封闭货车");
+		map.put("H24", "中型罐式货车");
+		map.put("H25", "中型平板货车");
+		map.put("H26", "中型集装厢车");
+		map.put("H27", "中型自卸货车");
+		map.put("H28", "中型特殊结构货车");
+		map.put("H29", "中型仓栅式货车");
+		map.put("H31", "轻型普货车");
+		map.put("H32", "轻型厢式货车");
+		map.put("H33", "轻型封闭货车");
+		map.put("H34", "轻型罐式货车");
+		map.put("H35", "轻型平板货车");
+		map.put("H37", "轻型自卸货车");
+		map.put("H38", "轻型特殊结构货车");
+		map.put("H39", "轻仓栅式货车");
+		map.put("H41", "微型普通货车");
+		map.put("H42", "微型厢式货车");
+		map.put("H43", "微型封闭货车");
+		map.put("H44", "微型罐式货车");
+		map.put("H45", "微型自卸货车");
+		map.put("H46", "微型特殊结构货车");
+		map.put("H47", "微型仓栅式货车");
+		map.put("H51", "普通低速货车");
+		map.put("H52", "厢式低速货车");
+		map.put("H53", "罐式低速货车");
+		map.put("H54", "自卸低速货车");
+		map.put("H55", "仓栅式低速货车");
+		map.put("J11", "轮式装载机械");
+		map.put("J12", "轮式挖掘机械");
+		map.put("J13", "轮式平地机械");
+		map.put("Q11", "重型半挂牵引车");
+		map.put("Q12", "重型全挂牵引车");
+		map.put("Q21", "中型半挂牵引车");
+		map.put("Q22", "中型全挂牵引车");
+		map.put("Q31", "轻型半挂牵引车");
+		map.put("Q32", "轻型全挂牵引车");
+		map.put("T11", "大型轮式拖拉机");
+		map.put("T21", "小型轮式拖拉机");
+		map.put("T22", "手扶拖拉机");
+		map.put("T23", "手扶变形运输机");
+		map.put("X99", "其它");
+		map.put("Z11", "大型专项作业车");
+		map.put("Z21", "中型专项作业车");
+		map.put("Z31", "小型专项作业车");
+		map.put("Z41", "微型专项作业车");
+		map.put("Z51", "重型专项作业车");
+		map.put("Z71", "轻型专项作业车");
+		Object[] objArr = new Object[146];
+		ArrayList<JSONObject> list = new ArrayList<>();
+
+		for (String key : map.keySet()) {
+			CarModelVo carModelVo = new CarModelVo();
+			carModelVo.setName(map.get(key));
+			carModelVo.setCode(key);
+			JSONObject json = (JSONObject) JSONObject.toJSON(carModelVo);
+			list.add(json);
+		}
+
+		for (int i = 0; i < 146; i++) {
+			objArr[i] = list.get(i);
+		}
+		baseBean.setData(objArr);
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
