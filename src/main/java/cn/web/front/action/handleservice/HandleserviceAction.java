@@ -265,6 +265,8 @@ public class HandleserviceAction extends BaseAction {
 				try {
 					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_xszbhlbl";
 					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+					logger.info("返回的url是：" + url);
+					logger.info("handleTemplateVo 是：" + handleTemplateVo);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
 					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
@@ -491,6 +493,8 @@ public class HandleserviceAction extends BaseAction {
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseAnnualVerification, waterNumber, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						logger.info("返回的url是：" + url);
+						logger.info("handleTemplateVo 是：" + handleTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
@@ -712,6 +716,8 @@ public class HandleserviceAction extends BaseAction {
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.renewalDriverLicense, waterNumber, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						logger.info("返回的url是：" + url);
+						logger.info("handleTemplateVo 是：" + handleTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
@@ -937,6 +943,8 @@ public class HandleserviceAction extends BaseAction {
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseInto, waterNumber, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						logger.info("返回的url是：" + url);
+						logger.info("handleTemplateVo 是：" + handleTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
@@ -1153,6 +1161,8 @@ public class HandleserviceAction extends BaseAction {
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseVoluntaryDemotion, waterNumber, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						logger.info("返回的url是：" + url);
+						logger.info("handleTemplateVo 是：" + handleTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
@@ -1395,6 +1405,8 @@ public class HandleserviceAction extends BaseAction {
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.repairDriverLicense, waterNumber, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						logger.info("返回的url是：" + url);
+						logger.info("handleTemplateVo 是：" + handleTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
@@ -1633,6 +1645,8 @@ public class HandleserviceAction extends BaseAction {
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.replaceDriverLicense, waterNumber, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						logger.info("返回的url是：" + url);
+						logger.info("handleTemplateVo 是：" + handleTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
@@ -1816,6 +1830,8 @@ public class HandleserviceAction extends BaseAction {
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseAnnualVerification, waterNumber, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						logger.info("返回的url是：" + url);
+						logger.info("handleTemplateVo 是：" + handleTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
@@ -1955,6 +1971,8 @@ public class HandleserviceAction extends BaseAction {
 				try {
 					String templateId = "OHe4a5_6nqj3VuN3QKmKYKPiEk54Y_w3oYQRUn0I34o";
 					String url = HandleTemplateVo.getUrl(handleTemplateVo, handleService.getTemplateSendUrl());
+					logger.info("返回的url是：" + url);
+					logger.info("handleTemplateVo 是：" + handleTemplateVo);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
 					map1.put("keynote1", new TemplateDataModel().new Property("每月1天通行证申请","#212121"));
@@ -2150,6 +2168,8 @@ public class HandleserviceAction extends BaseAction {
 				try {
 					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_sqjdclpbl";
 					String url = HandleTemplateVo.getUrl(handleTemplateVo, handleService.getTemplateSendUrl());
+					logger.info("返回的url是：" + url);
+					logger.info("handleTemplateVo 是：" + handleTemplateVo);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
 					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
@@ -2317,6 +2337,8 @@ public class HandleserviceAction extends BaseAction {
 					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.iocomotiveCarChangeContact, waterNumber, DateUtil2.date2str(new Date()));
 					baseBean.setData(handleTemplateVo);
 					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+					logger.info("返回的url是：" + url);
+					logger.info("handleTemplateVo 是：" + handleTemplateVo);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
 					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
@@ -2490,6 +2512,8 @@ public class HandleserviceAction extends BaseAction {
 					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.iocomotiveCarReplace, waterNumber, DateUtil2.date2str(new Date()));
 					baseBean.setData(handleTemplateVo);
 					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+					logger.info("返回的url是：" + url);
+					logger.info("handleTemplateVo 是：" + handleTemplateVo);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
 					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
@@ -2703,6 +2727,8 @@ public class HandleserviceAction extends BaseAction {
 					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.replaceInspectionMark, number, DateUtil2.date2str(new Date()));
 					baseBean.setData(handleTemplateVo);
 					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+					logger.info("返回的url是：" + url);
+					logger.info("handleTemplateVo 是：" + handleTemplateVo);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
 					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
@@ -2899,6 +2925,8 @@ public class HandleserviceAction extends BaseAction {
 					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.inspectionDeclaration, waterNumber, DateUtil2.date2str(new Date()));
 					baseBean.setData(handleTemplateVo);
 					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+					logger.info("返回的url是：" + url);
+					logger.info("handleTemplateVo 是：" + handleTemplateVo);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
 					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
@@ -3185,6 +3213,8 @@ public class HandleserviceAction extends BaseAction {
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.createVehicleInspection, result, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						logger.info("返回的url是：" + url);
+						logger.info("handleTemplateVo 是：" + handleTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
@@ -3524,6 +3554,8 @@ public class HandleserviceAction extends BaseAction {
 					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.replaceMotorVehicleLicensePlate, waterNumber, DateUtil2.date2str(new Date()));
 					baseBean.setData(handleTemplateVo);
 					String url = HandleTemplateVo.getUrl(handleTemplateVo, handleService.getTemplateSendUrl());
+					logger.info("返回的url是：" + url);
+					logger.info("handleTemplateVo 是：" + handleTemplateVo);
 					String openId = vo.getOpenId();
 					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
