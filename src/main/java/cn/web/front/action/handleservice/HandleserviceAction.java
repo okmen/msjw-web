@@ -1957,9 +1957,9 @@ public class HandleserviceAction extends BaseAction {
 					String url = HandleTemplateVo.getUrl(handleTemplateVo, handleService.getTemplateSendUrl());
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
-					map1.put("keyword1", new TemplateDataModel().new Property("每月1天通行证申请","#212121"));
-					map1.put("keyword2", new TemplateDataModel().new Property(abbreviation+numberPlate,"#212121"));
-					map1.put("keyword3", new TemplateDataModel().new Property(applyDate,"#212121"));
+					map1.put("keynote1", new TemplateDataModel().new Property("每月1天通行证申请","#212121"));
+					map1.put("keynote2", new TemplateDataModel().new Property(abbreviation+numberPlate,"#212121"));
+					map1.put("keynote3", new TemplateDataModel().new Property(applyDate,"#212121"));
 					map1.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map1);
 					logger.info("发送模板消息结果：" + flag);
