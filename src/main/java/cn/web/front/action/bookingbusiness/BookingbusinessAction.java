@@ -498,14 +498,12 @@ public class BookingbusinessAction extends BaseAction {
 			return;
 		}
 		try {
-			List<AppTimeHelper> appTimes = bookingBusinessService.getAppTimes(date, orgId, businessTypeId, carTypeId,
+			BaseBean appTimes = bookingBusinessService.getAppTimes(date, orgId, businessTypeId, carTypeId,
 					optlittleCar);
 			if (null != appTimes) {
 				baseBean.setCode(MsgCode.success);
-				baseBean.setData(appTimes);
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				baseBean.setMsg("获取可预约时间段失败");
 			}
 
 		} catch (Exception e) {
@@ -624,14 +622,20 @@ public class BookingbusinessAction extends BaseAction {
 		String bookerName = request.getParameter("bookerName");  //预约人姓名
 		String bookerIdNumber = request.getParameter("bookerIdNumber");  //预约人身份证号码
 		String bookerType = request.getParameter("bookerType");  //预约方式
+		String modelName = request.getParameter("modelName");  //预约方式
+		String bookerMobile=request.getParameter("bookerMobile");  //预约手机号
 		String useCharater = request.getParameter("useCharater");  //使用性质
 		String msgNumber = request.getParameter("msgNumber");  //短信验证码
+		String indexType = request.getParameter("indexType");  //指标类型
+		String indexNo = request.getParameter("indexNo");  //指标号/公证号/车辆识别代号
+		String optlittleCar= request.getParameter("optlittleCar");  //车辆产地
+		String rzjs =request.getParameter("rzjs");  //认证角色
 		
 		try {
 			//校验参数
 			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
 					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
-					"bookerType","useCharater","msgNumber");
+					"bookerType","useCharater","msgNumber","bookerMobile");
 			if(!bool) return;
 			
 			CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
@@ -649,14 +653,14 @@ public class BookingbusinessAction extends BaseAction {
 			vo.setBookerName(bookerName);  //预约人姓名
 			vo.setBookerIdNumber(bookerIdNumber); //预约人身份证号码
 			vo.setBookerType(bookerType); 	//预约方式  ‘0’ 非代办(本人)，’1’ 普通代办 ‘2’专业代办
-			vo.setOptlittleCar(""); 	//车辆产地  可为空
-			vo.setIndexType(""); 	//指标类型   可为空
-			vo.setIndexNo(""); 		//指标号/公证号/车辆识别代号  可为空
+			vo.setOptlittleCar(optlittleCar); 	//车辆产地  可为空
+			vo.setIndexType(indexType); 	//指标类型   可为空
+			vo.setIndexNo(indexNo); 		//指标号/公证号/车辆识别代号  可为空
 			vo.setUseCharater(useCharater); 	//使用性质
-			vo.setModelName("");  //车辆型号  可为空
-			vo.setBookerMobile(mobile); 	//手机号码
+			vo.setModelName(modelName);  //车辆型号  可为空
+			vo.setBookerMobile(bookerMobile); 	//手机号码
 			vo.setMsgNumber(msgNumber);	 	//短信验证码
-			vo.setRzjs("");    //可为空
+			vo.setRzjs(rzjs);    //可为空
 			
 			//接口调用
 			BaseBean refBean = bookingBusinessService.createVehicleInfo(vo);
