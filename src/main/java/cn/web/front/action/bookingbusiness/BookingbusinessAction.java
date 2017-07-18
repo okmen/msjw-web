@@ -691,7 +691,7 @@ public class BookingbusinessAction extends BaseAction {
 	 * 持军队、武装警察部队机动车驾驶证申领
 	 * @param request
 	 * @param response
-	 *//*
+	 */
 	@RequestMapping("createDriveinfo_ZJ11")
     public void createDriveinfo_ZJ11(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
@@ -837,11 +837,11 @@ public class BookingbusinessAction extends BaseAction {
 		logger.debug(JSON.toJSONString(baseBean));
     }
 	
-	*//**
+	/**
 	 * 香港机动车驾驶证免试换证
 	 * @param request
 	 * @param response
-	 *//*
+	 */
 	@RequestMapping("createDriveinfo_ZJ13")
     public void createDriveinfo_ZJ13(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
@@ -986,11 +986,11 @@ public class BookingbusinessAction extends BaseAction {
 		logger.debug(JSON.toJSONString(baseBean));
     }
 	
-	*//**
+	/**
 	 * 持境外驾驶证申请换证
 	 * @param request
 	 * @param response
-	 *//*
+	 */
 	@RequestMapping("createDriveinfo_ZJ17")
     public void createDriveinfo_ZJ17(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
@@ -1135,11 +1135,11 @@ public class BookingbusinessAction extends BaseAction {
 		logger.debug(JSON.toJSONString(baseBean));
     }
 	
-	*//**
+	/**
 	 * 其他业务(驾驶证)
 	 * @param request
 	 * @param response
-	 *//*
+	 */
 	@RequestMapping("createDriveinfo_ZJ20")
     public void createDriveinfo_ZJ20(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
@@ -1284,11 +1284,11 @@ public class BookingbusinessAction extends BaseAction {
 		logger.debug(JSON.toJSONString(baseBean));
     }
 	
-	*//**
+	/**
 	 * 恢复驾驶资格（逾期一年以上未换证类）
 	 * @param request
 	 * @param response
-	 *//*
+	 */
 	@RequestMapping("createDriveinfo_ZJ21")
     public void createDriveinfo_ZJ21(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
@@ -1433,11 +1433,11 @@ public class BookingbusinessAction extends BaseAction {
 		logger.debug(JSON.toJSONString(baseBean));
     }
 	
-	*//**
+	/**
 	 * 恢复驾驶资格（逾期一年以上未体检类）
 	 * @param request
 	 * @param response
-	 *//*
+	 */
 	@RequestMapping("createDriveinfo_ZJ22")
     public void createDriveinfo_ZJ22(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
@@ -1580,7 +1580,7 @@ public class BookingbusinessAction extends BaseAction {
 		}
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
-    }*/
+    }
 	
 	/**
 	 * 临时机动车驾驶许可申领
