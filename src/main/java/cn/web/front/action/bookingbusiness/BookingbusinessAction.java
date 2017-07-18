@@ -133,15 +133,25 @@ public class BookingbusinessAction extends BaseAction {
 			renderJSON(baseBean);
 			return;
 		}
+		if (StringUtil.isBlank(businessTypeId)) {
+			businessTypeId ="";
+		}
+		if (StringUtil.isBlank(organizationId)) {
+			organizationId = "";
+		}
 		try {
 			DriveInfoVO driveInfoVO = bookingBusinessService.getDriveInfo(bookerNumber, idNumber, businessTypeId, organizationId);
-			if(driveInfoVO != null){
-				baseBean.setCode(MsgCode.success);
-				baseBean.setData(driveInfoVO);
-			}else{
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("未查询到相关信息");
+			if (null != driveInfoVO) {
+				if("00".equals(driveInfoVO.getCode())){
+	        		baseBean.setCode(MsgCode.success);
+	        		baseBean.setMsg(driveInfoVO.getMsg());
+	        		baseBean.setData(driveInfoVO);
+	        	}else{
+	        		baseBean.setCode(MsgCode.businessError);
+	        		baseBean.setMsg(driveInfoVO.getMsg());
+	        	}
 			}
+			
 		} catch (Exception e) {
 			logger.error("getDriveInfo异常:" + e);
 			DealException(baseBean, e);
@@ -2264,8 +2274,8 @@ public class BookingbusinessAction extends BaseAction {
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping("cancleDriveinfo")
-    public void cancleDriveinfo(HttpServletRequest request,HttpServletResponse response){
+	@RequestMapping("cancleDriveInfo")
+    public void cancleDriveInfo(HttpServletRequest request,HttpServletResponse response){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
     	try {
 	    	String mobile = request.getParameter("mobile");
@@ -2286,7 +2296,7 @@ public class BookingbusinessAction extends BaseAction {
 				return;
 			}
 			
-			if(StringUtil.isBlank(bookerNumber)){
+			if(StringUtil.isBlank(businessType)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("业务类型不能为空!");
 				renderJSON(baseBean);
@@ -2642,12 +2652,13 @@ public class BookingbusinessAction extends BaseAction {
 	}
 	
 	
-	
+	/**
+	 * 获取车辆型号列表
+	 */
 	@RequestMapping("getCarModelArray")
 	public void getCarModelArray(){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
 		Map<String, String> map = new LinkedHashMap<>();
-		JSONArray jsonArray = new JSONArray();
 		map.put("K31", "小型普通客车");
 		map.put("K32", "小型越野客车");
 		map.put("K33", "小型轿车");
@@ -2796,7 +2807,6 @@ public class BookingbusinessAction extends BaseAction {
 		map.put("Z71", "轻型专项作业车");
 		Object[] objArr = new Object[146];
 		ArrayList<JSONObject> list = new ArrayList<>();
-
 		for (String key : map.keySet()) {
 			CarModelVo carModelVo = new CarModelVo();
 			carModelVo.setStr(map.get(key));
@@ -2804,7 +2814,6 @@ public class BookingbusinessAction extends BaseAction {
 			JSONObject json = (JSONObject) JSONObject.toJSON(carModelVo);
 			list.add(json);
 		}
-
 		for (int i = 0; i < 146; i++) {
 			objArr[i] = list.get(i);
 		}
