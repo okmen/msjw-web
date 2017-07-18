@@ -6,10 +6,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +28,7 @@ import cn.file.service.IFileService;
 import cn.message.service.IMobileMessageService;
 import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
-import cn.sdk.encryption.RSAEncrypt;
+import cn.sdk.bean.StVo;
 import cn.sdk.encryption.RSASignature;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
@@ -59,7 +57,7 @@ public class ChannelUpload extends BaseAction{
     @Autowired
 	@Qualifier("templateMessageService")
 	private ITemplateMessageService templateMessageService;
-	/**
+    /**
      * 随手拍
      * @param licensePlateNumber 车牌号
      * @param licensePlateType 车牌类型
@@ -86,7 +84,7 @@ public class ChannelUpload extends BaseAction{
     @RequestMapping(value = "readilyShoot")
     public void readilyShoot(String licensePlateNumber,String licensePlateType,String illegalActivitieOne, String illegalTime, String illegalSections,
     		String reportImgOne, String reportImgTwo,String reportImgThree, String inputMan,String inputManName,String inputManPhone,
-    		String identityCard,String userSource,String openId,String wfxw1,String sign,String encode) {
+    		String identityCard,String userSource,String openId,String wfxw1,String sign,String encode,String reportImgOneT1,String reportImgOneT2,String reportImgOneT3) {
     	String code=MsgCode.success;
  		StringBuffer sb = new StringBuffer("");
  		int imgNumber=0;//传入的图片数量
@@ -206,7 +204,6 @@ public class ChannelUpload extends BaseAction{
     			 String sourceSign = createSourceSign(map);
     			 String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCkyuU+H+gUIUOGazKey9wnryFjlRutBEuE4gpuVDgDG7Dji5OXJPV6U+p7r85D8rUQwDd0RLXKBlANd4/fkK8ZLF6uaedAZT27GrS1Q5+s8JpQS8eWSuUUXmfhdabtNsee9v3/Xwij7n1OBPCugaO29V3E/X0IuH09ZUDYHnzBbQIDAQAB";
     			 String privateKey = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAKTK5T4f6BQhQ4ZrMp7L3CevIWOVG60ES4TiCm5UOAMbsOOLk5ck9XpT6nuvzkPytRDAN3REtcoGUA13j9+QrxksXq5p50BlPbsatLVDn6zwmlBLx5ZK5RReZ+F1pu02x572/f9fCKPufU4E8K6Bo7b1XcT9fQi4fT1lQNgefMFtAgMBAAECgYBxITT1TDQntZpEqkzrBOqTd8AFPDTutxcdF4yvpzN4tsbdv1FIHsBDBV7hIJUKwpEY+cxYDl96XJESXbUwdoQtNELT5HtioK/ax/W4vYn/JLr82LAU3BI38VZt5xJEcbZkk9NNpzFLON9NBGZlxZeeJx1SjsF1xIu3VbVfkrhZBQJBAP8qvbNEZPMT3ZSP2arUULGBLhvMRkNxmLCicPPmOblAy+vqAshBMOOd+6FOy9n9KO6Z2Lag0MHVek0TORGF/+cCQQClVJ94Lkvf8bUxs3xYJVJL0gFC1r7RmanCWCH4YhWdbnsV6Z2zA2iVUDxAQU68rEwnjeL6lddkb5op5gt6sNmLAkBYi6ZkjPlS+LPNl9V62E5gKmmrr8k6IjNQKC52FJA3XurkpMHuZ+DlO69UHJnUvWr00WJIjamjeccE9AS7tfpFAkAdI8gjp41KAFEeXHM7GgDiSjZcsHrbeIj6Lwx1udvzboiVOSLJbX1ea9Dixl/5UyjtA84Qup5HHoB+iARX8Jm3AkEAoZkMewiaiK98GjAlZbzMuvtNqHjYiq6Ie/k1QpPKNxQ7a7sSBPN7NiZL/AghCf7VHNxbPHbIM8hBY35zSNmsZw==";
-
     			 String sign111 = RSASignature.sign(sourceSign,privateKey,"UTF-8");
     			 boolean validateResult = RSASignature.doCheck(sourceSign, sign111, publicKey,encode);
     			 
@@ -225,19 +222,22 @@ public class ChannelUpload extends BaseAction{
      			     	modelMap.put("queryPassword", password);
      			     	basebean.setData(modelMap);
      			     	
-     			     	List<String> base64Imgs = new ArrayList<String>();
-     			     	if(StringUtils.isNotBlank(reportImgOne)){
-     			     		base64Imgs.add(reportImgOne);
-     			     	}
-     			     	if(StringUtils.isNotBlank(reportImgTwo)){
-     			     		base64Imgs.add(reportImgTwo);
-     			     	}
-     			     	if(StringUtils.isNotBlank(reportImgThree)){
-     			     		base64Imgs.add(reportImgThree);
-     			     	}
+     			     	List<StVo> base64Imgs = new ArrayList<StVo>();
+    			     	if(StringUtils.isNotBlank(reportImgOne)){
+    			     		StVo stVo1 = new StVo(reportImgOne, reportImgOneT1);
+    			     		base64Imgs.add(stVo1);
+    			     	}
+    			     	if(StringUtils.isNotBlank(reportImgTwo)){
+    			     		StVo stVo2 = new StVo(reportImgTwo,reportImgOneT2);
+    			     		base64Imgs.add(stVo2);
+    			     	}
+    			     	if(StringUtils.isNotBlank(reportImgThree)){
+    			     		StVo stVo3 = new StVo(reportImgThree,reportImgOneT3);
+    			     		base64Imgs.add(stVo3);
+    			     	}
      			     	List<String> imgs = new ArrayList<String>();
      			     	try {
-     			     		imgs = fileService.writeImgReadilyShoot(reportSerialNumber, base64Imgs,illegalTime);
+     			     		imgs = fileService.writeImgReadilyShoot(reportSerialNumber, base64Imgs);
  						} catch (Exception e) {
  							logger.error("写图片到225服务器  失败", e);
  						}
