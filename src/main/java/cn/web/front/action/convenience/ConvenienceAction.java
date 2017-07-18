@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.alibaba.fastjson.JSON;
 
 import cn.convenience.bean.ConvenienceBean;
+import cn.convenience.bean.FeedbackResultBean;
 import cn.convenience.service.IConvenienceService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.WebServiceException;
@@ -729,29 +730,52 @@ public class ConvenienceAction extends BaseAction{
 	
 	/**
      * 
-     * @Title: getAllResourcesAbsoluteUrl 
-     * @author jiangjiayi
-     * @Description: TODO(加载所有资源绝对路径url) 
-     * @param 无
-     * @throws Exception    
-     * @return void    返回类型 
+     * @Title: historyNotice
+     * @Description: TODO(历史通报)
+     * @return void    返回类型
      */
     @RequestMapping(value = "getAllResourcesAbsoluteUrl")
     public void getAllResourcesAbsoluteUrl(){
     	BaseBean baseBean = new BaseBean();
     	
-    	List list = null;
+    	List<FeedbackResultBean> list = null;
     	try {
 			list = convenienceService.getAllResourcesAbsoluteUrl();
 			baseBean.setCode(MsgCode.success);
 			baseBean.setMsg("");
 			baseBean.setData(list);
 		} catch (Exception e) {
-			logger.error("getAllResourcesAbsoluteUrl 错误", e);
+			logger.error("历史通报 Action异常:", e);
    			DealException(baseBean, e);
 		}
     	renderJSON(baseBean);
    		logger.debug(JSON.toJSONString(baseBean));
     }
     
+    /**
+     * 根据档案编号查询电动车档案信息
+	 * @Description: TODO(根据档案编号查询电动车档案信息)
+	 * @param fileNo 档案编号
+     */
+    @RequestMapping(value = "getEbikeInfoByFileNo")
+    public void getEbikeInfoByFileNo(String fileNo){
+    	BaseBean baseBean = new BaseBean();
+    	
+    	try {
+    		if (StringUtil.isBlank(fileNo)) {
+    			baseBean.setCode(MsgCode.paramsError);
+    			baseBean.setMsg("档案编号不能为空!");
+    			renderJSON(baseBean);
+				return;
+		    }
+    		baseBean = convenienceService.getEbikeInfoByFileNo(fileNo);
+    		
+    		logger.info("根据档案编号查询电动车档案信息Action返回结果:" + JSON.toJSONString(baseBean));
+    	} catch (Exception e) {
+    		logger.error("根据档案编号查询电动车档案信息Action异常:", e);
+    		DealException(baseBean, e);
+    	}
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
+    }
 }
