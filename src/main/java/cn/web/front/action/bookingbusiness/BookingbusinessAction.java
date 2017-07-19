@@ -297,6 +297,40 @@ public class BookingbusinessAction extends BaseAction {
 		logger.debug(JSON.toJSONString(baseBean));
 	}
 
+	
+	/**
+	 *  获取所有的业务(机动车，驾驶证)
+	 * @param type 业务类型 ‘0’驾驶证业务 ‘1’机动车业务
+	 * @param part 暂不需要传值 0’获取所有业务类型 ‘1’获取可统一接口
+	 * @param arg0
+	 * @param arg1
+	 */
+	@RequestMapping("getBusinessTypes")
+	public void getBusinessTypes(String type, String part) {
+		BaseBean baseBean = new BaseBean();
+		boolean flag = false;
+		if (StringUtil.isBlank(type)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("type 不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(part)) {
+			part = "";
+		}
+		try {
+			List<BusinessTypeVO> businessTypes = bookingBusinessService.getBusinessTypes(type, part, "", "");
+			baseBean.setData(businessTypes);
+			baseBean.setMsg("查询成功");
+			baseBean.setCode(MsgCode.success);
+		} catch (Exception e) {
+			logger.error("getBusinessTypes异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+	
 	/**
 	 * 获取证件种类Id
 	 * 
