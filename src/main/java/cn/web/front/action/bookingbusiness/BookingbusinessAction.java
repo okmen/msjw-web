@@ -689,12 +689,161 @@ public class BookingbusinessAction extends BaseAction {
 	
 
 	/**
+	 * 满分学习
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping("createDriveInfo_ZJ10")
+    public void createDriveInfo_ZJ10(HttpServletRequest request,HttpServletResponse response){
+		BaseBean baseBean = new BaseBean();		//创建返回结果
+    	CreateDriveinfoVo createDriveinfoVo = new CreateDriveinfoVo();
+    	try {
+	    	String orgId = request.getParameter("orgId");
+	    	String businessTypeId = request.getParameter("businessTypeId");
+			String name = request.getParameter("name");
+			String idTypeId = request.getParameter("idTypeId");
+			String idNumber = request.getParameter("idNumber");
+			String mobile = request.getParameter("mobile");
+			String appointmentDate = request.getParameter("appointmentDate");
+			String appointmentTime = request.getParameter("appointmentTime");
+			String bookerName = request.getParameter("bookerName");
+			String bookerIdNumber = request.getParameter("bookerIdNumber");
+			String bookerType = request.getParameter("bookerType");
+			String bookerMobile = request.getParameter("bookerMobile");
+			String msgNumber = request.getParameter("msgNumber");
+			String sourceOfCertification = request.getParameter("sourceOfCertification");
+			String openId = request.getParameter("openId");
+			if(StringUtil.isBlank(orgId)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("预约地点Id不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(businessTypeId)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("业务类型Id不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(name)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("姓名不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(idTypeId)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("证件种类ID不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(mobile)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("手机号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(idNumber)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("证件号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(appointmentDate)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("预约日期不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(appointmentTime)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("预约时间不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(bookerMobile)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("手机号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(msgNumber)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("短信验证码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if (StringUtil.isBlank(bookerName)) {
+				bookerName ="";
+			}
+			if (StringUtil.isBlank(bookerIdNumber)) {
+				bookerIdNumber = "";
+			}
+			if (StringUtil.isBlank(bookerType)) {
+				bookerType = "";
+			}
+			createDriveinfoVo.setOrgId(orgId);
+			createDriveinfoVo.setBusinessTypeId(businessTypeId);
+			createDriveinfoVo.setName(name);
+			createDriveinfoVo.setIdTypeId(idTypeId);
+			createDriveinfoVo.setMobile(mobile);
+			createDriveinfoVo.setIdNumber(idNumber);
+			createDriveinfoVo.setBookerMobile(bookerMobile);
+			createDriveinfoVo.setMsgNumber(msgNumber);
+			createDriveinfoVo.setAppointmentDate(appointmentDate);
+			createDriveinfoVo.setAppointmentTime(appointmentTime);
+			createDriveinfoVo.setBookerName(bookerName);
+			createDriveinfoVo.setBookerIdNumber(bookerIdNumber);
+			createDriveinfoVo.setBookerType(bookerType);
+			//接口调用
+			BaseBean refBean = bookingBusinessService.createDriveinfo(createDriveinfoVo);
+			String code = refBean.getCode();
+			String msg = refBean.getMsg();
+			if ("00".equals(code)) {
+				String waterNumber = (String) refBean.getData();
+				baseBean.setCode(MsgCode.success);
+				baseBean.setMsg(msg);
+				if (sourceOfCertification.equals("C")) {
+					try {
+						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(2, "", waterNumber, DateUtil2.date2dayStr(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,"");
+						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
+								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("keyword1",
+								new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()), "#212121"));
+						tmap.put("keyword2", new TemplateDataModel().new Property("满分学习预约", "#212121"));
+						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
+						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
+						logger.info("发送模板消息结果：" + flag);
+					} catch (Exception e) {
+						logger.error("发送模板消息  失败===", e);
+					}
+				}else{
+					baseBean.setData(waterNumber);
+				}
+			} else {
+				baseBean.setCode(MsgCode.businessError);
+				baseBean.setMsg(msg +":"+refBean.getData());
+			}
+
+		} catch (Exception e) {
+			logger.error("【预约类服务】驾驶证预约 Action异常:"+e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+    }
+	/**
 	 * 持军队、武装警察部队机动车驾驶证申领
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping("createDriveinfo_ZJ11")
-    public void createDriveinfo_ZJ11(HttpServletRequest request,HttpServletResponse response){
+	@RequestMapping("createDriveInfo_ZJ11")
+    public void createDriveInfo_ZJ11(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
     	CreateDriveinfoVo createDriveinfoVo = new CreateDriveinfoVo();
     	try {
@@ -827,7 +976,7 @@ public class BookingbusinessAction extends BaseAction {
 				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				baseBean.setMsg(msg);
+				baseBean.setMsg(msg +":"+refBean.getData());
 			}
 
 		} catch (Exception e) {
@@ -843,8 +992,8 @@ public class BookingbusinessAction extends BaseAction {
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping("createDriveinfo_ZJ13")
-    public void createDriveinfo_ZJ13(HttpServletRequest request,HttpServletResponse response){
+	@RequestMapping("createDriveInfo_ZJ13")
+    public void createDriveInfo_ZJ13(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
     	CreateDriveinfoVo createDriveinfoVo = new CreateDriveinfoVo();
     	try {
@@ -977,7 +1126,7 @@ public class BookingbusinessAction extends BaseAction {
 				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				baseBean.setMsg(msg);
+				baseBean.setMsg(msg +":"+refBean.getData());
 			}
 		} catch (Exception e) {
 			logger.error("【预约类服务】驾驶证预约 Action异常:"+e);
@@ -992,8 +1141,8 @@ public class BookingbusinessAction extends BaseAction {
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping("createDriveinfo_ZJ17")
-    public void createDriveinfo_ZJ17(HttpServletRequest request,HttpServletResponse response){
+	@RequestMapping("createDriveInfo_ZJ17")
+    public void createDriveInfo_ZJ17(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
     	CreateDriveinfoVo createDriveinfoVo = new CreateDriveinfoVo();
     	try {
@@ -1126,7 +1275,7 @@ public class BookingbusinessAction extends BaseAction {
 				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				baseBean.setMsg(msg);
+				baseBean.setMsg(msg +":"+refBean.getData());
 			}
 		} catch (Exception e) {
 			logger.error("【预约类服务】驾驶证预约 Action异常:"+e);
@@ -1141,8 +1290,8 @@ public class BookingbusinessAction extends BaseAction {
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping("createDriveinfo_ZJ20")
-    public void createDriveinfo_ZJ20(HttpServletRequest request,HttpServletResponse response){
+	@RequestMapping("createDriveInfo_ZJ20")
+    public void createDriveInfo_ZJ20(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
     	CreateDriveinfoVo createDriveinfoVo = new CreateDriveinfoVo();
     	try {
@@ -1275,7 +1424,7 @@ public class BookingbusinessAction extends BaseAction {
 				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				baseBean.setMsg(msg);
+				baseBean.setMsg(msg +":"+refBean.getData());
 			}
 		} catch (Exception e) {
 			logger.error("【预约类服务】驾驶证预约 Action异常:"+e);
@@ -1290,8 +1439,8 @@ public class BookingbusinessAction extends BaseAction {
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping("createDriveinfo_ZJ21")
-    public void createDriveinfo_ZJ21(HttpServletRequest request,HttpServletResponse response){
+	@RequestMapping("createDriveInfo_ZJ21")
+    public void createDriveInfo_ZJ21(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
     	CreateDriveinfoVo createDriveinfoVo = new CreateDriveinfoVo();
     	try {
@@ -1424,7 +1573,7 @@ public class BookingbusinessAction extends BaseAction {
 				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				baseBean.setMsg(msg);
+				baseBean.setMsg(msg +":"+refBean.getData());
 			}
 		} catch (Exception e) {
 			logger.error("【预约类服务】驾驶证预约 Action异常:"+e);
@@ -1439,8 +1588,8 @@ public class BookingbusinessAction extends BaseAction {
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping("createDriveinfo_ZJ22")
-    public void createDriveinfo_ZJ22(HttpServletRequest request,HttpServletResponse response){
+	@RequestMapping("createDriveInfo_ZJ22")
+    public void createDriveInfo_ZJ22(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
     	CreateDriveinfoVo createDriveinfoVo = new CreateDriveinfoVo();
     	try {
@@ -1573,7 +1722,7 @@ public class BookingbusinessAction extends BaseAction {
 				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				baseBean.setMsg(msg);
+				baseBean.setMsg(msg +":"+refBean.getData());
 			}
 		} catch (Exception e) {
 			logger.error("【预约类服务】驾驶证预约 Action异常:"+e);
@@ -2209,58 +2358,6 @@ public class BookingbusinessAction extends BaseAction {
 	
 	
 	/**
-	 * 获取驾驶证预约信息
-	 * @param request
-	 * @param response
-	 */
-	/*@RequestMapping("getDriveinfo")
-    public void getDriveinfo(HttpServletRequest request,HttpServletResponse response){
-    	BaseBean baseBean = new BaseBean();		//创建返回结果
-    	try {
-	    	String orgId = request.getParameter("orgId");
-	    	String businessTypeId = request.getParameter("businessTypeId");
-	    	String idNumber = request.getParameter("idNumber");
-			String bookerNumber = request.getParameter("bookerNumber");
-			if(StringUtil.isBlank(idNumber)){
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("身份证号不能为空!");
-				renderJSON(baseBean);
-				return;
-			}
-			if(StringUtil.isBlank(bookerNumber)){
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("预约号不能为空!");
-				renderJSON(baseBean);
-				return;
-			}
-			
-			if (StringUtil.isBlank(businessTypeId)) {
-				businessTypeId ="";
-			}
-			if (StringUtil.isBlank(orgId)) {
-				orgId = "";
-			}
-			//接口调用
-			DriveInfoVO driveInfoVO = bookingBusinessService.getDriveInfo(bookerNumber, idNumber, businessTypeId, orgId);
-			
-			if("00".equals(driveInfoVO.getCode())){
-        		baseBean.setCode(MsgCode.success);
-        		baseBean.setMsg(driveInfoVO.getMsg());
-        		baseBean.setData(driveInfoVO);
-        	}else{
-        		baseBean.setCode(MsgCode.businessError);
-        		baseBean.setMsg(driveInfoVO.getMsg());
-        	}
-		} catch (Exception e) {
-			logger.error("【预约类服务】获取驾驶证预约 信息Action异常:"+e);
-	 
-			DealException(baseBean, e);
-		}
-		renderJSON(baseBean);
-		logger.debug(JSON.toJSONString(baseBean));
-	}*/
-	
-	/**
 	 * 取消驾驶证预约
 	 * @param request
 	 * @param response
@@ -2271,7 +2368,7 @@ public class BookingbusinessAction extends BaseAction {
     	try {
 	    	String mobile = request.getParameter("mobile");
 	    	String businessType = request.getParameter("businessType");
-			String bookerNumber = request.getParameter("bookerNumber");
+			String bookerNumber = request.getParameter("bookNumber");
 			String sourceOfCertification = request.getParameter("sourceOfCertification");
 			String openId = request.getParameter("openId");
 			if(StringUtil.isBlank(mobile)){
