@@ -27,6 +27,7 @@ import cn.booking.business.bean.CreateDriveinfoVo;
 import cn.booking.business.bean.CreateTemporaryLicenseVehicleInfoVo;
 import cn.booking.business.bean.CreateVehicleInfoVo;
 import cn.booking.business.bean.IdTypeVO;
+import cn.booking.business.bean.IndexTypeVo;
 import cn.booking.business.bean.OrgVO;
 import cn.booking.business.bean.SmsInfoVO;
 import cn.booking.business.service.IBookingBusinessService;
@@ -1606,10 +1607,6 @@ public class BookingbusinessAction extends BaseAction {
 			String bookerType = request.getParameter("bookerType");
 			String bookerMobile = request.getParameter("bookerMobile");
 			String msgNumber = request.getParameter("msgNumber");
-			String arg2 = request.getParameter("arg2");
-			String arg3 = request.getParameter("arg3");
-			String arg4 = request.getParameter("arg4");
-			String arg5 = request.getParameter("arg5");
 			String sourceOfCertification = request.getParameter("sourceOfCertification");
 			String openId = request.getParameter("openId");
 			
@@ -1676,18 +1673,6 @@ public class BookingbusinessAction extends BaseAction {
 			if (StringUtil.isBlank(bookerType)) {
 				bookerType = "";
 			}
-			if (StringUtil.isBlank(arg2)) {
-				arg2 = "";
-			}
-			if (StringUtil.isBlank(arg3)) {
-				arg3 = "";
-			}
-			if (StringUtil.isBlank(arg4)) {
-				arg4 = "";
-			}
-			if (StringUtil.isBlank(arg5)) {
-				arg5 = "";
-			}
 			createDriveinfoVo.setOrgId(orgId);
 			createDriveinfoVo.setBusinessTypeId(businessTypeId);
 			createDriveinfoVo.setName(name);
@@ -1701,10 +1686,6 @@ public class BookingbusinessAction extends BaseAction {
 			createDriveinfoVo.setBookerName(bookerName);
 			createDriveinfoVo.setBookerIdNumber(bookerIdNumber);
 			createDriveinfoVo.setBookerType(bookerType);
-			createDriveinfoVo.setArg2(arg2);
-			createDriveinfoVo.setArg3(arg3);
-			createDriveinfoVo.setArg4(arg4);
-			createDriveinfoVo.setArg5(arg5);
 			//接口调用
 			BaseBean refBean = bookingBusinessService.createDriveinfo(createDriveinfoVo);
 			
@@ -1900,6 +1881,7 @@ public class BookingbusinessAction extends BaseAction {
 			
 		} catch (Exception e) {
 			logger.error("核发临牌 Action异常:" + e);
+			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
@@ -2858,4 +2840,33 @@ public class BookingbusinessAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
+	
+	/**
+	 * 指标类型
+	 * @Description TODO(指标类型)
+	 */
+	@RequestMapping("getIndexTypes")
+	public void getIndexTypes(){
+		BaseBean baseBean = new BaseBean();
+		List<IndexTypeVo> list = new ArrayList<>();
+		try {
+			list.add(new IndexTypeVo("ZLZB", "增量指标"));
+			list.add(new IndexTypeVo("GXZB", "更新指标"));
+			list.add(new IndexTypeVo("QTZB", "其他指标"));
+			list.add(new IndexTypeVo("BAZB", "备案车辆指标"));
+			list.add(new IndexTypeVo("ESCLZB", "二手车辆指标"));
+			list.add(new IndexTypeVo("ESCZZZB", "二手车周转指标"));
+			list.add(new IndexTypeVo("WZB", "无指标"));
+			
+			baseBean.setCode(MsgCode.success);
+			baseBean.setData(list);
+			
+		} catch (Exception e) {
+			logger.error("【预约类】获取指标类型Action异常: baseBean = " + baseBean, e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+	
 }
