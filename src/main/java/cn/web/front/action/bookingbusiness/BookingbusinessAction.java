@@ -519,24 +519,6 @@ public class BookingbusinessAction extends BaseAction {
 			renderJSON(baseBean);
 			return;
 		}
-		if (StringUtil.isBlank(businessTypeId)) {
-			baseBean.setCode(MsgCode.paramsError);
-			baseBean.setMsg("businessTypeId不能为空!");
-			renderJSON(baseBean);
-			return;
-		}
-		if (StringUtil.isBlank(carTypeId)) {
-			baseBean.setCode(MsgCode.paramsError);
-			baseBean.setMsg("carTypeId不能为空!");
-			renderJSON(baseBean);
-			return;
-		}
-		if (StringUtil.isBlank(optlittleCar)) {
-			baseBean.setCode(MsgCode.paramsError);
-			baseBean.setMsg("optlittleCar不能为空!");
-			renderJSON(baseBean);
-			return;
-		}
 		try {
 			BaseBean appTimes = bookingBusinessService.getAppTimes(date, orgId, businessTypeId, carTypeId,
 					optlittleCar);
@@ -1867,7 +1849,11 @@ public class BookingbusinessAction extends BaseAction {
 			createDriveinfoVo.setIdTypeId(idTypeId);
 			createDriveinfoVo.setMobile(mobile);
 			createDriveinfoVo.setIdNumber(idNumber);
+<<<<<<< Updated upstream
 			createDriveinfoVo.setBookerMobile(mobile);//预约手机号
+=======
+			createDriveinfoVo.setBookerMobile(bookerMobile);
+>>>>>>> Stashed changes
 			createDriveinfoVo.setMsgNumber(msgNumber);
 			createDriveinfoVo.setAppointmentDate(appointmentDate);
 			createDriveinfoVo.setAppointmentTime(appointmentTime);
