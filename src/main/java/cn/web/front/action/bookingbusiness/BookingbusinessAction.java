@@ -1,25 +1,20 @@
 package cn.web.front.action.bookingbusiness;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-
 import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.CarModelVo;
 import cn.booking.business.bean.CarTypeVO;
@@ -39,7 +34,6 @@ import cn.sdk.util.DateUtil2;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
-
 /**
  * 预约类Action
  * 
@@ -50,7 +44,6 @@ import cn.web.front.support.BaseAction;
 @RequestMapping(value = "/bookingbusiness/")
 @SuppressWarnings(value = "all")
 public class BookingbusinessAction extends BaseAction {
-
 	
 	@Autowired
 	@Qualifier("bookingBusinessService")
@@ -229,7 +222,6 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setCode(MsgCode.businessError);
 				baseBean.setMsg("查询车辆类型id失败");
 			}
-
 		} catch (Exception e) {
 			logger.error("查询车辆类型id异常:" + e);
 			DealException(baseBean, e);
@@ -237,7 +229,27 @@ public class BookingbusinessAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
-
+	
+	/**
+	 * 获取所有车辆类型
+	 */
+	@RequestMapping("getCarTypes")
+	public void getCarTypes() {
+		BaseBean baseBean = new BaseBean();
+		try {
+			List<CarTypeVO> carTypeVOs = bookingBusinessService.getCarTypes();
+			baseBean.setCode(MsgCode.success);
+			baseBean.setData(carTypeVOs);
+			baseBean.setMsg("");
+		} catch (Exception e) {
+			logger.error("getCarTypes异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+	
+	
 	/**
 	 * 获取业务类型Id
 	 * 
@@ -247,7 +259,6 @@ public class BookingbusinessAction extends BaseAction {
 	 * @param arg0
 	 * @param arg1
 	 */
-
 	@RequestMapping("getBusinessTypeId")
 	public void getBusinessTypeId(String code, String type, String part, String arg0, String arg1) {
 		BaseBean baseBean = new BaseBean();
@@ -288,7 +299,6 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setCode(MsgCode.businessError);
 				baseBean.setMsg("查询业务类型id失败");
 			}
-
 		} catch (Exception e) {
 			logger.error("查询业务类型id异常:" + e);
 			DealException(baseBean, e);
@@ -296,7 +306,6 @@ public class BookingbusinessAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
-
 	
 	/**
 	 *  获取所有的业务(机动车，驾驶证)
@@ -339,7 +348,6 @@ public class BookingbusinessAction extends BaseAction {
 	 * @param arg0
 	 * @param arg1
 	 */
-
 	@RequestMapping("getIdTypeId")
 	public void getIdTypeId(String code, String businessTypeId, String arg0, String arg1) {
 		BaseBean baseBean = new BaseBean();
@@ -384,7 +392,6 @@ public class BookingbusinessAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
-
 	/**
 	 * 获取预约地点
 	 * 
@@ -392,7 +399,6 @@ public class BookingbusinessAction extends BaseAction {
 	 * @param arg0
 	 * @param arg1
 	 */
-
 	@RequestMapping("getOrgsByBusinessTypeId")
 	public void getOrgsByBusinessTypeId(String businessTypeId, String arg0, String arg1) {
 		BaseBean baseBean = new BaseBean();
@@ -411,7 +417,6 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setCode(MsgCode.businessError);
 				baseBean.setMsg("查询车辆类型id失败");
 			}
-
 		} catch (Exception e) {
 			logger.error("查询业务类型id异常:" + e);
 			DealException(baseBean, e);
@@ -419,7 +424,6 @@ public class BookingbusinessAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
-
 	/**
 	 * 根据单位ID获取单位详细信息
 	 * 
@@ -443,7 +447,6 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setCode(MsgCode.businessError);
 				baseBean.setMsg("根据单位ID获取单位详细信息失败");
 			}
-
 		} catch (Exception e) {
 			logger.error("根据单位ID获取单位详细信息异常:" + e);
 			DealException(baseBean, e);
@@ -451,7 +454,6 @@ public class BookingbusinessAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
-
 	/**
 	 * 获取可预约日期
 	 * 
@@ -485,7 +487,6 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setCode(MsgCode.businessError);
 				baseBean.setMsg("获取可预约日期失败");
 			}
-
 		} catch (Exception e) {
 			logger.error("获取可预约日期异常:" + e);
 			DealException(baseBean, e);
@@ -493,7 +494,6 @@ public class BookingbusinessAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
-
 	/**
 	 * 获取可预约时间段
 	 * 
@@ -503,7 +503,6 @@ public class BookingbusinessAction extends BaseAction {
 	 * @param carTypeId
 	 * @param optlittleCar
 	 */
-
 	@RequestMapping("getAppTimes")
 	public void getAppTimes(String date, String orgId, String businessTypeId, String carTypeId, String optlittleCar) {
 		BaseBean baseBean = new BaseBean();
@@ -545,7 +544,6 @@ public class BookingbusinessAction extends BaseAction {
 			} else {
 				baseBean.setCode(MsgCode.businessError);
 			}
-
 		} catch (Exception e) {
 			logger.error("获取可预约时间段异常:" + e);
 			DealException(baseBean, e);
@@ -633,7 +631,6 @@ public class BookingbusinessAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
-
 	
 	
 	/**
@@ -721,7 +718,6 @@ public class BookingbusinessAction extends BaseAction {
 		logger.debug(JSON.toJSONString(baseBean));
 	}
 	
-
 	/**
 	 * 满分学习
 	 * @param request
@@ -863,7 +859,6 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setCode(MsgCode.businessError);
 				baseBean.setMsg(msg +":"+refBean.getData());
 			}
-
 		} catch (Exception e) {
 			logger.error("【预约类服务】驾驶证预约 Action异常:"+e);
 			DealException(baseBean, e);
@@ -1012,7 +1007,6 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setCode(MsgCode.businessError);
 				baseBean.setMsg(msg +":"+refBean.getData());
 			}
-
 		} catch (Exception e) {
 			logger.error("【预约类服务】驾驶证预约 Action异常:"+e);
 			DealException(baseBean, e);
@@ -2475,7 +2469,6 @@ public class BookingbusinessAction extends BaseAction {
 	@RequestMapping("createVehicleInfo_JD28.html")
 	public void createVehicleInfo_JD28(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
-
     	String orgId = request.getParameter("orgId");   //预约地点id    e4e48584399473d201399b0c4ad62b39
     	String businessTypeId = request.getParameter("businessTypeId"); //预约类型ID
 		String name = request.getParameter("name");  //姓名
@@ -2560,7 +2553,6 @@ public class BookingbusinessAction extends BaseAction {
 	public void createVehicleInfo_JD29(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
    	
-
     	String orgId = request.getParameter("orgId");   //预约地点id    e4e48584399473d201399b0c4ad62b39
     	String businessTypeId = request.getParameter("businessTypeId"); //预约类型ID
 		String name = request.getParameter("name");  //姓名
@@ -2644,7 +2636,6 @@ public class BookingbusinessAction extends BaseAction {
 	public void createVehicleInfo_JD33(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
 	   	
-
     	String orgId = request.getParameter("orgId");   //预约地点id    e4e48584399473d201399b0c4ad62b39
     	String businessTypeId = request.getParameter("businessTypeId"); //预约类型ID
 		String name = request.getParameter("name");  //姓名
@@ -2727,7 +2718,6 @@ public class BookingbusinessAction extends BaseAction {
 	public void createVehicleInfo_DQ(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
 	   	
-
     	String orgId = request.getParameter("orgId");   //预约地点id    e4e48584399473d201399b0c4ad62b39
     	String businessTypeId = request.getParameter("businessTypeId"); //预约类型ID
 		String name = request.getParameter("name");  //姓名
