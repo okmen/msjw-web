@@ -541,12 +541,12 @@ public class BookingbusinessAction extends BaseAction {
 		try {
 			BaseBean  appTimes = bookingBusinessService.getAppTimes(date, orgId, businessTypeId, carTypeId,
 					optlittleCar);
-			if ("00".equals(baseBean.getCode())) {
+			if ("00".equals(appTimes.getCode())) {
 				baseBean.setCode(MsgCode.success);
 				baseBean.setData(appTimes.getData());
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				baseBean.setMsg("获取预约时间失败");
+				baseBean.setMsg(appTimes.getMsg());
 			}
 		} catch (Exception e) {
 			logger.error("获取可预约时间段异常:" + e);
