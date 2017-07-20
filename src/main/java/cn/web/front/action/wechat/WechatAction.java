@@ -74,8 +74,20 @@ public class WechatAction extends BaseAction {
 	        String content = requestMap.get("Content");
 	        String msgId = requestMap.get("MsgId");
 	        String eventKey = requestMap.get("EventKey");
+	        
+	        String cardId = requestMap.get("CardId");
+	        String code = requestMap.get("UserCardCode");
+	        String outerStr = requestMap.get("OuterStr");
+	        String isGiveByFriend = requestMap.get("IsGiveByFriend");
+	        String giveOpenId = requestMap.get("FriendUserName");
+	        
 	        String xml = requestMap.get("xml");
 	        String keyStandard = requestMap.get("KeyStandard");
+	        logger.info("xml:"+xml);
+	        //领卡消息
+	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_USER_GET_CARD.toLowerCase().equals(event)){
+	        	logger.info("xml:"+xml);
+	        }
 	        
 	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_TYPE_SCAN.toLowerCase().equals(event)){
 	        	 logger.info("微信消息xml:"+xml);
@@ -90,7 +102,7 @@ public class WechatAction extends BaseAction {
 	    		 return;
 	        }
 			
-			IMessage mesasge = wechatService.processPostMessage(new WechatPostMessageModel(fromUserName, toUserName, msgType, event,content,msgId,eventKey));
+			IMessage mesasge = wechatService.processPostMessage(new WechatPostMessageModel(fromUserName, toUserName, msgType, event,eventKey,content,msgId,cardId,code,outerStr,isGiveByFriend,giveOpenId));
 			if(null != mesasge){
 				outString(response, mesasge.toXml());
 			} else{
@@ -148,18 +160,14 @@ public class WechatAction extends BaseAction {
 		}
 	}
 	
-	@RequestMapping(value = "/jfhfsgagsa.html", method = RequestMethod.GET) 
-	public void jfhfsgagsa(HttpServletRequest request, HttpServletResponse response){
+	@RequestMapping(value = "/getJsapiTicket.html", method = RequestMethod.GET) 
+	public void getJsapiTicket(HttpServletRequest request, HttpServletResponse response){
 		try {
-			response.setCharacterEncoding("utf-8");
-			String key = request.getParameter("key");
-			if("qxwsed@!s1334".equals(key)){
-				String accessToken = wechatService.createAccessToken();
-				outString(response, accessToken);
-				return;
-			}
+			response.setCharacterEncoding("utf-8");  
+			String ticket = wechatService.getJsapiTicket();
+			outString(response, ticket);
 		} catch (Exception e) {
-			logger.error("创建token异常",e);
+			logger.error("获取ticket异常",e);
 			outString(response, "error");
 		}
 	}
