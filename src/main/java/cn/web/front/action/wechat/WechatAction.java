@@ -102,7 +102,7 @@ public class WechatAction extends BaseAction {
 	    		 return;
 	        }
 			
-			IMessage mesasge = wechatService.processPostMessage(new WechatPostMessageModel(fromUserName, toUserName, msgType, event,content,msgId,eventKey,cardId,code,outerStr,isGiveByFriend,giveOpenId));
+			IMessage mesasge = wechatService.processPostMessage(new WechatPostMessageModel(fromUserName, toUserName, msgType, event,eventKey,content,msgId,cardId,code,outerStr,isGiveByFriend,giveOpenId));
 			if(null != mesasge){
 				outString(response, mesasge.toXml());
 			} else{
