@@ -32,6 +32,7 @@ import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.util.DateUtil2;
 import cn.sdk.util.MsgCode;
+import cn.sdk.util.SXStringUtils;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
 /**
@@ -568,7 +569,7 @@ public class BookingbusinessAction extends BaseAction {
 	 * @throws Exception
 	 */
 	@RequestMapping("simpleSendMessage")
-	public void simpleSendMessage(String mobile,String idType,String lx,String bookerType,@RequestParam("name")String bookerName,String bookerIdNumber,String idNumber,String codes,HttpServletRequest request){
+	public void simpleSendMessage(String mobile,String idType,String lx,String bookerType,String bookerName,String bookerIdNumber,String idNumber,String codes,HttpServletRequest request){
 		BaseBean baseBean = new BaseBean();
 		
 		try{
@@ -590,9 +591,21 @@ public class BookingbusinessAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
+			if (StringUtil.isBlank(bookerType)) {//‘0’非代办（或本人） ‘1’普通代办 ‘2’专业代办（企业代办）
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("预约方式不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
 			if (StringUtil.isBlank(bookerName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("姓名不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if (StringUtil.isBlank(bookerIdNumber)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("代办人身份证号码不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
@@ -609,10 +622,6 @@ public class BookingbusinessAction extends BaseAction {
 				return;
 			}
 			
-			if (StringUtil.isBlank(bookerType)) {
-				bookerType = "0";
-				bookerIdNumber = idNumber;
-			}
 			String ip = getIp2(request);
 			
 			SmsInfoVO vo = bookingBusinessService.simpleSendMessage(mobile, idType, lx, ip, bookerType, bookerName, bookerIdNumber, idNumber, codes);
@@ -1816,6 +1825,8 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setMsg("手机号码不能为空!");
 				renderJSON(baseBean);
 				return;
+			}else{
+				bookerMobile = mobile;
 			}
 			if(StringUtil.isBlank(msgNumber)){
 				baseBean.setCode(MsgCode.paramsError);
@@ -1856,7 +1867,7 @@ public class BookingbusinessAction extends BaseAction {
 			createDriveinfoVo.setIdTypeId(idTypeId);
 			createDriveinfoVo.setMobile(mobile);
 			createDriveinfoVo.setIdNumber(idNumber);
-			createDriveinfoVo.setBookerMobile(mobile);
+			createDriveinfoVo.setBookerMobile(mobile);//预约手机号
 			createDriveinfoVo.setMsgNumber(msgNumber);
 			createDriveinfoVo.setAppointmentDate(appointmentDate);
 			createDriveinfoVo.setAppointmentTime(appointmentTime);
@@ -1871,6 +1882,29 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(refBean.getMsg());
 				baseBean.setData(refBean.getData());
+				/*//预约成功发送微信模板消息
+				if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(vo.getSourceOfCertification())){
+					try {
+						String waterNumber = baseBean.getData().toString();
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.xxxxxxxxxxxxxxx, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo, bookingBusinessService.getTemplateSendUrl());
+						String openId = vo.getOpenId();
+						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
+						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
+						map.put("businessType", new TemplateDataModel().new Property("机动车业务","#212121"));
+						map.put("business", new TemplateDataModel().new Property("核发临牌","#212121"));
+						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
+						map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
+						map.put("address", new TemplateDataModel().new Property(organizationName,"#212121"));
+						map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+						boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
+						logger.info("发送模板消息结果：" + flag);
+					} catch (Exception e) {
+						logger.error("发送模板消息  失败===", e);
+					}
+				}*/
 			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg(refBean.getMsg());
@@ -1910,8 +1944,6 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setMsg("车主姓名不能为空!");
 				renderJSON(baseBean);
 				return;
-			} else {
-				vo.setBookerName(vo.getName());
 			}
 			if (StringUtil.isBlank(vo.getIdTypeId())) {
 				baseBean.setCode(MsgCode.paramsError);
@@ -1924,8 +1956,6 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setMsg("证件号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			} else {
-				vo.setBookerIdNumber(vo.getIdNumber());
 			}
 			if (StringUtil.isBlank(vo.getMobile())) {
 				baseBean.setCode(MsgCode.paramsError);
@@ -2022,8 +2052,14 @@ public class BookingbusinessAction extends BaseAction {
 			}
 			
 			//参数可为空赋值
+			if (StringUtil.isBlank(vo.getBookerName())) {//预约人
+				vo.setBookerName("");
+			}
+			if (StringUtil.isBlank(vo.getBookerIdNumber())) {//预约人身份证号码
+				vo.setBookerIdNumber("");
+			}
 			if (StringUtil.isBlank(vo.getBookerType())) {//预约方式 0-本人
-				vo.setBookerType("0");
+				vo.setBookerType("");
 			}
 			if (StringUtil.isBlank(vo.getRzjs())) {//认证角色 2-企业星级用户，其他，非企业星级用户
 				vo.setRzjs("");
@@ -2074,49 +2110,59 @@ public class BookingbusinessAction extends BaseAction {
 	public void createVehicleInfo_JD27(HttpServletRequest request,HttpServletResponse response){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
     	
-    	String businessTypeId = request.getParameter("businessTypeId");		//预约类型ID
-    	String name = request.getParameter("name");							//姓名
-    	String idTypeId = request.getParameter("idTypeId");					//证件种类ID
-    	String idNumber = request.getParameter("idNumber");					//证件号码
-    	String mobile = request.getParameter("mobile");						//手机号码
-    	String msgNumber = request.getParameter("msgNumber");				//短信验证码
-    	String platNumber = request.getParameter("platNumber");				//车牌号或车架号
-    	String carTypeId = request.getParameter("carTypeId");				//号牌种类ID
-    	String useCharater = request.getParameter("useCharater");			//使用性质
-    	String carFrame = request.getParameter("carFrame");					//车架号
-    	String orgId = request.getParameter("orgId");						//预约地点ID
-		String appointmentDate = request.getParameter("appointmentDate");	//预约日期
-		String appointmentTime = request.getParameter("appointmentTime");	//预约时间
+    	String orgId = request.getParameter("orgId");					//预约地点ID
+    	String businessTypeId = request.getParameter("businessTypeId"); //预约类型ID
+		String name = request.getParameter("name");						//姓名
+		String idTypeId = request.getParameter("idTypeId");				//证件种类ID
+		String idNumber = request.getParameter("idNumber");				//证件号码
+		String mobile = request.getParameter("mobile");					//手机号码
+		String appointmentDate = request.getParameter("appointmentDate");//预约日期
+		String appointmentTime = request.getParameter("appointmentTime");//预约时间
+		String carTypeId = request.getParameter("carTypeId");			//号牌种类ID
+		String carFrame = request.getParameter("carFrame");				//车架号
+		String platNumber = request.getParameter("platNumber");			//车牌号或车架号
+		String bookerName = request.getParameter("bookerName");			//预约人姓名*
+		String bookerIdNumber = request.getParameter("bookerIdNumber");	//预约人身份证号码*
+		String bookerType = request.getParameter("bookerType");			//预约方式*
+		String rzjs =request.getParameter("rzjs");						//认证角色*
+		String optlittleCar= request.getParameter("optlittleCar");		//车辆产地*
+		String indexType = request.getParameter("indexType");			//指标类型*
+		String indexNo = request.getParameter("indexNo");				//指标号/公证号/车辆识别代号*
+		String useCharater = request.getParameter("useCharater");		//使用性质
+		String modelName = request.getParameter("modelName");			//车辆型号*
+		String bookerMobile=request.getParameter("bookerMobile");		//预约手机号
+		String msgNumber = request.getParameter("msgNumber");			//短信验证码
 		
 		try {
 			//校验参数
-			boolean bool = checkParamNotNull(request,response,"businessTypeId","name","idTypeId","idNumber","mobile","msgNumber",
-					"platNumber","carTypeId","useCharater","carFrame","orgId","appointmentDate","appointmentTime");
+			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
+					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
+					"bookerType","useCharater","msgNumber","bookerMobile");
 			if(!bool) return;
 			
 			CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
-			vo.setOrgId(orgId);  					//预约地点Id
-			vo.setBusinessTypeId(businessTypeId);  	//业务类型id
-			vo.setName(name); 						//姓名
+			vo.setOrgId(orgId);						//预约地点Id
+			vo.setBusinessTypeId(businessTypeId);	//业务类型id
+			vo.setName(name);						//姓名
 			vo.setIdTypeId(idTypeId);				//证件种类id
-			vo.setIdNumber(idNumber); 				//证件号码
+			vo.setIdNumber(idNumber);				//证件号码
 			vo.setMobile(mobile);					//手机号码
-			vo.setAppointmentDate(appointmentDate); //预约日期
+			vo.setAppointmentDate(appointmentDate);	//预约日期
 			vo.setAppointmentTime(appointmentTime);	//预约时间
-			vo.setCarTypeId(carTypeId); 			//车辆类型 号牌种类  小型汽车（蓝色）
-			vo.setCarFrame(carFrame); 				//车架号
-			vo.setPlatNumber(platNumber);   		//车牌号或车架号
-			vo.setBookerName(name);  				//预约人姓名
-			vo.setBookerIdNumber(idNumber); 		//预约人身份证号码
-			vo.setBookerType("0"); 					//预约方式  ‘0’ 非代办(本人)，’1’ 普通代办 ‘2’专业代办
-			vo.setRzjs("");							//可为空
-			vo.setOptlittleCar(""); 				//车辆产地  可为空
-			vo.setIndexType(""); 					//指标类型   可为空
-			vo.setIndexNo(""); 						//指标号/公证号/车辆识别代号  可为空
-			vo.setUseCharater(useCharater); 		//使用性质
-			vo.setModelName("");  					//车辆型号  可为空
-			vo.setBookerMobile(mobile); 			//手机号码
-			vo.setMsgNumber(msgNumber);	 			//短信验证码
+			vo.setCarTypeId(carTypeId);				//车辆类型 号牌种类  小型汽车（蓝色）
+			vo.setCarFrame(carFrame);				//车架号
+			vo.setPlatNumber(platNumber);			//车牌号或车架号
+			vo.setBookerName(bookerName);			//预约人姓名*
+			vo.setBookerIdNumber(bookerIdNumber);	//预约人身份证号码*
+			vo.setBookerType(bookerType);			//预约方式*  ‘0’ 非代办(本人)，’1’ 普通代办 ‘2’专业代办
+			vo.setRzjs(SXStringUtils.toString(rzjs));						//认证角色*
+			vo.setOptlittleCar(SXStringUtils.toString(optlittleCar));		//车辆产地*
+			vo.setIndexType(SXStringUtils.toString(indexType));				//指标类型*
+			vo.setIndexNo(SXStringUtils.toString(indexNo));					//指标号/公证号/车辆识别代号*
+			vo.setUseCharater(useCharater);			//使用性质
+			vo.setModelName(SXStringUtils.toString(modelName));				//车辆型号*
+			vo.setBookerMobile(bookerMobile);		//手机号码
+			vo.setMsgNumber(msgNumber);				//短信验证码
 			
 			//接口调用
 			BaseBean refBean = bookingBusinessService.createVehicleInfo(vo);
@@ -2126,6 +2172,29 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(refBean.getMsg());
 				baseBean.setData(refBean.getData());
+				/*//预约成功发送微信模板消息
+				if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(vo.getSourceOfCertification())){
+					try {
+						String waterNumber = baseBean.getData().toString();
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.xxxxxxxxxxxxxxx, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo, bookingBusinessService.getTemplateSendUrl());
+						String openId = vo.getOpenId();
+						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
+						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
+						map.put("businessType", new TemplateDataModel().new Property("机动车业务","#212121"));
+						map.put("business", new TemplateDataModel().new Property("核发临牌","#212121"));
+						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
+						map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
+						map.put("address", new TemplateDataModel().new Property(organizationName,"#212121"));
+						map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+						boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
+						logger.info("发送模板消息结果：" + flag);
+					} catch (Exception e) {
+						logger.error("发送模板消息  失败===", e);
+					}
+				}*/
 			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg(refBean.getMsg());
@@ -2154,49 +2223,59 @@ public class BookingbusinessAction extends BaseAction {
 	public void createVehicleInfo_JD37(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
 		
-		String businessTypeId = request.getParameter("businessTypeId");		//预约类型ID
-    	String name = request.getParameter("name");							//姓名
-    	String idTypeId = request.getParameter("idTypeId");					//证件种类ID
-    	String idNumber = request.getParameter("idNumber");					//证件号码
-    	String mobile = request.getParameter("mobile");						//手机号码
-    	String msgNumber = request.getParameter("msgNumber");				//短信验证码
-    	String platNumber = request.getParameter("platNumber");				//车牌号或车架号
-    	String carTypeId = request.getParameter("carTypeId");				//号牌种类ID
-    	String useCharater = request.getParameter("useCharater");			//使用性质
-    	String carFrame = request.getParameter("carFrame");					//车架号
-    	String orgId = request.getParameter("orgId");						//预约地点ID
-		String appointmentDate = request.getParameter("appointmentDate");	//预约日期
-		String appointmentTime = request.getParameter("appointmentTime");	//预约时间
+		String orgId = request.getParameter("orgId");					//预约地点ID
+    	String businessTypeId = request.getParameter("businessTypeId"); //预约类型ID
+		String name = request.getParameter("name");						//姓名
+		String idTypeId = request.getParameter("idTypeId");				//证件种类ID
+		String idNumber = request.getParameter("idNumber");				//证件号码
+		String mobile = request.getParameter("mobile");					//手机号码
+		String appointmentDate = request.getParameter("appointmentDate");//预约日期
+		String appointmentTime = request.getParameter("appointmentTime");//预约时间
+		String carTypeId = request.getParameter("carTypeId");			//号牌种类ID
+		String carFrame = request.getParameter("carFrame");				//车架号
+		String platNumber = request.getParameter("platNumber");			//车牌号或车架号
+		String bookerName = request.getParameter("bookerName");			//预约人姓名*
+		String bookerIdNumber = request.getParameter("bookerIdNumber");	//预约人身份证号码*
+		String bookerType = request.getParameter("bookerType");			//预约方式*
+		String rzjs =request.getParameter("rzjs");						//认证角色*
+		String optlittleCar= request.getParameter("optlittleCar");		//车辆产地*
+		String indexType = request.getParameter("indexType");			//指标类型*
+		String indexNo = request.getParameter("indexNo");				//指标号/公证号/车辆识别代号*
+		String useCharater = request.getParameter("useCharater");		//使用性质
+		String modelName = request.getParameter("modelName");			//车辆型号*
+		String bookerMobile=request.getParameter("bookerMobile");		//预约手机号
+		String msgNumber = request.getParameter("msgNumber");			//短信验证码
 		
 		try {
 			//校验参数
-			boolean bool = checkParamNotNull(request,response,"businessTypeId","name","idTypeId","idNumber","mobile","msgNumber",
-					"platNumber","carTypeId","useCharater","carFrame","orgId","appointmentDate","appointmentTime");
+			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
+					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
+					"bookerType","useCharater","msgNumber","bookerMobile");
 			if(!bool) return;
 			
 			CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
-			vo.setOrgId(orgId);  					//预约地点Id
-			vo.setBusinessTypeId(businessTypeId);  	//业务类型id
-			vo.setName(name); 						//姓名
+			vo.setOrgId(orgId);						//预约地点Id
+			vo.setBusinessTypeId(businessTypeId);	//业务类型id
+			vo.setName(name);						//姓名
 			vo.setIdTypeId(idTypeId);				//证件种类id
-			vo.setIdNumber(idNumber); 				//证件号码
+			vo.setIdNumber(idNumber);				//证件号码
 			vo.setMobile(mobile);					//手机号码
-			vo.setAppointmentDate(appointmentDate); //预约日期
+			vo.setAppointmentDate(appointmentDate);	//预约日期
 			vo.setAppointmentTime(appointmentTime);	//预约时间
-			vo.setCarTypeId(carTypeId); 			//车辆类型 号牌种类  小型汽车（蓝色）
-			vo.setCarFrame(carFrame); 				//车架号
-			vo.setPlatNumber(platNumber);   		//车牌号或车架号
-			vo.setBookerName(name);  				//预约人姓名
-			vo.setBookerIdNumber(idNumber); 		//预约人身份证号码
-			vo.setBookerType("0"); 					//预约方式  ‘0’ 非代办(本人)，’1’ 普通代办 ‘2’专业代办
-			vo.setRzjs("");							//可为空
-			vo.setOptlittleCar(""); 				//车辆产地  可为空
-			vo.setIndexType(""); 					//指标类型   可为空
-			vo.setIndexNo(""); 						//指标号/公证号/车辆识别代号  可为空
-			vo.setUseCharater(useCharater); 		//使用性质
-			vo.setModelName("");  					//车辆型号  可为空
-			vo.setBookerMobile(mobile); 			//手机号码
-			vo.setMsgNumber(msgNumber);	 			//短信验证码
+			vo.setCarTypeId(carTypeId);				//车辆类型 号牌种类  小型汽车（蓝色）
+			vo.setCarFrame(carFrame);				//车架号
+			vo.setPlatNumber(platNumber);			//车牌号或车架号
+			vo.setBookerName(bookerName);			//预约人姓名*
+			vo.setBookerIdNumber(bookerIdNumber);	//预约人身份证号码*
+			vo.setBookerType(bookerType);			//预约方式*  ‘0’ 非代办(本人)，’1’ 普通代办 ‘2’专业代办
+			vo.setRzjs(SXStringUtils.toString(rzjs));						//认证角色*
+			vo.setOptlittleCar(SXStringUtils.toString(optlittleCar));		//车辆产地*
+			vo.setIndexType(SXStringUtils.toString(indexType));				//指标类型*
+			vo.setIndexNo(SXStringUtils.toString(indexNo));					//指标号/公证号/车辆识别代号*
+			vo.setUseCharater(useCharater);			//使用性质
+			vo.setModelName(SXStringUtils.toString(modelName));				//车辆型号*
+			vo.setBookerMobile(bookerMobile);		//手机号码
+			vo.setMsgNumber(msgNumber);				//短信验证码
 			
 			//接口调用
 			BaseBean refBean = bookingBusinessService.createVehicleInfo(vo);
@@ -2206,6 +2285,29 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(refBean.getMsg());
 				baseBean.setData(refBean.getData());
+				/*//预约成功发送微信模板消息
+				if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(vo.getSourceOfCertification())){
+					try {
+						String waterNumber = baseBean.getData().toString();
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.xxxxxxxxxxxxxxx, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo, bookingBusinessService.getTemplateSendUrl());
+						String openId = vo.getOpenId();
+						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
+						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
+						map.put("businessType", new TemplateDataModel().new Property("机动车业务","#212121"));
+						map.put("business", new TemplateDataModel().new Property("核发临牌","#212121"));
+						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
+						map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
+						map.put("address", new TemplateDataModel().new Property(organizationName,"#212121"));
+						map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+						boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
+						logger.info("发送模板消息结果：" + flag);
+					} catch (Exception e) {
+						logger.error("发送模板消息  失败===", e);
+					}
+				}*/
 			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg(refBean.getMsg());
@@ -2234,49 +2336,59 @@ public class BookingbusinessAction extends BaseAction {
 	public void createVehicleInfo_JD38(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
 		
-		String businessTypeId = request.getParameter("businessTypeId");		//预约类型ID
-    	String name = request.getParameter("name");							//姓名
-    	String idTypeId = request.getParameter("idTypeId");					//证件种类ID
-    	String idNumber = request.getParameter("idNumber");					//证件号码
-    	String mobile = request.getParameter("mobile");						//手机号码
-    	String msgNumber = request.getParameter("msgNumber");				//短信验证码
-    	String platNumber = request.getParameter("platNumber");				//车牌号或车架号
-    	String carTypeId = request.getParameter("carTypeId");				//号牌种类ID
-    	String useCharater = request.getParameter("useCharater");			//使用性质
-    	String carFrame = request.getParameter("carFrame");					//车架号
-    	String orgId = request.getParameter("orgId");						//预约地点ID
-		String appointmentDate = request.getParameter("appointmentDate");	//预约日期
-		String appointmentTime = request.getParameter("appointmentTime");	//预约时间
+		String orgId = request.getParameter("orgId");					//预约地点ID
+    	String businessTypeId = request.getParameter("businessTypeId"); //预约类型ID
+		String name = request.getParameter("name");						//姓名
+		String idTypeId = request.getParameter("idTypeId");				//证件种类ID
+		String idNumber = request.getParameter("idNumber");				//证件号码
+		String mobile = request.getParameter("mobile");					//手机号码
+		String appointmentDate = request.getParameter("appointmentDate");//预约日期
+		String appointmentTime = request.getParameter("appointmentTime");//预约时间
+		String carTypeId = request.getParameter("carTypeId");			//号牌种类ID
+		String carFrame = request.getParameter("carFrame");				//车架号
+		String platNumber = request.getParameter("platNumber");			//车牌号或车架号
+		String bookerName = request.getParameter("bookerName");			//预约人姓名*
+		String bookerIdNumber = request.getParameter("bookerIdNumber");	//预约人身份证号码*
+		String bookerType = request.getParameter("bookerType");			//预约方式*
+		String rzjs =request.getParameter("rzjs");						//认证角色*
+		String optlittleCar= request.getParameter("optlittleCar");		//车辆产地*
+		String indexType = request.getParameter("indexType");			//指标类型*
+		String indexNo = request.getParameter("indexNo");				//指标号/公证号/车辆识别代号*
+		String useCharater = request.getParameter("useCharater");		//使用性质
+		String modelName = request.getParameter("modelName");			//车辆型号*
+		String bookerMobile=request.getParameter("bookerMobile");		//预约手机号
+		String msgNumber = request.getParameter("msgNumber");			//短信验证码
 		
 		try {
 			//校验参数
-			boolean bool = checkParamNotNull(request,response,"businessTypeId","name","idTypeId","idNumber","mobile","msgNumber",
-					"platNumber","carTypeId","useCharater","carFrame","orgId","appointmentDate","appointmentTime");
+			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
+					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
+					"bookerType","useCharater","msgNumber","bookerMobile");
 			if(!bool) return;
 			
 			CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
-			vo.setOrgId(orgId);  					//预约地点Id
-			vo.setBusinessTypeId(businessTypeId);  	//业务类型id
-			vo.setName(name); 						//姓名
+			vo.setOrgId(orgId);						//预约地点Id
+			vo.setBusinessTypeId(businessTypeId);	//业务类型id
+			vo.setName(name);						//姓名
 			vo.setIdTypeId(idTypeId);				//证件种类id
-			vo.setIdNumber(idNumber); 				//证件号码
+			vo.setIdNumber(idNumber);				//证件号码
 			vo.setMobile(mobile);					//手机号码
-			vo.setAppointmentDate(appointmentDate); //预约日期
+			vo.setAppointmentDate(appointmentDate);	//预约日期
 			vo.setAppointmentTime(appointmentTime);	//预约时间
-			vo.setCarTypeId(carTypeId); 			//车辆类型 号牌种类  小型汽车（蓝色）
-			vo.setCarFrame(carFrame); 				//车架号
-			vo.setPlatNumber(platNumber);   		//车牌号或车架号
-			vo.setBookerName(name);  				//预约人姓名
-			vo.setBookerIdNumber(idNumber); 		//预约人身份证号码
-			vo.setBookerType("0"); 					//预约方式  ‘0’ 非代办(本人)，’1’ 普通代办 ‘2’专业代办
-			vo.setRzjs("");							//可为空
-			vo.setOptlittleCar(""); 				//车辆产地  可为空
-			vo.setIndexType(""); 					//指标类型   可为空
-			vo.setIndexNo(""); 						//指标号/公证号/车辆识别代号  可为空
-			vo.setUseCharater(useCharater); 		//使用性质
-			vo.setModelName("");  					//车辆型号  可为空
-			vo.setBookerMobile(mobile); 			//手机号码
-			vo.setMsgNumber(msgNumber);	 			//短信验证码
+			vo.setCarTypeId(carTypeId);				//车辆类型 号牌种类  小型汽车（蓝色）
+			vo.setCarFrame(carFrame);				//车架号
+			vo.setPlatNumber(platNumber);			//车牌号或车架号
+			vo.setBookerName(bookerName);			//预约人姓名*
+			vo.setBookerIdNumber(bookerIdNumber);	//预约人身份证号码*
+			vo.setBookerType(bookerType);			//预约方式*  ‘0’ 非代办(本人)，’1’ 普通代办 ‘2’专业代办
+			vo.setRzjs(SXStringUtils.toString(rzjs));						//认证角色*
+			vo.setOptlittleCar(SXStringUtils.toString(optlittleCar));		//车辆产地*
+			vo.setIndexType(SXStringUtils.toString(indexType));				//指标类型*
+			vo.setIndexNo(SXStringUtils.toString(indexNo));					//指标号/公证号/车辆识别代号*
+			vo.setUseCharater(useCharater);			//使用性质
+			vo.setModelName(SXStringUtils.toString(modelName));				//车辆型号*
+			vo.setBookerMobile(bookerMobile);		//手机号码
+			vo.setMsgNumber(msgNumber);				//短信验证码
 			
 			//接口调用
 			BaseBean refBean = bookingBusinessService.createVehicleInfo(vo);
@@ -2286,6 +2398,29 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(refBean.getMsg());
 				baseBean.setData(refBean.getData());
+				/*//预约成功发送微信模板消息
+				if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(vo.getSourceOfCertification())){
+					try {
+						String waterNumber = baseBean.getData().toString();
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.xxxxxxxxxxxxxxx, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo, bookingBusinessService.getTemplateSendUrl());
+						String openId = vo.getOpenId();
+						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
+						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
+						map.put("businessType", new TemplateDataModel().new Property("机动车业务","#212121"));
+						map.put("business", new TemplateDataModel().new Property("核发临牌","#212121"));
+						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
+						map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
+						map.put("address", new TemplateDataModel().new Property(organizationName,"#212121"));
+						map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+						boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
+						logger.info("发送模板消息结果：" + flag);
+					} catch (Exception e) {
+						logger.error("发送模板消息  失败===", e);
+					}
+				}*/
 			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg(refBean.getMsg());
@@ -2314,49 +2449,59 @@ public class BookingbusinessAction extends BaseAction {
 	public void createVehicleInfo_JD41(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
 		
-		String businessTypeId = request.getParameter("businessTypeId");		//预约类型ID
-    	String name = request.getParameter("name");							//姓名
-    	String idTypeId = request.getParameter("idTypeId");					//证件种类ID
-    	String idNumber = request.getParameter("idNumber");					//证件号码
-    	String mobile = request.getParameter("mobile");						//手机号码
-    	String msgNumber = request.getParameter("msgNumber");				//短信验证码
-    	String platNumber = request.getParameter("platNumber");				//车牌号或车架号
-    	String carTypeId = request.getParameter("carTypeId");				//号牌种类ID
-    	String useCharater = request.getParameter("useCharater");			//使用性质
-    	String carFrame = request.getParameter("carFrame");					//车架号
-    	String orgId = request.getParameter("orgId");						//预约地点ID
-		String appointmentDate = request.getParameter("appointmentDate");	//预约日期
-		String appointmentTime = request.getParameter("appointmentTime");	//预约时间
+		String orgId = request.getParameter("orgId");					//预约地点ID
+    	String businessTypeId = request.getParameter("businessTypeId"); //预约类型ID
+		String name = request.getParameter("name");						//姓名
+		String idTypeId = request.getParameter("idTypeId");				//证件种类ID
+		String idNumber = request.getParameter("idNumber");				//证件号码
+		String mobile = request.getParameter("mobile");					//手机号码
+		String appointmentDate = request.getParameter("appointmentDate");//预约日期
+		String appointmentTime = request.getParameter("appointmentTime");//预约时间
+		String carTypeId = request.getParameter("carTypeId");			//号牌种类ID
+		String carFrame = request.getParameter("carFrame");				//车架号
+		String platNumber = request.getParameter("platNumber");			//车牌号或车架号
+		String bookerName = request.getParameter("bookerName");			//预约人姓名*
+		String bookerIdNumber = request.getParameter("bookerIdNumber");	//预约人身份证号码*
+		String bookerType = request.getParameter("bookerType");			//预约方式*
+		String rzjs =request.getParameter("rzjs");						//认证角色*
+		String optlittleCar= request.getParameter("optlittleCar");		//车辆产地*
+		String indexType = request.getParameter("indexType");			//指标类型*
+		String indexNo = request.getParameter("indexNo");				//指标号/公证号/车辆识别代号*
+		String useCharater = request.getParameter("useCharater");		//使用性质
+		String modelName = request.getParameter("modelName");			//车辆型号*
+		String bookerMobile=request.getParameter("bookerMobile");		//预约手机号
+		String msgNumber = request.getParameter("msgNumber");			//短信验证码
 		
 		try {
 			//校验参数
-			boolean bool = checkParamNotNull(request,response,"businessTypeId","name","idTypeId","idNumber","mobile","msgNumber",
-					"platNumber","carTypeId","useCharater","carFrame","orgId","appointmentDate","appointmentTime");
+			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
+					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
+					"bookerType","useCharater","msgNumber","bookerMobile");
 			if(!bool) return;
 			
 			CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
-			vo.setOrgId(orgId);  					//预约地点Id
-			vo.setBusinessTypeId(businessTypeId);  	//业务类型id
-			vo.setName(name); 						//姓名
+			vo.setOrgId(orgId);						//预约地点Id
+			vo.setBusinessTypeId(businessTypeId);	//业务类型id
+			vo.setName(name);						//姓名
 			vo.setIdTypeId(idTypeId);				//证件种类id
-			vo.setIdNumber(idNumber); 				//证件号码
+			vo.setIdNumber(idNumber);				//证件号码
 			vo.setMobile(mobile);					//手机号码
-			vo.setAppointmentDate(appointmentDate); //预约日期
+			vo.setAppointmentDate(appointmentDate);	//预约日期
 			vo.setAppointmentTime(appointmentTime);	//预约时间
-			vo.setCarTypeId(carTypeId); 			//车辆类型 号牌种类  小型汽车（蓝色）
-			vo.setCarFrame(carFrame); 				//车架号
-			vo.setPlatNumber(platNumber);   		//车牌号或车架号
-			vo.setBookerName(name);  				//预约人姓名
-			vo.setBookerIdNumber(idNumber); 		//预约人身份证号码
-			vo.setBookerType("0"); 					//预约方式  ‘0’ 非代办(本人)，’1’ 普通代办 ‘2’专业代办
-			vo.setRzjs("");							//可为空
-			vo.setOptlittleCar(""); 				//车辆产地  可为空
-			vo.setIndexType(""); 					//指标类型   可为空
-			vo.setIndexNo(""); 						//指标号/公证号/车辆识别代号  可为空
-			vo.setUseCharater(useCharater); 		//使用性质
-			vo.setModelName("");  					//车辆型号  可为空
-			vo.setBookerMobile(mobile); 			//手机号码
-			vo.setMsgNumber(msgNumber);	 			//短信验证码
+			vo.setCarTypeId(carTypeId);				//车辆类型 号牌种类  小型汽车（蓝色）
+			vo.setCarFrame(carFrame);				//车架号
+			vo.setPlatNumber(platNumber);			//车牌号或车架号
+			vo.setBookerName(bookerName);			//预约人姓名*
+			vo.setBookerIdNumber(bookerIdNumber);	//预约人身份证号码*
+			vo.setBookerType(bookerType);			//预约方式*  ‘0’ 非代办(本人)，’1’ 普通代办 ‘2’专业代办
+			vo.setRzjs(SXStringUtils.toString(rzjs));						//认证角色*
+			vo.setOptlittleCar(SXStringUtils.toString(optlittleCar));		//车辆产地*
+			vo.setIndexType(SXStringUtils.toString(indexType));				//指标类型*
+			vo.setIndexNo(SXStringUtils.toString(indexNo));					//指标号/公证号/车辆识别代号*
+			vo.setUseCharater(useCharater);			//使用性质
+			vo.setModelName(SXStringUtils.toString(modelName));				//车辆型号*
+			vo.setBookerMobile(bookerMobile);		//手机号码
+			vo.setMsgNumber(msgNumber);				//短信验证码
 			
 			//接口调用
 			BaseBean refBean = bookingBusinessService.createVehicleInfo(vo);
@@ -2366,6 +2511,29 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(refBean.getMsg());
 				baseBean.setData(refBean.getData());
+				/*//预约成功发送微信模板消息
+				if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(vo.getSourceOfCertification())){
+					try {
+						String waterNumber = baseBean.getData().toString();
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.xxxxxxxxxxxxxxx, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo, bookingBusinessService.getTemplateSendUrl());
+						String openId = vo.getOpenId();
+						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
+						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
+						map.put("businessType", new TemplateDataModel().new Property("机动车业务","#212121"));
+						map.put("business", new TemplateDataModel().new Property("核发临牌","#212121"));
+						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
+						map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
+						map.put("address", new TemplateDataModel().new Property(organizationName,"#212121"));
+						map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+						boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
+						logger.info("发送模板消息结果：" + flag);
+					} catch (Exception e) {
+						logger.error("发送模板消息  失败===", e);
+					}
+				}*/
 			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg(refBean.getMsg());
