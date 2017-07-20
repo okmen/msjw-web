@@ -519,10 +519,29 @@ public class BookingbusinessAction extends BaseAction {
 			renderJSON(baseBean);
 			return;
 		}
+		if (StringUtil.isBlank(businessTypeId)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("businessTypeId不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(carTypeId)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("carTypeId不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		/*if (StringUtil.isBlank(optlittleCar)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("optlittleCar不能为空!");
+			renderJSON(baseBean);
+			return;
+		}*/
+
 		try {
-			BaseBean appTimes = bookingBusinessService.getAppTimes(date, orgId, businessTypeId, carTypeId,
+			baseBean = bookingBusinessService.getAppTimes(date, orgId, businessTypeId, carTypeId,
 					optlittleCar);
-			if (null != appTimes) {
+			if ("00".equals(baseBean.getCode())) {
 				baseBean.setCode(MsgCode.success);
 			} else {
 				baseBean.setCode(MsgCode.businessError);
@@ -700,6 +719,7 @@ public class BookingbusinessAction extends BaseAction {
         	}else{
         		baseBean.setCode(MsgCode.businessError);
         		baseBean.setMsg(refBean.getMsg());
+        		baseBean.setData(refBean.getData());
         	}
 		} catch (Exception e) {
 			logger.error("【预约类服务】换领机动车登记证书 Action异常:"+e);
