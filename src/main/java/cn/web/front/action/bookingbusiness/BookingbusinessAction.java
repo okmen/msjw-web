@@ -519,7 +519,7 @@ public class BookingbusinessAction extends BaseAction {
 			renderJSON(baseBean);
 			return;
 		}
-		if (StringUtil.isBlank(businessTypeId)) {
+		/*if (StringUtil.isBlank(businessTypeId)) {
 			baseBean.setCode(MsgCode.paramsError);
 			baseBean.setMsg("businessTypeId不能为空!");
 			renderJSON(baseBean);
@@ -531,7 +531,7 @@ public class BookingbusinessAction extends BaseAction {
 			renderJSON(baseBean);
 			return;
 		}
-		/*if (StringUtil.isBlank(optlittleCar)) {
+		if (StringUtil.isBlank(optlittleCar)) {
 			baseBean.setCode(MsgCode.paramsError);
 			baseBean.setMsg("optlittleCar不能为空!");
 			renderJSON(baseBean);
@@ -539,12 +539,14 @@ public class BookingbusinessAction extends BaseAction {
 		}*/
 
 		try {
-			baseBean = bookingBusinessService.getAppTimes(date, orgId, businessTypeId, carTypeId,
+			BaseBean  appTimes = bookingBusinessService.getAppTimes(date, orgId, businessTypeId, carTypeId,
 					optlittleCar);
 			if ("00".equals(baseBean.getCode())) {
 				baseBean.setCode(MsgCode.success);
+				baseBean.setData(appTimes.getData());
 			} else {
 				baseBean.setCode(MsgCode.businessError);
+				baseBean.setMsg("获取预约时间失败");
 			}
 		} catch (Exception e) {
 			logger.error("获取可预约时间段异常:" + e);
