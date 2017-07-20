@@ -1849,11 +1849,8 @@ public class BookingbusinessAction extends BaseAction {
 			createDriveinfoVo.setIdTypeId(idTypeId);
 			createDriveinfoVo.setMobile(mobile);
 			createDriveinfoVo.setIdNumber(idNumber);
-<<<<<<< Updated upstream
 			createDriveinfoVo.setBookerMobile(mobile);//预约手机号
-=======
 			createDriveinfoVo.setBookerMobile(bookerMobile);
->>>>>>> Stashed changes
 			createDriveinfoVo.setMsgNumber(msgNumber);
 			createDriveinfoVo.setAppointmentDate(appointmentDate);
 			createDriveinfoVo.setAppointmentTime(appointmentTime);
