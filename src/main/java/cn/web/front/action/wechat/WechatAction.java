@@ -74,8 +74,20 @@ public class WechatAction extends BaseAction {
 	        String content = requestMap.get("Content");
 	        String msgId = requestMap.get("MsgId");
 	        String eventKey = requestMap.get("EventKey");
+	        
+	        String cardId = requestMap.get("CardId");
+	        String code = requestMap.get("UserCardCode");
+	        String outerStr = requestMap.get("OuterStr");
+	        String isGiveByFriend = requestMap.get("IsGiveByFriend");
+	        String giveOpenId = requestMap.get("FriendUserName");
+	        
 	        String xml = requestMap.get("xml");
 	        String keyStandard = requestMap.get("KeyStandard");
+	        
+	        //领卡消息
+	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_USER_GET_CARD.toLowerCase().equals(event)){
+	        	logger.info("xml:"+xml);
+	        }
 	        
 	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_TYPE_SCAN.toLowerCase().equals(event)){
 	        	 logger.info("微信消息xml:"+xml);
@@ -90,7 +102,7 @@ public class WechatAction extends BaseAction {
 	    		 return;
 	        }
 			
-			IMessage mesasge = wechatService.processPostMessage(new WechatPostMessageModel(fromUserName, toUserName, msgType, event,content,msgId,eventKey));
+			IMessage mesasge = wechatService.processPostMessage(new WechatPostMessageModel(fromUserName, toUserName, msgType, event,content,msgId,eventKey,cardId,code,outerStr,isGiveByFriend,giveOpenId));
 			if(null != mesasge){
 				outString(response, mesasge.toXml());
 			} else{

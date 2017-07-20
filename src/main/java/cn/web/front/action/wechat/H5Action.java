@@ -55,4 +55,36 @@ public class H5Action extends BaseAction {
 			logger.error("服务器异常:"+url, e);
 		}
 	}
+	
+	/**
+	 * h5获取cardconfig参数 用于调用卡券
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value = "/cardConfig.html")
+	public void cardConfig(HttpServletRequest request,HttpServletResponse response){
+		String openId = request.getParameter("openId");
+		String cardId = request.getParameter("cardId");
+		try {
+			if(!StringUtils.isNotBlank(openId)){
+				renderJSON(new ErrorBean(MsgCode.paramsError, "openId不能为空"));
+				return;
+			}
+			
+			if(!StringUtils.isNotBlank(cardId)){
+				renderJSON(new ErrorBean(MsgCode.paramsError, "cardId不能为空"));
+				return;
+			}
+			
+			Map<String, Object> map = wechatService.cardConfig(openId, cardId);
+			if(null == map){
+				renderJSON(new ErrorBean(MsgCode.paramsError, "card config 签名失败"));
+				return;
+			}
+			renderJSON(new SuccessBean(MsgCode.success, map));
+		} catch (Exception e) {
+			DealException(new ErrorBean(), e);
+			logger.error("服务器异常:openId="+openId + ",cardId="+cardId, e);
+		}
+	}
 }
