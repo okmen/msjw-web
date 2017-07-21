@@ -3086,7 +3086,15 @@ public class BookingbusinessAction extends BaseAction {
 			map.put("indexTypeVos", indexTypeVos);
 			//车辆型号列表
 			Map<String, String> carModelArray = bookingBusinessService.getCarModelArray();
-			map.put("carModelArray", carModelArray);
+			List<CarModelVo> carModelVos = new ArrayList<>();
+			for (String key : map.keySet()) {
+				CarModelVo carModelVo = new CarModelVo();
+				carModelVo.setStr(map.get(key).toString());
+				carModelVo.setId(key);
+				carModelVos.add(carModelVo);
+			}
+			
+			map.put("carModelArray", carModelVos);
 			//预约地点
 			List<OrgVO> orgVOs = bookingBusinessService.getOrgsByBusinessTypeId(businessTypeId, "", "");
 			map.put("orgVOs", orgVOs);
