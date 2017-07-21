@@ -25,6 +25,7 @@ import cn.booking.business.bean.IdTypeVO;
 import cn.booking.business.bean.IndexTypeVo;
 import cn.booking.business.bean.OrgVO;
 import cn.booking.business.bean.SmsInfoVO;
+import cn.booking.business.bean.UseCharater;
 import cn.booking.business.service.IBookingBusinessService;
 import cn.handle.bean.vo.HandleTemplateVo;
 import cn.message.model.wechat.TemplateDataModel;
@@ -3157,6 +3158,33 @@ public class BookingbusinessAction extends BaseAction {
 			
 		} catch (Exception e) {
 			logger.error("【预约类】获取指标类型Action异常: baseBean = " + baseBean, e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
+	
+	/**
+	 * 使用性质
+	 * @Description TODO(使用性质)
+	 */
+	@RequestMapping("getUseCharater")
+	public void getUseCharater(){
+		BaseBean baseBean = new BaseBean();
+		List<UseCharater> list = new ArrayList<>();
+		try {
+			list.add(new UseCharater("A", "非运营"));
+			list.add(new UseCharater("B", "公路客运"));
+			list.add(new UseCharater("C", "公交客运"));
+			list.add(new UseCharater("E", "旅游客运"));
+			list.add(new UseCharater("F", "货运"));
+			list.add(new UseCharater("G", "租赁"));
+			
+			baseBean.setCode(MsgCode.success);
+			baseBean.setData(list);
+			
+		} catch (Exception e) {
+			logger.error("【预约类】获取使用性质Action异常: baseBean = " + baseBean, e);
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
