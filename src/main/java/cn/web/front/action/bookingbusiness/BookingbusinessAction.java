@@ -573,10 +573,12 @@ public class BookingbusinessAction extends BaseAction {
 					optlittleCar);
 			if ("00".equals(appTimes.getCode())) {
 				baseBean.setCode(MsgCode.success);
+				baseBean.setMsg(appTimes.getMsg());
 				baseBean.setData(appTimes.getData());
 			} else {
 				baseBean.setCode(MsgCode.businessError);
 				baseBean.setMsg(appTimes.getMsg());
+				baseBean.setData(appTimes.getData());
 			}
 		} catch (Exception e) {
 			logger.error("获取可预约时间段异常:" + e);
