@@ -752,8 +752,8 @@ public class BookingbusinessAction extends BaseAction {
         		baseBean.setData(refBean.getData());
         	}else{
         		baseBean.setCode(MsgCode.businessError);
-        		baseBean.setMsg(refBean.getMsg());
-        		baseBean.setData(refBean.getData());
+        		baseBean.setMsg(refBean.getData().toString());
+        		baseBean.setData(refBean.getMsg());
         	}
 		} catch (Exception e) {
 			logger.error("【预约类服务】换领机动车登记证书 Action异常:"+e);
