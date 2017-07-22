@@ -640,7 +640,7 @@ public class BookingbusinessAction extends BaseAction {
 			}
 			if (StringUtil.isBlank(bookerIdNumber)) {
 				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("代办人身份证号码不能为空!");
+				baseBean.setMsg("代办人（或本人）身份证号码不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
@@ -1861,8 +1861,6 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setMsg("手机号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}else{
-				bookerMobile = mobile;
 			}
 			if(StringUtil.isBlank(msgNumber)){
 				baseBean.setCode(MsgCode.paramsError);
@@ -1903,7 +1901,6 @@ public class BookingbusinessAction extends BaseAction {
 			createDriveinfoVo.setIdTypeId(idTypeId);
 			createDriveinfoVo.setMobile(mobile);
 			createDriveinfoVo.setIdNumber(idNumber);
-			createDriveinfoVo.setBookerMobile(mobile);//预约手机号
 			createDriveinfoVo.setBookerMobile(bookerMobile);
 			createDriveinfoVo.setMsgNumber(msgNumber);
 			createDriveinfoVo.setAppointmentDate(appointmentDate);
@@ -1930,8 +1927,8 @@ public class BookingbusinessAction extends BaseAction {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
-						map.put("businessType", new TemplateDataModel().new Property("机动车业务","#212121"));
-						map.put("business", new TemplateDataModel().new Property("核发临牌","#212121"));
+						map.put("businessType", new TemplateDataModel().new Property("驾驶证在线预约","#212121"));
+						map.put("business", new TemplateDataModel().new Property("临时机动车驾驶许可申领","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
 						map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
 						map.put("address", new TemplateDataModel().new Property(organizationName,"#212121"));
@@ -1999,8 +1996,6 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setMsg("手机号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			} else {
-				vo.setBookerMobile(vo.getMobile());
 			}
 			if (StringUtil.isBlank(vo.getMsgNumber())) {
 				baseBean.setCode(MsgCode.paramsError);
@@ -2116,7 +2111,7 @@ public class BookingbusinessAction extends BaseAction {
 					String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
-					map.put("businessType", new TemplateDataModel().new Property("机动车业务","#212121"));
+					map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
 					map.put("business", new TemplateDataModel().new Property("核发临牌","#212121"));
 					map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
 					map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
@@ -2130,7 +2125,7 @@ public class BookingbusinessAction extends BaseAction {
 			}*/
 			
 		} catch (Exception e) {
-			logger.error("核发临牌 Action异常:" + e);
+			logger.error("【预约类服务】核发临牌 Action异常:" + e);
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
@@ -2220,8 +2215,8 @@ public class BookingbusinessAction extends BaseAction {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
-						map.put("businessType", new TemplateDataModel().new Property("机动车业务","#212121"));
-						map.put("business", new TemplateDataModel().new Property("核发临牌","#212121"));
+						map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
+						map.put("business", new TemplateDataModel().new Property("核发校车标牌","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
 						map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
 						map.put("address", new TemplateDataModel().new Property(organizationName,"#212121"));
@@ -2333,8 +2328,8 @@ public class BookingbusinessAction extends BaseAction {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
-						map.put("businessType", new TemplateDataModel().new Property("机动车业务","#212121"));
-						map.put("business", new TemplateDataModel().new Property("核发临牌","#212121"));
+						map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
+						map.put("business", new TemplateDataModel().new Property("抵押/解押登记现场办理","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
 						map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
 						map.put("address", new TemplateDataModel().new Property(organizationName,"#212121"));
@@ -2356,7 +2351,7 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setMsg(refBean.getMsg());
 			}
 		} catch (Exception e) {
-			logger.error("【预约类服务】抵押/解押登记现场办理:"+e);
+			logger.error("【预约类服务】抵押/解押登记现场办理 Action异常:"+e);
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
@@ -2446,8 +2441,8 @@ public class BookingbusinessAction extends BaseAction {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
-						map.put("businessType", new TemplateDataModel().new Property("机动车业务","#212121"));
-						map.put("business", new TemplateDataModel().new Property("核发临牌","#212121"));
+						map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
+						map.put("business", new TemplateDataModel().new Property("机动车委托异地年审现场办理","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
 						map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
 						map.put("address", new TemplateDataModel().new Property(organizationName,"#212121"));
@@ -2559,8 +2554,8 @@ public class BookingbusinessAction extends BaseAction {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
-						map.put("businessType", new TemplateDataModel().new Property("机动车业务","#212121"));
-						map.put("business", new TemplateDataModel().new Property("核发临牌","#212121"));
+						map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
+						map.put("business", new TemplateDataModel().new Property("转出、注销恢复","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
 						map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
 						map.put("address", new TemplateDataModel().new Property(organizationName,"#212121"));
