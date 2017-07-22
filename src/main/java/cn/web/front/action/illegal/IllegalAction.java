@@ -195,17 +195,11 @@ public class IllegalAction extends BaseAction {
 
 				// 同步客户信息
 				String str = illegalService.custRegInfoReceive(cust, carList, openId);
-				logger.info("同步客户信息！");
+				logger.info("同步客户信息！"+str);
 			}
-			List<IllegalInfoBean> list = illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType,
+			base = illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType,
 					vehicleIdentifyNoLast4, openId);
-			base.setCode("0000");
-			if (list != null) {
-				base.setData(list);
-				base.setMsg("成功");
-			} else {
-				base.setMsg("当前车辆无未处理违法");
-			}
+	
 		} catch (Exception e) {
 			DealException(base, e);
 			logger.error("查询异常：", e);
@@ -357,7 +351,7 @@ public class IllegalAction extends BaseAction {
 	 */
 	@RequestMapping(value = "illegalOnlineConfirm")
 	public void illegalOnlineConfirm(String licensePlateNo, String licensePlateType, String mobilephone,
-			String identityCard, String sourceOfCertification, String openId) {
+			String identityCard, String sourceOfCertification, String vehicleIdentifyNoLast4,String openId) {
 		BaseBean base = new BaseBean();
 		try {
 			// 参数校验
@@ -423,53 +417,53 @@ public class IllegalAction extends BaseAction {
 			}
 			List<IllegalInfoBean> returnList = new ArrayList<IllegalInfoBean>();
 			List<IllegalInfoClaim> infos = new ArrayList<IllegalInfoClaim>();
-
+			BaseBean reList =new BaseBean();
 			BaseBean result = illegalService.trafficIllegalClaimBefore(licensePlateNo, licensePlateType, mobilephone,
 					openId);
 			String msgCode = result.getCode();
 			String msg = result.getMsg();
 			if ("0000".equals(msgCode)) {
 				infos = (List<IllegalInfoClaim>) JSON.parseArray(result.getData().toString(), IllegalInfoClaim.class);
-				returnList = illegalService.queryInfoByLicensePlateNo1(licensePlateNo, licensePlateType, "", openId);
+				reList = illegalService.queryInfoByLicensePlateNo1(licensePlateNo, licensePlateType, vehicleIdentifyNoLast4, openId);
 			} else {
 				if ("您好，没有查找到可用互联网方式处理的交通违法，感谢您对我局工作的支持！".equals(msg)
 						|| "由于您的驾驶证处理此宗违法后累计分已经超过12分，请到各大队违例窗口现场办理。".equals(msg)) {
-					returnList = illegalService.queryInfoByLicensePlateNo1(licensePlateNo, licensePlateType, "",
+					reList = illegalService.queryInfoByLicensePlateNo1(licensePlateNo, licensePlateType,vehicleIdentifyNoLast4,
 							openId);
 				} else {
 					base.setCode(msgCode);
 					base.setMsg(msg);
 					renderJSON(base);
+					return;
 				}
 			}
 
-			// 拼接对象
-			for (IllegalInfoBean bean : returnList) {
-				// 直接缴款类型
-				if (bean.getIsNeedClaim().equals("2") || (bean.getBillNo() != null && bean.getBillNo().length() > 0)) {
-					IllegalInfoClaim claim = new IllegalInfoClaim();
-					claim.setIllegalNo(bean.getBillNo());
-					claim.setIllegalTime(bean.getIllegalTime());
-					claim.setIllegalDesc(bean.getIllegalDesc());
-					claim.setDealType(bean.getIsNeedClaim());
-					claim.setPunishAmt(bean.getPunishAmt() * 100);
-					claim.setLicensePlateNo(bean.getLicensePlateNo());
-					claim.setLicensePlateType(bean.getLicensePlateType());
-					claim.setPunishScore(bean.getPunishScore());
-					claim.setIllegalAddr(bean.getIllegalAddr());
-					claim.setAgency("");
-					claim.setDrivingLicenceNo("");
-					infos.add(claim);
+			if ("0000".equals(reList.getCode())) {
+				returnList=(List<IllegalInfoBean>)reList.getData();
+				// 拼接对象
+				for (IllegalInfoBean bean : returnList) {
+					// 直接缴款类型
+					if (bean.getIsNeedClaim().equals("2") || (bean.getBillNo() != null && bean.getBillNo().length() > 0)) {
+						IllegalInfoClaim claim = new IllegalInfoClaim();
+						claim.setIllegalNo(bean.getBillNo());
+						claim.setIllegalTime(bean.getIllegalTime());
+						claim.setIllegalDesc(bean.getIllegalDesc());
+						claim.setDealType(bean.getIsNeedClaim());
+						claim.setPunishAmt(bean.getPunishAmt() * 100);
+						claim.setLicensePlateNo(bean.getLicensePlateNo());
+						claim.setLicensePlateType(bean.getLicensePlateType());
+						claim.setPunishScore(bean.getPunishScore());
+						claim.setIllegalAddr(bean.getIllegalAddr());
+						claim.setAgency("");
+						claim.setDrivingLicenceNo("");
+						infos.add(claim);
+					}
 				}
-			}
 
-			base.setCode("0000");
-			if (infos.size() > 0) {
-				base.setData(infos);
-				base.setMsg("成功");
-			} else {
-				base.setMsg("当前无未处理的违法");
 			}
+			base.setCode(reList.getCode());
+			base.setData(infos);
+			base.setMsg(reList.getMsg());		
 		} catch (Exception e) {
 			DealException(base, e);
 			logger.error("查询异常：", e);
