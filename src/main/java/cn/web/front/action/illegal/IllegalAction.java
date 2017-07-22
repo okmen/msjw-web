@@ -439,7 +439,7 @@ public class IllegalAction extends BaseAction {
 			}
 
 			if ("0000".equals(reList.getCode())) {
-				returnList=(List<IllegalInfoBean>) JSON.parseArray(reList.getData().toString(), IllegalInfoBean.class);
+				returnList=(List<IllegalInfoBean>)reList.getData();
 				// 拼接对象
 				for (IllegalInfoBean bean : returnList) {
 					// 直接缴款类型
