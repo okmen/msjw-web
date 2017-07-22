@@ -29,6 +29,7 @@ import cn.message.service.IMobileMessageService;
 import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.bean.StVo;
+import cn.sdk.encryption.RSAEncrypt;
 import cn.sdk.encryption.RSASignature;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;

@@ -553,7 +553,15 @@ public class AccountSearchAction extends BaseAction {
             		}
 				}
         		//车牌号、车牌类型、车架后4位
-        		List<IllegalInfoBean> illegalInfoBeans = illegalService.queryInfoByLicensePlateNo(numberPlateNumber, plateType, "",openId);
+        		List<IllegalInfoBean> illegalInfoBeans = null;
+        		BaseBean baseBean2 = null;
+        		logger.info("绑定的车辆信息是：" + bindTheVehicleVo);
+        		if(StringUtils.isNotBlank(bindTheVehicleVo.getBehindTheFrame4Digits())){
+        			baseBean2 = illegalService.queryInfoByLicensePlateNo(numberPlateNumber, plateType, bindTheVehicleVo.getBehindTheFrame4Digits(),openId);
+        			if(null != baseBean2){
+        				illegalInfoBeans = (List<IllegalInfoBean>) baseBean2.getData();
+        			}
+        		}
         		if(null != illegalInfoBeans && illegalInfoBeans.size() > 0){
         			//bindTheVehicleVo.setIllegalNumber("当前本车有" + illegalInfoBeans.size() + "宗违法尚未处理");
         			bindTheVehicleVo.setIllegalNumber(String.valueOf(illegalInfoBeans.size()));
