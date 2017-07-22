@@ -3108,6 +3108,7 @@ public class BookingbusinessAction extends BaseAction {
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
+		System.out.println(JSON.toJSONString(baseBean));
 		logger.debug(JSON.toJSONString(baseBean));
 	}
 }
