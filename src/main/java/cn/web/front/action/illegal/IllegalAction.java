@@ -357,7 +357,7 @@ public class IllegalAction extends BaseAction {
 	 */
 	@RequestMapping(value = "illegalOnlineConfirm")
 	public void illegalOnlineConfirm(String licensePlateNo, String licensePlateType, String mobilephone,
-			String identityCard, String sourceOfCertification, String openId) {
+			String identityCard, String sourceOfCertification, String vehicleIdentifyNoLast4,String openId) {
 		BaseBean base = new BaseBean();
 		try {
 			// 参数校验
@@ -430,16 +430,17 @@ public class IllegalAction extends BaseAction {
 			String msg = result.getMsg();
 			if ("0000".equals(msgCode)) {
 				infos = (List<IllegalInfoClaim>) JSON.parseArray(result.getData().toString(), IllegalInfoClaim.class);
-				returnList = illegalService.queryInfoByLicensePlateNo1(licensePlateNo, licensePlateType, "", openId);
+				returnList = illegalService.queryInfoByLicensePlateNo1(licensePlateNo, licensePlateType, vehicleIdentifyNoLast4, openId);
 			} else {
 				if ("您好，没有查找到可用互联网方式处理的交通违法，感谢您对我局工作的支持！".equals(msg)
 						|| "由于您的驾驶证处理此宗违法后累计分已经超过12分，请到各大队违例窗口现场办理。".equals(msg)) {
-					returnList = illegalService.queryInfoByLicensePlateNo1(licensePlateNo, licensePlateType, "",
+					returnList = illegalService.queryInfoByLicensePlateNo1(licensePlateNo, licensePlateType,vehicleIdentifyNoLast4,
 							openId);
 				} else {
 					base.setCode(msgCode);
 					base.setMsg(msg);
 					renderJSON(base);
+					return;
 				}
 			}
 
