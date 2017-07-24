@@ -167,8 +167,20 @@ public class WechatAction extends BaseAction {
 			String ticket = wechatService.getJsapiTicket();
 			outString(response, ticket);
 		} catch (Exception e) {
-			logger.error("获取ticket异常",e);
-			outString(response, "error");
+			logger.error("获取jsapi ticket异常",e);
+			outString(response, "error"); 
+		}
+	}
+	
+	@RequestMapping(value = "/getApiTicket.html", method = RequestMethod.GET) 
+	public void getApiTicket(HttpServletRequest request, HttpServletResponse response){
+		try {
+			response.setCharacterEncoding("utf-8");  
+			String apiTicket = wechatService.getApiTicket();
+			outString(response, apiTicket);
+		} catch (Exception e) {
+			logger.error("获取apiTicket异常",e);
+			outString(response, "error"); 
 		}
 	}
 }
