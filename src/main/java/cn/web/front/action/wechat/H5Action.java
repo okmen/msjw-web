@@ -96,7 +96,7 @@ public class H5Action extends BaseAction {
 	 * @param response
 	 */
 	@RequestMapping(value = "/activeJsCard.html")
-	public void jsCardActive(HttpServletRequest request,HttpServletResponse response){
+	public void activeJsCard(HttpServletRequest request,HttpServletResponse response){
 		String openId = request.getParameter("openid");
 		String cardId = request.getParameter("card_id");
 		String encryptCode = request.getParameter("encrypt_code");
@@ -117,6 +117,44 @@ public class H5Action extends BaseAction {
 			}
 			
 			boolean bool = wechatService.activeJsCard(openId, cardId, encryptCode);
+			if(!bool){
+				outString(response, new ErrorBean(MsgCode.exception, MsgCode.systemMsg).toJson());
+				return;
+			}
+			outString(response, new SuccessBean(MsgCode.success, null).toJson());
+		} catch (Exception e) {
+			DealException(new ErrorBean(), e);
+			logger.error("服务器异常:openId="+openId + ",cardId="+cardId, e);
+		}
+	}
+	
+	/**
+	 * 行驶证激活
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value = "/activeXsCard.html")
+	public void activeXsCard(HttpServletRequest request,HttpServletResponse response){
+		String openId = request.getParameter("openid");
+		String cardId = request.getParameter("card_id");
+		String encryptCode = request.getParameter("encrypt_code");
+		try {
+			if(StringUtil.isBlank(openId)){
+				renderJSON(new ErrorBean(MsgCode.paramsError, "openid不能为空"));
+				return;
+			}
+			
+			if(StringUtil.isBlank(cardId)){
+				renderJSON(new ErrorBean(MsgCode.paramsError, "card_id不能为空"));
+				return;
+			}
+			
+			if(StringUtil.isBlank(encryptCode)){
+				renderJSON(new ErrorBean(MsgCode.paramsError, "encrypt_code不能为空"));
+				return;
+			}
+			
+			boolean bool = wechatService.activeXsCard(openId, cardId, encryptCode);
 			if(!bool){
 				outString(response, new ErrorBean(MsgCode.exception, MsgCode.systemMsg).toJson());
 				return;
