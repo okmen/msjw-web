@@ -1046,4 +1046,41 @@ public class IllegalAction extends BaseAction {
 		renderJSON(base);
 	}
 	
+	
+	/**
+	 * 电子回单列表查询
+	 * 
+	 * @param orderNumber
+	 * @param numberPlateNumber
+	 * @param plateType
+	 * @param sourceOfCertification
+	 */
+	@RequestMapping(value = "toQueryElectronicReceiptPage")
+	public void toQueryElectronicReceiptPage(String billNo, String licensePlateNo, String drivingLicenceNo) {
+		BaseBean base = new BaseBean();
+		if (StringUtil.isBlank(billNo)&&StringUtil.isBlank(licensePlateNo)&&StringUtil.isBlank(drivingLicenceNo)) {
+			base.setCode("0001");
+			base.setMsg("驾驶证/车牌/缴款编号 不能全部为空！");
+			renderJSON(base);
+			return;
+		}
+
+		try {
+			base=illegalService.toQueryElectronicReceiptPage(billNo, licensePlateNo, drivingLicenceNo);
+			/*String code = (String) map.get("code");
+			String msg = (String) map.get("msg");
+			if ("0000".equals(code)) {
+				base.setCode(MsgCode.success);
+				base.setData(map.get("data"));
+				base.setMsg(msg);
+			} else {
+				base.setCode(MsgCode.businessError);
+				base.setMsg(msg);
+			}*/
+		} catch (Exception e) {
+			DealException(base, e);
+			logger.error("电子回单记录列表查询异常：", e);
+		}
+		renderJSON(base);
+	}
 }
