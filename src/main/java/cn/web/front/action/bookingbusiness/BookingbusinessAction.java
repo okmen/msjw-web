@@ -508,8 +508,7 @@ public class BookingbusinessAction extends BaseAction {
 			return;
 		}
 		try {
-			List<String> appointmentDates = bookingBusinessService.getAppointmentDate(orgId, businessTypeId, arg0,
-					arg1);
+			List<String> appointmentDates = bookingBusinessService.getAppointmentDate(orgId, businessTypeId, arg0,arg1);
 			if (null != appointmentDates) {
 				baseBean.setCode(MsgCode.success);
 				baseBean.setData(appointmentDates);
@@ -3073,13 +3072,13 @@ public class BookingbusinessAction extends BaseAction {
 			//获取车辆类型列表
 			List<CarTypeVO> carTypeVOs = bookingBusinessService.getCarTypes();
 			map.put("carTypeVOs", carTypeVOs);
-			//使用性质
+			//使用性质(后端写死不需要缓存)
 			List<UseCharater> useCharaters = bookingBusinessService.getUseCharater();
 			map.put("useCharaters", useCharaters);
-			//指标类型
+			//指标类型(后端写死不需要缓存)
 			List<IndexTypeVo> indexTypeVos = bookingBusinessService.getIndexTypes();
 			map.put("indexTypeVos", indexTypeVos);
-			//车辆型号列表
+			//车辆型号列表(后端写死不需要缓存)
 			Map<String, String> carModelArray = bookingBusinessService.getCarModelArray();
 			List<CarModelVo> carModelVos = new ArrayList<>();
 			for (String key : carModelArray.keySet()) {
