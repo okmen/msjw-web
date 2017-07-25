@@ -777,7 +777,7 @@ public class BookingbusinessAction extends BaseAction {
 			//校验参数
 			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
 					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
-					"bookerType","useCharater","msgNumber","bookerMobile","orgName","orgAddr","businessCode","businessName","carTypeName");
+					"bookerType","useCharater","msgNumber","bookerMobile","businessCode","businessName","carTypeName");
 			if(!bool) return;
 			
 			CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
