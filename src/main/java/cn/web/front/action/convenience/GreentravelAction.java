@@ -151,6 +151,7 @@ public class GreentravelAction extends BaseAction{
 			String lrly=request.getParameter("lrly");        //申请来源（WX:微信，ZFB支付宝，APP:手机App）
 			String cdate=request.getParameter("cdate");      //申请停驶日期
 			String type=request.getParameter("type");       //申请类型
+			
 			//验证参数车主姓名
 			if (StringUtil.isBlank(sname)) {
 				jsonMap.put("code", MsgCode.paramsError);
@@ -217,7 +218,16 @@ public class GreentravelAction extends BaseAction{
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
 		    }
+			
 			String[] ret=cdate.split(",");
+			String[] retType=type.split(",");
+			//验证参数时间日期与申请类型个数是否一致
+			if (ret.length!=retType.length) {
+				jsonMap.put("code", MsgCode.paramsError);
+				jsonMap.put("msg", "申请日期与申请类型参数格式不一致！");
+				out.print(JSONObject.fromObject(jsonMap));
+				return;
+		    }
 			GreenTravelBean greenTravelBean=new GreenTravelBean();
 			greenTravelBean.setSname(sname);
 			greenTravelBean.setHphm(hphm);   //车牌号码(带’粤’)
@@ -230,7 +240,7 @@ public class GreentravelAction extends BaseAction{
 			for (int i = 0; i < ret.length; i++) {
 				ApplyGreenRet appret=new ApplyGreenRet();
 				appret.setCdate(ret[i]);
-				appret.setType(type);
+				appret.setType(retType[i]);
 				list.add(appret);
 			}
 			greenTravelBean.setApplyGreenRetList(list);
@@ -304,9 +314,7 @@ public class GreentravelAction extends BaseAction{
 		    }
 			greenBean.setHphm(hphm);
 			greenBean.setHpzl(hpzl);
-			DateFormat format = new SimpleDateFormat("yyyy-MM-dd"); 
-			String sprqStr=format.format(format.parse(sqrq));
-			greenBean.setSqrq(sprqStr.replace("-",""));
+			greenBean.setSqrq(sqrq);
 			BaseBean refBean=greentravelService.applyrunningQuery(greenBean);
 			jsonMap.put("code", refBean.getCode());
 			jsonMap.put("msg", refBean.getMsg());
