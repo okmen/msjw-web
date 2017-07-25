@@ -1083,4 +1083,48 @@ public class IllegalAction extends BaseAction {
 		}
 		renderJSON(base);
 	}
+	
+	
+	/**
+	 * 车管规费缴款
+	 * 
+	 * @param orderNumber
+	 * @param numberPlateNumber
+	 * @param plateType
+	 * @param sourceOfCertification
+	 */
+	@RequestMapping(value = "toQueryFeePage")
+	public void toQueryFeePage(String billNo, String licensePlateNo, String mobilephone, String openId) {
+		BaseBean base = new BaseBean();
+		try {
+			// 参数校验
+			if (StringUtil.isEmpty(billNo)) {
+				base.setCode("0001");
+				base.setMsg("缴款编号不能为空！");
+				renderJSON(base);
+			}
+			if (StringUtil.isEmpty(licensePlateNo)) {
+				base.setCode("0001");
+				base.setMsg("车牌号不能为空！");
+				renderJSON(base);
+			}
+			if (StringUtil.isEmpty(openId)) {
+				base.setCode("0001");
+				base.setMsg("未获取到openId！");
+				renderJSON(base);
+			}
+			String url = illegalService.toPayPage(billNo, licensePlateNo, mobilephone, openId);
+			if (StringUtil.isEmpty(url)) {
+				base.setCode("0001");
+				base.setMsg("返回页面地址为空！");
+			} else {
+				base.setCode("0000");
+				base.setMsg(url);
+			}
+		} catch (Exception e) {
+			DealException(base, e);
+			logger.error("获取异常：", e);
+		}
+		renderJSON(base);
+	}
 }
