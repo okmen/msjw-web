@@ -1969,8 +1969,8 @@ public class BookingbusinessAction extends BaseAction {
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping("createDriveinfo_ZJ16")
-	public void createDriveinfo_ZJ16(HttpServletRequest request,HttpServletResponse response){
+	@RequestMapping("createDriveInfo_ZJ16")
+	public void createDriveInfo_ZJ16(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();		//创建返回结果
     	CreateDriveinfoVo createDriveinfoVo = new CreateDriveinfoVo();
     	try {
@@ -1990,6 +1990,7 @@ public class BookingbusinessAction extends BaseAction {
 			String sourceOfCertification = request.getParameter("sourceOfCertification");
 			String openId = request.getParameter("openId");
 			String orgName = request.getParameter("orgName");
+			String orgAddr = request.getParameter("orgAddr");
 			
 			if(StringUtil.isBlank(businessTypeId)){
 				baseBean.setCode(MsgCode.paramsError);
@@ -2083,7 +2084,11 @@ public class BookingbusinessAction extends BaseAction {
 						if(StringUtil.isBlank(orgName)){
 							orgName = bookingBusinessService.findOrgByOrgId(orgId).getName();
 						}
-						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(0, BusinessType.createDriveinfo_ZJ16, waterNumber, appTime, orgName);
+						//获取预约地址
+						if(StringUtil.isBlank(orgAddr)){
+							orgAddr = bookingBusinessService.findOrgByOrgId(orgId).getDescription();
+						}
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ16, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						baseBean.setData(bookingTemplateVo);
 						String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getTemplateSendUrl());
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
@@ -2264,6 +2269,7 @@ public class BookingbusinessAction extends BaseAction {
 			String sourceOfCertification = request.getParameter("sourceOfCertification");
 			String openId = request.getParameter("openId");
 			String orgName = request.getParameter("orgName");
+			String orgAddr = request.getParameter("orgAddr");
 			
 			//接口调用
 			baseBean = bookingBusinessService.createTemporaryLicenseVehicleInfo(vo);
@@ -2277,7 +2283,11 @@ public class BookingbusinessAction extends BaseAction {
 					if(StringUtil.isBlank(orgName)){
 						orgName = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getName();
 					}
-					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(1, BusinessType.createTemporaryLicenseVehicleInfo, waterNumber, appTime, orgName);
+					//获取预约地址
+					if(StringUtil.isBlank(orgAddr)){
+						orgAddr = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getDescription();
+					}
+					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createTemporaryLicenseVehicleInfo, waterNumber, orgName, orgAddr, vo.getAppointmentDate(), vo.getAppointmentTime(), vo.getName());
 					baseBean.setData(bookingTemplateVo);
 					String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getTemplateSendUrl());
 					String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
@@ -2341,12 +2351,14 @@ public class BookingbusinessAction extends BaseAction {
 		String sourceOfCertification = request.getParameter("sourceOfCertification");
 		String openId = request.getParameter("openId");
 		String orgName = request.getParameter("orgName");
+		String orgAddr = request.getParameter("orgAddr");
+		String carTypeName = request.getParameter("carTypeName");
 		
 		try {
 			//校验参数
 			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
 					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
-					"bookerType","useCharater","msgNumber","bookerMobile");
+					"bookerType","useCharater","msgNumber","bookerMobile","carTypeName");
 			if(!bool) return;
 			
 			CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
@@ -2389,7 +2401,11 @@ public class BookingbusinessAction extends BaseAction {
 						if(StringUtil.isBlank(orgName)){
 							orgName = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getName();
 						}
-						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(1, BusinessType.createVehicleInfo_JD27, waterNumber, appTime, orgName);
+						//获取预约地址
+						if(StringUtil.isBlank(orgAddr)){
+							orgAddr = bookingBusinessService.findOrgByOrgId(orgId).getDescription();
+						}
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD27, platNumber, carTypeName, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						baseBean.setData(bookingTemplateVo);
 						String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getTemplateSendUrl());
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
@@ -2462,12 +2478,14 @@ public class BookingbusinessAction extends BaseAction {
 		String sourceOfCertification = request.getParameter("sourceOfCertification");
 		String openId = request.getParameter("openId");
 		String orgName = request.getParameter("orgName");
+		String orgAddr = request.getParameter("orgAddr");
+		String carTypeName = request.getParameter("carTypeName");
 		
 		try {
 			//校验参数
 			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
 					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
-					"bookerType","useCharater","msgNumber","bookerMobile");
+					"bookerType","useCharater","msgNumber","bookerMobile","carTypeName");
 			if(!bool) return;
 			
 			CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
@@ -2510,7 +2528,11 @@ public class BookingbusinessAction extends BaseAction {
 						if(StringUtil.isBlank(orgName)){
 							orgName = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getName();
 						}
-						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(1, BusinessType.createVehicleInfo_JD37, waterNumber, appTime, orgName);
+						//获取预约地址
+						if(StringUtil.isBlank(orgAddr)){
+							orgAddr = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getDescription();
+						}
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD37, platNumber, carTypeName, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						baseBean.setData(bookingTemplateVo);
 						String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getTemplateSendUrl());
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
@@ -2583,12 +2605,14 @@ public class BookingbusinessAction extends BaseAction {
 		String sourceOfCertification = request.getParameter("sourceOfCertification");
 		String openId = request.getParameter("openId");
 		String orgName = request.getParameter("orgName");
+		String orgAddr = request.getParameter("orgAddr");
+		String carTypeName = request.getParameter("carTypeName");
 		
 		try {
 			//校验参数
 			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
 					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
-					"bookerType","useCharater","msgNumber","bookerMobile");
+					"bookerType","useCharater","msgNumber","bookerMobile","carTypeName");
 			if(!bool) return;
 			
 			CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
@@ -2631,7 +2655,11 @@ public class BookingbusinessAction extends BaseAction {
 						if(StringUtil.isBlank(orgName)){
 							orgName = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getName();
 						}
-						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(1, BusinessType.createVehicleInfo_JD38, waterNumber, appTime, orgName);
+						//获取预约地址
+						if(StringUtil.isBlank(orgAddr)){
+							orgAddr = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getDescription();
+						}
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD38, platNumber, carTypeName, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						baseBean.setData(bookingTemplateVo);
 						String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getTemplateSendUrl());
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
@@ -2704,12 +2732,14 @@ public class BookingbusinessAction extends BaseAction {
 		String sourceOfCertification = request.getParameter("sourceOfCertification");
 		String openId = request.getParameter("openId");
 		String orgName = request.getParameter("orgName");
+		String orgAddr = request.getParameter("orgAddr");
+		String carTypeName = request.getParameter("carTypeName");
 		
 		try {
 			//校验参数
 			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
 					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
-					"bookerType","useCharater","msgNumber","bookerMobile");
+					"bookerType","useCharater","msgNumber","bookerMobile","carTypeName");
 			if(!bool) return;
 			
 			CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
@@ -2752,7 +2782,11 @@ public class BookingbusinessAction extends BaseAction {
 						if(StringUtil.isBlank(orgName)){
 							orgName = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getName();
 						}
-						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(1, BusinessType.createVehicleInfo_JD41, waterNumber, appTime, orgName);
+						//获取预约地址
+						if(StringUtil.isBlank(orgAddr)){
+							orgAddr = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getDescription();
+						}
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD41, platNumber, carTypeName, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						baseBean.setData(bookingTemplateVo);
 						String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getTemplateSendUrl());
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
