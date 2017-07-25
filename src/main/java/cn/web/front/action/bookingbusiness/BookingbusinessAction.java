@@ -575,8 +575,8 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setData(appTimes.getData());
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				baseBean.setMsg(appTimes.getMsg());
-				baseBean.setData(appTimes.getData());
+				baseBean.setMsg(appTimes.getData().toString());
+				baseBean.setData(appTimes.getMsg());
 			}
 		} catch (Exception e) {
 			logger.error("获取可预约时间段异常:" + e);
