@@ -5,17 +5,19 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import javax.print.attribute.HashAttributeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+
+import cn.booking.business.bean.BookingTemplateVo;
 import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.CarModelVo;
 import cn.booking.business.bean.CarTypeVO;
@@ -32,6 +34,7 @@ import cn.handle.bean.vo.HandleTemplateVo;
 import cn.message.model.wechat.TemplateDataModel;
 import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
+import cn.sdk.bean.BusinessType;
 import cn.sdk.util.DateUtil2;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.SXStringUtils;
@@ -1828,6 +1831,7 @@ public class BookingbusinessAction extends BaseAction {
 			String msgNumber = request.getParameter("msgNumber");
 			String sourceOfCertification = request.getParameter("sourceOfCertification");
 			String openId = request.getParameter("openId");
+			String orgName = request.getParameter("orgName");
 			
 			if(StringUtil.isBlank(businessTypeId)){
 				baseBean.setCode(MsgCode.paramsError);
@@ -1912,30 +1916,35 @@ public class BookingbusinessAction extends BaseAction {
 			if("00".equals(code)){
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(refBean.getMsg());
-				baseBean.setData(refBean.getData());
-				/*//预约成功发送微信模板消息
-				if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(vo.getSourceOfCertification())){
+				//预约成功发送微信模板消息
+				if("C".equals(sourceOfCertification)){
 					try {
-						String waterNumber = baseBean.getData().toString();
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.xxxxxxxxxxxxxxx, waterNumber, DateUtil2.date2str(new Date()));
-						baseBean.setData(handleTemplateVo);
-						String url = HandleTemplateVo.getUrl(handleTemplateVo, bookingBusinessService.getTemplateSendUrl());
-						String openId = vo.getOpenId();
+						String waterNumber = refBean.getData().toString();
+						String appTime = appointmentDate + " " + appointmentTime;
+						//获取预约地点
+						if(StringUtil.isBlank(orgName)){
+							orgName = bookingBusinessService.findOrgByOrgId(orgId).getName();
+						}
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(0, BusinessType.createDriveinfo_ZJ16, waterNumber, appTime, orgName);
+						baseBean.setData(bookingTemplateVo);
+						String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getTemplateSendUrl());
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
+						logger.info("返回的url是：" + url);
+						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
 						map.put("businessType", new TemplateDataModel().new Property("驾驶证在线预约","#212121"));
 						map.put("business", new TemplateDataModel().new Property("临时机动车驾驶许可申领","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
-						map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
-						map.put("address", new TemplateDataModel().new Property(organizationName,"#212121"));
+						map.put("time", new TemplateDataModel().new Property(appTime,"#212121"));
+						map.put("address", new TemplateDataModel().new Property(orgName,"#212121"));
 						map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
 						logger.info("发送模板消息结果：" + flag);
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
-				}*/
+				}
 			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg(refBean.getMsg());
@@ -1960,7 +1969,7 @@ public class BookingbusinessAction extends BaseAction {
 	 * @param vo 核发临牌Vo
 	 */
 	@RequestMapping("createTemporaryLicenseVehicleInfo")
-	public void createTemporaryLicenseVehicleInfo(CreateTemporaryLicenseVehicleInfoVo vo){
+	public void createTemporaryLicenseVehicleInfo(CreateTemporaryLicenseVehicleInfoVo vo, HttpServletRequest request){
 		BaseBean baseBean = new BaseBean();
 		
 		try {
@@ -2094,32 +2103,42 @@ public class BookingbusinessAction extends BaseAction {
 				vo.setRzjs("");
 			}
 			
+			String sourceOfCertification = request.getParameter("sourceOfCertification");
+			String openId = request.getParameter("openId");
+			String orgName = request.getParameter("orgName");
+			
 			//接口调用
 			baseBean = bookingBusinessService.createTemporaryLicenseVehicleInfo(vo);
 			
-			/*//预约成功发送微信模板消息
-			if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(vo.getSourceOfCertification())){
+			//预约成功发送微信模板消息
+			if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(sourceOfCertification)){
 				try {
 					String waterNumber = baseBean.getData().toString();
-					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.xxxxxxxxxxxxxxx, waterNumber, DateUtil2.date2str(new Date()));
-					baseBean.setData(handleTemplateVo);
-					String url = HandleTemplateVo.getUrl(handleTemplateVo, bookingBusinessService.getTemplateSendUrl());
-					String openId = vo.getOpenId();
+					String appTime = vo.getAppointmentDate() + " " + vo.getAppointmentTime();
+					//获取预约地点
+					if(StringUtil.isBlank(orgName)){
+						orgName = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getName();
+					}
+					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(1, BusinessType.createTemporaryLicenseVehicleInfo, waterNumber, appTime, orgName);
+					baseBean.setData(bookingTemplateVo);
+					String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getTemplateSendUrl());
 					String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
+					logger.info("返回的url是：" + url);
+					logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
 					map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
 					map.put("business", new TemplateDataModel().new Property("核发临牌","#212121"));
 					map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
-					map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
-					map.put("address", new TemplateDataModel().new Property(organizationName,"#212121"));
+					map.put("time", new TemplateDataModel().new Property(appTime,"#212121"));
+					map.put("address", new TemplateDataModel().new Property(orgName,"#212121"));
 					map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
 					logger.info("发送模板消息结果：" + flag);
 				} catch (Exception e) {
 					logger.error("发送模板消息  失败===", e);
 				}
-			}*/
+			}
 			
 		} catch (Exception e) {
 			logger.error("【预约类服务】核发临牌 Action异常:" + e);
@@ -2161,6 +2180,9 @@ public class BookingbusinessAction extends BaseAction {
 		String modelName = request.getParameter("modelName");			//车辆型号*
 		String bookerMobile=request.getParameter("bookerMobile");		//预约手机号
 		String msgNumber = request.getParameter("msgNumber");			//短信验证码
+		String sourceOfCertification = request.getParameter("sourceOfCertification");
+		String openId = request.getParameter("openId");
+		String orgName = request.getParameter("orgName");
 		
 		try {
 			//校验参数
@@ -2200,30 +2222,35 @@ public class BookingbusinessAction extends BaseAction {
 			if("00".equals(code)){
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(refBean.getMsg());
-				baseBean.setData(refBean.getData());
-				/*//预约成功发送微信模板消息
-				if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(vo.getSourceOfCertification())){
+				//预约成功发送微信模板消息
+				if("C".equals(sourceOfCertification)){
 					try {
-						String waterNumber = baseBean.getData().toString();
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.xxxxxxxxxxxxxxx, waterNumber, DateUtil2.date2str(new Date()));
-						baseBean.setData(handleTemplateVo);
-						String url = HandleTemplateVo.getUrl(handleTemplateVo, bookingBusinessService.getTemplateSendUrl());
-						String openId = vo.getOpenId();
+						String waterNumber = refBean.getData().toString();
+						String appTime = vo.getAppointmentDate() + " " + vo.getAppointmentTime();
+						//获取预约地点
+						if(StringUtil.isBlank(orgName)){
+							orgName = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getName();
+						}
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(1, BusinessType.createVehicleInfo_JD27, waterNumber, appTime, orgName);
+						baseBean.setData(bookingTemplateVo);
+						String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getTemplateSendUrl());
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
+						logger.info("返回的url是：" + url);
+						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
 						map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
 						map.put("business", new TemplateDataModel().new Property("核发校车标牌","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
-						map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
-						map.put("address", new TemplateDataModel().new Property(organizationName,"#212121"));
+						map.put("time", new TemplateDataModel().new Property(appTime,"#212121"));
+						map.put("address", new TemplateDataModel().new Property(orgName,"#212121"));
 						map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
 						logger.info("发送模板消息结果：" + flag);
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
-				}*/
+				}
 			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg(refBean.getMsg());
@@ -2274,6 +2301,9 @@ public class BookingbusinessAction extends BaseAction {
 		String modelName = request.getParameter("modelName");			//车辆型号*
 		String bookerMobile=request.getParameter("bookerMobile");		//预约手机号
 		String msgNumber = request.getParameter("msgNumber");			//短信验证码
+		String sourceOfCertification = request.getParameter("sourceOfCertification");
+		String openId = request.getParameter("openId");
+		String orgName = request.getParameter("orgName");
 		
 		try {
 			//校验参数
@@ -2313,30 +2343,35 @@ public class BookingbusinessAction extends BaseAction {
 			if("00".equals(code)){
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(refBean.getMsg());
-				baseBean.setData(refBean.getData());
-				/*//预约成功发送微信模板消息
-				if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(vo.getSourceOfCertification())){
+				//预约成功发送微信模板消息
+				if("C".equals(sourceOfCertification)){
 					try {
-						String waterNumber = baseBean.getData().toString();
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.xxxxxxxxxxxxxxx, waterNumber, DateUtil2.date2str(new Date()));
-						baseBean.setData(handleTemplateVo);
-						String url = HandleTemplateVo.getUrl(handleTemplateVo, bookingBusinessService.getTemplateSendUrl());
-						String openId = vo.getOpenId();
+						String waterNumber = refBean.getData().toString();
+						String appTime = vo.getAppointmentDate() + " " + vo.getAppointmentTime();
+						//获取预约地点
+						if(StringUtil.isBlank(orgName)){
+							orgName = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getName();
+						}
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(1, BusinessType.createVehicleInfo_JD37, waterNumber, appTime, orgName);
+						baseBean.setData(bookingTemplateVo);
+						String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getTemplateSendUrl());
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
+						logger.info("返回的url是：" + url);
+						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
 						map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
 						map.put("business", new TemplateDataModel().new Property("抵押/解押登记现场办理","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
-						map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
-						map.put("address", new TemplateDataModel().new Property(organizationName,"#212121"));
+						map.put("time", new TemplateDataModel().new Property(appTime,"#212121"));
+						map.put("address", new TemplateDataModel().new Property(orgName,"#212121"));
 						map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
 						logger.info("发送模板消息结果：" + flag);
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
-				}*/
+				}
 			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg(refBean.getMsg());
@@ -2387,6 +2422,9 @@ public class BookingbusinessAction extends BaseAction {
 		String modelName = request.getParameter("modelName");			//车辆型号*
 		String bookerMobile=request.getParameter("bookerMobile");		//预约手机号
 		String msgNumber = request.getParameter("msgNumber");			//短信验证码
+		String sourceOfCertification = request.getParameter("sourceOfCertification");
+		String openId = request.getParameter("openId");
+		String orgName = request.getParameter("orgName");
 		
 		try {
 			//校验参数
@@ -2426,30 +2464,35 @@ public class BookingbusinessAction extends BaseAction {
 			if("00".equals(code)){
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(refBean.getMsg());
-				baseBean.setData(refBean.getData());
-				/*//预约成功发送微信模板消息
-				if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(vo.getSourceOfCertification())){
+				//预约成功发送微信模板消息
+				if("C".equals(sourceOfCertification)){
 					try {
-						String waterNumber = baseBean.getData().toString();
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.xxxxxxxxxxxxxxx, waterNumber, DateUtil2.date2str(new Date()));
-						baseBean.setData(handleTemplateVo);
-						String url = HandleTemplateVo.getUrl(handleTemplateVo, bookingBusinessService.getTemplateSendUrl());
-						String openId = vo.getOpenId();
+						String waterNumber = refBean.getData().toString();
+						String appTime = vo.getAppointmentDate() + " " + vo.getAppointmentTime();
+						//获取预约地点
+						if(StringUtil.isBlank(orgName)){
+							orgName = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getName();
+						}
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(1, BusinessType.createVehicleInfo_JD38, waterNumber, appTime, orgName);
+						baseBean.setData(bookingTemplateVo);
+						String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getTemplateSendUrl());
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
+						logger.info("返回的url是：" + url);
+						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
 						map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
 						map.put("business", new TemplateDataModel().new Property("机动车委托异地年审现场办理","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
-						map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
-						map.put("address", new TemplateDataModel().new Property(organizationName,"#212121"));
+						map.put("time", new TemplateDataModel().new Property(appTime,"#212121"));
+						map.put("address", new TemplateDataModel().new Property(orgName,"#212121"));
 						map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
 						logger.info("发送模板消息结果：" + flag);
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
-				}*/
+				}
 			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg(refBean.getMsg());
@@ -2500,6 +2543,9 @@ public class BookingbusinessAction extends BaseAction {
 		String modelName = request.getParameter("modelName");			//车辆型号*
 		String bookerMobile=request.getParameter("bookerMobile");		//预约手机号
 		String msgNumber = request.getParameter("msgNumber");			//短信验证码
+		String sourceOfCertification = request.getParameter("sourceOfCertification");
+		String openId = request.getParameter("openId");
+		String orgName = request.getParameter("orgName");
 		
 		try {
 			//校验参数
@@ -2539,30 +2585,35 @@ public class BookingbusinessAction extends BaseAction {
 			if("00".equals(code)){
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(refBean.getMsg());
-				baseBean.setData(refBean.getData());
-				/*//预约成功发送微信模板消息
-				if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(vo.getSourceOfCertification())){
+				//预约成功发送微信模板消息
+				if("C".equals(sourceOfCertification)){
 					try {
-						String waterNumber = baseBean.getData().toString();
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.xxxxxxxxxxxxxxx, waterNumber, DateUtil2.date2str(new Date()));
-						baseBean.setData(handleTemplateVo);
-						String url = HandleTemplateVo.getUrl(handleTemplateVo, bookingBusinessService.getTemplateSendUrl());
-						String openId = vo.getOpenId();
+						String waterNumber = refBean.getData().toString();
+						String appTime = vo.getAppointmentDate() + " " + vo.getAppointmentTime();
+						//获取预约地点
+						if(StringUtil.isBlank(orgName)){
+							orgName = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getName();
+						}
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(1, BusinessType.createVehicleInfo_JD41, waterNumber, appTime, orgName);
+						baseBean.setData(bookingTemplateVo);
+						String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getTemplateSendUrl());
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
+						logger.info("返回的url是：" + url);
+						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
 						map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
 						map.put("business", new TemplateDataModel().new Property("转出、注销恢复","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
-						map.put("time", new TemplateDataModel().new Property(vo.getAppointmentDate() + " " + vo.getAppointmentTime(),"#212121"));
-						map.put("address", new TemplateDataModel().new Property(organizationName,"#212121"));
+						map.put("time", new TemplateDataModel().new Property(appTime,"#212121"));
+						map.put("address", new TemplateDataModel().new Property(orgName,"#212121"));
 						map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
 						logger.info("发送模板消息结果：" + flag);
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
-				}*/
+				}
 			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg(refBean.getMsg());
