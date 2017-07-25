@@ -61,13 +61,16 @@ public class BookingbusinessAction extends BaseAction {
 	/**
 	 * 取消预约
 	 * @param businessType 业务类型 必填 ‘1’驾驶证业务 ‘2’机动车业务
-	 * @param bookNumber  预约号
+	 * @param bookNumber  预约号,订单号
 	 * @param mobile 手机号
+	 * @param organizationName 预约地点
+	 * @param appointmentDate 预约时间
+	 * 
 	 */
 	@RequestMapping("cancel")
-	public void cancel(String businessType, String bookerNumber, String mobile) {
+	public void cancel(String businessType, String bookerNumber, String mobile,String organizationName,
+			String appointmentDate,String appointmentTime,String openId,String businessTypeName) {
 		BaseBean baseBean = new BaseBean();
-		boolean flag = false;
 		if (StringUtil.isBlank(businessType)) {
 			baseBean.setCode(MsgCode.paramsError);
 			baseBean.setMsg("businessType 不能为空!");
@@ -86,6 +89,36 @@ public class BookingbusinessAction extends BaseAction {
 			renderJSON(baseBean);
 			return;
 		}
+		if (StringUtil.isBlank(organizationName)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("organizationName 不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(appointmentDate)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("appointmentDate 不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(appointmentTime)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("appointmentTime 不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(openId)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("openId 不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(businessTypeName)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("businessTypeName 不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
 		try {
 			SmsInfoVO smsInfoVO = bookingBusinessService.cancel(businessType, bookerNumber, mobile);
 			if(null != smsInfoVO && "00".equals(smsInfoVO.getCode())){
@@ -93,6 +126,26 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(smsInfoVO.getMsg());
 				baseBean.setData(smsInfoVO.getResult());
+				
+				String templateId = "nR0-6Nfw9VvmEEcq8Kih24j1Q5X0e7ozbM5dqkV1BXo";
+				/*HandleTemplateVo handleTemplateVo = new HandleTemplateVo(2, "", bookerNumber, appointmentDate);
+				baseBean.setData(handleTemplateVo);
+				String url = HandleTemplateVo.getUrl(handleTemplateVo,"");*/
+				Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+				tmap.put("first", new TemplateDataModel().new Property("您好，您的预约申请已取消，具体信息如下：", "#212121"));
+				if("1".equals(businessType)){
+					tmap.put("businessType",new TemplateDataModel().new Property("驾驶证业务", "#212121"));
+				}else if("2".equals(businessType)){
+					tmap.put("businessType",new TemplateDataModel().new Property("机动车业务", "#212121"));	
+				}
+				tmap.put("business",new TemplateDataModel().new Property(businessTypeName, "#212121"));
+				tmap.put("order", new TemplateDataModel().new Property(bookerNumber, "#212121"));
+				tmap.put("time", new TemplateDataModel().new Property(appointmentDate +" "+ appointmentTime, "#212121"));
+				tmap.put("address", new TemplateDataModel().new Property(organizationName, "#212121"));
+				tmap.put("remark", new TemplateDataModel().new Property("", "#212121"));
+				boolean flag = templateMessageService.sendMessage(openId, templateId, "", tmap);
+				logger.info("发送模板消息结果：" + flag);
+				
 			}else{
 				baseBean.setCode(MsgCode.businessError);
 				baseBean.setMsg(smsInfoVO.getMsg());
