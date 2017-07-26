@@ -718,7 +718,8 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setMsg("验证码已发送");
 			}else{
 				baseBean.setCode(MsgCode.businessError);
-				baseBean.setMsg(vo.getMsg());
+				baseBean.setMsg(vo.getResult());
+				baseBean.setData(vo.getMsg());
 			}
 			
 		} catch (Exception e) {
