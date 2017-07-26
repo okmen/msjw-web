@@ -3031,7 +3031,7 @@ public class BookingbusinessAction extends BaseAction {
 						if(StringUtil.isBlank(orgAddr)){
 							orgAddr = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getDescription();
 						}
-						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD28, waterNumber, platNumber, carTypeName, orgName, orgAddr, appointmentDate, appointmentTime, name);
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD28, platNumber, carTypeName, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						baseBean.setData(bookingTemplateVo);
 						String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getTemplateSendUrl());
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
@@ -3159,7 +3159,7 @@ public class BookingbusinessAction extends BaseAction {
 						if(StringUtil.isBlank(orgAddr)){
 							orgAddr = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getDescription();
 						}
-						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD29, waterNumber, platNumber, carTypeName, orgName, orgAddr, appointmentDate, appointmentTime, name);
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD29, platNumber, carTypeName, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						baseBean.setData(bookingTemplateVo);
 						String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getTemplateSendUrl());
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
@@ -3286,7 +3286,7 @@ public class BookingbusinessAction extends BaseAction {
 						if(StringUtil.isBlank(orgAddr)){
 							orgAddr = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getDescription();
 						}
-						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD33, waterNumber, platNumber, carTypeName, orgName, orgAddr, appointmentDate, appointmentTime, name);
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD33, platNumber, carTypeName, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						baseBean.setData(bookingTemplateVo);
 						String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getTemplateSendUrl());
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
