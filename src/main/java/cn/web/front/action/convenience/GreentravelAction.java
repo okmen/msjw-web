@@ -2,7 +2,6 @@ package cn.web.front.action.convenience;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,6 @@ import cn.message.model.wechat.TemplateDataModel;
 import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.WebServiceException;
-import cn.sdk.util.DateUtil;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
@@ -111,9 +109,21 @@ public class GreentravelAction extends BaseAction{
 			greenBean.setSfzmhm(sfzmhm);
 			greenBean.setMonth(month);
 			BaseBean refBean=greentravelService.applyDownDate(greenBean);
-			jsonMap.put("code", refBean.getCode());
-			jsonMap.put("msg", refBean.getMsg());
-			jsonMap.put("date", refBean.getData());
+			GreenTravelBean bean=new GreenTravelBean();
+			bean.setHphm(hphm);
+			bean.setHpzl(hpzl);
+			BaseBean queryBean=greentravelService.applyTotalQuery(bean);
+			if("0000".equals(refBean.getCode())&& "0000".equals(queryBean.getCode())){
+				jsonMap.put("code",refBean.getCode());
+				jsonMap.put("msg",refBean.getMsg());
+				jsonMap.put("date", refBean.getData());
+				JSONObject respStr=JSONObject.fromObject(queryBean.data);
+				logger.info("统计停驶日期数据:"+respStr.toString());
+				jsonMap.put("zts", respStr.get("zts"));
+			}else{
+				jsonMap.put("code","0001");
+				jsonMap.put("msg", "数据查询失败");
+			}
 			out.print(JSONObject.fromObject(jsonMap));
 		}catch(Exception e){
              logger.error("安全隐患Action异常:"+e);
@@ -159,7 +169,8 @@ public class GreentravelAction extends BaseAction{
 			String lrly=request.getParameter("lrly");        //申请来源（WX:微信，ZFB支付宝，APP:手机App）
 			String cdate=request.getParameter("cdate");      //申请停驶日期
 			String type=request.getParameter("type");       //申请类型
-			String openId=request.getParameter("openId");   //openId
+			String openId=request.getParameter("openId");   //openId 
+			String zts=request.getParameter("zts");   //累计申请停驶天数 
 			//验证参数车主姓名
 			if (StringUtil.isBlank(sname)) {
 				jsonMap.put("code", MsgCode.paramsError);
@@ -244,6 +255,10 @@ public class GreentravelAction extends BaseAction{
 				return;
 			} 
 			
+			//验证参数当前申请累计天数
+			if (StringUtil.isBlank(zts)) {
+				zts="0";
+			} 
 			GreenTravelBean greenTravelBean=new GreenTravelBean();
 			greenTravelBean.setSname(sname);
 			greenTravelBean.setHphm(hphm);   //车牌号码(带’粤’)
@@ -254,6 +269,7 @@ public class GreentravelAction extends BaseAction{
 			greenTravelBean.setLrly(lrly);
 			List<ApplyGreenRet> list=new ArrayList<ApplyGreenRet>();
 			int reserveNumber=0;   //申报停驶天数
+			int calcelNuber=0;     //申报停驶日取消天数
 			for (int i = 0; i < ret.length; i++) {
 				ApplyGreenRet appret=new ApplyGreenRet();
 				appret.setCdate(ret[i]);
@@ -262,6 +278,8 @@ public class GreentravelAction extends BaseAction{
 				//统计申请停驶天数
 				if("1".equals(retType[i])){
 					reserveNumber++;
+				}else if("0".equals(retType[i])){
+					calcelNuber++;
 				}
 			}
 			logger.info("本次申请停驶日申请天数:"+reserveNumber);
@@ -272,10 +290,12 @@ public class GreentravelAction extends BaseAction{
 				jsonMap.put("msg", "数据处理出现异常");
 			}else if("0000".equals(refBean.getCode())){
 				jsonMap.put("msg", refBean.getMsg());
+					 int totalNumber=Integer.parseInt(zts);
+					 totalNumber=totalNumber+reserveNumber-calcelNuber;   //计算当前累计停驶总日期
 					try {
-						//模板消息发送
-						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
-						GreenTraveTemplateVo greenTraveTemplateVo = new GreenTraveTemplateVo("3",hphm,"绿色出行",reserveNumber);
+						//绿色出行模板消息发送
+						String templateId = "9vbb8d_BfhE5-i1KA1u9rWcVpMcIPGVh9kUyzG26MB0";
+						GreenTraveTemplateVo greenTraveTemplateVo = new GreenTraveTemplateVo("3",hphm,"绿色出行",totalNumber);
 						jsonMap.put("date", greenTraveTemplateVo);
 						String url = greenTraveTemplateVo.getUrl(greenTraveTemplateVo,greentravelService.getTemplateSendUrl());
 						logger.info("返回的url是：" + url);
@@ -284,9 +304,8 @@ public class GreentravelAction extends BaseAction{
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						tmap.put("first", new TemplateDataModel().new Property("您好,您的绿色出行申报以申请,具体信息如下：", "#212121"));
 						tmap.put("keyword1",
-								new TemplateDataModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
-						tmap.put("keyword2", new TemplateDataModel().new Property("绿色出行", "#212121"));
-						tmap.put("keyword3", new TemplateDataModel().new Property("申报成功", "#212121"));
+								new TemplateDataModel().new Property("绿色出行", "#212121"));
+						tmap.put("keyword2", new TemplateDataModel().new Property(hphm, "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
 						logger.info("发送模板消息结果：" + flag);
