@@ -2,6 +2,8 @@ package cn.web.front.action.wechat;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,6 +37,7 @@ public class OauthAction extends BaseAction{
 		String code = request.getParameter("code");
 		String state = request.getParameter("state");//前端会带过来一个url
 		try {
+			
 			//URL url = new URL(state);
 			response.setCharacterEncoding("utf-8");
 			//获取微信用户信息
@@ -43,6 +46,7 @@ public class OauthAction extends BaseAction{
 			
 			String separator = state.contains("?") ? "&" : "?";
 			
+			state = URLDecoder.decode(state);
 			String url = state + separator +
 					"openId="+wechatUserInfo.getOpenId()+
 					"&headimgurl="+wechatUserInfo.getHeadUrlImg()+
