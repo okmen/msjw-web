@@ -1,5 +1,8 @@
 package cn.web.front.action.wechat;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,14 +35,20 @@ public class OauthAction extends BaseAction{
 		String code = request.getParameter("code");
 		String state = request.getParameter("state");//前端会带过来一个url
 		try {
+			//URL url = new URL(state);
 			response.setCharacterEncoding("utf-8");
 			//获取微信用户信息
 			WechatUserInfo wechatUserInfo = wechatService.callback4OpenId(code, state);
 			logger.info("Wechat 获取用户信息:"+wechatUserInfo.toString());
-			response.sendRedirect(state+
-					"?openId="+wechatUserInfo.getOpenId()+
+			
+			String separator = state.contains("?") ? "&" : "?";
+			
+			String url = state + separator +
+					"openId="+wechatUserInfo.getOpenId()+
 					"&headimgurl="+wechatUserInfo.getHeadUrlImg()+
-					"&nickname="+java.net.URLEncoder.encode(wechatUserInfo.getNickName(), "UTF-8"));
+					"&nickname="+java.net.URLEncoder.encode(wechatUserInfo.getNickName(), "UTF-8");
+			logger.info("sendRedirect : " + url);
+			response.sendRedirect(url);
 		} catch (Exception e) {
 			logger.error("callback获取openId异常 ",e);
 		}
