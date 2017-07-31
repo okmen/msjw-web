@@ -44,9 +44,8 @@ public class OauthAction extends BaseAction{
 			WechatUserInfo wechatUserInfo = wechatService.callback4OpenId(code, state);
 			logger.info("Wechat 获取用户信息:"+wechatUserInfo.toString());
 			
-			String separator = state.contains("?") ? "&" : "?";
-			
 			state = URLDecoder.decode(state);
+			String separator = state.contains("?") ? "&" : "?";
 			String url = state + separator +
 					"openId="+wechatUserInfo.getOpenId()+
 					"&headimgurl="+wechatUserInfo.getHeadUrlImg()+
