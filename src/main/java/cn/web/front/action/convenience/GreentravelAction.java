@@ -108,11 +108,10 @@ public class GreentravelAction extends BaseAction{
 			greenBean.setHpzl(hpzl);
 			greenBean.setSfzmhm(sfzmhm);
 			greenBean.setMonth(month);
+			//申报停驶操作
 			BaseBean refBean=greentravelService.applyDownDate(greenBean);
-			GreenTravelBean bean=new GreenTravelBean();
-			bean.setHphm(hphm);
-			bean.setHpzl(hpzl);
-			BaseBean queryBean=greentravelService.applyTotalQuery(bean);
+			//查询总共停驶累计
+			BaseBean queryBean=greentravelService.applyTotalQuery(greenBean);
 			if("0000".equals(refBean.getCode())&& "0000".equals(queryBean.getCode())){
 				jsonMap.put("code",refBean.getCode());
 				jsonMap.put("msg",refBean.getMsg());
