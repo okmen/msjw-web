@@ -947,7 +947,6 @@ public class AccountAction extends BaseAction {
     	}else{
    		readilyShootVo.setLicensePlateNumber(licensePlateNumber);
     	}
-
     	if(StringUtil.isBlank(licensePlateType)){
     		readilyShootVo.setLicensePlateType("");
     	}else{
@@ -1040,7 +1039,6 @@ public class AccountAction extends BaseAction {
  		}else{
  			readilyShootVo.setOpenId(openId);
  		}
-
        	BaseBean basebean = new  BaseBean();
        	ReadilyShoot readilyShoot = new ReadilyShoot();
     	try {

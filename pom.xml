@@ -332,6 +332,12 @@
 			<artifactId>handle-center-api</artifactId>
 			<version>${cn.services.version}</version>
 		</dependency>
+		<!-- 预约类业务 -->
+		<dependency>
+			<groupId>${choumei.services.groupId}</groupId>
+			<artifactId>bookingbusiness-center-api</artifactId>
+			<version>${cn.services.version}</version>
+		</dependency>
 		<!-- choumei services -->
 		<dependency>
 			<groupId>cn.chudaokeji.lib</groupId>
