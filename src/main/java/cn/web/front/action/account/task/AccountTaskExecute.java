@@ -20,7 +20,7 @@ public class AccountTaskExecute {
      * 随手拍发送数据给php系统
      */
     public static void sendReadilyShootVoDataToPhp(ReadilyShoot readilyShoot,ReadilyShootVo readilyShootVo){
-    	//http://szjj.u-road.com/SZJJAPIServer/index.php?/report/reportfornew?jbbh=1234&wfsj=0&querypwd=123456&wfroad=test&hphm=ABCDE&hpzl=1&wfname=asd&jbr=randy&fromopenid=test123456&imagepath=http://test&phone=123456789&token=Chudao4Wfjj
+    	//http://gzh.stc.gov.cn/SZJJAPIServer/index.php?/report/reportfornew?jbbh=1234&wfsj=0&querypwd=123456&wfroad=test&hphm=ABCDE&hpzl=1&wfname=asd&jbr=randy&fromopenid=test123456&imagepath=http://test&phone=123456789&token=Chudao4Wfjj
     	logger.info("readilyShoot=" + readilyShoot);
     	logger.info("readilyShootVo=" + readilyShootVo);
     	/*jbbh 举报成功后返回的编号
@@ -39,7 +39,7 @@ public class AccountTaskExecute {
     	StringBuffer sb = new StringBuffer();
     	StringBuffer imagepath = new StringBuffer();
     	imagepath.append(readilyShoot.getIllegalImg1()).append(",").append(readilyShoot.getIllegalImg2()).append(",").append(readilyShoot.getIllegalImg3());
-    	String url = "http://szjj.u-road.com/SZJJAPIServer/index.php?/report/reportfornew?";
+    	String url = "http://gzh.stc.gov.cn/SZJJAPIServer/index.php?/report/reportfornew?";
     	sb.append(url).append("jbbh=").append(null != readilyShoot.getReportSerialNumber() ? readilyShoot.getReportSerialNumber() : "" ).append("&");
     	sb.append("wfsj=").append(null != readilyShoot.getIllegalTime() ? readilyShoot.getIllegalTime() : "").append("&");
     	sb.append("querypwd=").append(null != readilyShoot.getPassword() ? readilyShoot.getPassword() : "").append("&");
