@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import cn.booking.business.bean.DriveInfoVO;
 import cn.handle.bean.vo.ApplyCarTemporaryLicenceVo;
 import cn.handle.bean.vo.ApplyGatePassVo;
 import cn.handle.bean.vo.ApplyInspectionMarkVo;
@@ -3399,9 +3400,16 @@ public class HandleserviceAction extends BaseAction {
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
 			if ("00".equals(code)) {
-				baseBean.setCode("0000");
-				baseBean.setData(jsonObject.getJSONObject("result"));
-				baseBean.setMsg(msg);
+				Object obj = jsonObject.get("result");
+				if(obj instanceof JSONObject && obj != null){
+					JSONObject result = (JSONObject) obj;
+					baseBean.setCode(MsgCode.success);
+					baseBean.setData(result);
+				}else{
+					baseBean.setCode(MsgCode.businessError);
+					baseBean.setMsg("未查询到相应记录");
+
+				}
 			} else {
 				baseBean.setCode("0001");
 				baseBean.setMsg(msg);
