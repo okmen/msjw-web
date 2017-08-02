@@ -2993,19 +2993,20 @@ public class HandleserviceAction extends BaseAction {
 			Map<String, String> map = handleService.inspectionDeclarationQuery(identityCard,sourceOfCertification);
 			String code = map.get("code");
 			String msg = map.get("msg");
-			
+			String body=map.get("BODY");
 
 			if("0000".equals(code)){
        		baseBean.setCode(MsgCode.success);
        		baseBean.setMsg(msg);
-       	}else{
-       		baseBean.setCode(MsgCode.businessError);
-       		if ("9999".equals(code)) {
-       			baseBean.setMsg("输入信息格式有误！");
-				}else{
-					baseBean.setMsg(msg);
-				}
-       	}
+       		baseBean.setData(body);    		
+	       	}else{
+	       		baseBean.setCode(MsgCode.businessError);
+	       		if ("9999".equals(code)) {
+	       			baseBean.setMsg("输入信息格式有误！");
+					}else{
+						baseBean.setMsg(msg);
+					}
+	       	}
 		} catch (Exception e) {
 
 
