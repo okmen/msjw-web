@@ -2993,7 +2993,7 @@ public class HandleserviceAction extends BaseAction {
 			Map<String, String> map = handleService.inspectionDeclarationQuery(identityCard,sourceOfCertification);
 			String code = map.get("code");
 			String msg = map.get("msg");
-			String body=map.get("BODY");
+			String body=map.get("body");
 
 			if("0000".equals(code)){
        		baseBean.setCode(MsgCode.success);
