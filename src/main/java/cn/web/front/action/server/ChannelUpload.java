@@ -274,7 +274,7 @@ public class ChannelUpload extends BaseAction{
  						 //举报成功发送模板消息
      					/*try {
      						String templateId = "pFy7gcEYSklRmg32165BUBwM3PFbUbBSLe0IPw3ZuY4";
-         					String url = "http://szjj.u-road.com/h5/#/takePicturesSuccess1?reportSerialNumber=" + reportSerialNumber + "&password=" + password;
+         					String url = "http://gzh.stc.gov.cn/h5/#/takePicturesSuccess1?reportSerialNumber=" + reportSerialNumber + "&password=" + password;
      						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
      						map.put("first", new TemplateDataModel().new Property("随手拍举报通知","#212121"));
      						map.put("keyword1", new TemplateDataModel().new Property(reportSerialNumber,"#212121"));
