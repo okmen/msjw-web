@@ -991,7 +991,7 @@ public class BookingbusinessAction extends BaseAction {
 				if (sourceOfCertification.equals("C")) {
 					try {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
-						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ10, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, orgName);
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ10, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						baseBean.setData(bookingTemplateVo);
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
@@ -1154,7 +1154,7 @@ public class BookingbusinessAction extends BaseAction {
 				if (sourceOfCertification.equals("C")) {
 					try {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
-						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ11, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, orgName);
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ11, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						baseBean.setData(bookingTemplateVo);
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
@@ -1318,7 +1318,7 @@ public class BookingbusinessAction extends BaseAction {
 				if (sourceOfCertification.equals("C")) {
 					try {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
-						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ13, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, orgName);
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ13, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						baseBean.setData(bookingTemplateVo);
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
@@ -1482,7 +1482,7 @@ public class BookingbusinessAction extends BaseAction {
 				if (sourceOfCertification.equals("C")) {
 					try {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
-						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ17, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, orgName);
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ17, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						baseBean.setData(bookingTemplateVo);
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
@@ -1646,7 +1646,7 @@ public class BookingbusinessAction extends BaseAction {
 				if (sourceOfCertification.equals("C")) {
 					try {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
-						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ20, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, orgName);
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ20, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						baseBean.setData(bookingTemplateVo);
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
@@ -1810,7 +1810,7 @@ public class BookingbusinessAction extends BaseAction {
 				if (sourceOfCertification.equals("C")) {
 					try {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
-						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ21, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, orgName);
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ21, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						baseBean.setData(bookingTemplateVo);
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
@@ -1974,7 +1974,7 @@ public class BookingbusinessAction extends BaseAction {
 				if (sourceOfCertification.equals("C")) {
 					try {
 						String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
-						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ22, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, orgName);
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ22, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						baseBean.setData(bookingTemplateVo);
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
