@@ -986,6 +986,7 @@ public class BookingbusinessAction extends BaseAction {
 			String msg = refBean.getMsg();
 			if ("00".equals(code)) {
 				String waterNumber = (String) refBean.getData();
+				String appTime = appointmentDate +" "+appointmentTime;
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(msg);
 				if (sourceOfCertification.equals("C")) {
@@ -1000,7 +1001,7 @@ public class BookingbusinessAction extends BaseAction {
 						tmap.put("businessType", new TemplateDataModel().new Property("驾驶证在线预约","#212121"));
 						tmap.put("business", new TemplateDataModel().new Property("满分学习考试", "#212121"));
 						tmap.put("order", new TemplateDataModel().new Property(waterNumber, "#212121"));
-						tmap.put("time", new TemplateDataModel().new Property(appointmentDate +" "+appointmentTime, "#212121"));
+						tmap.put("time", new TemplateDataModel().new Property(appTime, "#212121"));
 						tmap.put("address", new TemplateDataModel().new Property(orgName, "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
@@ -1149,6 +1150,7 @@ public class BookingbusinessAction extends BaseAction {
 			String msg = refBean.getMsg();
 			if ("00".equals(code)) {
 				String waterNumber = (String) refBean.getData();
+				String appTime = appointmentDate +" "+appointmentTime;
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(msg);
 				if (sourceOfCertification.equals("C")) {
@@ -1163,7 +1165,7 @@ public class BookingbusinessAction extends BaseAction {
 						tmap.put("businessType", new TemplateDataModel().new Property("驾驶证在线预约","#212121"));
 						tmap.put("business", new TemplateDataModel().new Property("持军队、武装警察部队机动车驾驶证申领", "#212121"));
 						tmap.put("order", new TemplateDataModel().new Property(waterNumber, "#212121"));
-						tmap.put("time", new TemplateDataModel().new Property(appointmentDate +" "+appointmentTime, "#212121"));
+						tmap.put("time", new TemplateDataModel().new Property(appTime, "#212121"));
 						tmap.put("address", new TemplateDataModel().new Property(orgName, "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
@@ -1313,6 +1315,7 @@ public class BookingbusinessAction extends BaseAction {
 			String msg = refBean.getMsg();
 			if ("00".equals(code)) {
 				String waterNumber = (String) refBean.getData();
+				String appTime = appointmentDate +" "+appointmentTime;
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(msg);
 				if (sourceOfCertification.equals("C")) {
@@ -1327,7 +1330,7 @@ public class BookingbusinessAction extends BaseAction {
 						tmap.put("businessType", new TemplateDataModel().new Property("驾驶证在线预约","#212121"));
 						tmap.put("business", new TemplateDataModel().new Property("香港机动车驾驶证免试换证", "#212121"));
 						tmap.put("order", new TemplateDataModel().new Property(waterNumber, "#212121"));
-						tmap.put("time", new TemplateDataModel().new Property(appointmentDate +" "+appointmentTime, "#212121"));
+						tmap.put("time", new TemplateDataModel().new Property(appTime, "#212121"));
 						tmap.put("address", new TemplateDataModel().new Property(orgName, "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
@@ -1477,6 +1480,7 @@ public class BookingbusinessAction extends BaseAction {
 			String msg = refBean.getMsg();
 			if ("00".equals(code)) {
 				String waterNumber = (String) refBean.getData();
+				String appTime = appointmentDate +" "+appointmentTime;
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(msg);
 				if (sourceOfCertification.equals("C")) {
@@ -1491,7 +1495,7 @@ public class BookingbusinessAction extends BaseAction {
 						tmap.put("businessType", new TemplateDataModel().new Property("驾驶证在线预约","#212121"));
 						tmap.put("business", new TemplateDataModel().new Property("持境外驾驶证申请换证", "#212121"));
 						tmap.put("order", new TemplateDataModel().new Property(waterNumber, "#212121"));
-						tmap.put("time", new TemplateDataModel().new Property(appointmentDate +" "+appointmentTime, "#212121"));
+						tmap.put("time", new TemplateDataModel().new Property(appTime, "#212121"));
 						tmap.put("address", new TemplateDataModel().new Property(orgName, "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
@@ -1641,6 +1645,7 @@ public class BookingbusinessAction extends BaseAction {
 			String msg = refBean.getMsg();
 			if ("00".equals(code)) {
 				String waterNumber = (String) refBean.getData();
+				String appTime = appointmentDate +" "+appointmentTime;
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(msg);
 				if (sourceOfCertification.equals("C")) {
@@ -1655,7 +1660,7 @@ public class BookingbusinessAction extends BaseAction {
 						tmap.put("businessType", new TemplateDataModel().new Property("驾驶证在线预约","#212121"));
 						tmap.put("business", new TemplateDataModel().new Property("其他业务(驾驶证)", "#212121"));
 						tmap.put("order", new TemplateDataModel().new Property(waterNumber, "#212121"));
-						tmap.put("time", new TemplateDataModel().new Property(appointmentDate +" "+appointmentTime, "#212121"));
+						tmap.put("time", new TemplateDataModel().new Property(appTime, "#212121"));
 						tmap.put("address", new TemplateDataModel().new Property(orgName, "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
@@ -1805,6 +1810,7 @@ public class BookingbusinessAction extends BaseAction {
 			String msg = refBean.getMsg();
 			if ("00".equals(code)) {
 				String waterNumber = (String) refBean.getData();
+				String appTime = appointmentDate +" "+appointmentTime;
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(msg);
 				if (sourceOfCertification.equals("C")) {
@@ -1819,7 +1825,7 @@ public class BookingbusinessAction extends BaseAction {
 						tmap.put("businessType", new TemplateDataModel().new Property("驾驶证在线预约","#212121"));
 						tmap.put("business", new TemplateDataModel().new Property("恢复驾驶资格（逾期一年以上未换证类）", "#212121"));
 						tmap.put("order", new TemplateDataModel().new Property(waterNumber, "#212121"));
-						tmap.put("time", new TemplateDataModel().new Property(appointmentDate +" "+appointmentTime, "#212121"));
+						tmap.put("time", new TemplateDataModel().new Property(appTime, "#212121"));
 						tmap.put("address", new TemplateDataModel().new Property(orgName, "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
@@ -1969,6 +1975,7 @@ public class BookingbusinessAction extends BaseAction {
 			String msg = refBean.getMsg();
 			if ("00".equals(code)) {
 				String waterNumber = (String) refBean.getData();
+				String appTime = appointmentDate +" "+appointmentTime;
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(msg);
 				if (sourceOfCertification.equals("C")) {
@@ -1983,7 +1990,7 @@ public class BookingbusinessAction extends BaseAction {
 						tmap.put("businessType", new TemplateDataModel().new Property("驾驶证在线预约","#212121"));
 						tmap.put("business", new TemplateDataModel().new Property("恢复驾驶资格（逾期一年以上未体检类）", "#212121"));
 						tmap.put("order", new TemplateDataModel().new Property(waterNumber, "#212121"));
-						tmap.put("time", new TemplateDataModel().new Property(appointmentDate +" "+appointmentTime, "#212121"));
+						tmap.put("time", new TemplateDataModel().new Property(appTime, "#212121"));
 						tmap.put("address", new TemplateDataModel().new Property(orgName, "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
