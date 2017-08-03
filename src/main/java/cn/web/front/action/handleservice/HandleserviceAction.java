@@ -2818,6 +2818,14 @@ public class HandleserviceAction extends BaseAction {
 				return;
 			}
 			
+			//验证星级用户identityCard
+			if(StringUtil.isBlank(identityCard)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("登录星级用户身份证号不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
 			//验证vehicleIdentifyNoLast4
 			if(StringUtil.isBlank(vehicleIdentifyNoLast4)){
 				baseBean.setCode(MsgCode.paramsError);
