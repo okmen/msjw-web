@@ -2723,7 +2723,7 @@ public class HandleserviceAction extends BaseAction {
         		baseBean.setMsg(msg);
         		//成功需要发送模板消息
 				try {
-					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_xszbhlbl";
+					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
 					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.replaceInspectionMark, number, DateUtil2.date2str(new Date()));
 					baseBean.setData(handleTemplateVo);
 					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
@@ -2921,7 +2921,7 @@ public class HandleserviceAction extends BaseAction {
         		baseBean.setMsg(msg);
         		//成功需要发送模板消息
 				try {
-					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_xszbhlbl";
+					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
 					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.inspectionDeclaration, waterNumber, DateUtil2.date2str(new Date()));
 					baseBean.setData(handleTemplateVo);
 					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
