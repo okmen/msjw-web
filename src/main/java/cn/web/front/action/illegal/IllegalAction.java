@@ -1103,11 +1103,6 @@ public class IllegalAction extends BaseAction {
 				base.setMsg("缴款编号不能为空！");
 				renderJSON(base);
 			}
-			if (StringUtil.isEmpty(licensePlateNo)) {
-				base.setCode("0001");
-				base.setMsg("车牌号不能为空！");
-				renderJSON(base);
-			}
 			if (StringUtil.isEmpty(openId)) {
 				base.setCode("0001");
 				base.setMsg("未获取到openId！");
