@@ -3361,6 +3361,9 @@ public class HandleserviceAction extends BaseAction {
 				JSONObject result = (JSONObject) obj;
 				baseBean.setCode(MsgCode.success);
 				baseBean.setData(JSON.parseObject(result.getString("VehicleInspectionVO"), VehicleInspectionVO.class));
+ 				}else{
+ 					baseBean.setCode("0001");
+ 	 				baseBean.setMsg("未查询到相关数据");
  				}
  			} else {
  				baseBean.setCode("0001");
