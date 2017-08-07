@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import cn.booking.business.bean.VehicleInfoVO;
 import cn.handle.bean.vo.ApplyCarTemporaryLicenceVo;
 import cn.handle.bean.vo.ApplyGatePassVo;
 import cn.handle.bean.vo.ApplyInspectionMarkVo;
@@ -35,6 +36,7 @@ import cn.handle.bean.vo.RenewalDriverLicenseVo;
 import cn.handle.bean.vo.RepairOrReplaceDriverLicenseVo;
 import cn.handle.bean.vo.ReplaceMotorVehicleLicensePlateVo;
 import cn.handle.bean.vo.VehicleDrivingLicenseVo;
+import cn.handle.bean.vo.VehicleInspectionVO;
 import cn.handle.service.IHandleService;
 import cn.message.model.wechat.TemplateDataModel;
 import cn.message.service.ITemplateMessageService;
@@ -3353,11 +3355,11 @@ public class HandleserviceAction extends BaseAction {
  			JSONObject jsonObject = handleService.getVehicleInspection(bookNumber,numberPlate, driveLicenseNumber);
  			String code = jsonObject.getString("code");
  			String msg = jsonObject.getString("msg");
- 			String result = jsonObject.getString("result");
  			if ("00".equals(code)) {
- 				baseBean.setCode("0000");
- 				baseBean.setData(JSON.parseObject(result));
- 				baseBean.setMsg(msg);
+ 				Object obj = jsonObject.get("result");
+				JSONObject result = (JSONObject) obj;
+				baseBean.setCode(MsgCode.success);
+				baseBean.setData(JSON.parseObject(result.getString("VehicleInspectionVO"), VehicleInspectionVO.class));
  			} else {
  				baseBean.setCode("0001");
  				baseBean.setMsg(msg);
