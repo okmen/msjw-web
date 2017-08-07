@@ -3353,9 +3353,10 @@ public class HandleserviceAction extends BaseAction {
  			JSONObject jsonObject = handleService.getVehicleInspection(bookNumber,numberPlate, driveLicenseNumber);
  			String code = jsonObject.getString("code");
  			String msg = jsonObject.getString("msg");
+ 			JSONObject result = jsonObject.getJSONObject("result");
  			if ("00".equals(code)) {
  				baseBean.setCode("0000");
- 				baseBean.setData(jsonObject.getString("result"));
+ 				baseBean.setData(JSON.parseObject(result.getString("VehicleInspectionVO")));
  				baseBean.setMsg(msg);
  			} else {
  				baseBean.setCode("0001");
