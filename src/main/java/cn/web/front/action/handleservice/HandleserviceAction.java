@@ -3219,7 +3219,7 @@ public class HandleserviceAction extends BaseAction {
  				}
  			} else {
  				baseBean.setCode("0001");
- 				baseBean.setMsg(msg);
+ 				baseBean.setMsg(msg+": " +result);
  				baseBean.setData(result);
  			}
 
