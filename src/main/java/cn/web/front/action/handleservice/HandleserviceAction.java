@@ -3355,7 +3355,7 @@ public class HandleserviceAction extends BaseAction {
  			String msg = jsonObject.getString("msg");
  			if ("00".equals(code)) {
  				baseBean.setCode("0000");
- 				baseBean.setData(jsonObject.getJSONObject("result"));
+ 				baseBean.setData(jsonObject.getString("result"));
  				baseBean.setMsg(msg);
  			} else {
  				baseBean.setCode("0001");
