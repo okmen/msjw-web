@@ -132,7 +132,7 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setData(handleTemplateVo);
 				String url = HandleTemplateVo.getUrl(handleTemplateVo,"");*/
 				Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-				tmap.put("first", new TemplateDataModel().new Property("您好，您的预约申请已取消，具体信息如下：", "#212121"));
+				tmap.put("first", new TemplateDataModel().new Property("您的预约申请已取消，具体信息如下", "#212121"));
 				if("1".equals(businessType)){
 					tmap.put("businessType",new TemplateDataModel().new Property("驾驶证业务", "#212121"));
 				}else if("2".equals(businessType)){
@@ -834,7 +834,7 @@ public class BookingbusinessAction extends BaseAction {
 						logger.info("返回的url是：" + url);
 						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
+						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下","#212121"));
 						map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
 						map.put("business", new TemplateDataModel().new Property(businessName,"#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
@@ -997,7 +997,7 @@ public class BookingbusinessAction extends BaseAction {
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("first", new TemplateDataModel().new Property("您的业务办理申请已申请，具体信息如下", "#212121"));
 						tmap.put("businessType", new TemplateDataModel().new Property("驾驶证在线预约","#212121"));
 						tmap.put("business", new TemplateDataModel().new Property("满分学习考试", "#212121"));
 						tmap.put("order", new TemplateDataModel().new Property(waterNumber, "#212121"));
@@ -1161,7 +1161,7 @@ public class BookingbusinessAction extends BaseAction {
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("first", new TemplateDataModel().new Property("您的业务办理申请已申请，具体信息如下", "#212121"));
 						tmap.put("businessType", new TemplateDataModel().new Property("驾驶证在线预约","#212121"));
 						tmap.put("business", new TemplateDataModel().new Property("持军队、武装警察部队机动车驾驶证申领", "#212121"));
 						tmap.put("order", new TemplateDataModel().new Property(waterNumber, "#212121"));
@@ -1326,7 +1326,7 @@ public class BookingbusinessAction extends BaseAction {
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("first", new TemplateDataModel().new Property("您的业务办理申请已申请，具体信息如下", "#212121"));
 						tmap.put("businessType", new TemplateDataModel().new Property("驾驶证在线预约","#212121"));
 						tmap.put("business", new TemplateDataModel().new Property("香港机动车驾驶证免试换证", "#212121"));
 						tmap.put("order", new TemplateDataModel().new Property(waterNumber, "#212121"));
@@ -1491,7 +1491,7 @@ public class BookingbusinessAction extends BaseAction {
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("first", new TemplateDataModel().new Property("您的业务办理申请已申请，具体信息如下", "#212121"));
 						tmap.put("businessType", new TemplateDataModel().new Property("驾驶证在线预约","#212121"));
 						tmap.put("business", new TemplateDataModel().new Property("持境外驾驶证申请换证", "#212121"));
 						tmap.put("order", new TemplateDataModel().new Property(waterNumber, "#212121"));
@@ -1656,7 +1656,7 @@ public class BookingbusinessAction extends BaseAction {
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("first", new TemplateDataModel().new Property("您的业务办理申请已申请，具体信息如下", "#212121"));
 						tmap.put("businessType", new TemplateDataModel().new Property("驾驶证在线预约","#212121"));
 						tmap.put("business", new TemplateDataModel().new Property("其他业务(驾驶证)", "#212121"));
 						tmap.put("order", new TemplateDataModel().new Property(waterNumber, "#212121"));
@@ -1821,7 +1821,7 @@ public class BookingbusinessAction extends BaseAction {
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("first", new TemplateDataModel().new Property("您的业务办理申请已申请，具体信息如下", "#212121"));
 						tmap.put("businessType", new TemplateDataModel().new Property("驾驶证在线预约","#212121"));
 						tmap.put("business", new TemplateDataModel().new Property("恢复驾驶资格（逾期一年以上未换证类）", "#212121"));
 						tmap.put("order", new TemplateDataModel().new Property(waterNumber, "#212121"));
@@ -1986,7 +1986,7 @@ public class BookingbusinessAction extends BaseAction {
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("first", new TemplateDataModel().new Property("您的业务办理申请已申请，具体信息如下", "#212121"));
 						tmap.put("businessType", new TemplateDataModel().new Property("驾驶证在线预约","#212121"));
 						tmap.put("business", new TemplateDataModel().new Property("恢复驾驶资格（逾期一年以上未体检类）", "#212121"));
 						tmap.put("order", new TemplateDataModel().new Property(waterNumber, "#212121"));
@@ -2145,7 +2145,7 @@ public class BookingbusinessAction extends BaseAction {
 						logger.info("返回的url是：" + url);
 						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
+						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下","#212121"));
 						map.put("businessType", new TemplateDataModel().new Property("驾驶证在线预约","#212121"));
 						map.put("business", new TemplateDataModel().new Property("临时机动车驾驶许可申领","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
@@ -2344,7 +2344,7 @@ public class BookingbusinessAction extends BaseAction {
 					logger.info("返回的url是：" + url);
 					logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-					map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
+					map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下","#212121"));
 					map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
 					map.put("business", new TemplateDataModel().new Property("核发临牌","#212121"));
 					map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
@@ -2462,7 +2462,7 @@ public class BookingbusinessAction extends BaseAction {
 						logger.info("返回的url是：" + url);
 						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
+						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下","#212121"));
 						map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
 						map.put("business", new TemplateDataModel().new Property("核发校车标牌","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
@@ -2589,7 +2589,7 @@ public class BookingbusinessAction extends BaseAction {
 						logger.info("返回的url是：" + url);
 						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
+						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下","#212121"));
 						map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
 						map.put("business", new TemplateDataModel().new Property("抵押/解押登记现场办理","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
@@ -2716,7 +2716,7 @@ public class BookingbusinessAction extends BaseAction {
 						logger.info("返回的url是：" + url);
 						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
+						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下","#212121"));
 						map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
 						map.put("business", new TemplateDataModel().new Property("机动车委托异地年审现场办理","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
@@ -2843,7 +2843,7 @@ public class BookingbusinessAction extends BaseAction {
 						logger.info("返回的url是：" + url);
 						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
+						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下","#212121"));
 						map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
 						map.put("business", new TemplateDataModel().new Property("转出、注销恢复","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
@@ -2925,7 +2925,7 @@ public class BookingbusinessAction extends BaseAction {
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,bookingBusinessService.getTemplateSendUrl());
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
+						tmap.put("first", new TemplateDataModel().new Property("您的业务办理申请已申请，具体信息如下", "#212121"));
 						tmap.put("keyword1",
 								new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()), "#212121"));
 						tmap.put("keyword2", new TemplateDataModel().new Property("取消驾驶证预约业务", "#212121"));
@@ -3046,7 +3046,7 @@ public class BookingbusinessAction extends BaseAction {
 						logger.info("返回的url是：" + url);
 						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
+						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下","#212121"));
 						map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
 						map.put("business", new TemplateDataModel().new Property("机动车打刻原车发动机号码变更备案","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
@@ -3174,7 +3174,7 @@ public class BookingbusinessAction extends BaseAction {
 						logger.info("返回的url是：" + url);
 						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
+						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下","#212121"));
 						map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
 						map.put("business", new TemplateDataModel().new Property("机动车打刻原车辆识别代号变更备案","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
@@ -3301,7 +3301,7 @@ public class BookingbusinessAction extends BaseAction {
 						logger.info("返回的url是：" + url);
 						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下：","#212121"));
+						map.put("first", new TemplateDataModel().new Property("您的业务办理预约申请已成功提交，具体信息如下","#212121"));
 						map.put("businessType", new TemplateDataModel().new Property("机动车在线预约","#212121"));
 						map.put("business", new TemplateDataModel().new Property("档案更正","#212121"));
 						map.put("order", new TemplateDataModel().new Property(waterNumber,"#212121"));
