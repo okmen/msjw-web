@@ -457,7 +457,7 @@ public class BookingbusinessAction extends BaseAction {
 	 * localhost/web/bookingbusiness/getIdTypes.html
 	 */
 	@RequestMapping("getIdTypes")
-	public void getIdTypes(String businessTypeId) {
+	public void getIdTypes(String businessTypeId ,String type) {
 		BaseBean baseBean = new BaseBean();
 		if (StringUtil.isBlank(businessTypeId)) {
 			baseBean.setCode(MsgCode.paramsError);
@@ -466,7 +466,7 @@ public class BookingbusinessAction extends BaseAction {
 			return;
 		}
 		try {
-			List<IdTypeVO> idTypeVOs = bookingBusinessService.getIdTypes(businessTypeId, "", "");
+			List<IdTypeVO> idTypeVOs = bookingBusinessService.getIdTypes(businessTypeId, "", "" ,type);
 			baseBean.setCode(MsgCode.success);
 			baseBean.setMsg("");
 			baseBean.setData(idTypeVOs);
