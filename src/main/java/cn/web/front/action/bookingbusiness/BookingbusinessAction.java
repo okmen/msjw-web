@@ -408,7 +408,7 @@ public class BookingbusinessAction extends BaseAction {
 	 * @param arg1
 	 */
 	@RequestMapping("getIdTypeId")
-	public void getIdTypeId(String code, String businessTypeId, String arg0, String arg1) {
+	public void getIdTypeId(String code, String businessTypeId, String arg0, String arg1 ,String type) {
 		BaseBean baseBean = new BaseBean();
 		boolean flag = false;
 		if (StringUtil.isBlank(code)) {
@@ -424,7 +424,7 @@ public class BookingbusinessAction extends BaseAction {
 			return;
 		}
 		try {
-			List<IdTypeVO> idTypeVOs = bookingBusinessService.getIdTypes(businessTypeId, arg0, arg1);
+			List<IdTypeVO> idTypeVOs = bookingBusinessService.getIdTypes(businessTypeId, arg0, arg1 ,type);
 			if (null != idTypeVOs) {
 				baseBean.setCode(MsgCode.success);
 				for (IdTypeVO idTypeVO : idTypeVOs) {
