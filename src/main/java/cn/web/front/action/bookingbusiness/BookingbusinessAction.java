@@ -3487,11 +3487,17 @@ public class BookingbusinessAction extends BaseAction {
 	 * 获取页面初始化数据
 	 */
 	@RequestMapping("getPageInit")
-	public void getPageInit(String businessTypeId) {
+	public void getPageInit(String businessTypeId ,String type) {
 		BaseBean baseBean = new BaseBean();
 		if (StringUtil.isBlank(businessTypeId)) {
 			baseBean.setCode(MsgCode.paramsError);
 			baseBean.setMsg("businessTypeId 不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if (StringUtil.isBlank(type)) {
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("type 不能为空!");
 			renderJSON(baseBean);
 			return;
 		}
@@ -3520,7 +3526,7 @@ public class BookingbusinessAction extends BaseAction {
 			List<OrgVO> orgVOs = bookingBusinessService.getOrgsByBusinessTypeId(businessTypeId, "", "");
 			map.put("orgVOs", orgVOs);
 			//获取身份证明类型
-			List<IdTypeVO> idTypeVOs = bookingBusinessService.getIdTypes(businessTypeId, "", "");
+			List<IdTypeVO> idTypeVOs = bookingBusinessService.getIdTypes(businessTypeId, "", "",type);
 			map.put("idTypeVOs", idTypeVOs);
 			baseBean.setCode(MsgCode.success);
 			baseBean.setData(map);
