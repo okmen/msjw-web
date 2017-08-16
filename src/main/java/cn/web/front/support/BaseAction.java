@@ -132,7 +132,7 @@ public class BaseAction extends cn.web.front.common.BaseAction {
     	if(exception instanceof WebServiceException){
 			WebServiceException webServiceException = (WebServiceException) exception;
 			baseBean.setCode(String.valueOf(webServiceException.getCode()));
-			baseBean.setMsg(MsgCode.webServiceCallMsg);
+			baseBean.setMsg(webServiceException.getMessage());
 		}else if(exception instanceof HttpPingAnException){
 			HttpPingAnException pingAnException = (HttpPingAnException) exception;
 			baseBean.setCode(String.valueOf(pingAnException.getCode()));
