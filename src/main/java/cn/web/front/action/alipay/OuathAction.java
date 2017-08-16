@@ -1,5 +1,6 @@
 package cn.web.front.action.alipay;
 
+import java.net.URLEncoder;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,14 +42,18 @@ public class OuathAction extends BaseAction {
 			AlipayUserInfo alipayUserInfo = alipayService.callback4UserId(code);
 			logger.info("alipay 获取用户信息："+alipayUserInfo.toString());
 			
-			String nickName = alipayUserInfo.getNickName();
-			if (!StringUtils.isNotBlank(nickName)) {
-				nickName = "未设置昵称";
-			}
-			String redirectUrl = state + "?openId=" + alipayUserInfo.getUserId() + "&headimgurl=" + alipayUserInfo.getAvatar() + "&nickname=" + java.net.URLEncoder.encode(nickName, "UTF-8");
+			StringBuffer sBuffer = new StringBuffer();
+			sBuffer
+			.append("alipayId=").append(alipayUserInfo.getAlipayId()).append("&")
+			.append("avatar=").append(alipayUserInfo.getAvatar()).append("&")
+			.append("&nickname=").append(alipayUserInfo.getNickName()).append("&")
+			.append("&mobile=").append(alipayUserInfo.getMobile());
+			String redirectUrl = state + "?" + URLEncoder.encode(sBuffer.toString(), "UTF-8");
+			logger.info("返回的redirectUrl：" + redirectUrl);
+			//String redirectUrl = state + "?alipayId=" + alipayUserInfo.getAlipayId() + "&avatar=" + alipayUserInfo.getAvatar() + "&nickname=" + java.net.URLEncoder.encode(nickName, "UTF-8");
 			response.sendRedirect(redirectUrl);
 		} catch (Exception e) {
-			logger.error("alipay callback获取userInfo异常 ", e);
+			logger.error("callback异常 ", e);
 		}
 	}
 }

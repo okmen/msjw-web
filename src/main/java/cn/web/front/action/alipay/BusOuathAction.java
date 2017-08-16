@@ -49,7 +49,7 @@ Logger logger = Logger.getLogger(OuathAction.class);
 			if (!StringUtils.isNotBlank(nickName)) {
 				nickName = "未设置昵称";
 			}
-			String redirectUrl = state + "?openId=" + alipayUserInfo.getUserId() + "&headimgurl=" + alipayUserInfo.getAvatar() + "&nickname=" + java.net.URLEncoder.encode(nickName, "UTF-8");
+			String redirectUrl = state + "?openId=" + alipayUserInfo.getAlipayId() + "&headimgurl=" + alipayUserInfo.getAvatar() + "&nickname=" + java.net.URLEncoder.encode(nickName, "UTF-8");
 			response.sendRedirect(redirectUrl);
 		} catch (Exception e) {
 			logger.error("alipay callback获取userInfo异常 ", e);
