@@ -934,7 +934,7 @@ public class AccountAction extends BaseAction {
      * @return void    返回类型 
      * @date 2017年4月20日 下午3:06:02
      */
-    @RequestMapping(value = "readilyShoot",method = RequestMethod.POST)
+    @RequestMapping(value = "readilyShoot")
     public void readilyShoot(String licensePlateNumber,String licensePlateType,String illegalActivitieOne, String illegalTime, String illegalSections, 
     		String reportImgOne, String reportImgTwo,String reportImgThree,String reportImgOneT1,String reportImgOneT2,String reportImgOneT3,
     		String inputMan,String inputManName,String inputManPhone,String identityCard,String userSource,String openId,String wfxw1,String sourceOfCertification) {
@@ -1035,7 +1035,7 @@ public class AccountAction extends BaseAction {
     	
     	if(StringUtil.isBlank(openId)){
  			code=MsgCode.paramsError;
- 			sb.append("微信openid为空  ");
+ 			sb.append("openId 为空  ");
  		}else{
  			readilyShootVo.setOpenId(openId);
  		}
