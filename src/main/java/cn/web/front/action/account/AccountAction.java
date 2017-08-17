@@ -930,14 +930,15 @@ public class AccountAction extends BaseAction {
      * @param userSource 认证来源(微信C，支付宝Z)
      * @param openId    openId(暂时无用)
      * @param wfxw1 违法行为1
-     * 
+     * @param shsm 是否实名 0  -非实名  1-实名认证过
      * @return void    返回类型 
      * @date 2017年4月20日 下午3:06:02
      */
     @RequestMapping(value = "readilyShoot")
     public void readilyShoot(String licensePlateNumber,String licensePlateType,String illegalActivitieOne, String illegalTime, String illegalSections, 
     		String reportImgOne, String reportImgTwo,String reportImgThree,String reportImgOneT1,String reportImgOneT2,String reportImgOneT3,
-    		String inputMan,String inputManName,String inputManPhone,String identityCard,String userSource,String openId,String wfxw1,String sourceOfCertification) {
+    		String inputMan,String inputManName,String inputManPhone,String identityCard,String userSource,String openId,String wfxw1,
+    		String sourceOfCertification,String shsm) {
     	String code=MsgCode.success;
  		StringBuffer sb = new StringBuffer("");
  		int imgNumber=0;//传入的图片数量
@@ -1025,6 +1026,12 @@ public class AccountAction extends BaseAction {
  			sb.append("用户来源为空  ");
  		}else{
  			readilyShootVo.setUserSource(userSource);
+ 			if("Z".equals(userSource)){
+ 				if(StringUtil.isBlank(shsm)){
+ 					code=MsgCode.paramsError;
+ 		 			sb.append("shsm 不能为空");
+ 				}
+ 			}
  		}
     	if(StringUtil.isBlank(sourceOfCertification)){
  			code=MsgCode.paramsError;
