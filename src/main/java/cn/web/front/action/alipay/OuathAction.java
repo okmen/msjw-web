@@ -46,8 +46,8 @@ public class OuathAction extends BaseAction {
 			sBuffer
 			.append("alipayId=").append(alipayUserInfo.getAlipayId()).append("&")
 			.append("avatar=").append(alipayUserInfo.getAvatar()).append("&")
-			.append("&nickname=").append(alipayUserInfo.getNickName()).append("&")
-			.append("&mobile=").append(alipayUserInfo.getMobile());
+			.append("nickname=").append(alipayUserInfo.getNickName()).append("&")
+			.append("mobile=").append(alipayUserInfo.getMobile());
 			String redirectUrl = state + "?" + URLEncoder.encode(sBuffer.toString(), "UTF-8");
 			logger.info("返回的redirectUrl：" + redirectUrl);
 			//String redirectUrl = state + "?alipayId=" + alipayUserInfo.getAlipayId() + "&avatar=" + alipayUserInfo.getAvatar() + "&nickname=" + java.net.URLEncoder.encode(nickName, "UTF-8");
