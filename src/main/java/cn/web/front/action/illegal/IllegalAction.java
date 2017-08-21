@@ -831,7 +831,7 @@ public class IllegalAction extends BaseAction {
 	@RequestMapping(value = "reportingNoParking")
 	public void reportingNoParking(String numberPlateNumber, String plateType, String IDcard, String parkingSpot,
 			String parkingReason, String scenePhoto, String scenePhoto1, String scenePhoto2, String scenePhoto3,
-			String stopNoticePhoto, String sourceOfCertification) {
+			String stopNoticePhoto, String sourceOfCertification ,String stopNoticeNumber) {
 		BaseBean base = new BaseBean();
 		ReportingNoParking reportingNoParking = new ReportingNoParking();
 		if (StringUtil.isBlank(numberPlateNumber)) {
@@ -866,17 +866,10 @@ public class IllegalAction extends BaseAction {
 		} else {
 			reportingNoParking.setParkingSpot(parkingSpot);
 		}
-		if (StringUtil.isBlank(parkingReason)) {
-			base.setCode("0001");
-			base.setMsg("停车原因不能为空！");
-			renderJSON(base);
-			return;
-		} else {
-			reportingNoParking.setParkingReason(parkingReason);
-		}
+		reportingNoParking.setParkingReason("");
 		if (StringUtil.isBlank(scenePhoto)) {
 			base.setCode("0001");
-			base.setMsg("大场景1不能为空！");
+			base.setMsg("车身45°不能为空！");
 			renderJSON(base);
 			return;
 		} else {
@@ -884,7 +877,7 @@ public class IllegalAction extends BaseAction {
 		}
 		if (StringUtil.isBlank(scenePhoto1)) {
 			base.setCode("0001");
-			base.setMsg("大场景不能为空！");
+			base.setMsg("车头正面不能为空！");
 			renderJSON(base);
 			return;
 		} else {
@@ -892,20 +885,13 @@ public class IllegalAction extends BaseAction {
 		}
 		if (StringUtil.isBlank(scenePhoto2)) {
 			base.setCode("0001");
-			base.setMsg("前五米无车场景不能为空！");
+			base.setMsg("驾离后照片不能为空！");
 			renderJSON(base);
 			return;
 		} else {
 			reportingNoParking.setScenePhoto2(scenePhoto2);
-		}
-		if (StringUtil.isBlank(scenePhoto3)) {
-			base.setCode("0001");
-			base.setMsg("后五米无车场景不能为空！");
-			renderJSON(base);
-			return;
-		} else {
-			reportingNoParking.setScenePhoto3(scenePhoto3);
-		}
+		}		
+		reportingNoParking.setScenePhoto3("");
 		if (StringUtil.isBlank(stopNoticePhoto)) {
 			base.setCode("0001");
 			base.setMsg("停车告知单拍摄照片不能为空！");
@@ -922,6 +908,15 @@ public class IllegalAction extends BaseAction {
 		} else {
 			reportingNoParking.setSourceOfCertification(sourceOfCertification);
 		}
+		if (StringUtil.isBlank(stopNoticeNumber)) {
+			base.setCode("0001");
+			base.setMsg("违停告知单号不能为空！");
+			renderJSON(base);
+			return;
+		} else {
+			reportingNoParking.setSourceOfCertification(stopNoticeNumber);
+		}
+		
 		try {
 			Map<String, String> map = illegalService.reportingNoParking(reportingNoParking);
 			String code = map.get("code");
