@@ -112,16 +112,15 @@ public class GreentravelAction extends BaseAction{
 			BaseBean refBean=greentravelService.applyDownDate(greenBean);
 			//查询总共停驶累计
 			BaseBean queryBean=greentravelService.applyTotalQuery(greenBean);
-			if("0000".equals(refBean.getCode())&& "0000".equals(queryBean.getCode())){
-				jsonMap.put("code",refBean.getCode());
-				jsonMap.put("msg",refBean.getMsg());
-				jsonMap.put("date", refBean.getData());
-				JSONObject respStr=JSONObject.fromObject(queryBean.data);
+			jsonMap.put("code",refBean.getCode());
+			jsonMap.put("msg",refBean.getMsg());
+			jsonMap.put("date", refBean.getData());
+			JSONObject respStr=JSONObject.fromObject(queryBean.data);
+			if("0000".equals(queryBean.getCode())){
 				logger.info("统计停驶日期数据:"+respStr.toString());
 				jsonMap.put("zts", respStr.get("zts"));
 			}else{
-				jsonMap.put("code","0001");
-				jsonMap.put("msg", "数据查询失败");
+				jsonMap.put("zts",0);
 			}
 			out.print(JSONObject.fromObject(jsonMap));
 		}catch(Exception e){
@@ -137,6 +136,10 @@ public class GreentravelAction extends BaseAction{
 				jsonMap.put("msg", MsgCode.systemMsg);
 			}
 			out.print(JSONObject.fromObject(jsonMap));
+		}finally{
+			if(out!=null){
+				out.close();
+			}
 		}
 	}
 	
@@ -328,6 +331,10 @@ public class GreentravelAction extends BaseAction{
 				jsonMap.put("msg", MsgCode.systemMsg);
 			}
 			out.print(JSONObject.fromObject(jsonMap));
+		}finally{
+			if(out!=null){
+				out.close();
+			}
 		}
 	}
 	
@@ -396,6 +403,10 @@ public class GreentravelAction extends BaseAction{
 				jsonMap.put("msg", MsgCode.systemMsg);
 			}
 			out.print(JSONObject.fromObject(jsonMap));
+		}finally{
+			if(out!=null){
+				out.close();
+			}
 		}
 	}
 }
