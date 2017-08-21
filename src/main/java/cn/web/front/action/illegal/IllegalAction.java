@@ -914,7 +914,7 @@ public class IllegalAction extends BaseAction {
 			renderJSON(base);
 			return;
 		} else {
-			reportingNoParking.setSourceOfCertification(stopNoticeNumber);
+			reportingNoParking.setStopNoticeNumber(stopNoticeNumber);
 		}
 		
 		try {
