@@ -545,6 +545,7 @@ public class IllegalAction extends BaseAction {
 				base.setMsg("未获取到openId！");
 				renderJSON(base);
 			}
+			billNo = billNo.replaceAll(" ", "");
 			String url = illegalService.toQueryPunishmentPage(billNo, licensePlateNo, mobilephone, openId);
 			if (StringUtil.isEmpty(url)) {
 				base.setCode("0001");
@@ -1061,6 +1062,7 @@ public class IllegalAction extends BaseAction {
 		}
 
 		try {
+			billNo = billNo.replaceAll(" ", "");
 			base=illegalService.toQueryElectronicReceiptPage(billNo, licensePlateNo, drivingLicenceNo);
 			/*String code = (String) map.get("code");
 			String msg = (String) map.get("msg");
@@ -1103,6 +1105,7 @@ public class IllegalAction extends BaseAction {
 				base.setMsg("未获取到openId！");
 				renderJSON(base);
 			}
+			billNo = billNo.replaceAll(" ", "");
 			String url = illegalService.toPayPage(billNo, licensePlateNo, mobilephone, openId);
 			if (StringUtil.isEmpty(url)) {
 				base.setCode("0001");
