@@ -3387,6 +3387,8 @@ public class HandleserviceAction extends BaseAction {
     	BaseBean baseBean = new BaseBean();
     	try {
     		if(StringUtils.isBlank(vo.getName())){
+    			logger.error(JSON.toJSONString(vo));
+    			
         		baseBean.setMsg("车主姓名不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
