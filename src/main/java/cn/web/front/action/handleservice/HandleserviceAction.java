@@ -94,11 +94,13 @@ public class HandleserviceAction extends BaseAction {
     		String livePhoto1,String livePhoto2,String PHOTO9, String PHOTO10, String DJZSFYJ,
     		String ip,String sourceOfCertification,String foreignPeopleLivingOnTheTable,String openId,String XSZZP,
     		HttpServletRequest request,HttpServletResponse response) throws Exception{
-    	
     	Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
-			String paraName=(String)enu.nextElement();  
-			logger.info("补领机动车行驶证为：" + paraName+": "+request.getParameter(paraName));
+			String paraName=(String)enu.nextElement();
+			String value = request.getParameter(paraName);
+			if(null != value && value.length() <= 30){
+				logger.info("补领机动车行驶证参数为：" + paraName+": "+request.getParameter(paraName));
+			}
 		}
 		
 		
@@ -334,8 +336,11 @@ public class HandleserviceAction extends BaseAction {
 		
 		Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
-			String paraName=(String)enu.nextElement();  
-			logger.info("驾驶证年审为：" + paraName+": "+request.getParameter(paraName));
+			String paraName=(String)enu.nextElement();
+			String value = request.getParameter(paraName);
+			if(null != value && value.length() <= 30){
+				logger.info("驾驶证年审参数为：" + paraName+": "+request.getParameter(paraName));
+			}
 		}
 		
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
@@ -574,8 +579,11 @@ public class HandleserviceAction extends BaseAction {
 		
 		Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
-			String paraName=(String)enu.nextElement();  
-			logger.info("驾驶证延期换证为：" + paraName+": "+request.getParameter(paraName));
+			String paraName=(String)enu.nextElement();
+			String value = request.getParameter(paraName);
+			if(null != value && value.length() <= 30){
+				logger.info("驾驶证延期换证参数为：" + paraName+": "+request.getParameter(paraName));
+			}
 		}
 		
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
@@ -805,8 +813,11 @@ public class HandleserviceAction extends BaseAction {
 			HttpServletResponse response) {
 		Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
-			String paraName=(String)enu.nextElement();  
-			logger.info("驾驶证转入为：" + paraName+": "+request.getParameter(paraName));
+			String paraName=(String)enu.nextElement();
+			String value = request.getParameter(paraName);
+			if(null != value && value.length() <= 30){
+				logger.info("驾驶证转入参数为：" + paraName+": "+request.getParameter(paraName));
+			}
 		}
 		
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
@@ -1036,8 +1047,11 @@ public class HandleserviceAction extends BaseAction {
 			HttpServletResponse response) {
 		Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
-			String paraName=(String)enu.nextElement();  
-			logger.info("驾驶证自愿降级为：" + paraName+": "+request.getParameter(paraName));
+			String paraName=(String)enu.nextElement();
+			String value = request.getParameter(paraName);
+			if(null != value && value.length() <= 30){
+				logger.info("驾驶证自愿降级参数为：" + paraName+": "+request.getParameter(paraName));
+			}
 		}
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
 		DriverLicenseVoluntaryDemotionVo driverLicenseVoluntaryDemotionVo = new DriverLicenseVoluntaryDemotionVo();
@@ -1263,8 +1277,11 @@ public class HandleserviceAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response) {
 		Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
-			String paraName=(String)enu.nextElement();  
-			logger.info("驾驶证补证请求参数为：" + paraName+": "+request.getParameter(paraName));
+			String paraName=(String)enu.nextElement();
+			String value = request.getParameter(paraName);
+			if(null != value && value.length() <= 30){
+				logger.info("驾驶证补证参数为：" + paraName+": "+request.getParameter(paraName));
+			}
 		}
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
 		RepairOrReplaceDriverLicenseVo repairOrReplaceDriverLicenseVo = new RepairOrReplaceDriverLicenseVo();
@@ -1508,8 +1525,11 @@ public class HandleserviceAction extends BaseAction {
 			HttpServletResponse response) {
 		Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
-			String paraName=(String)enu.nextElement();  
-			logger.info("驾驶证换证为：" + paraName+": "+request.getParameter(paraName));
+			String paraName=(String)enu.nextElement();
+			String value = request.getParameter(paraName);
+			if(null != value && value.length() <= 30){
+				logger.info("驾驶证换证参数为：" + paraName+": "+request.getParameter(paraName));
+			}
 		}
 		
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
@@ -1746,8 +1766,11 @@ public class HandleserviceAction extends BaseAction {
 			String PHOTO9, String PHOTO10, String JSZZP, String openId ,HttpServletRequest request, HttpServletResponse response) {
 		Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
-			String paraName=(String)enu.nextElement();  
-			logger.info("驾驶人联系方式变更为：" + paraName+": "+request.getParameter(paraName));
+			String paraName=(String)enu.nextElement();
+			String value = request.getParameter(paraName);
+			if(null != value && value.length() <= 30){
+				logger.info("驾驶人联系方式变更参数为：" + paraName+": "+request.getParameter(paraName));
+			}
 		}
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
 		DriverChangeContactVo driverChangeContactVo = new DriverChangeContactVo();
@@ -1925,8 +1948,11 @@ public class HandleserviceAction extends BaseAction {
     	ApplyGatePassVo vo = new ApplyGatePassVo();
     	Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
-			String paraName=(String)enu.nextElement();  
-			logger.info("applyGatePass请求参数为：" + paraName+": "+request.getParameter(paraName));
+			String paraName=(String)enu.nextElement();
+			String value = request.getParameter(paraName);
+			if(null != value && value.length() <= 30){
+				logger.info("applyGatePass参数为：" + paraName+": "+request.getParameter(paraName));
+			}
 		}
 		try {
 			String plateType = request.getParameter("plateType");   //号牌种类
@@ -2065,8 +2091,11 @@ public class HandleserviceAction extends BaseAction {
     	ApplyCarTemporaryLicenceVo vo = new ApplyCarTemporaryLicenceVo();
     	Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
-			String paraName=(String)enu.nextElement();  
-			logger.info("applyCarTemporaryLicence请求参数为：" + paraName+": "+request.getParameter(paraName));
+			String paraName=(String)enu.nextElement();
+			String value = request.getParameter(paraName);
+			if(null != value && value.length() <= 30){
+				logger.info("applyCarTemporaryLicence参数为：" + paraName+": "+request.getParameter(paraName));
+			}
 		}
 		try {
 			String userName = request.getParameter("userName");   //姓名
@@ -2263,8 +2292,11 @@ public class HandleserviceAction extends BaseAction {
 	public void iocomotiveCarChangeContact(HttpServletRequest request,HttpServletResponse response){
 		Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
-			String paraName=(String)enu.nextElement();  
-			logger.info("iocomotiveCarChangeContact请求参数为：" + paraName+": "+request.getParameter(paraName));
+			String paraName=(String)enu.nextElement();
+			String value = request.getParameter(paraName);
+			if(null != value && value.length() <= 30){
+				logger.info("机动车联系方式变更参数为：" + paraName+": "+request.getParameter(paraName));
+			}
 		}
 		
 		BaseBean baseBean = new BaseBean();		//创建返回结果
@@ -2436,8 +2468,11 @@ public class HandleserviceAction extends BaseAction {
     public void iocomotiveCarReplace(HttpServletRequest request,HttpServletResponse response){
     	Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
-			String paraName=(String)enu.nextElement();  
-			logger.info("iocomotiveCarReplace请求参数为：" + paraName+": "+request.getParameter(paraName));
+			String paraName=(String)enu.nextElement();
+			String value = request.getParameter(paraName);
+			if(null != value && value.length() <= 30){
+				logger.info("换领机动车行驶证参数为：" + paraName+": "+request.getParameter(paraName));
+			}
 		}
     	BaseBean baseBean = new BaseBean();		//创建返回结果
     	IocomotiveCarReplaceVo iocomotiveCarReplaceVo = new IocomotiveCarReplaceVo();
@@ -2620,8 +2655,11 @@ public class HandleserviceAction extends BaseAction {
    		ApplyInspectionMarkVo vo = new ApplyInspectionMarkVo();
    		Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
-			String paraName=(String)enu.nextElement();  
-			logger.info("replaceInspectionMark请求参数为：" + paraName+": "+request.getParameter(paraName));
+			String paraName=(String)enu.nextElement();
+			String value = request.getParameter(paraName);
+			if(null != value && value.length() <= 30){
+				logger.info("replaceInspectionMark参数为：" + paraName+": "+request.getParameter(paraName));
+			}
 		}
 		try {
 			String userName = request.getParameter("userName");   //姓名
@@ -2840,8 +2878,11 @@ public class HandleserviceAction extends BaseAction {
    		ApplyRemoteEntrustedBusinessVo vo = new ApplyRemoteEntrustedBusinessVo();
    		Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
-			String paraName=(String)enu.nextElement();  
-			logger.info("inspectionDeclaration请求参数为：" + paraName+": "+request.getParameter(paraName));
+			String paraName=(String)enu.nextElement();
+			String value = request.getParameter(paraName);
+			if(null != value && value.length() <= 30){
+				logger.info("inspectionDeclaration参数为：" + paraName+": "+request.getParameter(paraName));
+			}
 		}
 		try {
 			String name = request.getParameter("name");   //车主姓名
@@ -3048,8 +3089,11 @@ public class HandleserviceAction extends BaseAction {
 	public void inspectionDeclarationQuery(HttpServletRequest request,HttpServletResponse response){
 	   Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
-			String paraName=(String)enu.nextElement();  
-			logger.info("inspectionDeclarationQuery请求参数为：" + paraName+": "+request.getParameter(paraName));
+			String paraName=(String)enu.nextElement();
+			String value = request.getParameter(paraName);
+			if(null != value && value.length() <= 30){
+				logger.info("inspectionDeclarationQuery参数为：" + paraName+": "+request.getParameter(paraName));
+			}
 		}
    		BaseBean baseBean = new BaseBean();		//创建返回结果    	
 		try {
@@ -3136,8 +3180,11 @@ public class HandleserviceAction extends BaseAction {
  			String bookerIdentityCard, String bookerType, String carTypeId, String sourceOfCertification, String openId,HttpServletRequest request) {
  		Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
-			String paraName=(String)enu.nextElement();  
-			logger.info("createVehicleInspection请求参数为：" + paraName+": "+request.getParameter(paraName));
+			String paraName=(String)enu.nextElement();
+			String value = request.getParameter(paraName);
+			if(null != value && value.length() <= 30){
+				logger.info("createVehicleInspection参数为：" + paraName+": "+request.getParameter(paraName));
+			}
 		}
  		BaseBean baseBean = new BaseBean();
  		CreateVehicleInspectionVo createVehicleInspectionVo = new CreateVehicleInspectionVo();
@@ -3463,7 +3510,14 @@ public class HandleserviceAction extends BaseAction {
 	 */
     @RequestMapping("replaceMotorVehicleLicensePlate")
     public void replaceMotorVehicleLicensePlate(ReplaceMotorVehicleLicensePlateVo vo, HttpServletRequest request){
-    	logger.info("replaceMotorVehicleLicensePlate参数为：" + JSON.toJSONString(vo));
+    	Enumeration enu=request.getParameterNames();  
+		while(enu.hasMoreElements()){  
+			String paraName=(String)enu.nextElement();
+			String value = request.getParameter(paraName);
+			if(null != value && value.length() <= 30){
+				logger.info("replaceMotorVehicleLicensePlate参数为：" + paraName+": "+request.getParameter(paraName));
+			}
+		}
     	BaseBean baseBean = new BaseBean();
     	try {
     		if(StringUtils.isBlank(vo.getName())){
