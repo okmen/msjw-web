@@ -413,7 +413,7 @@ public class IllegalAction extends BaseAction {
 						claim.setLicensePlateType(bean.getLicensePlateType());
 						claim.setPunishScore(bean.getPunishScore());
 						claim.setIllegalAddr(bean.getIllegalAddr());
-						claim.setAgency("");
+						claim.setAgency(bean.getIllegalUnit());
 						claim.setDrivingLicenceNo("");
 						infos.add(claim);
 					}
