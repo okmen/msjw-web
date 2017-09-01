@@ -23,7 +23,7 @@
 	<!-- 绿色出行 -->
 	<dubbo:reference id="greentravelService" interface="cn.convenience.service.IGreentravelService" timeout="${dubbo.consumer.convenience.timeout}" retries="${dubbo.consumer.retries}" />
 
-	<dubbo:reference id="illegalService" interface="cn.illegal.service.IIllegalService" timeout="16000" retries="${dubbo.consumer.retries}" /> 
+	<dubbo:reference id="illegalService" interface="cn.illegal.service.IIllegalService" timeout="10000" retries="${dubbo.consumer.retries}" /> 
 
 	<dubbo:reference id="microclassServer" interface="cn.microclass.service.IMicroclassService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
 	
