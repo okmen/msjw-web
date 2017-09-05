@@ -873,16 +873,16 @@ public class IllegalAction extends BaseAction {
 			reportingNoParking.setParkingSpot(parkingSpot);
 		}
 		reportingNoParking.setParkingReason("");
-		reportingNoParking.setScenePhoto("");
+		reportingNoParking.setScenePhoto2("");
 		reportingNoParking.setScenePhoto1("");
 
-		if (StringUtil.isBlank(scenePhoto2)) {
+		if (StringUtil.isBlank(scenePhoto)) {
 			base.setCode("0001");
 			base.setMsg("驾离后照片不能为空！");
 			renderJSON(base);
 			return;
 		} else {
-			reportingNoParking.setScenePhoto2(scenePhoto2);
+			reportingNoParking.setScenePhoto(scenePhoto);
 		}		
 		reportingNoParking.setScenePhoto3("");
 		reportingNoParking.setStopNoticePhoto("");
