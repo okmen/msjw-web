@@ -1,5 +1,6 @@
 package cn.web.front.action.account;
 
+import java.beans.beancontext.BeanContextServiceProviderBeanInfo;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -2401,5 +2402,40 @@ public class AccountAction extends BaseAction {
   		renderJSON(baseBean);
   		logger.debug(JSON.toJSONString(baseBean));
       }
-     
+      /**
+       * 接入授权
+       * @param mobilephone
+       * @param identityCard
+       * @param userSource
+       */
+      @RequestMapping("accessAuthorization")
+      public void accessAuthorization(String mobilephone, String identityCard, String userSource) {
+      	BaseBean baseBean = new BaseBean();
+      	if(StringUtil.isBlank(mobilephone)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("mobilephone 不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(identityCard)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("identityCard 不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(userSource)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("userSource 不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	try{
+      		baseBean = accountService.accessAuthorization(mobilephone, identityCard, userSource); 
+  		} catch (Exception e) {
+  			logger.error("getIdentificationOfAuditResults:" + e);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  		logger.debug(JSON.toJSONString(baseBean));
+      }
 }

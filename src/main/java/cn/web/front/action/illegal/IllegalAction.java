@@ -28,6 +28,7 @@ import cn.illegal.bean.ReportingNoParking;
 import cn.illegal.bean.SubcribeBean;
 import cn.illegal.service.IIllegalService;
 import cn.message.model.wechat.WechatUserInfo;
+import cn.message.service.IMobileMessageService;
 import cn.message.service.IWechatService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.util.MsgCode;
@@ -52,6 +53,10 @@ public class IllegalAction extends BaseAction {
 	@Autowired
 	@Qualifier("wechatService")
 	private IWechatService wechatService;
+	 @Autowired
+	 @Qualifier("mobileMessageService")
+	 private IMobileMessageService mobileMessageService;
+	    
 	/**
 	 * 
 	 * 获取业务列表
@@ -868,22 +873,9 @@ public class IllegalAction extends BaseAction {
 			reportingNoParking.setParkingSpot(parkingSpot);
 		}
 		reportingNoParking.setParkingReason("");
-		if (StringUtil.isBlank(scenePhoto)) {
-			base.setCode("0001");
-			base.setMsg("车身45°不能为空！");
-			renderJSON(base);
-			return;
-		} else {
-			reportingNoParking.setScenePhoto(scenePhoto);
-		}
-		if (StringUtil.isBlank(scenePhoto1)) {
-			base.setCode("0001");
-			base.setMsg("车头正面不能为空！");
-			renderJSON(base);
-			return;
-		} else {
-			reportingNoParking.setScenePhoto1(scenePhoto1);
-		}
+		reportingNoParking.setScenePhoto("");
+		reportingNoParking.setScenePhoto1("");
+
 		if (StringUtil.isBlank(scenePhoto2)) {
 			base.setCode("0001");
 			base.setMsg("驾离后照片不能为空！");
@@ -893,14 +885,7 @@ public class IllegalAction extends BaseAction {
 			reportingNoParking.setScenePhoto2(scenePhoto2);
 		}		
 		reportingNoParking.setScenePhoto3("");
-		if (StringUtil.isBlank(stopNoticePhoto)) {
-			base.setCode("0001");
-			base.setMsg("停车告知单拍摄照片不能为空！");
-			renderJSON(base);
-			return;
-		} else {
-			reportingNoParking.setStopNoticePhoto(stopNoticePhoto);
-		}
+		reportingNoParking.setStopNoticePhoto("");
 		if (StringUtil.isBlank(sourceOfCertification)) {
 			base.setCode("0001");
 			base.setMsg("来源方式不能为空！");
@@ -909,14 +894,9 @@ public class IllegalAction extends BaseAction {
 		} else {
 			reportingNoParking.setSourceOfCertification(sourceOfCertification);
 		}
-		if (StringUtil.isBlank(stopNoticeNumber)) {
-			base.setCode("0001");
-			base.setMsg("违停告知单号不能为空！");
-			renderJSON(base);
-			return;
-		} else {
-			reportingNoParking.setStopNoticeNumber(stopNoticeNumber);
-		}
+
+		reportingNoParking.setStopNoticeNumber("");
+
 		
 		try {
 			Map<String, String> map = illegalService.reportingNoParking(reportingNoParking);
@@ -937,6 +917,7 @@ public class IllegalAction extends BaseAction {
 		}
 		renderJSON(base);
 	}
+	
 	/**
 	 * 单宗违停申报结果查询
 	 * 
@@ -1114,6 +1095,33 @@ public class IllegalAction extends BaseAction {
 				base.setCode("0000");
 				base.setMsg(url);
 			}
+		} catch (Exception e) {
+			DealException(base, e);
+			logger.error("获取异常：", e);
+		}
+		renderJSON(base);
+	}
+	@RequestMapping(value = "sendMessage")
+	public void sendMessage(String mobilephone) {
+		BaseBean baseBean = new BaseBean();
+		try {
+			// 参数校验
+			if (StringUtil.isEmpty(mobilephone)) {
+				baseBean.setCode("0001");
+				baseBean.setMsg("手机号不能为空！");
+				renderJSON(baseBean);
+			}
+			String msgContent = "违停免罚";
+			boolean flag = mobileMessageService.sendMessage(mobilephone, msgContent);
+    		if(flag){
+    			baseBean.setCode(MsgCode.success);
+            	baseBean.setMsg("");
+            	baseBean.setData("发送成功");
+    		}else{
+    			baseBean.setCode(MsgCode.businessError);
+            	baseBean.setMsg(MsgCode.systemMsg);
+            	baseBean.setData("发送失败");
+    		}
 		} catch (Exception e) {
 			DealException(base, e);
 			logger.error("获取异常：", e);
