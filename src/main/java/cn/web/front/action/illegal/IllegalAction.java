@@ -1123,9 +1123,9 @@ public class IllegalAction extends BaseAction {
             	baseBean.setData("发送失败");
     		}
 		} catch (Exception e) {
-			DealException(base, e);
+			DealException(baseBean, e);
 			logger.error("获取异常：", e);
 		}
-		renderJSON(base);
+		renderJSON(baseBean);
 	}
 }
