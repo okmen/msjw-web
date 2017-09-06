@@ -74,12 +74,12 @@ public class FaceautonymAction  extends BaseAction{
 					json.put("frontpic",frontpicPath);
 				}
 				String backpic=json.getString("backpic");
-				if(!StringUtils.isBlank(frontpic)){
+				if(!StringUtils.isBlank(backpic)){
 					String backpicPath=fileService.uploadFile(backpic, ".jpg");
 					json.put("backpic",backpicPath);
 				}
 				String videopic1=json.getString("videopic1");
-				if(!StringUtils.isBlank(frontpic)){
+				if(!StringUtils.isBlank(videopic1)){
 					String videopicPath=fileService.uploadFile(videopic1, ".jpg");
 					json.put("videopic1",videopicPath);
 				}
