@@ -2439,7 +2439,6 @@ public class AccountAction extends BaseAction {
   		renderJSON(baseBean);
   		logger.debug(JSON.toJSONString(baseBean));
       }
-      
       @RequestMapping("weChatBrushFaceAuthentication")
       public void weChatBrushFaceAuthentication(String name, String identityCard, String mobilephone ,String userSource ,String certificationType ,String photo6 ,String openId) {
       	BaseBean baseBean = new BaseBean();
