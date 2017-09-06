@@ -40,5 +40,7 @@
 	<dubbo:reference id="fileService"  interface="cn.file.service.IFileService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
     
    	<dubbo:reference id="activityService"  interface="cn.activity.service.IActivityService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
+   	<!-- 微信刷脸认证接口 -->
+   	<dubbo:reference id="faceautonymService"  interface="cn.convenience.service.IFaceautonymService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
 </beans>
 	
