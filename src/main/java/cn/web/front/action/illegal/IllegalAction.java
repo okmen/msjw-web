@@ -836,8 +836,7 @@ public class IllegalAction extends BaseAction {
 	 */
 	@RequestMapping(value = "reportingNoParking")
 	public void reportingNoParking(String numberPlateNumber, String plateType, String IDcard, String parkingSpot,
-			String parkingReason, String scenePhoto, String scenePhoto1, String scenePhoto2, String scenePhoto3,
-			String stopNoticePhoto, String sourceOfCertification ,String stopNoticeNumber) {
+			String scenePhoto,String sourceOfCertification ,String openId) {
 		BaseBean base = new BaseBean();
 		ReportingNoParking reportingNoParking = new ReportingNoParking();
 		if (StringUtil.isBlank(numberPlateNumber)) {
@@ -872,10 +871,6 @@ public class IllegalAction extends BaseAction {
 		} else {
 			reportingNoParking.setParkingSpot(parkingSpot);
 		}
-		reportingNoParking.setParkingReason("");
-		reportingNoParking.setScenePhoto2("");
-		reportingNoParking.setScenePhoto1("");
-
 		if (StringUtil.isBlank(scenePhoto)) {
 			base.setCode("0001");
 			base.setMsg("驾离后照片不能为空！");
@@ -884,8 +879,6 @@ public class IllegalAction extends BaseAction {
 		} else {
 			reportingNoParking.setScenePhoto(scenePhoto);
 		}		
-		reportingNoParking.setScenePhoto3("");
-		reportingNoParking.setStopNoticePhoto("");
 		if (StringUtil.isBlank(sourceOfCertification)) {
 			base.setCode("0001");
 			base.setMsg("来源方式不能为空！");
@@ -894,10 +887,14 @@ public class IllegalAction extends BaseAction {
 		} else {
 			reportingNoParking.setSourceOfCertification(sourceOfCertification);
 		}
-
-		reportingNoParking.setStopNoticeNumber("");
-
-		
+		if (StringUtil.isBlank(openId)) {
+			base.setCode("0001");
+			base.setMsg("openId不能为空！");
+			renderJSON(base);
+			return;
+		} else {
+			reportingNoParking.setOpenId(openId);
+		}
 		try {
 			Map<String, String> map = illegalService.reportingNoParking(reportingNoParking);
 			String code = map.get("code");
@@ -916,6 +913,7 @@ public class IllegalAction extends BaseAction {
 			logger.error("车辆临时停车违停申报异常：", e);
 		}
 		renderJSON(base);
+		logger.debug(JSON.toJSONString(base));
 	}
 	
 	/**
@@ -1111,7 +1109,7 @@ public class IllegalAction extends BaseAction {
 				baseBean.setMsg("手机号不能为空！");
 				renderJSON(baseBean);
 			}
-			String msgContent = "违停免罚";
+			String msgContent = "违停免罚申请";
 			boolean flag = mobileMessageService.sendMessage(mobilephone, msgContent);
     		if(flag){
     			baseBean.setCode(MsgCode.success);
@@ -1119,13 +1117,13 @@ public class IllegalAction extends BaseAction {
             	baseBean.setData("发送成功");
     		}else{
     			baseBean.setCode(MsgCode.businessError);
-            	baseBean.setMsg(MsgCode.systemMsg);
-            	baseBean.setData("发送失败");
+            	baseBean.setMsg("发送失败");
     		}
 		} catch (Exception e) {
 			DealException(baseBean, e);
-			logger.error("获取异常：", e);
+			logger.error("违停免罚发送短信异常：", e);
 		}
 		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
 	}
 }

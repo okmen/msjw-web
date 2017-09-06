@@ -2413,26 +2413,26 @@ public class AccountAction extends BaseAction {
       	BaseBean baseBean = new BaseBean();
       	if(StringUtil.isBlank(mobilephone)){
  			baseBean.setCode(MsgCode.paramsError);
- 			baseBean.setMsg("mobilephone 不能为空!");
+ 			baseBean.setMsg("手机号号码不能为空!");
  			renderJSON(baseBean);
  			return;
  		}
       	if(StringUtil.isBlank(identityCard)){
  			baseBean.setCode(MsgCode.paramsError);
- 			baseBean.setMsg("identityCard 不能为空!");
+ 			baseBean.setMsg("身份证号不能为空!");
  			renderJSON(baseBean);
  			return;
  		}
       	if(StringUtil.isBlank(userSource)){
  			baseBean.setCode(MsgCode.paramsError);
- 			baseBean.setMsg("userSource 不能为空!");
+ 			baseBean.setMsg("用户来源不能为空!");
  			renderJSON(baseBean);
  			return;
  		}
       	try{
       		baseBean = accountService.accessAuthorization(mobilephone, identityCard, userSource); 
   		} catch (Exception e) {
-  			logger.error("getIdentificationOfAuditResults:" + e);
+  			logger.error("接入授权异常:" + e);
   			DealException(baseBean, e);
   		}
   		renderJSON(baseBean);
