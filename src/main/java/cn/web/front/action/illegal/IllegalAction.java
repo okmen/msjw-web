@@ -1,5 +1,6 @@
 package cn.web.front.action.illegal;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -514,8 +515,14 @@ public class IllegalAction extends BaseAction {
 				logger.error("Wechat 获取用户信息为空！");
 			}
 		} catch (Exception e) {
-			DealException(base, e);
-			logger.error("页面跳转异常 ", e);
+			try {
+				response.setCharacterEncoding("UTF-8");
+				response.setContentType("text/html;charset=utf-8");
+				PrintWriter out = response.getWriter();		
+				out.print("目前系统繁忙，请稍后重试!");
+			} catch (IOException e1) {
+				logger.error("页面跳转异常 ", e);
+			}	
 		}
 	}
 	/**
