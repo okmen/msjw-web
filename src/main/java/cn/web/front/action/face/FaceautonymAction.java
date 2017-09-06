@@ -69,17 +69,17 @@ public class FaceautonymAction  extends BaseAction{
 			 if("0000".equals(baseBean.getCode())){
 				JSONObject json=JSONObject.fromObject(baseBean.getData());
 				String frontpic=json.getString("frontpic");
-				if(StringUtils.isBlank(frontpic)){
+				if(!StringUtils.isBlank(frontpic)){
 					String frontpicPath=fileService.uploadFile(frontpic, ".jpg");
 					json.put("frontpic",frontpicPath);
 				}
 				String backpic=json.getString("backpic");
-				if(StringUtils.isBlank(frontpic)){
+				if(!StringUtils.isBlank(frontpic)){
 					String backpicPath=fileService.uploadFile(backpic, ".jpg");
 					json.put("backpic",backpicPath);
 				}
 				String videopic1=json.getString("videopic1");
-				if(StringUtils.isBlank(frontpic)){
+				if(!StringUtils.isBlank(frontpic)){
 					String videopicPath=fileService.uploadFile(videopic1, ".jpg");
 					json.put("videopic1",videopicPath);
 				}
