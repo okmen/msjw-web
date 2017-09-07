@@ -33,9 +33,9 @@ import cn.web.front.support.BaseAction;
 public class FaceautonymAction  extends BaseAction{
 	private final static Logger logger = LoggerFactory.getLogger(FaceautonymAction.class);
 	
-	@Autowired
+	/*@Autowired
 	@Qualifier("fileService")
-	private IFileService fileService;
+	private IFileService fileService;*/
 	
 	@Autowired
 	@Qualifier("faceautonymService")
@@ -66,7 +66,7 @@ public class FaceautonymAction  extends BaseAction{
      	}
 		 try {
 			 baseBean=faceautonymService.getdetectinfo(appid, token);
-			 if("0000".equals(baseBean.getCode())){
+			 /*if("0000".equals(baseBean.getCode())){
 				JSONObject json=JSONObject.fromObject(baseBean.getData());
 				String frontpic=json.getString("frontpic");
 				if(!StringUtils.isBlank(frontpic)){
@@ -87,7 +87,7 @@ public class FaceautonymAction  extends BaseAction{
 					json.put("videopic1",videopicPath);
 				}
 				baseBean.setData(json);
-			 }
+			 }*/
 			 renderJSON(baseBean);
 			 logger.info("获取用户信息成功");
 		} catch (Exception e) {
