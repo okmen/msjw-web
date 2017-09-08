@@ -48,7 +48,7 @@ public class FaceautonymAction  extends BaseAction{
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping(value="/applyDownDateReport.html",method=RequestMethod.POST)
+	@RequestMapping(value="/getdetectinfo.html",method=RequestMethod.POST)
 	public void getdetectinfo(String appid,String token, HttpServletRequest request,HttpServletResponse response){
 		 BaseBean baseBean=new BaseBean();
 		 //验证appid不能为空
