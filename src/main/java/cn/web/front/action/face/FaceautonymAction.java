@@ -33,9 +33,9 @@ import cn.web.front.support.BaseAction;
 public class FaceautonymAction  extends BaseAction{
 	private final static Logger logger = LoggerFactory.getLogger(FaceautonymAction.class);
 	
-	@Autowired
+	/*@Autowired
 	@Qualifier("fileService")
-	private IFileService fileService;
+	private IFileService fileService;*/
 	
 	@Autowired
 	@Qualifier("faceautonymService")
@@ -67,26 +67,25 @@ public class FaceautonymAction  extends BaseAction{
 		 try {
 			 baseBean=faceautonymService.getdetectinfo(appid, token);
 			 if("0000".equals(baseBean.getCode())){
-				JSONObject json=JSONObject.fromObject(baseBean.getData());
-				String frontpic=json.getString("frontpic");
-				if(!StringUtils.isBlank(frontpic)){
-					String frontpicPath=fileService.uploadFile(frontpic, ".jpg");
-					json.put("frontpic",frontpicPath);
-				}
-				String backpic=json.getString("backpic");
-				if(!StringUtils.isBlank(backpic)){
-					String backpicPath=fileService.uploadFile(backpic, ".jpg");
-					json.put("backpic",backpicPath);
-				}
-				String videopic1=json.getString("videopic1");
-				if(!StringUtils.isBlank(videopic1)){
-					String videopicPath=fileService.uploadFile(videopic1, ".jpg");
-					json.put("videopic1",videopicPath);
-				}
-				baseBean.setData(json);
+				 JSONObject json=JSONObject.fromObject(baseBean.getData());
+				 String yterrorcode=json.getString("yt_errorcode");
+				 if(!"0".equals(yterrorcode)){
+			     	 baseBean.setCode(MsgCode.paramsError);
+			     	 baseBean.setMsg("验证获取用户信息失败");
+			     	 baseBean.setData("");
+			     	logger.info("验证获取用户信息失败");
+			         renderJSON(baseBean);
+			         return;
+				 }
+			 }else{
+				 baseBean.setMsg("未获取到用户信息");
+		     	 baseBean.setCode(MsgCode.paramsError);
+		     	logger.info("未获取到用户信息");
+		         renderJSON(baseBean);
+		     	 return;
 			 }
-			 renderJSON(baseBean);
-			 logger.info("获取用户信息成功");
+			renderJSON(baseBean);
+			logger.info("获取用户信息成功");
 		} catch (Exception e) {
 			DealException(baseBean, e);
         	logger.error("获取基本用户信息出现异常", e);
