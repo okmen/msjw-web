@@ -7,16 +7,13 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-
 import cn.booking.business.bean.BookingTemplateVo;
 import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.CarModelVo;
@@ -772,7 +769,6 @@ public class BookingbusinessAction extends BaseAction {
 		String businessCode=request.getParameter("businessCode");
 		String businessName=request.getParameter("businessName");
 		String carTypeName = request.getParameter("carTypeName");
-
 		
 		try {
 			//校验参数
