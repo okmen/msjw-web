@@ -66,12 +66,6 @@ public class FaceautonymAction  extends BaseAction{
      	}
 		 try {
 			 baseBean=faceautonymService.getdetectinfo(appid, token);
-			 if(baseBean==null){
-				 baseBean.setMsg("未获取到用户信息");
-		     	 baseBean.setCode(MsgCode.paramsError);
-		         renderJSON(baseBean);
-		     	 return;
-			 }
 			 if("0000".equals(baseBean.getCode())){
 				 JSONObject json=JSONObject.fromObject(baseBean.getData());
 				 String yterrorcode=json.getString("yt_errorcode");
@@ -79,11 +73,16 @@ public class FaceautonymAction  extends BaseAction{
 			     	 baseBean.setCode(MsgCode.paramsError);
 			     	 baseBean.setMsg("验证获取用户信息失败");
 			     	 baseBean.setData("");
-			     	logger.info("获取用户信息成功");
+			     	 logger.info("获取用户信息成功");
 			         renderJSON(baseBean);
+			         return;
 				 }
+			 }else{
+				 baseBean.setMsg("未获取到用户信息");
+		     	 baseBean.setCode(MsgCode.paramsError);
+		         renderJSON(baseBean);
+		     	 return;
 			 }
-			 renderJSON(baseBean);
 		} catch (Exception e) {
 			DealException(baseBean, e);
         	logger.error("获取基本用户信息出现异常", e);
