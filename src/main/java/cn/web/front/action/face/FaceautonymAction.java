@@ -66,30 +66,24 @@ public class FaceautonymAction  extends BaseAction{
      	}
 		 try {
 			 baseBean=faceautonymService.getdetectinfo(appid, token);
-			 /*if("0000".equals(baseBean.getCode())){
-				JSONObject json=JSONObject.fromObject(baseBean.getData());
-				String frontpic=json.getString("frontpic");
-				if(!StringUtils.isBlank(frontpic)){
-					String frontpicPath=fileService.uploadFileImg(frontpic, ".jpg");
-					logger.info("frontpicPath图片路径:"+frontpicPath);
-					json.put("frontpic",frontpicPath);
-				}
-				String backpic=json.getString("backpic");
-				if(!StringUtils.isBlank(backpic)){
-					String backpicPath=fileService.uploadFileImg(backpic, ".jpg");
-					logger.info("backpicPath图片路径:"+backpicPath);
-					json.put("backpic",backpicPath);
-				}
-				String videopic1=json.getString("videopic1");
-				if(!StringUtils.isBlank(videopic1)){
-					String videopicPath=fileService.uploadFileImg(videopic1, ".jpg");
-					logger.info("videopicPath图片路径:"+videopicPath);
-					json.put("videopic1",videopicPath);
-				}
-				baseBean.setData(json);
-			 }*/
+			 if(baseBean==null){
+				 baseBean.setMsg("未获取到用户信息");
+		     	 baseBean.setCode(MsgCode.paramsError);
+		         renderJSON(baseBean);
+		     	 return;
+			 }
+			 if("0000".equals(baseBean.getCode())){
+				 JSONObject json=JSONObject.fromObject(baseBean.getData());
+				 String yterrorcode=json.getString("yt_errorcode");
+				 if(!"0".equals(yterrorcode)){
+			     	 baseBean.setCode(MsgCode.paramsError);
+			     	 baseBean.setMsg("验证获取用户信息失败");
+			     	 baseBean.setData("");
+			     	logger.info("获取用户信息成功");
+			         renderJSON(baseBean);
+				 }
+			 }
 			 renderJSON(baseBean);
-			 logger.info("获取用户信息成功");
 		} catch (Exception e) {
 			DealException(baseBean, e);
         	logger.error("获取基本用户信息出现异常", e);
