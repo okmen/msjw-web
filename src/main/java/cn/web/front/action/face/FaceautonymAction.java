@@ -73,17 +73,19 @@ public class FaceautonymAction  extends BaseAction{
 			     	 baseBean.setCode(MsgCode.paramsError);
 			     	 baseBean.setMsg("验证获取用户信息失败");
 			     	 baseBean.setData("");
-			     	 logger.info("获取用户信息成功");
+			     	logger.info("验证获取用户信息失败");
 			         renderJSON(baseBean);
 			         return;
 				 }
 			 }else{
 				 baseBean.setMsg("未获取到用户信息");
 		     	 baseBean.setCode(MsgCode.paramsError);
+		     	logger.info("未获取到用户信息");
 		         renderJSON(baseBean);
 		     	 return;
 			 }
 			renderJSON(baseBean);
+			logger.info("获取用户信息成功");
 		} catch (Exception e) {
 			DealException(baseBean, e);
         	logger.error("获取基本用户信息出现异常", e);
