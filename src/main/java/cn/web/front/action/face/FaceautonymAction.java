@@ -83,6 +83,7 @@ public class FaceautonymAction  extends BaseAction{
 		         renderJSON(baseBean);
 		     	 return;
 			 }
+			renderJSON(baseBean);
 		} catch (Exception e) {
 			DealException(baseBean, e);
         	logger.error("获取基本用户信息出现异常", e);
