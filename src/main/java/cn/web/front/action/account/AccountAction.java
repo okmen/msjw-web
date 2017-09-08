@@ -2495,6 +2495,7 @@ public class AccountAction extends BaseAction {
       	brushFaceVo.setUserSource(userSource);
       	try{
       		baseBean = accountService.weChatBrushFaceAuthentication(brushFaceVo); 
+      		logger.info("微信刷脸认证--------"+baseBean.toJson());
   		} catch (Exception e) {
   			logger.error("接入授权异常:" + e);
   			DealException(baseBean, e);
