@@ -34,6 +34,7 @@ import cn.account.bean.ReadilyShoot;
 import cn.account.bean.UserBind;
 import cn.account.bean.vo.BindCarVo;
 import cn.account.bean.vo.BindDriverLicenseVo;
+import cn.account.bean.vo.BrushFaceVo;
 import cn.account.bean.vo.IdentificationOfAuditResultsVo;
 import cn.account.bean.vo.LoginReturnBeanVo;
 import cn.account.bean.vo.ReadilyShootVo;
@@ -2431,6 +2432,69 @@ public class AccountAction extends BaseAction {
  		}
       	try{
       		baseBean = accountService.accessAuthorization(mobilephone, identityCard, userSource); 
+  		} catch (Exception e) {
+  			logger.error("接入授权异常:" + e);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  		logger.debug(JSON.toJSONString(baseBean));
+      }
+      
+      @RequestMapping("weChatBrushFaceAuthentication")
+      public void weChatBrushFaceAuthentication(String name, String identityCard, String mobilephone ,String userSource ,String certificationType ,String photo6 ,String openId) {
+      	BaseBean baseBean = new BaseBean();
+      	if(StringUtil.isBlank(name)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("姓名不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(certificationType)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("认证类型不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(photo6)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("照片不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(openId)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("openId不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(mobilephone)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("手机号号码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(identityCard)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("身份证号不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(userSource)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("用户来源不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	BrushFaceVo brushFaceVo= new BrushFaceVo();
+      	brushFaceVo.setCertificationType(certificationType);
+      	brushFaceVo.setIdentityCard(identityCard);
+      	brushFaceVo.setMobilephone(mobilephone);
+      	brushFaceVo.setName(name);
+      	brushFaceVo.setOpenId(openId);
+      	brushFaceVo.setPhoto6(photo6);
+      	brushFaceVo.setUserSource(userSource);
+      	try{
+      		baseBean = accountService.weChatBrushFaceAuthentication(brushFaceVo); 
   		} catch (Exception e) {
   			logger.error("接入授权异常:" + e);
   			DealException(baseBean, e);
