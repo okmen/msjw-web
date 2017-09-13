@@ -178,7 +178,7 @@ public class IllegalAction extends BaseAction {
 				logger.info("同步客户信息！"+str);
 			}
 			base = illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType,
-					vehicleIdentifyNoLast4, openId);
+					vehicleIdentifyNoLast4, openId,sourceOfCertification);
 	
 		} catch (Exception e) {
 			DealException(base, e);
