@@ -1,25 +1,19 @@
 package cn.web.front.action.handleservice;
-
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-
-import cn.booking.business.bean.BookingTemplateVo;
 import cn.handle.bean.vo.ApplyCarTemporaryLicenceVo;
 import cn.handle.bean.vo.ApplyGatePassVo;
 import cn.handle.bean.vo.ApplyInspectionMarkVo;
@@ -38,9 +32,7 @@ import cn.handle.bean.vo.ReplaceMotorVehicleLicensePlateVo;
 import cn.handle.bean.vo.VehicleDrivingLicenseVo;
 import cn.handle.bean.vo.VehicleInspectionVO;
 import cn.handle.service.IHandleService;
-import cn.message.model.wechat.MessageChannelModel;
 import cn.message.model.wechat.TemplateDataModel;
-import cn.message.model.wechat.MessageChannelModel.Property;
 import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.bean.BusinessType;
@@ -50,7 +42,6 @@ import cn.sdk.util.MsgCode;
 import cn.sdk.util.SXStringUtils;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
-
 /**
  * 办理类Action
  * @author Mbenben
@@ -305,7 +296,6 @@ public class HandleserviceAction extends BaseAction {
     	renderJSON(baseBean);
     	logger.debug(JSON.toJSONString(baseBean));
     }
-
 	/**
 	 * 驾驶证年审
 	 * 
@@ -359,9 +349,7 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseAnnualVerificationVo.setIdentificationNO(identificationNO);
 			}
-
 			driverLicenseAnnualVerificationVo.setPostalcode(postCode);
-
 			if (StringUtil.isBlank(userName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("姓名不能为空!");
@@ -370,7 +358,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseAnnualVerificationVo.setName(userName);
 			}
-
 			if (StringUtil.isBlank(identityCard)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证号不能为空!");
@@ -404,7 +391,6 @@ public class HandleserviceAction extends BaseAction {
 						driverLicenseAnnualVerificationVo.setForeignersLiveTable(PHOTO31);
 					}
 				}
-
 			}
 			if (StringUtil.isBlank(receiverName)) {
 				baseBean.setCode(MsgCode.paramsError);
@@ -446,7 +432,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseAnnualVerificationVo.setIDCardPhoto2(PHOTO10);
 			}
-
 			if (StringUtil.isBlank(JZZA)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("居住证正面照片不能为空!");
@@ -471,7 +456,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseAnnualVerificationVo.setEducationDrawingtable(SHJYPXB);
 			}
-
 			if (StringUtil.isBlank(loginUser)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("登录用户不能为空!");
@@ -480,7 +464,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseAnnualVerificationVo.setLoginUser(loginUser);
 			}
-
 			if (StringUtil.isBlank(sourceOfCertification)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("认证来源不能为空!");
@@ -514,7 +497,12 @@ public class HandleserviceAction extends BaseAction {
 				baseBean.setMsg(msg);
 				if (sourceOfCertification.equals("C")) {
 					try {
-						/*String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
+						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseAnnualVerification, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						logger.info("返回的url是：" + url);
+						logger.info("handleTemplateVo 是：" + handleTemplateVo);
 						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
 								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 						tmap.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：", "#212121"));
@@ -524,35 +512,7 @@ public class HandleserviceAction extends BaseAction {
 						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
-						logger.info("发送模板消息结果：" + flag);*/
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseAnnualVerification, waterNumber, DateUtil2.date2str(new Date()));
-						baseBean.setData(handleTemplateVo);
-						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
-						logger.info("返回的url是：" + url);
-						logger.info("handleTemplateVo 是：" + handleTemplateVo);
-						MessageChannelModel model = new MessageChannelModel();
-						model.setOpenid(openId);
-						model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbn3H9wpHz8dKjXPL9J_xC5s");
-						model.setResult_page_style_id("23ClyLHM5Fr790uz7t-fxiodPnL9ohRzcnlGWEudkL8");
-						model.setDeal_msg_style_id("23ClyLHM5Fr790uz7t-fxlzJePTelFGvOKtKR4udm1o");
-						model.setCard_style_id("");
-						model.setOrder_no(waterNumber);
-						model.setUrl(url);
-						Map<String, cn.message.model.wechat.MessageChannelModel.Property> tmap = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
-						tmap.put("first", new MessageChannelModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
-						tmap.put("keyword1",
-								new MessageChannelModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
-						tmap.put("keyword2", new MessageChannelModel().new Property("驾驶证年审申请", "#212121"));
-						tmap.put("keyword3", new MessageChannelModel().new Property("待初审", "#212121"));
-						tmap.put("remark", new MessageChannelModel().new Property("更多信息请点击详情查看","#212121"));
-						model.setData(tmap);
-						BaseBean msgBean = templateMessageService.sendServiceMessage(model);
-						logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
-						
-						//发送成功
-						if("0".equals(msgBean.getCode())){
-							baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
-						}
+						logger.info("发送模板消息结果：" + flag);
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
@@ -574,7 +534,6 @@ public class HandleserviceAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
-
 	/**
 	 * 驾驶证延期换证
 	 * 
@@ -625,7 +584,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				renewalDriverLicenseVo.setName(userName);
 			}
-
 			if (StringUtil.isBlank(identificationNO)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明类型 错误!");
@@ -634,7 +592,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				renewalDriverLicenseVo.setIdentificationNO(identificationNO);
 			}
-
 			if (StringUtil.isBlank(identityCard)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证号不能为空!");
@@ -643,7 +600,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				renewalDriverLicenseVo.setIDcard(identityCard);
 			}
-
 			if (StringUtil.isBlank(driverLicense)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("驾驶证号不能为空!");
@@ -684,7 +640,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				renewalDriverLicenseVo.setSourceOfCertification(sourceOfCertification);
 			}
-
 			if (StringUtil.isBlank(loginUser)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("来源标志不能为空!");
@@ -693,7 +648,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				renewalDriverLicenseVo.setLoginUser(loginUser);
 			}
-
 			if (StringUtil.isBlank(PHOTO9)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证正面照片不能为空!");
@@ -710,7 +664,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				renewalDriverLicenseVo.setIDCardPhoto2(PHOTO10);
 			}
-
 			if (StringUtil.isBlank(JSZZP)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("驾驶证照片不能为空!");
@@ -719,7 +672,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				renewalDriverLicenseVo.setDriverLicensePhoto(JSZZP);
 			}
-
 			if (StringUtil.isBlank(YQZMZP)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("延期证明照片不能为空!");
@@ -728,7 +680,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				renewalDriverLicenseVo.setDelayPhoto(YQZMZP);
 			}
-
 			if (StringUtil.isBlank(receiverName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("收件人姓名不能为空!");
@@ -800,7 +751,6 @@ public class HandleserviceAction extends BaseAction {
 					baseBean.setMsg(msg);
 				}
 			}
-
 		} catch (Exception e) {
 			logger.error("驾驶证延期领证异常:" + e);
 			DealException(baseBean, e);
@@ -808,7 +758,6 @@ public class HandleserviceAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
-
 	/**
 	 * 驾驶证转入
 	 * 
@@ -851,7 +800,6 @@ public class HandleserviceAction extends BaseAction {
 		String businessType = "Z";
 		driverLicenseIntoVo.setBusinessType(businessType);
 		try {
-
 			if (StringUtil.isBlank(userName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("姓名不能为空!");
@@ -860,7 +808,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseIntoVo.setName(userName);
 			}
-
 			if (StringUtil.isBlank(identificationNO)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明类型不能为空!");
@@ -869,7 +816,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseIntoVo.setIdentificationNO(identificationNO);
 			}
-
 			if (StringUtil.isBlank(identityCard)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明号码不能为空!");
@@ -878,7 +824,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseIntoVo.setIDcard(identityCard);
 			}
-
 			if (StringUtil.isBlank(driverLicense)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明号码不能为空!");
@@ -887,7 +832,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseIntoVo.setDriverLicense(driverLicense);
 			}
-
 			if (StringUtil.isBlank(fileNumber)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("档案编号不能为空!");
@@ -944,7 +888,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseIntoVo.setSourceOfCertification(sourceOfCertification);
 			}
-
 			if (StringUtil.isBlank(loginUser)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("登录用户不能为空!");
@@ -953,7 +896,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseIntoVo.setLoginUser(loginUser);
 			}
-
 			if (StringUtil.isBlank(PHOTO9)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证正面照片不能为空!");
@@ -970,7 +912,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseIntoVo.setIDCardPhoto2(PHOTO10);
 			}
-
 			if (StringUtil.isBlank(JSZZP)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("驾驶证照片不能为空!");
@@ -979,7 +920,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseIntoVo.setDriverLicensePhoto(JSZZP);
 			}
-
 			if (StringUtil.isBlank(STTJSQB)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身体条件申请表不能为空!");
@@ -1035,7 +975,6 @@ public class HandleserviceAction extends BaseAction {
 					baseBean.setMsg(msg);
 				}
 			}
-
 		} catch (Exception e) {
 			logger.error("驾驶证转入异常:" + e);
 			DealException(baseBean, e);
@@ -1043,7 +982,6 @@ public class HandleserviceAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
-
 	/**
 	 * 驾驶证自愿降级
 	 * 
@@ -1084,7 +1022,6 @@ public class HandleserviceAction extends BaseAction {
 		String businessType = "J";
 		driverLicenseVoluntaryDemotionVo.setBusinessType(businessType);
 		try {
-
 			if (StringUtil.isBlank(userName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("姓名不能为空!");
@@ -1093,7 +1030,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseVoluntaryDemotionVo.setName(userName);
 			}
-
 			if (StringUtil.isBlank(identificationNO)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明类型不能为空!");
@@ -1102,7 +1038,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseVoluntaryDemotionVo.setIdentificationNO(identificationNO);
 			}
-
 			if (StringUtil.isBlank(loginUser)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("认证用户身份证号不能为空!");
@@ -1119,7 +1054,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseVoluntaryDemotionVo.setIDcard(identityCard);
 			}
-
 			if (StringUtil.isBlank(driverLicense)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("驾驶证号码不能为空!");
@@ -1128,7 +1062,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseVoluntaryDemotionVo.setDriverLicense(driverLicense);
 			}
-
 			if (StringUtil.isBlank(userSource)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("申请来源不能为空!");
@@ -1137,7 +1070,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseVoluntaryDemotionVo.setUserSource(userSource);
 			}
-
 			if (StringUtil.isBlank(photoReturnNumberString)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("相片回执编号不能为空!");
@@ -1178,7 +1110,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseVoluntaryDemotionVo.setSourceOfCertification(sourceOfCertification);
 			}
-
 			if (StringUtil.isBlank(PHOTO9)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证正面照片不能为空!");
@@ -1195,7 +1126,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseVoluntaryDemotionVo.setIDCardPhoto2(PHOTO10);
 			}
-
 			if (StringUtil.isBlank(JSZZP)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("驾驶证照片不能为空!");
@@ -1204,7 +1134,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseVoluntaryDemotionVo.setDriverLicensePhoto(JSZZP);
 			}
-
 			if (StringUtil.isBlank(placeOfDomicile)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("户籍所在地不能为空!");
@@ -1261,7 +1190,6 @@ public class HandleserviceAction extends BaseAction {
 					baseBean.setMsg(msg);
 				}
 			}
-
 		} catch (Exception e) {
 			logger.error("驾驶证自愿降级异常:" + e);
 			DealException(baseBean, e);
@@ -1269,7 +1197,6 @@ public class HandleserviceAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
-
 	/**
 	 * 驾驶证补证
 	 * 
@@ -1311,11 +1238,9 @@ public class HandleserviceAction extends BaseAction {
 		}
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
 		RepairOrReplaceDriverLicenseVo repairOrReplaceDriverLicenseVo = new RepairOrReplaceDriverLicenseVo();
-
 		try {
 			String businessType = "B";
 			repairOrReplaceDriverLicenseVo.setBusinessType(businessType);
-
 			if (StringUtil.isBlank(userName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("姓名不能为空!");
@@ -1324,7 +1249,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				repairOrReplaceDriverLicenseVo.setName(userName);
 			}
-
 			if (StringUtil.isBlank(mobilephone)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("电话号码不能为空!");
@@ -1333,7 +1257,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				repairOrReplaceDriverLicenseVo.setMobilephone(mobilephone);
 			}
-
 			if (StringUtil.isBlank(identificationNO)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明类型不能为空!");
@@ -1342,7 +1265,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				repairOrReplaceDriverLicenseVo.setIdentificationNO(identificationNO);
 			}
-
 			if (StringUtil.isBlank(loginUser)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("认证用户身份证号不能为空!");
@@ -1359,7 +1281,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				repairOrReplaceDriverLicenseVo.setIDcard(identityCard);
 			}
-
 			if (StringUtil.isBlank(userSource)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("申请来源不能为空!");
@@ -1368,7 +1289,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				repairOrReplaceDriverLicenseVo.setUserSource(userSource);
 			}
-
 			if (StringUtil.isBlank(photoReturnNumberString)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("相片回执编号不能为空!");
@@ -1409,7 +1329,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				repairOrReplaceDriverLicenseVo.setSourceOfCertification(sourceOfCertification);
 			}
-
 			if (StringUtil.isBlank(PHOTO9)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证正面照片不能为空!");
@@ -1426,7 +1345,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				repairOrReplaceDriverLicenseVo.setIDCardPhoto2(PHOTO10);
 			}
-
 			if (StringUtil.isBlank(JZZA)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("居住证正面照片不能为空!");
@@ -1443,7 +1361,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				repairOrReplaceDriverLicenseVo.setLivePhoto2(JZZB);
 			}
-
 			if (StringUtil.isBlank(placeOfDomicile)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("户籍所在地不能为空!");
@@ -1481,7 +1398,7 @@ public class HandleserviceAction extends BaseAction {
 				baseBean.setMsg(msg);
 				if (sourceOfCertification.equals("C")) {
 					try {
-						/*String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
+						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.repairDriverLicense, waterNumber, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
@@ -1496,35 +1413,7 @@ public class HandleserviceAction extends BaseAction {
 						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
-						logger.info("发送模板消息结果：" + flag);*/
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseAnnualVerification, waterNumber, DateUtil2.date2str(new Date()));
-						baseBean.setData(handleTemplateVo);
-						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
-						logger.info("返回的url是：" + url);
-						logger.info("handleTemplateVo 是：" + handleTemplateVo);
-						MessageChannelModel model = new MessageChannelModel();
-						model.setOpenid(openId);
-						model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbn3H9wpHz8dKjXPL9J_xC5s");
-						model.setResult_page_style_id("23ClyLHM5Fr790uz7t-fxiodPnL9ohRzcnlGWEudkL8");
-						model.setDeal_msg_style_id("23ClyLHM5Fr790uz7t-fxlzJePTelFGvOKtKR4udm1o");
-						model.setCard_style_id("");
-						model.setOrder_no(waterNumber);
-						model.setUrl(url);
-						Map<String, cn.message.model.wechat.MessageChannelModel.Property> tmap = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
-						tmap.put("first", new MessageChannelModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
-						tmap.put("keyword1",
-								new MessageChannelModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
-						tmap.put("keyword2", new MessageChannelModel().new Property("驾驶证补证", "#212121"));
-						tmap.put("keyword3", new MessageChannelModel().new Property("待初审", "#212121"));
-						tmap.put("remark", new MessageChannelModel().new Property("更多信息请点击详情查看","#212121"));
-						model.setData(tmap);
-						BaseBean msgBean = templateMessageService.sendServiceMessage(model);
-						logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
-						
-						//发送成功
-						if("0".equals(msgBean.getCode())){
-							baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
-						}
+						logger.info("发送模板消息结果：" + flag);
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
@@ -1539,7 +1428,6 @@ public class HandleserviceAction extends BaseAction {
 					baseBean.setMsg(msg);
 				}
 			}
-
 		} catch (Exception e) {
 			logger.error("驾驶证补证异常:" + e);
 			DealException(baseBean, e);
@@ -1547,7 +1435,6 @@ public class HandleserviceAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
-
 	/**
 	 * 驾驶证换证
 	 * 
@@ -1588,12 +1475,9 @@ public class HandleserviceAction extends BaseAction {
 		
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
 		RepairOrReplaceDriverLicenseVo repairOrReplaceDriverLicenseVo = new RepairOrReplaceDriverLicenseVo();
-
 		try {
-
 			String businessType = "H";
 			repairOrReplaceDriverLicenseVo.setBusinessType(businessType);
-
 			if (StringUtil.isBlank(userName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("姓名不能为空!");
@@ -1602,7 +1486,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				repairOrReplaceDriverLicenseVo.setName(userName);
 			}
-
 			if (StringUtil.isBlank(mobilephone)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("电话号码不能为空!");
@@ -1611,7 +1494,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				repairOrReplaceDriverLicenseVo.setMobilephone(mobilephone);
 			}
-
 			if (StringUtil.isBlank(identificationNO)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明类型不能为空!");
@@ -1620,7 +1502,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				repairOrReplaceDriverLicenseVo.setIdentificationNO(identificationNO);
 			}
-
 			if (StringUtil.isBlank(loginUser)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("认证用户身份证号不能为空!");
@@ -1637,7 +1518,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				repairOrReplaceDriverLicenseVo.setIDcard(identityCard);
 			}
-
 			if (StringUtil.isBlank(userSource)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("申请来源不能为空!");
@@ -1646,7 +1526,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				repairOrReplaceDriverLicenseVo.setUserSource(userSource);
 			}
-
 			if (StringUtil.isBlank(photoReturnNumberString)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("相片回执编号不能为空!");
@@ -1687,7 +1566,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				repairOrReplaceDriverLicenseVo.setSourceOfCertification(sourceOfCertification);
 			}
-
 			if (StringUtil.isBlank(PHOTO9)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证正面照片不能为空!");
@@ -1704,7 +1582,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				repairOrReplaceDriverLicenseVo.setIDCardPhoto2(PHOTO10);
 			}
-
 			if (StringUtil.isBlank(JZZA)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("居住证正面照片不能为空!");
@@ -1721,7 +1598,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				repairOrReplaceDriverLicenseVo.setLivePhoto2(JZZB);
 			}
-
 			if (StringUtil.isBlank(placeOfDomicile)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("户籍所在地不能为空!");
@@ -1757,7 +1633,7 @@ public class HandleserviceAction extends BaseAction {
 				baseBean.setMsg(msg);
 				if (sourceOfCertification.equals("C")) {
 					try {
-						/*String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
+						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.replaceDriverLicense, waterNumber, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
@@ -1772,35 +1648,7 @@ public class HandleserviceAction extends BaseAction {
 						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
-						logger.info("发送模板消息结果：" + flag);*/
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseAnnualVerification, waterNumber, DateUtil2.date2str(new Date()));
-						baseBean.setData(handleTemplateVo);
-						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
-						logger.info("返回的url是：" + url);
-						logger.info("handleTemplateVo 是：" + handleTemplateVo);
-						MessageChannelModel model = new MessageChannelModel();
-						model.setOpenid(openId);
-						model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbn3H9wpHz8dKjXPL9J_xC5s");
-						model.setResult_page_style_id("23ClyLHM5Fr790uz7t-fxiodPnL9ohRzcnlGWEudkL8");
-						model.setDeal_msg_style_id("23ClyLHM5Fr790uz7t-fxlzJePTelFGvOKtKR4udm1o");
-						model.setCard_style_id("");
-						model.setOrder_no(waterNumber);
-						model.setUrl(url);
-						Map<String, cn.message.model.wechat.MessageChannelModel.Property> tmap = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
-						tmap.put("first", new MessageChannelModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
-						tmap.put("keyword1",
-								new MessageChannelModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
-						tmap.put("keyword2", new MessageChannelModel().new Property("驾驶证换证", "#212121"));
-						tmap.put("keyword3", new MessageChannelModel().new Property("待初审", "#212121"));
-						tmap.put("remark", new MessageChannelModel().new Property("更多信息请点击详情查看","#212121"));
-						model.setData(tmap);
-						BaseBean msgBean = templateMessageService.sendServiceMessage(model);
-						logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
-						
-						//发送成功
-						if("0".equals(msgBean.getCode())){
-							baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
-						}
+						logger.info("发送模板消息结果：" + flag);
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
@@ -1815,7 +1663,6 @@ public class HandleserviceAction extends BaseAction {
 					baseBean.setMsg(msg);
 				}
 			}
-
 		} catch (Exception e) {
 			logger.error("驾驶证换证异常:" + e);
 			DealException(baseBean, e);
@@ -1823,7 +1670,6 @@ public class HandleserviceAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
-
 	/**
 	 * 驾驶人联系方式变更
 	 * 
@@ -1867,7 +1713,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverChangeContactVo.setName(userName);
 			}
-
 			if (StringUtil.isBlank(gender)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("性别不能为空!");
@@ -1876,7 +1721,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverChangeContactVo.setGender(gender);
 			}
-
 			if (StringUtil.isBlank(identificationNO)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证明类型不能为空!");
@@ -1885,7 +1729,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverChangeContactVo.setIdentificationNO(identificationNO);
 			}
-
 			if (StringUtil.isBlank(loginUser)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("认证用户身份证号不能为空!");
@@ -1910,7 +1753,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverChangeContactVo.setDriverLicense(driverLicense);
 			}
-
 			if (StringUtil.isBlank(mobilephone)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("电话号码不能为空!");
@@ -1935,7 +1777,6 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverChangeContactVo.setMailingAddress(receiverAddress);
 			}
-
 			if (StringUtil.isBlank(PHOTO9)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("身份证正面照片不能为空!");
@@ -2007,7 +1848,6 @@ public class HandleserviceAction extends BaseAction {
 					baseBean.setMsg(msg);
 				}
 			}
-
 		} catch (Exception e) {
 			logger.error("驾驶人联系方式变更异常:" + e);
 			DealException(baseBean, e);
@@ -2015,7 +1855,6 @@ public class HandleserviceAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
-
     /**
      * @Title: applyGatePass
      * @Description: TODO(申请通行证-外地车)
@@ -2128,7 +1967,7 @@ public class HandleserviceAction extends BaseAction {
         		//推送模板消息
 				try {
 					String templateId = "OHe4a5_6nqj3VuN3QKmKYKPiEk54Y_w3oYQRUn0I34o";
-					String url = HandleTemplateVo.getUrl(handleTemplateVo, handleService.getTemplateSendUrl())+"&noTip=true";
+					String url = HandleTemplateVo.getUrl(handleTemplateVo, handleService.getTemplateSendUrl());
 					logger.info("返回的url是：" + url);
 					logger.info("handleTemplateVo 是：" + handleTemplateVo);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
@@ -2332,7 +2171,8 @@ public class HandleserviceAction extends BaseAction {
         		//推送模板消息
 				try {
 					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_sqjdclpbl";
-					String url = HandleTemplateVo.getUrl(handleTemplateVo, handleService.getTemplateSendUrl());
+					//String url = HandleTemplateVo.getUrl(handleTemplateVo, handleService.getTemplateSendUrl());
+					String url = HandleTemplateVo.getUrl(handleTemplateVo, handleService.getTemplateSendUrl())+"&noTip=true";
 					logger.info("返回的url是：" + url);
 					logger.info("handleTemplateVo 是：" + handleTemplateVo);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
@@ -2759,14 +2599,12 @@ public class HandleserviceAction extends BaseAction {
 			String idCardImgPositive = request.getParameter("PHOTO9");  //身份证正面
 			String idCardImgNegative = request.getParameter("PHOTO10");  //身份证反面
 			String idCarImgTable = request.getParameter("DJZSFYJ");  //机动车登机证书
-
 			String sourceOfCertification = request.getParameter("sourceOfCertification");  	//来源
 			
 			String foreignersLiveTable=request.getParameter("PHOTO31");
 			String JZZA=request.getParameter("JZZA");
 			String JZZB=request.getParameter("JZZB");
 			String openId = request.getParameter("openId");  //openId
-
 			
 			//验证identityCard
 			if(StringUtil.isBlank(userName)){
@@ -2977,7 +2815,6 @@ public class HandleserviceAction extends BaseAction {
 			
 			String licensePlateNo = request.getParameter("numberPlate");  //车牌号
 			String licensePlateType = request.getParameter("cartype");  //车辆类型
-
 			String sourceOfCertification = request.getParameter("sourceOfCertification");  	//来源
 			
 			String proprietorship = request.getParameter("proprietorship");   //车子所有权
@@ -2987,7 +2824,6 @@ public class HandleserviceAction extends BaseAction {
 			String postalcode = request.getParameter("postCode");  //邮政编码
 			String openId = request.getParameter("openId");  //openId
 			
-
 			
 			//验证proprietorship
 			if(StringUtil.isBlank(proprietorship)){
@@ -3004,7 +2840,6 @@ public class HandleserviceAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-
 			
 			//验证carOwnerIdentityCard
 			if(StringUtil.isBlank(carOwnerIdentityCard)){
@@ -3206,7 +3041,6 @@ public class HandleserviceAction extends BaseAction {
 			String code = map.get("code");
 			String msg = map.get("msg");
 			String body=map.get("body");
-
 			if("0000".equals(code)){
        		baseBean.setCode(MsgCode.success);
        		baseBean.setMsg(msg);
@@ -3220,8 +3054,6 @@ public class HandleserviceAction extends BaseAction {
 					}
 	       	}
 		} catch (Exception e) {
-
-
 			logger.error("机动车委托异地定期检验申报查询Action异常:"+e);
 			DealException(baseBean, e);
 			
@@ -3432,7 +3264,6 @@ public class HandleserviceAction extends BaseAction {
  				baseBean.setMsg(msg+": " +result);
  				baseBean.setData(result);
  			}
-
  		} catch (Exception e) {
  			logger.error("预约六年免检异常:" + e);
  			DealException(baseBean, e);
@@ -3440,7 +3271,6 @@ public class HandleserviceAction extends BaseAction {
  		renderJSON(baseBean);
  		logger.debug(JSON.toJSONString(baseBean));
  	}
-
  	/**
  	 * 获取车辆类型Id
  	 * 
@@ -3476,18 +3306,15 @@ public class HandleserviceAction extends BaseAction {
  						flag = true;
  					}
  				}
-
  			} else {
  				baseBean.setCode("0001");
  				baseBean.setMsg(msg);
  				baseBean.setData(jsonObject.getString("result"));
  			}
-
  			if (flag = false) {
  				baseBean.setCode("0001");
  				baseBean.setMsg("查询车辆类型id失败");
  			}
-
  		} catch (Exception e) {
  			logger.error("预约六年免检异常:" + e);
  			DealException(baseBean, e);
@@ -3495,7 +3322,6 @@ public class HandleserviceAction extends BaseAction {
  		renderJSON(baseBean);
  		logger.debug(JSON.toJSONString(baseBean));
  	}
-
  	/**
  	 * 取消机动车六年免检预约
  	 * 
@@ -3533,7 +3359,6 @@ public class HandleserviceAction extends BaseAction {
  				baseBean.setMsg(msg);
  				baseBean.setData(result);
  			}
-
  		} catch (Exception e) {
  			logger.error("取消六年免检预约异常:" + e);
  			DealException(baseBean, e);
@@ -3541,7 +3366,6 @@ public class HandleserviceAction extends BaseAction {
  		renderJSON(baseBean);
  		logger.debug(JSON.toJSONString(baseBean));
  	}
-
  	/**
  	 * 获取机动车六年免检预约信息
  	 * 
@@ -3554,7 +3378,7 @@ public class HandleserviceAction extends BaseAction {
  		BaseBean baseBean = new BaseBean();
  		if (StringUtil.isBlank(bookNumber)) {
  			baseBean.setCode(MsgCode.paramsError);
- 			baseBean.setMsg("预约号码不能为空!");
+ 			baseBean.setMsg("车牌号码不能为空!");
  			renderJSON(baseBean);
  			return;
  		}
@@ -3577,7 +3401,6 @@ public class HandleserviceAction extends BaseAction {
  				baseBean.setCode("0001");
  				baseBean.setMsg(msg);
  			}
-
  		} catch (Exception e) {
  			logger.error("获取六年免检预约信息异常:" + e);
  			DealException(baseBean, e);
@@ -3814,7 +3637,6 @@ public class HandleserviceAction extends BaseAction {
 				baseBean.setCode("0001");
 				baseBean.setMsg(msg);
 			}
-
 		} catch (Exception e) {
 			logger.error("首违免罚查询异常:" + e);
 			DealException(baseBean, e);
@@ -3823,4 +3645,3 @@ public class HandleserviceAction extends BaseAction {
 		logger.debug(JSON.toJSONString(baseBean));
 	}
 }
-
