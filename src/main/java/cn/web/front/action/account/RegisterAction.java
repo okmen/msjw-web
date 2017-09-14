@@ -57,7 +57,7 @@ public class RegisterAction extends BaseAction {
 	public void iAmTheOwner(String licensePlateType, String provinceAbbreviation, String licensePlateNumber,
 			String identityCard, String linkAddress, String mobilephone, String validateCode, Integer isDriverLicense,
 			String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgNegative,
-			String idCardImgHandHeld,String openId) {
+			String idCardImgHandHeld,String openId,String sourceOfCertification) {
 		String code = MsgCode.success;
 		StringBuffer sb = new StringBuffer("");
 		RegisterVo registerVo = new RegisterVo();
@@ -149,6 +149,7 @@ public class RegisterAction extends BaseAction {
 					registerVo.setCallAccount("WX02_TEST"); //默认写死，玉璞发的
 					registerVo.setCertifiedType("1");
 					registerVo.setCertifiedRole("1");
+					registerVo.setCertifiedSource(sourceOfCertification);
 					// registerVo
 					JSONObject json = accountService.iAmTheOwner(registerVo);
 					code = json.getString("CODE");
@@ -214,7 +215,7 @@ public class RegisterAction extends BaseAction {
 	public void iamALongtimeUser(String licensePlateType, String provinceAbbreviation, String licensePlateNumber,
 			String ownerName, String ownerIdCard, String userIdCard, String linkAddress, String mobilephone,
 			String validateCode, String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgHandHeld,
-			String idCardImgNegative, String ownerIdCardImgPositive, String ownerIdCardImgHandHeld,String openId) {
+			String idCardImgNegative, String ownerIdCardImgPositive, String ownerIdCardImgHandHeld,String openId,String sourceOfCertification) {
 		String code = MsgCode.success;
 		StringBuffer sb = new StringBuffer("");
 		RegisterVo registerVo = new RegisterVo();
@@ -330,7 +331,7 @@ public class RegisterAction extends BaseAction {
 					registerVo.setCertifiedType("2");
 					registerVo.setCallAccount("WX02_TEST");
 					registerVo.setCertifiedRole("1");
-					registerVo.setCertifiedSource("C");
+					registerVo.setCertifiedSource(sourceOfCertification);
 					JSONObject json = accountService.iamALongtimeUser(registerVo);
 					code = json.getString("CODE");
 					if (!MsgCode.success.equals(code)) {
@@ -389,7 +390,7 @@ public class RegisterAction extends BaseAction {
 	@RequestMapping(value = "haveDriverLicenseNotCar")
 	public void haveDriverLicenseNotCar(String identityCard, String linkAddress, String mobilephone,
 			String validateCode, String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgNegative,
-			String idCardImgHandHeld,String openId) {
+			String idCardImgHandHeld,String openId,String sourceOfCertification) {
 
 		String code = MsgCode.success;
 		StringBuffer sb = new StringBuffer("");
@@ -463,7 +464,7 @@ public class RegisterAction extends BaseAction {
 					registerVo.setCertifiedType("3"); 
 					registerVo.setCallAccount("WX02_TEST");
 					registerVo.setCertifiedRole("1");
-					registerVo.setCertifiedSource("C");
+					registerVo.setCertifiedSource(sourceOfCertification);
 					JSONObject json = accountService.haveDriverLicenseNotCar(registerVo);
 					code = json.getString("CODE");
 					if (!MsgCode.success.equals(code)) {
@@ -518,7 +519,7 @@ public class RegisterAction extends BaseAction {
 	 */
 	@RequestMapping(value = "isPedestrianNotDriver")
 	public void isPedestrianNotDriver(String identityCard, String mobilephone, String validateCode,
-			String idCardImgPositive, String idCardImgNegative, String idCardImgHandHeld,String openId) {
+			String idCardImgPositive, String idCardImgNegative, String idCardImgHandHeld,String openId,String sourceOfCertification) {
 		String code = MsgCode.success;
 		StringBuffer sb = new StringBuffer("");
 		RegisterVo registerVo = new RegisterVo();
@@ -573,7 +574,7 @@ public class RegisterAction extends BaseAction {
 				// 0-验证成功，1-验证失败，2-验证码失效
 				int result = accountService.verificatioCode(mobilephone, validateCode);
 				if (0 == result) {
-					registerVo.setCertifiedSource("C");
+					registerVo.setCertifiedSource(sourceOfCertification);
 					registerVo.setCertifiedType("4");
 					JSONObject json = accountService.isPedestrianNotDriver(registerVo);
 					code = json.getString("CODE");
