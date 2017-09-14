@@ -45,21 +45,29 @@ import cn.account.bean.vo.UnbindVehicleVo;
 import cn.account.bean.vo.UserBasicVo;
 import cn.account.service.IAccountService;
 import cn.file.service.IFileService;
+import cn.handle.bean.vo.HandleTemplateVo;
+import cn.handle.service.IHandleService;
 import cn.illegal.service.IIllegalService;
+import cn.message.model.wechat.MessageChannelModel;
 import cn.message.model.wechat.TemplateDataModel;
+import cn.message.model.wechat.MessageChannelModel.Property;
 import cn.message.service.IMobileMessageService;
 import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
+import cn.sdk.bean.BusinessType;
 import cn.sdk.bean.StVo;
 import cn.sdk.exception.ResultCode;
 import cn.sdk.msg.MsgTemplate;
 import cn.sdk.thread.BilinThreadPool;
+import cn.sdk.util.DateUtil;
+import cn.sdk.util.DateUtil2;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.SXStringUtils;
 import cn.sdk.util.StringUtil;
 import cn.web.front.action.account.task.AccountTask;
 import cn.web.front.action.account.task.AccountTaskExecute;
 import cn.web.front.support.BaseAction;
+import cn.file.bean.vo.ProblemFeedbackVo;
 
 
 /**
@@ -79,7 +87,7 @@ public class AccountAction extends BaseAction {
     
     @Autowired
     @Qualifier("illegalService")
-    private IIllegalService illegalService;;
+    private IIllegalService illegalService;
     
     @Autowired
     @Qualifier("mobileMessageService")
@@ -100,6 +108,10 @@ public class AccountAction extends BaseAction {
     @Autowired
     @Qualifier("accountTaskExecute")
     private AccountTaskExecute accountTaskExecute;
+    
+    @Autowired
+    @Qualifier("handleService")
+    private IHandleService handleService;
 
     @RequestMapping(value = "get-wechat-userInfo-by-id")
     public ModelAndView getWechatUserInfoById(HttpServletRequest request) {
@@ -582,6 +594,7 @@ public class AccountAction extends BaseAction {
     	StringBuffer sb = new StringBuffer("");   	
     	BindCarVo bindCarVo = new BindCarVo();
     	BaseBean basebean = new  BaseBean();
+    	String openId = request.getParameter("openId");
     	if(null == bindType || bindType<0){
     		basebean.setMsg("bindType 绑定类型错误!");
     		basebean.setCode(MsgCode.paramsError);
@@ -680,11 +693,75 @@ public class AccountAction extends BaseAction {
     	try {
     		JSONObject json = accountService.addVehicle(bindCarVo);
 			code =json.getString("CODE");
+			basebean.setCode(code);
+	    	basebean.setMsg(json.getString("MSG"));
+			if ("0000".equals(code)&&"C".equals(certifiedSource)) {
+				JSONObject body = json.getJSONObject("BODY");
+				if (null != body) {
+					String waterNumber = body.getString("CID");
+					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "addVehicle", waterNumber, DateUtil2.date2str(new Date()));
+					basebean.setData(handleTemplateVo);
+					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+					logger.info("返回的url是：" + url);
+					logger.info("handleTemplateVo 是：" + handleTemplateVo);
+					MessageChannelModel model = new MessageChannelModel();
+					model.setOpenid(openId);
+					model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbn3H9wpHz8dKjXPL9J_xC5s");
+					model.setResult_page_style_id("23ClyLHM5Fr790uz7t-fxiodPnL9ohRzcnlGWEudkL8");
+					model.setDeal_msg_style_id("23ClyLHM5Fr790uz7t-fxlzJePTelFGvOKtKR4udm1o");
+					model.setCard_style_id("");
+					model.setOrder_no(waterNumber);
+					model.setUrl(url);
+					Map<String, cn.message.model.wechat.MessageChannelModel.Property> tmap = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
+					tmap.put("first", new MessageChannelModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
+					tmap.put("keyword1",
+							new MessageChannelModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
+					tmap.put("keyword2", new MessageChannelModel().new Property("添加车辆", "#212121"));
+					tmap.put("keyword3", new MessageChannelModel().new Property("待初审", "#212121"));
+					tmap.put("remark", new MessageChannelModel().new Property("更多信息请点击详情查看","#212121"));
+					model.setData(tmap);
+					BaseBean msgBean = templateMessageService.sendServiceMessage(model);
+					logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
+					
+					//发送成功
+					if("0".equals(msgBean.getCode())){
+						basebean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+					}
+				}else{
+					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "addVehicle",  DateUtil2.date2str(new Date()));
+					basebean.setData(handleTemplateVo);
+					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+					logger.info("返回的url是：" + url);
+					logger.info("handleTemplateVo 是：" + handleTemplateVo);
+					MessageChannelModel model = new MessageChannelModel();
+					model.setOpenid(openId);
+					model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbn3H9wpHz8dKjXPL9J_xC5s");
+					model.setResult_page_style_id("23ClyLHM5Fr790uz7t-fxiodPnL9ohRzcnlGWEudkL8");
+					model.setDeal_msg_style_id("23ClyLHM5Fr790uz7t-fxlzJePTelFGvOKtKR4udm1o");
+					model.setCard_style_id("");
+					model.setOrder_no("");
+					model.setUrl(url);
+					Map<String, cn.message.model.wechat.MessageChannelModel.Property> tmap = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
+					tmap.put("first", new MessageChannelModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
+					tmap.put("keyword1",
+							new MessageChannelModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
+					tmap.put("keyword2", new MessageChannelModel().new Property("添加车辆", "#212121"));
+					tmap.put("keyword3", new MessageChannelModel().new Property(json.getString("MSG"), "#212121"));
+					tmap.put("remark", new MessageChannelModel().new Property("更多信息请点击详情查看","#212121"));
+					model.setData(tmap);
+					BaseBean msgBean = templateMessageService.sendServiceMessage(model);
+					logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
+					
+					//发送成功
+					if("0".equals(msgBean.getCode())){
+						basebean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+					}
+				}
+				
+			}
 			if(!MsgCode.success.equals(code)){
 				code=MsgCode.businessError;
 			}
-	    	basebean.setCode(code);
-	    	basebean.setMsg(json.getString("MSG"));   
 		} catch (Exception e) {
 			DealException(basebean, e);
 			logger.error("addVehicle出错",e);
@@ -2291,7 +2368,7 @@ public class AccountAction extends BaseAction {
      * @param photo9
      */
      @RequestMapping("reauthentication")
-     public void reauthentication(String identityCard , String mobilephone ,String authenticationType ,String sourceOfCertification ,String photo6 ,String photo9) {
+     public void reauthentication(String identityCard , String mobilephone ,String authenticationType ,String sourceOfCertification ,String photo6 ,String photo9,String businessType ,String openId) {
      	BaseBean baseBean = new BaseBean();
      	ReauthenticationVo reauthenticationVo = new ReauthenticationVo();
      	if(StringUtil.isBlank(identityCard)){
@@ -2342,15 +2419,60 @@ public class AccountAction extends BaseAction {
 		}else{
 			reauthenticationVo.setPhoto9(photo9);
 		}
+     	if(StringUtil.isBlank(openId)){
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("openId不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+     	if(StringUtil.isBlank(businessType)){
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("业务类型不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
      	try{
      		//创建返回结果
  			Map<String, String> map = accountService.reauthentication(reauthenticationVo);
- 			String code = (String) map.get("code");
- 			String msg = (String) map.get("msg");
- 			if("0000".equals(code)){
+ 			String code = map.get("code");
+ 			String msg = map.get("msg");
+ 			if("0000".equals(code)&&"C".equals(sourceOfCertification)){
          		baseBean.setCode(MsgCode.success);
-         		baseBean.setMsg(msg);
-         		baseBean.setData(map.get("data"));
+         		String waterNumber = map.get("data");
+				HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "reauthentication", waterNumber, DateUtil2.date2str(new Date()));
+				baseBean.setData(handleTemplateVo);
+				String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+				logger.info("返回的url是：" + url);
+				logger.info("handleTemplateVo 是：" + handleTemplateVo);
+				MessageChannelModel model = new MessageChannelModel();
+				model.setOpenid(openId);
+				if ("1".equals(businessType)) {
+					model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbn3H9wpHz8dKjXPL9J_xC5s");
+				}else if ("2".equals(businessType)) {
+					model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbjAEGcUfJBYRRfOgme0SPuk");
+				}
+				model.setResult_page_style_id("23ClyLHM5Fr790uz7t-fxiodPnL9ohRzcnlGWEudkL8");
+				model.setDeal_msg_style_id("23ClyLHM5Fr790uz7t-fxlzJePTelFGvOKtKR4udm1o");
+				model.setCard_style_id("");
+				model.setOrder_no(waterNumber);
+				model.setUrl(url);
+				Map<String, cn.message.model.wechat.MessageChannelModel.Property> tmap = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
+				tmap.put("first", new MessageChannelModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
+				tmap.put("keyword1",
+						new MessageChannelModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
+				tmap.put("keyword2", new MessageChannelModel().new Property("重新认证", "#212121"));
+				tmap.put("keyword3", new MessageChannelModel().new Property("待初审", "#212121"));
+				tmap.put("remark", new MessageChannelModel().new Property("更多信息请点击详情查看","#212121"));
+				model.setData(tmap);
+				BaseBean msgBean = templateMessageService.sendServiceMessage(model);
+				logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
+				
+				//发送成功
+				if("0".equals(msgBean.getCode())){
+					baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+				}
+//         		baseBean.setMsg(msg);
+//         		baseBean.setData(map.get("data"));
          	}else{
          		baseBean.setCode(MsgCode.businessError);
  				baseBean.setMsg(msg);
@@ -2501,4 +2623,80 @@ public class AccountAction extends BaseAction {
   		renderJSON(baseBean);
   		logger.debug(JSON.toJSONString(baseBean));
       }
+      
+      @RequestMapping("problemFeedback")
+      public void problemFeedback(String openId ,String remark ,String status ,String img1 ,String img2 ,String img3) {
+      	BaseBean baseBean = new BaseBean();
+      	if(StringUtil.isBlank(openId)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("微信openId不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(remark)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("反馈内容不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(img1)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("图片不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+    	if(StringUtil.isBlank(status)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("状态不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	try{
+      		ProblemFeedbackVo problemFeedbackVo = new ProblemFeedbackVo();
+      		List<StVo> base64Imgs = new ArrayList<StVo>();
+	     	if(StringUtils.isNotBlank(img1)){
+	     		StVo stVo1 = new StVo(img1, DateUtil.formatDateTime(new Date()));
+	     		base64Imgs.add(stVo1);
+	     	}
+	     	if(StringUtils.isNotBlank(img2)){
+	     		StVo stVo2 = new StVo(img2,DateUtil.formatDateTime(new Date()));
+	     		base64Imgs.add(stVo2);
+	     	}
+	     	if(StringUtils.isNotBlank(img3)){
+	     		StVo stVo3 = new StVo(img3,DateUtil.formatDateTime(new Date()));
+	     		base64Imgs.add(stVo3);
+	     	}
+	     	List<String> imgs = new ArrayList<String>();
+	     	try {
+	     		imgs = fileService.problemFeedback(openId, base64Imgs);
+			} catch (Exception e) {
+				logger.error("写图片到225服务器失败", e);
+			}
+	     	StringBuffer sb = new StringBuffer();
+	     	if (null != imgs && imgs.size()>0) {
+				for (String string : imgs) {
+					sb.append(string + ";");
+				}
+			}
+	     	problemFeedbackVo.setJpgurl(sb.toString());
+          	problemFeedbackVo.setIntime(new Date());
+          	problemFeedbackVo.setRemark(remark);
+          	problemFeedbackVo.setStatus(Integer.parseInt(status));
+          	problemFeedbackVo.setWxcode(openId);
+      		int result = fileService.saveProblemFeedback(problemFeedbackVo);
+      		if (1 == result) {
+				logger.info("数据写入数据库成功，problemFeedbackVo ="+problemFeedbackVo);
+			}else{
+				logger.info("数据写入数据库失败，problemFeedbackVo ="+problemFeedbackVo);
+			}
+  		} catch (Exception e) {
+  			logger.error("深圳交警问题反馈异常:" + e);
+//  			DealException(baseBean, e);
+  		}finally{
+  			baseBean.setCode("0000");
+  			baseBean.setData("反馈成功!");
+  			renderJSON(baseBean);
+  	  		logger.debug(JSON.toJSONString(baseBean));
+  		}
+      } 
 }
