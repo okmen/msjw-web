@@ -1,22 +1,27 @@
 package cn.web.front.action.account;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.account.bean.vo.RegisterVo;
 import cn.account.service.IAccountService;
+import cn.message.model.wechat.MessageChannelModel;
+import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
-import cn.sdk.util.Base64;
+import cn.sdk.util.DateUtil2;
 import cn.sdk.util.MsgCode;
+import cn.sdk.util.SXStringUtils;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
 
@@ -34,6 +39,10 @@ public class RegisterAction extends BaseAction {
 
 	@Autowired
 	private IAccountService accountService;
+	
+	@Autowired
+    @Qualifier("templateMessageService")
+	private ITemplateMessageService templateMessageService;
 
 	/**
 	 * 星级用户认证-我是车主
@@ -57,7 +66,7 @@ public class RegisterAction extends BaseAction {
 	public void iAmTheOwner(String licensePlateType, String provinceAbbreviation, String licensePlateNumber,
 			String identityCard, String linkAddress, String mobilephone, String validateCode, Integer isDriverLicense,
 			String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgNegative,
-			String idCardImgHandHeld,String openId,String sourceOfCertification) {
+			String idCardImgHandHeld,String openId, String sourceOfCertification, String businessType) {
 		String code = MsgCode.success;
 		StringBuffer sb = new StringBuffer("");
 		RegisterVo registerVo = new RegisterVo();
@@ -158,6 +167,10 @@ public class RegisterAction extends BaseAction {
 					}
 					basebean.setCode(code);
 					basebean.setMsg(json.getString("MSG"));
+					
+					//申请成功，发送微信模板消息
+					sendServiceMessage(openId, sourceOfCertification, code, basebean, json, businessType);
+					
 				}
 				if (1 == result) {
 					code=MsgCode.paramsError;
@@ -215,7 +228,8 @@ public class RegisterAction extends BaseAction {
 	public void iamALongtimeUser(String licensePlateType, String provinceAbbreviation, String licensePlateNumber,
 			String ownerName, String ownerIdCard, String userIdCard, String linkAddress, String mobilephone,
 			String validateCode, String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgHandHeld,
-			String idCardImgNegative, String ownerIdCardImgPositive, String ownerIdCardImgHandHeld,String openId,String sourceOfCertification) {
+			String idCardImgNegative, String ownerIdCardImgPositive, String ownerIdCardImgHandHeld,String openId,
+			String sourceOfCertification, String businessType) {
 		String code = MsgCode.success;
 		StringBuffer sb = new StringBuffer("");
 		RegisterVo registerVo = new RegisterVo();
@@ -339,6 +353,10 @@ public class RegisterAction extends BaseAction {
 					}
 					basebean.setCode(code);
 					basebean.setMsg(json.getString("MSG"));
+					
+					//申请成功，发送微信模板消息
+					sendServiceMessage(openId, sourceOfCertification, code, basebean, json, businessType);
+					
 				}
 				if (1 == result) {
 					code=MsgCode.paramsError;
@@ -390,7 +408,7 @@ public class RegisterAction extends BaseAction {
 	@RequestMapping(value = "haveDriverLicenseNotCar")
 	public void haveDriverLicenseNotCar(String identityCard, String linkAddress, String mobilephone,
 			String validateCode, String driverLicenseIssuedAddress, String idCardImgPositive, String idCardImgNegative,
-			String idCardImgHandHeld,String openId,String sourceOfCertification) {
+			String idCardImgHandHeld,String openId,String sourceOfCertification, String businessType) {
 
 		String code = MsgCode.success;
 		StringBuffer sb = new StringBuffer("");
@@ -472,6 +490,10 @@ public class RegisterAction extends BaseAction {
 					}
 					basebean.setCode(code);
 					basebean.setMsg(json.getString("MSG"));
+					
+					//申请成功，发送微信模板消息
+					sendServiceMessage(openId, sourceOfCertification, code, basebean, json, businessType);
+					
 				}
 				if (1 == result) {
 					code=MsgCode.paramsError;
@@ -519,7 +541,8 @@ public class RegisterAction extends BaseAction {
 	 */
 	@RequestMapping(value = "isPedestrianNotDriver")
 	public void isPedestrianNotDriver(String identityCard, String mobilephone, String validateCode,
-			String idCardImgPositive, String idCardImgNegative, String idCardImgHandHeld,String openId,String sourceOfCertification) {
+			String idCardImgPositive, String idCardImgNegative, String idCardImgHandHeld,String openId,
+			String sourceOfCertification, String businessType) {
 		String code = MsgCode.success;
 		StringBuffer sb = new StringBuffer("");
 		RegisterVo registerVo = new RegisterVo();
@@ -583,6 +606,10 @@ public class RegisterAction extends BaseAction {
 					}
 					basebean.setCode(code);
 					basebean.setMsg(json.getString("MSG"));
+					
+					//申请成功，发送微信模板消息
+					sendServiceMessage(openId, sourceOfCertification, code, basebean, json, businessType);
+					
 				}
 				if (1 == result) {
 					code=MsgCode.paramsError;
@@ -608,4 +635,60 @@ public class RegisterAction extends BaseAction {
 		logger.debug(JSON.toJSONString(basebean));
 	}
 
+	/**
+	 * 发送模板消息
+	 * @param openId
+	 * @param sourceOfCertification
+	 * @param code
+	 * @param basebean
+	 * @param json
+	 */
+	public void sendServiceMessage(String openId, String sourceOfCertification, String code, BaseBean basebean,
+			JSONObject json, String businessType) {
+		if(StringUtil.isNotBlank(businessType) && MsgCode.success.equals(code) && "C".equals(sourceOfCertification)){
+			String msg = json.getString("MSG");
+			//String waterNumber = msg.substring(msg.indexOf("：")+1, msg.indexOf("。"));//截取流水号
+			String waterNumber = "";
+			waterNumber = SXStringUtils.deleteChineseCharactertoString(msg);
+			waterNumber = waterNumber.replace(",", "").replace(":", "").replace("。", "");
+			logger.info("【星级用户认证】截取后的流水号：" + waterNumber);
+			String dateStr = DateUtil2.date2str(new Date());
+			String url = templateMessageService.getTemplateSendUrl() + "type=1&title=starUserAuth&waterNumber="+waterNumber+"&bidDate="+dateStr;
+			logger.info("【星级用户认证】返回的url是：" + url);
+			
+			MessageChannelModel model = new MessageChannelModel();
+			model.setOpenid(openId);
+			if("1".equals(businessType)){//1-驾驶证业务入口
+				model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbn3H9wpHz8dKjXPL9J_xC5s");
+			}else if("2".equals(businessType)){//2-机动车业务入口
+				model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbjAEGcUfJBYRRfOgme0SPuk");
+			}else if("3".equals(businessType)){//3-交通违法办理入口
+				model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbhcd1wTBLI3B0xsiP7KVObo");
+			}else if("4".equals(businessType)){//4-随手拍举报入口
+				model.setBiz_template_id("z0HL_wBSsoF7AR42tGzuFMalEi3RKowXmg9nKNTC0BM");
+			}else{
+				logger.info("业务类型businessType="+businessType);
+			}
+			model.setResult_page_style_id("23ClyLHM5Fr790uz7t-fxiodPnL9ohRzcnlGWEudkL8");
+			model.setDeal_msg_style_id("23ClyLHM5Fr790uz7t-fxlzJePTelFGvOKtKR4udm1o");
+			model.setCard_style_id("");
+			model.setOrder_no(waterNumber);
+			model.setUrl(url);
+			Map<String, cn.message.model.wechat.MessageChannelModel.Property> map = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
+			map.put("first", new MessageChannelModel().new Property("您好，您的业务办理申请已成功提交，具体信息如下。","#212121"));
+			map.put("keyword1", new MessageChannelModel().new Property(dateStr,"#212121"));
+			map.put("keyword2", new MessageChannelModel().new Property("星级用户认证","#212121"));
+			map.put("keyword3", new MessageChannelModel().new Property("待初审","#212121"));
+			map.put("remark", new MessageChannelModel().new Property("","#212121"));
+			model.setData(map);
+			
+			BaseBean msgBean = templateMessageService.sendServiceMessage(model);
+			logger.info("【星级用户认证】发送模板消息结果：" + JSON.toJSONString(msgBean));
+			
+			//发送成功
+			if("0".equals(msgBean.getCode())){
+				basebean.setData(msgBean.getData().toString());//结果评价页url设置在data中
+			}
+		}
+	}
 }

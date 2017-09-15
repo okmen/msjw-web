@@ -2,17 +2,22 @@ package cn.web.front.action.illegal;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.alibaba.fastjson.JSON;
+
 import cn.account.bean.vo.AuthenticationBasicInformationVo;
 import cn.account.bean.vo.BindTheVehicleVo;
 import cn.account.service.IAccountService;
@@ -28,8 +33,10 @@ import cn.illegal.bean.IllegalProcessPointBean;
 import cn.illegal.bean.ReportingNoParking;
 import cn.illegal.bean.SubcribeBean;
 import cn.illegal.service.IIllegalService;
+import cn.message.model.wechat.MessageChannelModel;
 import cn.message.model.wechat.WechatUserInfo;
 import cn.message.service.IMobileMessageService;
+import cn.message.service.ITemplateMessageService;
 import cn.message.service.IWechatService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.util.MsgCode;
@@ -54,9 +61,12 @@ public class IllegalAction extends BaseAction {
 	@Autowired
 	@Qualifier("wechatService")
 	private IWechatService wechatService;
-	 @Autowired
-	 @Qualifier("mobileMessageService")
-	 private IMobileMessageService mobileMessageService;
+	@Autowired
+	@Qualifier("mobileMessageService")
+	private IMobileMessageService mobileMessageService;
+	@Autowired
+	@Qualifier("templateMessageService")
+	private ITemplateMessageService templateMessageService;
 	    
 	/**
 	 * 
@@ -630,7 +640,8 @@ public class IllegalAction extends BaseAction {
 	 */
 	@RequestMapping(value = "toChangeSubscribe")
 	public void toChangeSubscribe(String snm, String cldbmid, String cczb_id, CustInfoBean custInfo,
-			CarInfoBean carInfo, String sourceOfCertification) {
+			CarInfoBean carInfo, String sourceOfCertification, String openId,
+			String cldbmmc, String cldlxdh, String cldaddress, String yydate, String ccsjd) {
 		// CarInfoBean carinfo=new CarInfoBean("粤B6F7M1", "2", "9094");
 		// CustInfoBean custinfo=new CustInfoBean("王玉璞", "622822198502074110",
 		// "01", "18601174358", "622822198502074110");
@@ -652,6 +663,48 @@ public class IllegalAction extends BaseAction {
 				renderJSON(base);
 			}
 			base = illegalService.toChangeSubscribe(snm, cldbmid, cczb_id, custInfo, carInfo, sourceOfCertification);
+			
+			/*base.setCode("0");//{"code":"0","message":"1170914100036"}
+			base.setMsg("1170914100012");
+			System.out.println("【base】"+JSON.toJSONString(base));*/
+			//模板消息新增字段
+			boolean flag = true;
+			if (StringUtil.isEmpty(cldbmmc) && StringUtil.isEmpty(cldlxdh) && StringUtil.isEmpty(cldaddress) && StringUtil.isEmpty(yydate) && StringUtil.isEmpty(ccsjd)) {
+				logger.info("cldbmmc="+cldbmmc+";cldlxdh="+cldlxdh+";cldaddress="+cldaddress+";yydate="+yydate+";ccsjd="+ccsjd);
+				flag = false;
+			}
+			//预约成功，发送微信模板消息
+			if(flag && "0".equals(base.getCode()) && "C".equals(sourceOfCertification)){
+				String waterNumber = base.getMsg();
+				String url = templateMessageService.getTemplateSendUrl() + "type=2&title=illegalAppointment&waterNumber="+waterNumber+"&orgName="+cldbmmc+"&serviceCall="+cldlxdh+"&orgAddr="+cldaddress+"&appointmentDate="+yydate+"&appointmentTime="+ccsjd;
+				//String url = "http://gzh.stc.gov.cn/h5/#/submitSuccess?type=2&title=illegalAppointment&waterNumber=123&orgName=龙华交警大队违法处理点&serviceCall=13800138000&orgAddr=龙华新区大道创业花园向荣大厦188栋&appointmentDate=2017-09-21&appointmentTime=12:00-17:00";
+				logger.info("【交通违法办理】返回的url是：" + url);
+				
+				MessageChannelModel model = new MessageChannelModel();
+				model.setOpenid(openId);
+				model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbv3QTn_7dV2OuKaPDHYBrNQ");
+				model.setResult_page_style_id("4P3yuc5LgEgbuQ6w2ZEZzZw0J4Cpz8_qtEszelOARpU");
+				model.setDeal_msg_style_id("4P3yuc5LgEgbuQ6w2ZEZzbEZz3IWDGV7iJiPSpYQCDw");
+				model.setCard_style_id("");
+				model.setOrder_no(waterNumber);
+				model.setUrl(url);
+				Map<String, cn.message.model.wechat.MessageChannelModel.Property> map = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
+				map.put("first", new MessageChannelModel().new Property("您好，您的业务办理预约申请已成功提交，具体信息如下。","#212121"));
+				map.put("business", new MessageChannelModel().new Property("交通违法办理-违法处理预约","#212121"));
+				map.put("order", new MessageChannelModel().new Property(waterNumber,"#212121"));
+				map.put("time", new MessageChannelModel().new Property(yydate + " " + ccsjd,"#212121"));
+				map.put("address", new MessageChannelModel().new Property(cldbmmc,"#212121"));
+				map.put("remark", new MessageChannelModel().new Property("请您持身份证及业务办理所需材料在预约办理时间段内完成取号，不能办理业务请及时取消。","#212121"));
+				model.setData(map);
+				
+				BaseBean msgBean = templateMessageService.sendServiceMessage(model);
+				logger.info("【交通违法办理】发送模板消息结果：" + JSON.toJSONString(msgBean));
+				
+				//发送成功
+				if("0".equals(msgBean.getCode())){
+					base.setData(msgBean.getData().toString());//结果评价页url设置在data中
+				}
+			}
 		} catch (Exception e) {
 			DealException(base, e);
 			logger.error("预约异常：", e);
@@ -666,7 +719,8 @@ public class IllegalAction extends BaseAction {
 	 * @param mobilephone
 	 */
 	@RequestMapping(value = "toCancelSubscribe")
-	public void toCancleSubscribe(String subscribeNo) {
+	public void toCancleSubscribe(String subscribeNo, String sourceOfCertification, String openId, String businessName,
+			String yydate, String ccsjd, String cldbmmc) {
 		BaseBean bean = new BaseBean();
 		try {
 			if (StringUtil.isEmpty(subscribeNo)) {
@@ -675,6 +729,44 @@ public class IllegalAction extends BaseAction {
 				renderJSON(bean);
 			}
 			bean = illegalService.toCancleSubscribe(subscribeNo);
+			
+			/*bean.setCode("0");//{"code":"0","message":"1170914100036"}
+			bean.setMsg("取消成功!");
+			System.out.println("【bean】"+JSON.toJSONString(bean));*/
+			//模板消息新增字段
+			boolean flag = true;
+			if(StringUtil.isEmpty(businessName)&&StringUtil.isEmpty(yydate)&&StringUtil.isEmpty(ccsjd)&&StringUtil.isEmpty(cldbmmc)){
+				logger.info("cldbmmc="+cldbmmc+";businessName="+businessName+";yydate="+yydate+";ccsjd="+ccsjd);
+				flag = false;
+			}
+			//取消成功，发送微信模板消息
+			if(flag && "0".equals(bean.getCode()) && "C".equals(sourceOfCertification)){
+				MessageChannelModel model = new MessageChannelModel();
+				model.setOpenid(openId);
+				model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbmdPgvKIb6VMfR1zxNIe_fw");
+				model.setResult_page_style_id("PMw9-nhDOOQuMzL7-cVZ3DqyaaLEvpIWsopaXE1qvC0");
+				model.setDeal_msg_style_id("PMw9-nhDOOQuMzL7-cVZ3CZoVDr0ojGdWvwZf7SZK6A");
+				model.setCard_style_id("");
+				model.setOrder_no(subscribeNo);
+				model.setUrl("");
+				Map<String, cn.message.model.wechat.MessageChannelModel.Property> map = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
+				map.put("first", new MessageChannelModel().new Property("您好，您的预约申请已取消，具体信息如下","#212121"));
+				map.put("businessType", new MessageChannelModel().new Property("交通违法办理","#212121"));
+				map.put("business", new MessageChannelModel().new Property(businessName,"#212121"));
+				map.put("order", new MessageChannelModel().new Property(subscribeNo,"#212121"));
+				map.put("time", new MessageChannelModel().new Property(yydate + " " + ccsjd,"#212121"));
+				map.put("address", new MessageChannelModel().new Property(cldbmmc,"#212121"));
+				map.put("remark", new MessageChannelModel().new Property("","#212121"));
+				model.setData(map);
+				
+				BaseBean msgBean = templateMessageService.sendServiceMessage(model);
+				logger.info("【交通违法办理】发送模板消息结果：" + JSON.toJSONString(msgBean));
+				
+				//发送成功
+				if("0".equals(msgBean.getCode())){
+					bean.setData(msgBean.getData().toString());//结果评价页url设置在data中
+				}
+			}
 		} catch (Exception e) {
 			DealException(bean, e);
 			logger.error("取消预约异常：", e);
