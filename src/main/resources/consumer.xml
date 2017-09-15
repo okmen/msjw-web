@@ -8,12 +8,12 @@
 	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.url}" />
 	<!-- 引入服务接口 --><!-- 本地调试通过添加 url="dubbo://127.0.0.1:20880/"> -->
 	
-	<dubbo:reference id="accountService" interface="cn.account.service.IAccountService" timeout="${dubbo.consumer.account.timeout}" retries="${dubbo.consumer.retries}" /> 
+	<dubbo:reference id="accountService" interface="cn.account.service.IAccountService" url="dubbo://192.168.1.247:30100/" timeout="${dubbo.consumer.account.timeout}" retries="${dubbo.consumer.retries}" /> 
 	<!-- 办理类业务 -->
-	<dubbo:reference id="handleService" interface="cn.handle.service.IHandleService"  timeout="${dubbo.consumer.account.timeout}" retries="${dubbo.consumer.retries}" /> 
+	<dubbo:reference id="handleService" interface="cn.handle.service.IHandleService"   url="dubbo://192.168.1.247:30800/" timeout="${dubbo.consumer.account.timeout}" retries="${dubbo.consumer.retries}" /> 
 	
 	<!-- 预约类业务 -->
-	<dubbo:reference id="bookingBusinessService"  interface="cn.booking.business.service.IBookingBusinessService"  timeout="${dubbo.consumer.account.timeout}" retries="${dubbo.consumer.retries}" />
+	<dubbo:reference id="bookingBusinessService"  interface="cn.booking.business.service.IBookingBusinessService"  url="dubbo://192.168.1.247:30700/" timeout="${dubbo.consumer.account.timeout}" retries="${dubbo.consumer.retries}" />
 	
 	<dubbo:reference id="thirdPartyInformationService" interface="cn.account.service.IThirdPartyInformationService" timeout="${dubbo.consumer.account.timeout}" retries="${dubbo.consumer.retries}" />
 	
@@ -31,13 +31,13 @@
     
     <dubbo:reference id="wechatService" interface="cn.message.service.IWechatService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
     
-    <dubbo:reference id="templateMessageService"  interface="cn.message.service.ITemplateMessageService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
+    <dubbo:reference id="templateMessageService"  interface="cn.message.service.ITemplateMessageService" url="dubbo://192.168.1.247:30600/" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
 	
 	<!-- <dubbo:reference id="alipayService" interface="cn.message.service.IAlipayService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" /> -->
 	
 	<dubbo:reference id="alipayService" interface="cn.message.service.IAlipayService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
 	
-	<dubbo:reference id="fileService"  interface="cn.file.service.IFileService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
+	<dubbo:reference id="fileService" interface="cn.file.service.IFileService" url="dubbo://192.168.1.247:30400/" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
     
    	<dubbo:reference id="activityService"  interface="cn.activity.service.IActivityService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />  
    	<!-- 微信刷脸认证接口 -->

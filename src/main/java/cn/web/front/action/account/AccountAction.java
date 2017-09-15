@@ -589,7 +589,7 @@ public class AccountAction extends BaseAction {
      */
     @RequestMapping(value = "addVehicle")
     public void addVehicle( Integer bindType, String licensePlateType,String provinceAbbreviation,String licensePlateNumber,String frameNumber,String certifiedSource,
-    		String ownerName, String ownerIdCard,String userIdCard, String idCardImgPositive,String idCardImgHandHeld,HttpServletRequest request) {
+    		String ownerName, String ownerIdCard,String userIdCard, String idCardImgPositive,String idCardImgHandHeld,String businessType ,HttpServletRequest request) {
     	String code=MsgCode.success;
     	StringBuffer sb = new StringBuffer("");   	
     	BindCarVo bindCarVo = new BindCarVo();
@@ -694,73 +694,90 @@ public class AccountAction extends BaseAction {
     		JSONObject json = accountService.addVehicle(bindCarVo);
 			code =json.getString("CODE");
 			basebean.setCode(code);
-	    	basebean.setMsg(json.getString("MSG"));
-			if ("0000".equals(code)&&"C".equals(certifiedSource)) {
-				JSONObject body = json.getJSONObject("BODY");
-				if (null != body) {
-					String waterNumber = body.getString("CID");
-					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "addVehicle", waterNumber, DateUtil2.date2str(new Date()));
-					basebean.setData(handleTemplateVo);
-					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
-					logger.info("返回的url是：" + url);
-					logger.info("handleTemplateVo 是：" + handleTemplateVo);
-					MessageChannelModel model = new MessageChannelModel();
-					model.setOpenid(openId);
-					model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbn3H9wpHz8dKjXPL9J_xC5s");
-					model.setResult_page_style_id("23ClyLHM5Fr790uz7t-fxiodPnL9ohRzcnlGWEudkL8");
-					model.setDeal_msg_style_id("23ClyLHM5Fr790uz7t-fxlzJePTelFGvOKtKR4udm1o");
-					model.setCard_style_id("");
-					model.setOrder_no(waterNumber);
-					model.setUrl(url);
-					Map<String, cn.message.model.wechat.MessageChannelModel.Property> tmap = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
-					tmap.put("first", new MessageChannelModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
-					tmap.put("keyword1",
-							new MessageChannelModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
-					tmap.put("keyword2", new MessageChannelModel().new Property("添加车辆", "#212121"));
-					tmap.put("keyword3", new MessageChannelModel().new Property("待初审", "#212121"));
-					tmap.put("remark", new MessageChannelModel().new Property("更多信息请点击详情查看","#212121"));
-					model.setData(tmap);
-					BaseBean msgBean = templateMessageService.sendServiceMessage(model);
-					logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
-					
-					//发送成功
-					if("0".equals(msgBean.getCode())){
-						basebean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+			if ("0000".equals(code)) {
+				if (StringUtil.isNotBlank(businessType)&&"C".equals(certifiedSource)) {
+					JSONObject body = json.getJSONObject("BODY");
+					if (null != body) {
+						String waterNumber = body.getString("CID");
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "addVehicle", waterNumber, DateUtil2.date2str(new Date()));
+						basebean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						logger.info("返回的url是：" + url);
+						logger.info("handleTemplateVo 是：" + handleTemplateVo);
+						MessageChannelModel model = new MessageChannelModel();
+						model.setOpenid(openId);
+						if ("1".equals(businessType)) {
+	 						model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbn3H9wpHz8dKjXPL9J_xC5s");
+	 					}else if ("2".equals(businessType)) {
+	 						model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbjAEGcUfJBYRRfOgme0SPuk");
+	 					}
+						model.setResult_page_style_id("23ClyLHM5Fr790uz7t-fxiodPnL9ohRzcnlGWEudkL8");
+						model.setDeal_msg_style_id("23ClyLHM5Fr790uz7t-fxlzJePTelFGvOKtKR4udm1o");
+						model.setCard_style_id("");
+						model.setOrder_no(waterNumber);
+						model.setUrl(url);
+						Map<String, cn.message.model.wechat.MessageChannelModel.Property> tmap = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
+						tmap.put("first", new MessageChannelModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
+						tmap.put("keyword1",
+								new MessageChannelModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
+						tmap.put("keyword2", new MessageChannelModel().new Property("添加车辆", "#212121"));
+						tmap.put("keyword3", new MessageChannelModel().new Property("待初审", "#212121"));
+						tmap.put("remark", new MessageChannelModel().new Property("更多信息请点击详情查看","#212121"));
+						model.setData(tmap);
+						BaseBean msgBean = templateMessageService.sendServiceMessage(model);
+						logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
+						
+						//发送成功
+						if("0".equals(msgBean.getCode())){
+							basebean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+						}else{
+							basebean.setMsg(url);
+						}
+					}else{
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "addVehicle",  DateUtil2.date2str(new Date()));
+						basebean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						logger.info("返回的url是：" + url);
+						logger.info("handleTemplateVo 是：" + handleTemplateVo);
+						MessageChannelModel model = new MessageChannelModel();
+						model.setOpenid(openId);
+						if ("1".equals(businessType)) {
+	 						model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbn3H9wpHz8dKjXPL9J_xC5s");
+	 					}else if ("2".equals(businessType)) {
+	 						model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbjAEGcUfJBYRRfOgme0SPuk");
+	 					}
+						model.setResult_page_style_id("23ClyLHM5Fr790uz7t-fxiodPnL9ohRzcnlGWEudkL8");
+						model.setDeal_msg_style_id("23ClyLHM5Fr790uz7t-fxlzJePTelFGvOKtKR4udm1o");
+						model.setCard_style_id("");
+						model.setOrder_no("");
+						model.setUrl(url);
+						Map<String, cn.message.model.wechat.MessageChannelModel.Property> tmap = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
+						tmap.put("first", new MessageChannelModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
+						tmap.put("keyword1",
+								new MessageChannelModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
+						tmap.put("keyword2", new MessageChannelModel().new Property("添加车辆", "#212121"));
+						tmap.put("keyword3", new MessageChannelModel().new Property(json.getString("MSG"), "#212121"));
+						tmap.put("remark", new MessageChannelModel().new Property("更多信息请点击详情查看","#212121"));
+						model.setData(tmap);
+						BaseBean msgBean = templateMessageService.sendServiceMessage(model);
+						logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
+						
+						//发送成功
+						if("0".equals(msgBean.getCode())){
+							basebean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+						}else{
+							basebean.setMsg(url);
+						}
 					}
 				}else{
-					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "addVehicle",  DateUtil2.date2str(new Date()));
-					basebean.setData(handleTemplateVo);
-					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
-					logger.info("返回的url是：" + url);
-					logger.info("handleTemplateVo 是：" + handleTemplateVo);
-					MessageChannelModel model = new MessageChannelModel();
-					model.setOpenid(openId);
-					model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbn3H9wpHz8dKjXPL9J_xC5s");
-					model.setResult_page_style_id("23ClyLHM5Fr790uz7t-fxiodPnL9ohRzcnlGWEudkL8");
-					model.setDeal_msg_style_id("23ClyLHM5Fr790uz7t-fxlzJePTelFGvOKtKR4udm1o");
-					model.setCard_style_id("");
-					model.setOrder_no("");
-					model.setUrl(url);
-					Map<String, cn.message.model.wechat.MessageChannelModel.Property> tmap = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
-					tmap.put("first", new MessageChannelModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
-					tmap.put("keyword1",
-							new MessageChannelModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
-					tmap.put("keyword2", new MessageChannelModel().new Property("添加车辆", "#212121"));
-					tmap.put("keyword3", new MessageChannelModel().new Property(json.getString("MSG"), "#212121"));
-					tmap.put("remark", new MessageChannelModel().new Property("更多信息请点击详情查看","#212121"));
-					model.setData(tmap);
-					BaseBean msgBean = templateMessageService.sendServiceMessage(model);
-					logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
-					
-					//发送成功
-					if("0".equals(msgBean.getCode())){
-						basebean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
-					}
+					basebean.setCode("0000");
+					basebean.setMsg(json.getString("MSG"));
 				}
 				
 			}
 			if(!MsgCode.success.equals(code)){
 				code=MsgCode.businessError;
+				basebean.setMsg(json.getString("MSG"));
 			}
 		} catch (Exception e) {
 			DealException(basebean, e);
@@ -2425,58 +2442,63 @@ public class AccountAction extends BaseAction {
 			renderJSON(baseBean);
 			return;
 		}
-     	if(StringUtil.isBlank(businessType)){
-			baseBean.setCode(MsgCode.paramsError);
-			baseBean.setMsg("业务类型不能为空!");
-			renderJSON(baseBean);
-			return;
-		}
+     	
      	try{
      		//创建返回结果
  			Map<String, String> map = accountService.reauthentication(reauthenticationVo);
+ 			logger.info(map.toString());
  			String code = map.get("code");
  			String msg = map.get("msg");
- 			if("0000".equals(code)&&"C".equals(sourceOfCertification)){
-         		baseBean.setCode(MsgCode.success);
-         		String waterNumber = map.get("data");
-				HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "reauthentication", waterNumber, DateUtil2.date2str(new Date()));
-				baseBean.setData(handleTemplateVo);
-				String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
-				logger.info("返回的url是：" + url);
-				logger.info("handleTemplateVo 是：" + handleTemplateVo);
-				MessageChannelModel model = new MessageChannelModel();
-				model.setOpenid(openId);
-				if ("1".equals(businessType)) {
-					model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbn3H9wpHz8dKjXPL9J_xC5s");
-				}else if ("2".equals(businessType)) {
-					model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbjAEGcUfJBYRRfOgme0SPuk");
-				}
-				model.setResult_page_style_id("23ClyLHM5Fr790uz7t-fxiodPnL9ohRzcnlGWEudkL8");
-				model.setDeal_msg_style_id("23ClyLHM5Fr790uz7t-fxlzJePTelFGvOKtKR4udm1o");
-				model.setCard_style_id("");
-				model.setOrder_no(waterNumber);
-				model.setUrl(url);
-				Map<String, cn.message.model.wechat.MessageChannelModel.Property> tmap = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
-				tmap.put("first", new MessageChannelModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
-				tmap.put("keyword1",
-						new MessageChannelModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
-				tmap.put("keyword2", new MessageChannelModel().new Property("重新认证", "#212121"));
-				tmap.put("keyword3", new MessageChannelModel().new Property("待初审", "#212121"));
-				tmap.put("remark", new MessageChannelModel().new Property("更多信息请点击详情查看","#212121"));
-				model.setData(tmap);
-				BaseBean msgBean = templateMessageService.sendServiceMessage(model);
-				logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
-				
-				//发送成功
-				if("0".equals(msgBean.getCode())){
-					baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
-				}
-//         		baseBean.setMsg(msg);
-//         		baseBean.setData(map.get("data"));
-         	}else{
+ 			if ("0000".equals(code)) {
+ 				if(StringUtil.isNotBlank(businessType)&&"C".equals(sourceOfCertification)){
+ 	         		baseBean.setCode(MsgCode.success);
+ 	         		String waterNumber = map.get("data");
+ 					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "reauthentication", waterNumber, DateUtil2.date2str(new Date()));
+ 					baseBean.setData(handleTemplateVo);
+ 					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+ 					logger.info("返回的url是：" + url);
+ 					logger.info("handleTemplateVo 是：" + handleTemplateVo);
+ 					MessageChannelModel model = new MessageChannelModel();
+ 					model.setOpenid(openId);
+ 					if ("1".equals(businessType)) {
+ 						model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbn3H9wpHz8dKjXPL9J_xC5s");
+ 					}else if ("2".equals(businessType)) {
+ 						model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbjAEGcUfJBYRRfOgme0SPuk");
+ 					}
+ 					model.setResult_page_style_id("23ClyLHM5Fr790uz7t-fxiodPnL9ohRzcnlGWEudkL8");
+ 					model.setDeal_msg_style_id("23ClyLHM5Fr790uz7t-fxlzJePTelFGvOKtKR4udm1o");
+ 					model.setCard_style_id("");
+ 					model.setOrder_no(waterNumber);
+ 					model.setUrl(url);
+ 					Map<String, cn.message.model.wechat.MessageChannelModel.Property> tmap = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
+ 					tmap.put("first", new MessageChannelModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
+ 					tmap.put("keyword1",
+ 							new MessageChannelModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
+ 					tmap.put("keyword2", new MessageChannelModel().new Property("重新认证", "#212121"));
+ 					tmap.put("keyword3", new MessageChannelModel().new Property("待初审", "#212121"));
+ 					tmap.put("remark", new MessageChannelModel().new Property("更多信息请点击详情查看","#212121"));
+ 					model.setData(tmap);
+ 					BaseBean msgBean = templateMessageService.sendServiceMessage(model);
+ 					logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
+ 					
+ 					//发送成功
+ 					if("0".equals(msgBean.getCode())){
+ 						baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+ 					}else{
+ 						baseBean.setMsg(url);
+ 					}
+// 	         		baseBean.setMsg(msg);
+// 	         		baseBean.setData(map.get("data"));
+ 	         	}else{
+ 	         		baseBean.setCode("0000");
+ 	         		baseBean.setData(map.get("data"));
+ 	         		baseBean.setMsg(msg);
+ 	         	}
+			}else{
          		baseBean.setCode(MsgCode.businessError);
  				baseBean.setMsg(msg);
          	}
+ 			
  			
  		} catch (Exception e) {
  			logger.error("重新认证异常:" + e);

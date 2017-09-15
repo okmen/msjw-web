@@ -1042,7 +1042,7 @@ public class BookingbusinessAction extends BaseAction {
 				String waterNumber = (String) refBean.getData();
 				String appTime = appointmentDate +" "+appointmentTime;
 				baseBean.setCode(MsgCode.success);
-				baseBean.setMsg(msg);
+//				baseBean.setMsg(msg);
 				if (sourceOfCertification.equals("C")) {
 					try {
 						/*String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
@@ -1060,6 +1060,7 @@ public class BookingbusinessAction extends BaseAction {
 						logger.info("发送模板消息结果：" + flag);*/
 						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ10, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
+						baseBean.setData(bookingTemplateVo);
 						logger.info("返回的url是：" + url);
 						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 						MessageChannelModel model = new MessageChannelModel();
@@ -1084,6 +1085,8 @@ public class BookingbusinessAction extends BaseAction {
 						//发送成功
 						if("0".equals(msgBean.getCode())){
 							baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+						}else{
+							baseBean.setMsg(url);
 						}
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
@@ -1231,7 +1234,6 @@ public class BookingbusinessAction extends BaseAction {
 				String waterNumber = (String) refBean.getData();
 				String appTime = appointmentDate +" "+appointmentTime;
 				baseBean.setCode(MsgCode.success);
-				baseBean.setMsg(msg);
 				if (sourceOfCertification.equals("C")) {
 					try {
 						/*String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
@@ -1251,6 +1253,7 @@ public class BookingbusinessAction extends BaseAction {
 						logger.info("发送模板消息结果：" + flag);*/
 						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ11, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
+						baseBean.setData(bookingTemplateVo);
 						logger.info("返回的url是：" + url);
 						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 						MessageChannelModel model = new MessageChannelModel();
@@ -1275,6 +1278,8 @@ public class BookingbusinessAction extends BaseAction {
 						//发送成功
 						if("0".equals(msgBean.getCode())){
 							baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+						}else{
+							baseBean.setMsg(url);
 						}
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
@@ -1423,7 +1428,6 @@ public class BookingbusinessAction extends BaseAction {
 				String waterNumber = (String) refBean.getData();
 				String appTime = appointmentDate +" "+appointmentTime;
 				baseBean.setCode(MsgCode.success);
-				baseBean.setMsg(msg);
 				if (sourceOfCertification.equals("C")) {
 					try {
 						/*String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
@@ -1443,6 +1447,7 @@ public class BookingbusinessAction extends BaseAction {
 						logger.info("发送模板消息结果：" + flag);*/
 						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ13, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
+						baseBean.setData(bookingTemplateVo);
 						logger.info("返回的url是：" + url);
 						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
 						MessageChannelModel model = new MessageChannelModel();
@@ -1467,6 +1472,8 @@ public class BookingbusinessAction extends BaseAction {
 						//发送成功
 						if("0".equals(msgBean.getCode())){
 							baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+						}else{
+							baseBean.setMsg(url);
 						}
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
@@ -1615,7 +1622,6 @@ public class BookingbusinessAction extends BaseAction {
 				String waterNumber = (String) refBean.getData();
 				String appTime = appointmentDate +" "+appointmentTime;
 				baseBean.setCode(MsgCode.success);
-				baseBean.setMsg(msg);
 				if (sourceOfCertification.equals("C")) {
 					try {
 						/*String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
@@ -1634,6 +1640,7 @@ public class BookingbusinessAction extends BaseAction {
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
 						logger.info("发送模板消息结果：" + flag);*/
 						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ17, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
+						baseBean.setData(bookingTemplateVo);
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
 						logger.info("返回的url是：" + url);
 						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
@@ -1659,6 +1666,8 @@ public class BookingbusinessAction extends BaseAction {
 						//发送成功
 						if("0".equals(msgBean.getCode())){
 							baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+						}else{
+							baseBean.setMsg(url);
 						}
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
@@ -1807,7 +1816,6 @@ public class BookingbusinessAction extends BaseAction {
 				String waterNumber = (String) refBean.getData();
 				String appTime = appointmentDate +" "+appointmentTime;
 				baseBean.setCode(MsgCode.success);
-				baseBean.setMsg(msg);
 				if (sourceOfCertification.equals("C")) {
 					try {
 						/*String templateId = "kS7o4u0btdEciJTbJe03LcPIwmxv1bxj95MhWqwuB84";
@@ -1826,6 +1834,7 @@ public class BookingbusinessAction extends BaseAction {
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
 						logger.info("发送模板消息结果：" + flag);*/
 						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ20, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
+						baseBean.setData(bookingTemplateVo);
 						String url = BookingTemplateVo.getUrl(bookingTemplateVo,bookingBusinessService.getTemplateSendUrl());
 						logger.info("返回的url是：" + url);
 						logger.info("bookingTemplateVo 是：" + bookingTemplateVo);
@@ -1851,6 +1860,8 @@ public class BookingbusinessAction extends BaseAction {
 						//发送成功
 						if("0".equals(msgBean.getCode())){
 							baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+						}else{
+							baseBean.setMsg(url);
 						}
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
@@ -2311,7 +2322,6 @@ public class BookingbusinessAction extends BaseAction {
 			String code = refBean.getCode();
 			if("00".equals(code)){
 				baseBean.setCode(MsgCode.success);
-				baseBean.setMsg(refBean.getMsg());
 				//预约成功发送微信模板消息
 				if("C".equals(sourceOfCertification)){
 					try {
@@ -2366,6 +2376,8 @@ public class BookingbusinessAction extends BaseAction {
 						//发送成功
 						if("0".equals(msgBean.getCode())){
 							baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+						}else{
+							baseBean.setMsg(url);
 						}
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
