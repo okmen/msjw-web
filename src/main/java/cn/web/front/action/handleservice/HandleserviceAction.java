@@ -495,10 +495,9 @@ public class HandleserviceAction extends BaseAction {
 			if ("0000".equals(code)) {
 				String waterNumber = map.get("waterNumber");
 				baseBean.setCode("0000");
-				baseBean.setMsg(msg);
 				if (sourceOfCertification.equals("C")) {
 					try {
-						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
+						/*String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseAnnualVerification, waterNumber, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
@@ -513,7 +512,37 @@ public class HandleserviceAction extends BaseAction {
 						tmap.put("keyword3", new TemplateDataModel().new Property("待受理", "#212121"));
 						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
 						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
-						logger.info("发送模板消息结果：" + flag);
+						logger.info("发送模板消息结果：" + flag);*/
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseAnnualVerification, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+						logger.info("返回的url是：" + url);
+						logger.info("handleTemplateVo 是：" + handleTemplateVo);
+						MessageChannelModel model = new MessageChannelModel();
+						model.setOpenid(openId);
+						model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbn3H9wpHz8dKjXPL9J_xC5s");
+						model.setResult_page_style_id("23ClyLHM5Fr790uz7t-fxiodPnL9ohRzcnlGWEudkL8");
+						model.setDeal_msg_style_id("23ClyLHM5Fr790uz7t-fxlzJePTelFGvOKtKR4udm1o");
+						model.setCard_style_id("");
+						model.setOrder_no(waterNumber);
+						model.setUrl(url);
+						Map<String, cn.message.model.wechat.MessageChannelModel.Property> tmap = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
+						tmap.put("first", new MessageChannelModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
+						tmap.put("keyword1",
+								new MessageChannelModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
+						tmap.put("keyword2", new MessageChannelModel().new Property("驾驶证年审", "#212121"));
+						tmap.put("keyword3", new MessageChannelModel().new Property("待初审", "#212121"));
+						tmap.put("remark", new MessageChannelModel().new Property("更多信息请点击详情查看","#212121"));
+						model.setData(tmap);
+						BaseBean msgBean = templateMessageService.sendServiceMessage(model);
+						logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
+						
+						//发送成功
+						if("0".equals(msgBean.getCode())){
+							baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+						}else{
+							baseBean.setMsg(url);
+						}
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}

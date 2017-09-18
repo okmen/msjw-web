@@ -10,10 +10,10 @@
 	
 	<dubbo:reference id="accountService" interface="cn.account.service.IAccountService" timeout="${dubbo.consumer.account.timeout}" retries="${dubbo.consumer.retries}" /> 
 	<!-- 办理类业务 -->
-	<dubbo:reference id="handleService" interface="cn.handle.service.IHandleService"  timeout="${dubbo.consumer.account.timeout}" retries="${dubbo.consumer.retries}" /> 
+	<dubbo:reference id="handleService" interface="cn.handle.service.IHandleService" timeout="${dubbo.consumer.account.timeout}" retries="${dubbo.consumer.retries}" /> 
 	
 	<!-- 预约类业务 -->
-	<dubbo:reference id="bookingBusinessService"  interface="cn.booking.business.service.IBookingBusinessService"  timeout="${dubbo.consumer.account.timeout}" retries="${dubbo.consumer.retries}" />
+	<dubbo:reference id="bookingBusinessService"  interface="cn.booking.business.service.IBookingBusinessService" timeout="${dubbo.consumer.account.timeout}" retries="${dubbo.consumer.retries}" />
 	
 	<dubbo:reference id="thirdPartyInformationService" interface="cn.account.service.IThirdPartyInformationService" timeout="${dubbo.consumer.account.timeout}" retries="${dubbo.consumer.retries}" />
 	
@@ -31,7 +31,7 @@
     
     <dubbo:reference id="wechatService" interface="cn.message.service.IWechatService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
     
-    <dubbo:reference id="templateMessageService"  interface="cn.message.service.ITemplateMessageService" url="dubbo://192.168.1.247:30600/" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
+    <dubbo:reference id="templateMessageService"  interface="cn.message.service.ITemplateMessageService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" />
 	
 	<!-- <dubbo:reference id="alipayService" interface="cn.message.service.IAlipayService" timeout="${dubbo.consumer.timeout}" retries="${dubbo.consumer.retries}" /> -->
 	
