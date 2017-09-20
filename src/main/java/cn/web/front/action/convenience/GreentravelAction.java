@@ -268,6 +268,7 @@ public class GreentravelAction extends BaseAction{
 			greenTravelBean.setLrly(lrly);
 			List<ApplyGreenRet> list=new ArrayList<ApplyGreenRet>();
 			int reserveNumber=0;   //申报停驶天数
+			int cryearNo=0;    //年度累计申报停驶天数
 			for (int i = 0; i < ret.length; i++) {
 				ApplyGreenRet appret=new ApplyGreenRet();
 				appret.setCdate(ret[i]);
@@ -292,6 +293,10 @@ public class GreentravelAction extends BaseAction{
 					logger.info("统计停驶日期数据:"+respStr.toString());
 					jsonMap.put("zts", respStr.get("zts"));
 					jsonMap.put("cryearNo", respStr.get("cryearNo"));
+					String cryearNum= respStr.get("cryearNo").toString();
+					if(StringUtil.isBlank(cryearNum)){
+						cryearNo=Integer.parseInt(cryearNum);
+					}
 				}else{
 					jsonMap.put("zts",0);
 					jsonMap.put("cryearNo",0);
@@ -300,7 +305,7 @@ public class GreentravelAction extends BaseAction{
 					try {
 						//绿色出行模板消息发送
 						String templateId = "9vbb8d_BfhE5-i1KA1u9rWcVpMcIPGVh9kUyzG26MB0";
-						GreenTraveTemplateVo greenTraveTemplateVo = new GreenTraveTemplateVo("3",hphm,"绿色出行",reserveNumber);
+						GreenTraveTemplateVo greenTraveTemplateVo = new GreenTraveTemplateVo("3",hphm,"绿色出行",reserveNumber,cryearNo);
 						jsonMap.put("date", greenTraveTemplateVo);
 						String url = greenTraveTemplateVo.getUrl(greenTraveTemplateVo,greentravelService.getTemplateSendUrl());
 						logger.info("返回的url是：" + url);
