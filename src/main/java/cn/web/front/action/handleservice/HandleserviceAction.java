@@ -532,7 +532,7 @@ public class HandleserviceAction extends BaseAction {
 								new MessageChannelModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
 						tmap.put("keyword2", new MessageChannelModel().new Property("驾驶证年审", "#212121"));
 						tmap.put("keyword3", new MessageChannelModel().new Property("待初审", "#212121"));
-						tmap.put("remark", new MessageChannelModel().new Property("更多信息请点击详情查看","#212121"));
+						tmap.put("remark", new MessageChannelModel().new Property("","#212121"));
 						model.setData(tmap);
 						BaseBean msgBean = templateMessageService.sendServiceMessage(model);
 						logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
@@ -1463,7 +1463,7 @@ public class HandleserviceAction extends BaseAction {
 								new MessageChannelModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
 						tmap.put("keyword2", new MessageChannelModel().new Property("驾驶证补证", "#212121"));
 						tmap.put("keyword3", new MessageChannelModel().new Property("待初审", "#212121"));
-						tmap.put("remark", new MessageChannelModel().new Property("更多信息请点击详情查看","#212121"));
+						tmap.put("remark", new MessageChannelModel().new Property("","#212121"));
 						model.setData(tmap);
 						BaseBean msgBean = templateMessageService.sendServiceMessage(model);
 						logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
@@ -1728,7 +1728,7 @@ public class HandleserviceAction extends BaseAction {
 								new MessageChannelModel().new Property(DateUtil.formatDateTime(new Date()), "#212121"));
 						tmap.put("keyword2", new MessageChannelModel().new Property("驾驶证换证", "#212121"));
 						tmap.put("keyword3", new MessageChannelModel().new Property("待初审", "#212121"));
-						tmap.put("remark", new MessageChannelModel().new Property("更多信息请点击详情查看","#212121"));
+						tmap.put("remark", new MessageChannelModel().new Property("","#212121"));
 						model.setData(tmap);
 						BaseBean msgBean = templateMessageService.sendServiceMessage(model);
 						logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
