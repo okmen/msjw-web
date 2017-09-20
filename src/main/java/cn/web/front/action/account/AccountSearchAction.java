@@ -557,7 +557,7 @@ public class AccountSearchAction extends BaseAction {
         		BaseBean baseBean2 = null;
         		logger.info("绑定的车辆信息是：" + bindTheVehicleVo);
         		if(StringUtils.isNotBlank(bindTheVehicleVo.getBehindTheFrame4Digits())){
-        			baseBean2 = illegalService.queryInfoByLicensePlateNo(numberPlateNumber, plateType, bindTheVehicleVo.getBehindTheFrame4Digits(),openId,sourceOfCertification);
+        			baseBean2 = illegalService.queryInfoByLicensePlateNo(numberPlateNumber, plateType, bindTheVehicleVo.getBehindTheFrame4Digits(),openId);
         			if(null != baseBean2){
         				illegalInfoBeans = (List<IllegalInfoBean>) baseBean2.getData();
         			}
