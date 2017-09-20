@@ -113,6 +113,17 @@ public class GreentravelAction extends BaseAction{
 			jsonMap.put("code",refBean.getCode());
 			jsonMap.put("msg",refBean.getMsg());
 			jsonMap.put("date", refBean.getData());
+			//查询总共停驶累计
+			BaseBean queryBean=greentravelService.applyTotalQuery(greenBean);
+			JSONObject respStr=JSONObject.fromObject(queryBean.data);
+			if("0000".equals(queryBean.getCode())){
+				logger.info("统计停驶日期数据:"+respStr.toString());
+				jsonMap.put("totalzts", respStr.get("zts"));
+				jsonMap.put("cryearNo", respStr.get("cryearNo"));
+			}else{
+				jsonMap.put("totalzts",0);
+				jsonMap.put("cryearNo",0);
+			}
 			out.print(JSONObject.fromObject(jsonMap));
 		}catch(Exception e){
              logger.error("安全隐患Action异常:"+e);
