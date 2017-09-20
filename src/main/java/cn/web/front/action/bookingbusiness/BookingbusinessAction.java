@@ -1073,7 +1073,7 @@ public class BookingbusinessAction extends BaseAction {
 						model.setUrl(url);
 						Map<String, cn.message.model.wechat.MessageChannelModel.Property> map = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
 						map.put("first", new MessageChannelModel().new Property("您好，您的业务办理预约申请已成功提交，具体信息如下。","#212121"));
-						map.put("business", new MessageChannelModel().new Property("驾驶证在线预约","#212121"));
+						map.put("business", new MessageChannelModel().new Property("驾驶证在线预约-满分学习","#212121"));
 						map.put("order", new MessageChannelModel().new Property(waterNumber,"#212121"));
 						map.put("time", new MessageChannelModel().new Property(appTime,"#212121"));
 						map.put("address", new MessageChannelModel().new Property(orgName,"#212121"));
@@ -1266,7 +1266,7 @@ public class BookingbusinessAction extends BaseAction {
 						model.setUrl(url);
 						Map<String, cn.message.model.wechat.MessageChannelModel.Property> map = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
 						map.put("first", new MessageChannelModel().new Property("您好，您的业务办理预约申请已成功提交，具体信息如下。","#212121"));
-						map.put("business", new MessageChannelModel().new Property("驾驶证在线预约","#212121"));
+						map.put("business", new MessageChannelModel().new Property("驾驶证在线预约-持军队、武装警察部队机动车驾驶证申领","#212121"));
 						map.put("order", new MessageChannelModel().new Property(waterNumber,"#212121"));
 						map.put("time", new MessageChannelModel().new Property(appTime,"#212121"));
 						map.put("address", new MessageChannelModel().new Property(orgName,"#212121"));
@@ -1460,7 +1460,7 @@ public class BookingbusinessAction extends BaseAction {
 						model.setUrl(url);
 						Map<String, cn.message.model.wechat.MessageChannelModel.Property> map = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
 						map.put("first", new MessageChannelModel().new Property("您好，您的业务办理预约申请已成功提交，具体信息如下。","#212121"));
-						map.put("business", new MessageChannelModel().new Property("驾驶证在线预约","#212121"));
+						map.put("business", new MessageChannelModel().new Property("驾驶证在线预约-香港机动车驾驶证免试换证","#212121"));
 						map.put("order", new MessageChannelModel().new Property(waterNumber,"#212121"));
 						map.put("time", new MessageChannelModel().new Property(appTime,"#212121"));
 						map.put("address", new MessageChannelModel().new Property(orgName,"#212121"));
@@ -1654,7 +1654,7 @@ public class BookingbusinessAction extends BaseAction {
 						model.setUrl(url);
 						Map<String, cn.message.model.wechat.MessageChannelModel.Property> map = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
 						map.put("first", new MessageChannelModel().new Property("您好，您的业务办理预约申请已成功提交，具体信息如下。","#212121"));
-						map.put("business", new MessageChannelModel().new Property("驾驶证在线预约","#212121"));
+						map.put("business", new MessageChannelModel().new Property("驾驶证在线预约-持境外驾驶证申请换证","#212121"));
 						map.put("order", new MessageChannelModel().new Property(waterNumber,"#212121"));
 						map.put("time", new MessageChannelModel().new Property(appTime,"#212121"));
 						map.put("address", new MessageChannelModel().new Property(orgName,"#212121"));
@@ -1848,7 +1848,7 @@ public class BookingbusinessAction extends BaseAction {
 						model.setUrl(url);
 						Map<String, cn.message.model.wechat.MessageChannelModel.Property> map = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
 						map.put("first", new MessageChannelModel().new Property("您好，您的业务办理预约申请已成功提交，具体信息如下。","#212121"));
-						map.put("business", new MessageChannelModel().new Property("驾驶证在线预约","#212121"));
+						map.put("business", new MessageChannelModel().new Property("驾驶证在线预约-其他业务(驾驶证)","#212121"));
 						map.put("order", new MessageChannelModel().new Property(waterNumber,"#212121"));
 						map.put("time", new MessageChannelModel().new Property(appTime,"#212121"));
 						map.put("address", new MessageChannelModel().new Property(orgName,"#212121"));
@@ -2364,7 +2364,7 @@ public class BookingbusinessAction extends BaseAction {
 						model.setUrl(url);
 						Map<String, cn.message.model.wechat.MessageChannelModel.Property> map = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
 						map.put("first", new MessageChannelModel().new Property("您好，您的业务办理预约申请已成功提交，具体信息如下。","#212121"));
-						map.put("business", new MessageChannelModel().new Property("驾驶证在线预约","#212121"));
+						map.put("business", new MessageChannelModel().new Property("驾驶证在线预约-临时机动车驾驶许可申领","#212121"));
 						map.put("order", new MessageChannelModel().new Property(waterNumber,"#212121"));
 						map.put("time", new MessageChannelModel().new Property(appTime,"#212121"));
 						map.put("address", new MessageChannelModel().new Property(orgName,"#212121"));
