@@ -294,7 +294,8 @@ public class GreentravelAction extends BaseAction{
 					jsonMap.put("zts", respStr.get("zts"));
 					jsonMap.put("cryearNo", respStr.get("cryearNo"));
 					String cryearNum= respStr.get("cryearNo").toString();
-					if(StringUtil.isBlank(cryearNum)){
+					logger.info("年度停驶统计申请天数:"+cryearNum);
+					if(!StringUtil.isBlank(cryearNum)){
 						cryearNo=Integer.parseInt(cryearNum);
 					}
 				}else{
@@ -305,7 +306,7 @@ public class GreentravelAction extends BaseAction{
 					try {
 						//绿色出行模板消息发送
 						String templateId = "9vbb8d_BfhE5-i1KA1u9rWcVpMcIPGVh9kUyzG26MB0";
-						GreenTraveTemplateVo greenTraveTemplateVo = new GreenTraveTemplateVo("3",hphm,"绿色出行",reserveNumber,cryearNo);
+						GreenTraveTemplateVo greenTraveTemplateVo = new GreenTraveTemplateVo("3",hphm,"绿色出行",reserveNumber+"天",cryearNo);
 						jsonMap.put("date", greenTraveTemplateVo);
 						String url = greenTraveTemplateVo.getUrl(greenTraveTemplateVo,greentravelService.getTemplateSendUrl());
 						logger.info("返回的url是：" + url);
