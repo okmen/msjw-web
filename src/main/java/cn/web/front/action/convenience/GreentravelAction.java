@@ -118,10 +118,10 @@ public class GreentravelAction extends BaseAction{
 			JSONObject respStr=JSONObject.fromObject(queryBean.data);
 			if("0000".equals(queryBean.getCode())){
 				logger.info("统计停驶日期数据:"+respStr.toString());
-				jsonMap.put("totalzts", respStr.get("zts"));
+				jsonMap.put("zts", respStr.get("zts"));
 				jsonMap.put("cryearNo", respStr.get("cryearNo"));
 			}else{
-				jsonMap.put("totalzts",0);
+				jsonMap.put("zts",0);
 				jsonMap.put("cryearNo",0);
 			}
 			out.print(JSONObject.fromObject(jsonMap));
@@ -174,7 +174,6 @@ public class GreentravelAction extends BaseAction{
 			String cdate=request.getParameter("cdate");      //申请停驶日期
 			String type=request.getParameter("type");       //申请类型
 			String openId=request.getParameter("openId");   //openId 
-			String zts=request.getParameter("zts");   //累计申请停驶天数 
 			//验证参数车主姓名
 			if (StringUtil.isBlank(sname)) {
 				jsonMap.put("code", MsgCode.paramsError);
@@ -259,10 +258,6 @@ public class GreentravelAction extends BaseAction{
 				return;
 			} 
 			
-			//验证参数当前申请累计天数
-			if (StringUtil.isBlank(zts)) {
-				zts="0";
-			} 
 			GreenTravelBean greenTravelBean=new GreenTravelBean();
 			greenTravelBean.setSname(sname);
 			greenTravelBean.setHphm(hphm);   //车牌号码(带’粤’)
@@ -273,7 +268,6 @@ public class GreentravelAction extends BaseAction{
 			greenTravelBean.setLrly(lrly);
 			List<ApplyGreenRet> list=new ArrayList<ApplyGreenRet>();
 			int reserveNumber=0;   //申报停驶天数
-			int calcelNuber=0;     //申报停驶日取消天数
 			for (int i = 0; i < ret.length; i++) {
 				ApplyGreenRet appret=new ApplyGreenRet();
 				appret.setCdate(ret[i]);
@@ -282,8 +276,6 @@ public class GreentravelAction extends BaseAction{
 				//统计申请停驶天数
 				if("1".equals(retType[i])){
 					reserveNumber++;
-				}else if("0".equals(retType[i])){
-					calcelNuber++;
 				}
 			}
 			logger.info("本次申请停驶日申请天数:"+reserveNumber);
@@ -298,19 +290,17 @@ public class GreentravelAction extends BaseAction{
 				JSONObject respStr=JSONObject.fromObject(queryBean.data);
 				if("0000".equals(queryBean.getCode())){
 					logger.info("统计停驶日期数据:"+respStr.toString());
-					jsonMap.put("totalzts", respStr.get("zts"));
+					jsonMap.put("zts", respStr.get("zts"));
 					jsonMap.put("cryearNo", respStr.get("cryearNo"));
 				}else{
-					jsonMap.put("totalzts",0);
+					jsonMap.put("zts",0);
 					jsonMap.put("cryearNo",0);
 				}
 				jsonMap.put("msg", refBean.getMsg());
-					 int totalNumber=Integer.parseInt(zts);
-					 totalNumber=totalNumber+reserveNumber-calcelNuber;   //计算当前累计停驶总日期
 					try {
 						//绿色出行模板消息发送
 						String templateId = "9vbb8d_BfhE5-i1KA1u9rWcVpMcIPGVh9kUyzG26MB0";
-						GreenTraveTemplateVo greenTraveTemplateVo = new GreenTraveTemplateVo("3",hphm,"绿色出行",totalNumber);
+						GreenTraveTemplateVo greenTraveTemplateVo = new GreenTraveTemplateVo("3",hphm,"绿色出行",reserveNumber);
 						jsonMap.put("date", greenTraveTemplateVo);
 						String url = greenTraveTemplateVo.getUrl(greenTraveTemplateVo,greentravelService.getTemplateSendUrl());
 						logger.info("返回的url是：" + url);
