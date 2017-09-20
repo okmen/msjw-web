@@ -119,8 +119,10 @@ public class GreentravelAction extends BaseAction{
 			if("0000".equals(queryBean.getCode())){
 				logger.info("统计停驶日期数据:"+respStr.toString());
 				jsonMap.put("zts", respStr.get("zts"));
+				jsonMap.put("cryearNo", respStr.get("cryearNo"));
 			}else{
 				jsonMap.put("zts",0);
+				jsonMap.put("cryearNo",0);
 			}
 			out.print(JSONObject.fromObject(jsonMap));
 		}catch(Exception e){
