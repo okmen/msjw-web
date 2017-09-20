@@ -110,20 +110,9 @@ public class GreentravelAction extends BaseAction{
 			greenBean.setMonth(month);
 			//申报停驶操作
 			BaseBean refBean=greentravelService.applyDownDate(greenBean);
-			//查询总共停驶累计
-			BaseBean queryBean=greentravelService.applyTotalQuery(greenBean);
 			jsonMap.put("code",refBean.getCode());
 			jsonMap.put("msg",refBean.getMsg());
 			jsonMap.put("date", refBean.getData());
-			JSONObject respStr=JSONObject.fromObject(queryBean.data);
-			if("0000".equals(queryBean.getCode())){
-				logger.info("统计停驶日期数据:"+respStr.toString());
-				jsonMap.put("zts", respStr.get("zts"));
-				jsonMap.put("cryearNo", respStr.get("cryearNo"));
-			}else{
-				jsonMap.put("zts",0);
-				jsonMap.put("cryearNo",0);
-			}
 			out.print(JSONObject.fromObject(jsonMap));
 		}catch(Exception e){
              logger.error("安全隐患Action异常:"+e);
@@ -293,6 +282,17 @@ public class GreentravelAction extends BaseAction{
 			if("0002".equals(refBean.getCode())){
 				jsonMap.put("msg", "数据处理出现异常");
 			}else if("0000".equals(refBean.getCode())){
+				//查询总共停驶累计
+				BaseBean queryBean=greentravelService.applyTotalQuery(greenTravelBean);
+				JSONObject respStr=JSONObject.fromObject(queryBean.data);
+				if("0000".equals(queryBean.getCode())){
+					logger.info("统计停驶日期数据:"+respStr.toString());
+					jsonMap.put("totalzts", respStr.get("zts"));
+					jsonMap.put("cryearNo", respStr.get("cryearNo"));
+				}else{
+					jsonMap.put("totalzts",0);
+					jsonMap.put("cryearNo",0);
+				}
 				jsonMap.put("msg", refBean.getMsg());
 					 int totalNumber=Integer.parseInt(zts);
 					 totalNumber=totalNumber+reserveNumber-calcelNuber;   //计算当前累计停驶总日期
