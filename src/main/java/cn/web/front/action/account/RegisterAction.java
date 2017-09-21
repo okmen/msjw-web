@@ -688,6 +688,8 @@ public class RegisterAction extends BaseAction {
 			//发送成功
 			if("0".equals(msgBean.getCode())){
 				basebean.setData(msgBean.getData().toString());//结果评价页url设置在data中
+			}else{
+				basebean.setMsg(url);//详情页url
 			}
 		}
 	}

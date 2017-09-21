@@ -895,6 +895,8 @@ public class BookingbusinessAction extends BaseAction {
 						//发送成功
 						if("0".equals(msgBean.getCode())){
 							baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+						}else{
+							baseBean.setMsg(url);//详情页url
 						}
 						
 					} catch (Exception e) {
@@ -3303,6 +3305,8 @@ public class BookingbusinessAction extends BaseAction {
 						//发送成功
 						if("0".equals(msgBean.getCode())){
 							baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+						}else{
+							baseBean.setMsg(url);//详情页url
 						}
 						
 					} catch (Exception e) {
@@ -3583,6 +3587,8 @@ public class BookingbusinessAction extends BaseAction {
 						//发送成功
 						if("0".equals(msgBean.getCode())){
 							baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+						}else{
+							baseBean.setMsg(url);//详情页url
 						}
 						
 					} catch (Exception e) {
