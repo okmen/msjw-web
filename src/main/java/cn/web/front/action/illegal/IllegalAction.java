@@ -704,7 +704,7 @@ public class IllegalAction extends BaseAction {
 				if("0".equals(msgBean.getCode())){
 					base.setData(msgBean.getData().toString());//结果评价页url设置在data中
 				}else{
-					base.setMsg(url);//详情页url
+					base.setData(url);//详情页url
 				}
 			}
 		} catch (Exception e) {
