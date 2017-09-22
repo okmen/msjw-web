@@ -19,6 +19,7 @@ import cn.handle.bean.vo.ApplyGatePassVo;
 import cn.handle.bean.vo.ApplyInspectionMarkVo;
 import cn.handle.bean.vo.ApplyRemoteEntrustedBusinessVo;
 import cn.handle.bean.vo.CreateVehicleInspectionVo;
+import cn.handle.bean.vo.DelegateVehiclesVo;
 import cn.handle.bean.vo.DriverChangeContactVo;
 import cn.handle.bean.vo.DriverLicenseAnnualVerificationVo;
 import cn.handle.bean.vo.DriverLicenseIntoVo;
@@ -2055,7 +2056,7 @@ public class HandleserviceAction extends BaseAction {
         		//推送模板消息
 				try {
 					String templateId = "OHe4a5_6nqj3VuN3QKmKYKPiEk54Y_w3oYQRUn0I34o";
-					String url = HandleTemplateVo.getUrl(handleTemplateVo, handleService.getTemplateSendUrl());
+					String url = HandleTemplateVo.getUrl(handleTemplateVo, handleService.getTemplateSendUrl())+"&noTip=true";
 					logger.info("返回的url是：" + url);
 					logger.info("handleTemplateVo 是：" + handleTemplateVo);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
@@ -3732,4 +3733,110 @@ public class HandleserviceAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
+	/**
+	 * 
+	 * @param request
+	 */
+	@RequestMapping("electronicDelegateVehicles")
+ 	public void electronicDelegateVehicles(HttpServletRequest request) {
+ 		BaseBean baseBean = new BaseBean();
+ 		String businessType = request.getParameter("businessType");
+ 		String businessReason = request.getParameter("businessReason");
+ 		String bailerName = request.getParameter("bailerName");
+ 		String bailerIdentityCard = request.getParameter("bailerIdentityCard");
+ 		String bailerNumberPlate = request.getParameter("bailerNumberPlate");
+ 		String bailerLicenseNumber = request.getParameter("bailerLicenseNumber");
+ 		String bailerValidTime = request.getParameter("bailerValidTime");
+ 		String baileeName = request.getParameter("baileeName");
+ 		String baileeIdentitycard = request.getParameter("baileeIdentitycard");
+ 		String baileeMobilephone = request.getParameter("baileeMobilephone");
+ 		String userSource = request.getParameter("userSource");
+ 		if (StringUtil.isBlank(businessType)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("业务类型不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(businessReason)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("业务原因不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(bailerName)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("委托人姓名不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(bailerIdentityCard)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("委托人身份证号码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(bailerLicenseNumber)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("委托人车牌号码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(bailerNumberPlate)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("委托人号牌种类不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(bailerValidTime)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("委托有效时间不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(baileeName)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("受托人姓名不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(baileeIdentitycard)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("受托人身份证号码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(baileeMobilephone)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("受托人手机号码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(userSource)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("认证来源不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		DelegateVehiclesVo delegateVehiclesVo = new DelegateVehiclesVo();
+ 		delegateVehiclesVo.setBaileeIdentitycard(baileeIdentitycard);
+ 		delegateVehiclesVo.setBaileeMobilephone(baileeMobilephone);
+ 		delegateVehiclesVo.setBaileeName(baileeName);
+ 		delegateVehiclesVo.setBailerIdentityCard(bailerIdentityCard);
+ 		delegateVehiclesVo.setBailerLicenseNumber(bailerLicenseNumber);
+ 		delegateVehiclesVo.setBailerName(bailerName);
+ 		delegateVehiclesVo.setBailerNumberPlate(bailerNumberPlate);
+ 		delegateVehiclesVo.setBailerValidTime(bailerValidTime);
+ 		delegateVehiclesVo.setBusinessReason(businessReason);
+ 		delegateVehiclesVo.setBusinessType(businessType);
+ 		delegateVehiclesVo.setUserSource(userSource);
+ 		try {
+ 			// 创建返回结果
+ 			baseBean = handleService.electronicDelegateVehicles(delegateVehiclesVo);
+ 		} catch (Exception e) {
+ 			logger.error("车管电子委托机动车业务申报业务异常:" + e);
+ 			DealException(baseBean, e);
+ 		}
+ 		renderJSON(baseBean);
+ 		logger.debug(JSON.toJSONString(baseBean));
+ 	}
 }
