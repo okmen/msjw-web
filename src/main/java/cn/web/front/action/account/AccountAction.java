@@ -2721,4 +2721,34 @@ public class AccountAction extends BaseAction {
   	  		logger.debug(JSON.toJSONString(baseBean));
   		}
       } 
+
+    /**
+     * 车辆绑定审核结果查询
+     * @param identityCardNo
+     * @param sourceOfCertification
+     */
+	@RequestMapping("queryVehicleBindAuditResult")
+	public void queryVehicleBindAuditResult(String identityCardNo, String sourceOfCertification) {
+		BaseBean baseBean = new BaseBean();
+		try{
+			if(StringUtil.isBlank(identityCardNo)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("身份证号码不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(sourceOfCertification)){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("用户来源不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			baseBean = accountService.queryVehicleBindAuditResult(identityCardNo, sourceOfCertification);
+		} catch (Exception e) {
+			logger.error("车辆绑定审核结果查询Action异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+	}
 }
