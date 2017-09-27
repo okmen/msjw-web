@@ -492,8 +492,14 @@ public class IllegalAction extends BaseAction {
 			String url = illegalService.callback(traffData);
 			resp.sendRedirect(url);
 		} catch (Exception e) {
-			DealException(base, e);
-			logger.error("微信回调异常 ", e);
+			try {
+				resp.setCharacterEncoding("UTF-8");
+				resp.setContentType("text/html;charset=utf-8");
+				PrintWriter out = resp.getWriter();		
+				out.print("目前系统繁忙，请稍后重试!");
+			} catch (IOException e1) {
+				logger.error("微信回调异常 ", e);
+			}	
 		}
 		renderJSON(base);
 	}
