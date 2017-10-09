@@ -32,6 +32,7 @@ import cn.account.bean.ElectronicPolicyBean;
 import cn.account.bean.IssuingLicenceAuthority;
 import cn.account.bean.ReadilyShoot;
 import cn.account.bean.UserBind;
+import cn.account.bean.UserBindAlipay;
 import cn.account.bean.vo.BindCarVo;
 import cn.account.bean.vo.BindDriverLicenseVo;
 import cn.account.bean.vo.BrushFaceVo;
@@ -2375,6 +2376,44 @@ public class AccountAction extends BaseAction {
 	}
      
      
+ /**
+  * 查询
+  * @param 
+  * @param 
+  *  http://192.168.1.245:8080/web/user/detailsTrafficQuery.html?zjz=537535&sourceOfCertification=C
+  */
+   @RequestMapping("getUserBinds")
+ 	public void getUserBinds(Integer page,Integer pageSize) {
+ 		BaseBean baseBean = new BaseBean();
+ 		try{
+ 			List<UserBind> userBinds = accountService.getUserBinds(page, pageSize);
+ 			baseBean.setData(userBinds);
+ 		} catch (Exception e) {
+ 			logger.error("getUserBinds:" + e);
+ 			DealException(baseBean, e);
+ 		}
+ 		renderJSON(baseBean);
+ 	}
+      
+  /**
+   * 查询
+   * @param 
+   * @param 
+   *  http://192.168.1.245:8080/web/user/detailsTrafficQuery.html?zjz=537535&sourceOfCertification=C
+   */
+    @RequestMapping("getUserBindAlipays")
+  	public void getUserBindAlipays(Integer page,Integer pageSize) {
+  		BaseBean baseBean = new BaseBean();
+  		try{
+  			List<UserBindAlipay> userBindAlipays = accountService.getUserBindAlipays(page, pageSize);
+  			baseBean.setData(userBindAlipays);
+  		} catch (Exception e) {
+  			logger.error("getUserBinds:" + e);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  	}
+     
     /**
      * 重新认证 
      * @param identityCard
@@ -2507,6 +2546,8 @@ public class AccountAction extends BaseAction {
  		renderJSON(baseBean);
  		logger.debug(JSON.toJSONString(baseBean));
      }
+     
+     
      
      /**
       * 查询星级用户认证
