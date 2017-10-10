@@ -34,9 +34,12 @@ import cn.account.bean.ReadilyShoot;
 import cn.account.bean.UserBind;
 import cn.account.bean.UserBindAlipay;
 import cn.account.bean.vo.BindCarVo;
+import cn.account.bean.vo.BindCompanyCarVo;
 import cn.account.bean.vo.BindDriverLicenseVo;
 import cn.account.bean.vo.BrushFaceVo;
+import cn.account.bean.vo.CompanyRegisterVo;
 import cn.account.bean.vo.IdentificationOfAuditResultsVo;
+import cn.account.bean.vo.InformationCollectionVo;
 import cn.account.bean.vo.LoginReturnBeanVo;
 import cn.account.bean.vo.ReadilyShootVo;
 import cn.account.bean.vo.ReauthenticationVo;
@@ -2624,6 +2627,16 @@ public class AccountAction extends BaseAction {
   		renderJSON(baseBean);
   		logger.debug(JSON.toJSONString(baseBean));
       }
+      /**
+       * 问题反馈
+       * @param name
+       * @param identityCard
+       * @param mobilephone
+       * @param userSource
+       * @param certificationType
+       * @param photo6
+       * @param openId
+       */
       @RequestMapping("weChatBrushFaceAuthentication")
       public void weChatBrushFaceAuthentication(String name, String identityCard, String mobilephone ,String userSource ,String certificationType ,String photo6 ,String openId) {
       	BaseBean baseBean = new BaseBean();
@@ -2686,7 +2699,15 @@ public class AccountAction extends BaseAction {
   		renderJSON(baseBean);
   		logger.debug(JSON.toJSONString(baseBean));
       }
-      
+      /**
+       * 星级用户问题反馈
+       * @param openId
+       * @param remark
+       * @param status
+       * @param img1
+       * @param img2
+       * @param img3
+       */
       @RequestMapping("problemFeedback")
       public void problemFeedback(String openId ,String remark ,String status ,String img1 ,String img2 ,String img3) {
       	BaseBean baseBean = new BaseBean();
@@ -2792,4 +2813,552 @@ public class AccountAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
+      /**
+       * 单位注册
+       * @param request
+       * @param response
+       */
+      @RequestMapping("companyRegister")
+      public void companyRegister(HttpServletRequest request,HttpServletResponse response){
+      	BaseBean baseBean = new BaseBean();	
+      	String organizationCodeNumber = request.getParameter("organizationCodeNumber");
+      	String companyName = request.getParameter("companyName");
+      	String applicantIdentityCard  = request.getParameter("applicantIdentityCard");
+      	String applicantName = request.getParameter("applicantName");
+      	String applicantMobilephone = request.getParameter("applicantMobilephone");
+      	String applicantAddress = request.getParameter("applicantAddress");
+      	String photo9 = request.getParameter("photo9");
+      	String photo32 = request.getParameter("photo32");
+      	String photo33 = request.getParameter("photo33");
+      	String sourceOfCertification = request.getParameter("sourceOfCertification");
+      	if(StringUtil.isBlank(organizationCodeNumber)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("组织机构代码证号不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(companyName)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("单位名称不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(applicantIdentityCard)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("申请人身份证号不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(applicantName)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("申请人姓名不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(applicantMobilephone)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("申请人联系电话不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(applicantAddress)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("申请人联系地址不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(photo9)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("身份证正面照片不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(photo32)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("组织机构代码证照片不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(photo33)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("申请人手持身份证正面和组织机构代码证照片不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(sourceOfCertification)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("注册来源不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	CompanyRegisterVo companyRegisterVo = new CompanyRegisterVo();
+      	companyRegisterVo.setApplicantAddress(applicantAddress);
+      	companyRegisterVo.setApplicantIdentityCard(applicantIdentityCard);
+      	companyRegisterVo.setApplicantMobilephone(applicantMobilephone);
+      	companyRegisterVo.setApplicantName(applicantName);
+      	companyRegisterVo.setCompanyName(companyName);
+      	companyRegisterVo.setOrganizationCodeNumber(organizationCodeNumber);
+      	companyRegisterVo.setPhoto32(photo32);
+      	companyRegisterVo.setPhoto33(photo33);
+      	companyRegisterVo.setPhoto9(photo9);
+      	companyRegisterVo.setSourceOfCertification(sourceOfCertification);
+      	try{
+  			baseBean = accountService.companyRegister(companyRegisterVo);
+  		} catch (Exception e) {
+  			logger.error("单位注册异常:" + e);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  		logger.debug(JSON.toJSONString(baseBean));
+      }
+      /**
+       * 单位注册查询
+       * @param request
+       * @param response
+       */
+      @RequestMapping("queryCompanyRegister")
+      public void queryCompanyRegister(HttpServletRequest request,HttpServletResponse response){
+      	BaseBean baseBean = new BaseBean();	
+      	String organizationCodeNumber = request.getParameter("organizationCodeNumber");
+      	String sourceOfCertification = request.getParameter("sourceOfCertification");
+      	if(StringUtil.isBlank(organizationCodeNumber)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("组织机构代码证号不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+    	if(StringUtil.isBlank(sourceOfCertification)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("查询来源不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	try{
+  			baseBean = accountService.queryCompanyRegister(organizationCodeNumber, sourceOfCertification);
+  		} catch (Exception e) {
+  			logger.error("单位注册查询异常:" + e);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  		logger.debug(JSON.toJSONString(baseBean));
+      }
+      /**
+       * 单位用户登录
+       * @param request
+       * @param response
+       */
+      @RequestMapping("companyUserLogin")
+      public void companyUserLogin(HttpServletRequest request,HttpServletResponse response){
+      	BaseBean baseBean = new BaseBean();	
+      	String loginUser = request.getParameter("loginUser");
+      	String loginPwd = request.getParameter("loginPwd");
+      	String sourceOfCertification = request.getParameter("sourceOfCertification");
+      	if(StringUtil.isBlank(loginUser)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车辆管理人身份证号码/手机号码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(loginPwd)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("登录密码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(sourceOfCertification)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("用户来源不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	try{
+  			baseBean = accountService.companyUserLogin(loginUser, loginPwd, sourceOfCertification);
+  		} catch (Exception e) {
+  			logger.error("单位用户登录异常:" + e);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  		logger.debug(JSON.toJSONString(baseBean));
+      }
+      /**
+       * 单位用户修改密码
+       * @param request
+       * @param response
+       */
+      @RequestMapping("companyUserChangePwd")
+      public void companyUserChangePwd(HttpServletRequest request,HttpServletResponse response){
+      	BaseBean baseBean = new BaseBean();	
+      	String loginUser = request.getParameter("loginUser");
+      	String oldPwd = request.getParameter("oldPwd");
+      	String newPwd  = request.getParameter("newPwd");
+      	String sourceOfCertification = request.getParameter("sourceOfCertification");
+      	if(StringUtil.isBlank(loginUser)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车辆管理人身份证号码/手机号码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(oldPwd)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("旧密码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(newPwd)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("新密码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(sourceOfCertification)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("用户来源不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	try{
+  			baseBean = accountService.companyUserChangePwd(loginUser, oldPwd, newPwd, sourceOfCertification);
+  		} catch (Exception e) {
+  			logger.error("密码修改异常:" + e);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  		logger.debug(JSON.toJSONString(baseBean));
+      }
+      /**
+       * 单位用户绑定车辆
+       * @param request
+       * @param response
+       */
+      @RequestMapping("bindCompanyCar")
+      public void bindCompanyCar(HttpServletRequest request,HttpServletResponse response){
+      	BaseBean baseBean = new BaseBean();	
+      	String licenseNumber = request.getParameter("licenseNumber");
+      	String loginUser = request.getParameter("loginUser");
+      	String provinceCode  = request.getParameter("provinceCode");
+      	String numberPlate = request.getParameter("numberPlate");
+      	String sourceOfCertification = request.getParameter("sourceOfCertification");
+      	if(StringUtil.isBlank(loginUser)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车辆管理人身份证号码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(provinceCode)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("省份简称不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(licenseNumber)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车牌号码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(numberPlate)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("号牌种类不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	if(StringUtil.isBlank(sourceOfCertification)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("用户来源不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+      	BindCompanyCarVo bindCompanyCarVo = new BindCompanyCarVo();
+      	bindCompanyCarVo.setLicenseNumber(licenseNumber);
+      	bindCompanyCarVo.setLoginUser(loginUser);
+      	bindCompanyCarVo.setProvinceCode(provinceCode);
+      	bindCompanyCarVo.setSourceOfCertification(sourceOfCertification);
+      	bindCompanyCarVo.setNumberPlate(numberPlate);
+      	try{
+  			baseBean = accountService.bindCompanyCar(bindCompanyCarVo);
+  		} catch (Exception e) {
+  			logger.error("单位用户绑定车辆异常:" + e);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  		logger.debug(JSON.toJSONString(baseBean));
+      }
+      /**
+       * 本人名下车辆查询
+       * @param request
+       * @param response
+       */
+      @RequestMapping("getMyCompanyCars")
+      public void getMyCompanyCars(HttpServletRequest request,HttpServletResponse response){
+      	BaseBean baseBean = new BaseBean();	
+      	String loginUser = request.getParameter("loginUser");
+      	String sourceOfCertification = request.getParameter("sourceOfCertification");
+      	if(StringUtil.isBlank(loginUser)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车辆管理人身份证号码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(sourceOfCertification)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("用户来源不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+      	CompanyRegisterVo companyRegisterVo = new CompanyRegisterVo();
+      	try{
+  			baseBean = accountService.getMyCompanyCars(loginUser, sourceOfCertification);
+  		} catch (Exception e) {
+  			logger.error("本人名下车辆查询异常:" + e);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  		logger.debug(JSON.toJSONString(baseBean));
+      }
+      
+      
+      /**
+       * 信息采集
+       * @param request
+       * @param response
+       */
+      @RequestMapping("informationCollection")
+      public void informationCollection(HttpServletRequest request,HttpServletResponse response){
+      	BaseBean baseBean = new BaseBean();
+      	String licenseNumber = request.getParameter("licenseNumber");                  
+      	String numberPlate = request.getParameter("numberPlate");                     
+      	String carType = request.getParameter("carType");                         
+      	String engineNumber = request.getParameter("engineNumber");                    
+      	String vehicleIdentificationNumber = request.getParameter("vehicleIdentificationNumber");     
+      	String validityOfAnnualAudit = request.getParameter("validityOfAnnualAudit");           
+      	String ownerIdentityCard = request.getParameter("ownerIdentityCard");               
+      	String ownerMobilephone = request.getParameter("ownerMobilephone");                
+      	String ownerAddress = request.getParameter("ownerAddress");                    
+      	String identityCard = request.getParameter("identityCard");                    
+      	String mobilephone = request.getParameter("mobilephone");                    
+      	String address = request.getParameter("address");                         
+      	String copyOfOwnerIdentityCard = request.getParameter("copyOfOwnerIdentityCard");         
+      	String copyOfDriverLicense = request.getParameter("copyOfDriverLicense");             
+      	String copyOfVehicleTravelLicense = request.getParameter("copyOfVehicleTravelLicense");      
+      	String copyOfLegalEntity = request.getParameter("copyOfLegalEntity");               
+      	String copyOfApplicant = request.getParameter("copyOfApplicant");                 
+      	String loginUser = request.getParameter("loginUser");                      
+      	String userMobilepbone = request.getParameter("userMobilepbone");                
+      	String certificationType = request.getParameter("certificationType");              
+      	String sourceOfCertification = request.getParameter("sourceOfCertification");           
+      	if(StringUtil.isBlank(certificationType)){
+      		baseBean.setCode(MsgCode.paramsError);
+      		baseBean.setMsg("申请认证类型不能为空!");
+      		renderJSON(baseBean);
+      		return;
+      	}else if("2" == certificationType){
+      		if(StringUtil.isBlank(copyOfLegalEntity)){
+     			baseBean.setCode(MsgCode.paramsError);
+     			baseBean.setMsg("单位法人复印件不能为空!");
+     			renderJSON(baseBean);
+     			return;
+          	}
+        	if(StringUtil.isBlank(copyOfApplicant)){
+     			baseBean.setCode(MsgCode.paramsError);
+     			baseBean.setMsg("申请人手持身份证+组织代码证复印件不能为空!");
+     			renderJSON(baseBean);
+     			return;
+          	}
+      	}
+    	if(StringUtil.isBlank(licenseNumber)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车牌号码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(numberPlate)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("号牌种类不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(carType)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车辆类型不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(engineNumber)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("发动机号不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(vehicleIdentificationNumber)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车架号不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(validityOfAnnualAudit)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("年审有效期不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(ownerIdentityCard)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车主身份证号不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(ownerMobilephone)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车主联系电话不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(ownerAddress)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车主联系地址不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(identityCard)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("身份证号不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(mobilephone)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("联系电话不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(address)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("联系地址不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(copyOfOwnerIdentityCard)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车主身份证复印件不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(copyOfDriverLicense)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车辆驾驶人驾驶证复印件不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(copyOfVehicleTravelLicense)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("机动车行驶证复印件不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(loginUser)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("星级用户身份证号不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(userMobilepbone)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("星级用户手机号不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(sourceOfCertification)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("认证来源不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	InformationCollectionVo informationCollectionVo = new InformationCollectionVo();
+    	informationCollectionVo.setAddress(address);
+    	informationCollectionVo.setCarType(carType);
+    	informationCollectionVo.setCertificationType(certificationType);
+    	informationCollectionVo.setCopyOfApplicant(copyOfApplicant);
+    	informationCollectionVo.setCopyOfDriverLicense(copyOfDriverLicense);
+    	informationCollectionVo.setCopyOfLegalEntity(copyOfLegalEntity);
+    	informationCollectionVo.setCopyOfOwnerIdentityCard(copyOfOwnerIdentityCard);
+    	informationCollectionVo.setCopyOfVehicleTravelLicense(copyOfVehicleTravelLicense);
+    	informationCollectionVo.setEngineNumber(engineNumber);
+    	informationCollectionVo.setIdentityCard(identityCard);
+    	informationCollectionVo.setLicenseNumber(licenseNumber);
+    	informationCollectionVo.setLoginUser(loginUser);
+    	informationCollectionVo.setMobilephone(mobilephone);
+    	informationCollectionVo.setNumberPlate(numberPlate);
+    	informationCollectionVo.setOwnerAddress(ownerAddress);
+    	informationCollectionVo.setOwnerIdentityCard(ownerIdentityCard);
+    	informationCollectionVo.setOwnerMobilephone(ownerMobilephone);
+    	informationCollectionVo.setSourceOfCertification(sourceOfCertification);
+    	informationCollectionVo.setUserMobilepbone(userMobilepbone);
+    	informationCollectionVo.setValidityOfAnnualAudit(validityOfAnnualAudit);
+    	informationCollectionVo.setVehicleIdentificationNumber(vehicleIdentificationNumber);
+      	try{
+  			baseBean = accountService.informationCollection(informationCollectionVo);
+  		} catch (Exception e) {
+  			logger.error("信息采集异常:" + e);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  		logger.debug(JSON.toJSONString(baseBean));
+      }
+      
+      /**
+       * 信息采集查询
+       * @param request
+       * @param response
+       */
+      @RequestMapping("queryInformationCollection")
+      public void queryInformationCollection(HttpServletRequest request,HttpServletResponse response){
+      	BaseBean baseBean = new BaseBean();	
+      	String licenseNumber = request.getParameter("licenseNumber");
+      	String numberPlate = request.getParameter("numberPlate");
+      	String loginUser = request.getParameter("loginUser");
+      	String sourceOfCertification = request.getParameter("sourceOfCertification");
+    	if(StringUtil.isBlank(licenseNumber)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车牌号码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if (!licenseNumber.startsWith("粤B")) {
+    		baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("必须粤B车牌才能办理此业务!");
+ 			renderJSON(baseBean);
+ 			return;
+		}
+    	if(StringUtil.isBlank(numberPlate)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("号牌种类不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(loginUser)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("星级用户不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(sourceOfCertification)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("认证来源不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	InformationCollectionVo informationCollectionVo = new InformationCollectionVo();
+    	informationCollectionVo.setLicenseNumber(licenseNumber);
+    	informationCollectionVo.setNumberPlate(numberPlate);
+    	informationCollectionVo.setLoginUser(loginUser);
+    	informationCollectionVo.setSourceOfCertification(sourceOfCertification);
+      	try{
+  			baseBean = accountService.queryInformationCollection(informationCollectionVo);
+  		} catch (Exception e) {
+  			logger.error("信息采集查询异常:" + e);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  		logger.debug(JSON.toJSONString(baseBean));
+      }
 }
