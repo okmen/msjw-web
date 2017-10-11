@@ -3145,7 +3145,8 @@ public class AccountAction extends BaseAction {
       	String loginUser = request.getParameter("loginUser");                      
       	String userMobilepbone = request.getParameter("userMobilepbone");                
       	String certificationType = request.getParameter("certificationType");              
-      	String sourceOfCertification = request.getParameter("sourceOfCertification");           
+      	String sourceOfCertification = request.getParameter("sourceOfCertification");
+      	String issuingBrigade = request.getParameter("issuingBrigade");
       	if(StringUtil.isBlank(certificationType)){
       		baseBean.setCode(MsgCode.paramsError);
       		baseBean.setMsg("申请认证类型不能为空!");
@@ -3273,6 +3274,12 @@ public class AccountAction extends BaseAction {
  			renderJSON(baseBean);
  			return;
       	}
+    	if(StringUtil.isBlank(issuingBrigade)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("发卡大队不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
     	InformationCollectionVo informationCollectionVo = new InformationCollectionVo();
     	informationCollectionVo.setAddress(address);
     	informationCollectionVo.setCarType(carType);
@@ -3295,8 +3302,12 @@ public class AccountAction extends BaseAction {
     	informationCollectionVo.setUserMobilepbone(userMobilepbone);
     	informationCollectionVo.setValidityOfAnnualAudit(validityOfAnnualAudit);
     	informationCollectionVo.setVehicleIdentificationNumber(vehicleIdentificationNumber);
+    	informationCollectionVo.setIssuingBrigade(issuingBrigade);
       	try{
   			baseBean = accountService.informationCollection(informationCollectionVo);
+  			if ("9999".equals(baseBean.getCode())) {
+				baseBean.setMsg("信息采集异常");
+			}
   		} catch (Exception e) {
   			logger.error("信息采集异常:" + e);
   			DealException(baseBean, e);
@@ -3354,6 +3365,9 @@ public class AccountAction extends BaseAction {
     	informationCollectionVo.setSourceOfCertification(sourceOfCertification);
       	try{
   			baseBean = accountService.queryInformationCollection(informationCollectionVo);
+  			if ("9999".equals(baseBean.getCode())) {
+				baseBean.setMsg("信息采集查询异常");
+			}
   		} catch (Exception e) {
   			logger.error("信息采集查询异常:" + e);
   			DealException(baseBean, e);
