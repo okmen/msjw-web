@@ -541,7 +541,7 @@ public class IllegalAction extends BaseAction {
 			if (wechatUserInfo != null) {
 				logger.info("Wechat 获取用户信息:" + wechatUserInfo.toString());
 				String url = illegalService.qrCodeToQueryPage(userName, traffData, mobileNo,
-						wechatUserInfo.getOpenId(),"W");
+						wechatUserInfo.getOpenId(),"C");
 				response.sendRedirect(url);
 			} else {
 				logger.error("Wechat 获取用户信息为空！");
