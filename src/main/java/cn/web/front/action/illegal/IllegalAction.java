@@ -1,4 +1,6 @@
 package cn.web.front.action.illegal;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -7,8 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,7 +164,7 @@ public class IllegalAction extends BaseAction {
 				renderJSON(base);
 			}
 			// 判断客户是否已同步
-			String isReg = illegalService.isRegisterUser(openId);
+			String isReg = illegalService.isRegisterUser(openId,sourceOfCertification);
 			if (StringUtil.isEmpty(identityCard)) {
 				isReg = "1";
 			}
@@ -191,11 +195,11 @@ public class IllegalAction extends BaseAction {
 					carList.add(bean);
 				}
 				// 同步客户信息
-				String str = illegalService.custRegInfoReceive(cust, carList, openId);
+				String str = illegalService.custRegInfoReceive(cust, carList, openId,sourceOfCertification);
 				logger.info("同步客户信息！"+str);
 			}
 			base = illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType,
-					vehicleIdentifyNoLast4, openId);
+					vehicleIdentifyNoLast4, openId,sourceOfCertification);
 	
 		} catch (Exception e) {
 			DealException(base, e);
@@ -237,7 +241,7 @@ public class IllegalAction extends BaseAction {
 				renderJSON(base);
 			}
 			// 判断客户是否已同步
-			String isReg = illegalService.isRegisterUser(openId);
+			String isReg = illegalService.isRegisterUser(openId,sourceOfCertification);
 			if (StringUtil.isEmpty(identityCard)) {
 				isReg = "1";
 			}
@@ -268,10 +272,10 @@ public class IllegalAction extends BaseAction {
 					carList.add(bean);
 				}
 				// 同步客户信息
-				String str = illegalService.custRegInfoReceive(cust, carList, openId);
+				String str = illegalService.custRegInfoReceive(cust, carList, openId,sourceOfCertification);
 				System.out.println("同步：" + str);
 			}
-			List<IllegalInfoBean> list = illegalService.queryInfoByDrivingLicenceNo(drivingLicenceNo, recordNo, openId);
+			List<IllegalInfoBean> list = illegalService.queryInfoByDrivingLicenceNo(drivingLicenceNo, recordNo, openId,sourceOfCertification);
 			base.setCode("0000");
 			if (list != null) {
 				base.setData(list);
@@ -364,7 +368,7 @@ public class IllegalAction extends BaseAction {
 				renderJSON(base);
 			}
 			// 判断客户是否已同步
-			String isReg = illegalService.isRegisterUser(openId);
+			String isReg = illegalService.isRegisterUser(openId,sourceOfCertification);
 			if (StringUtil.isEmpty(identityCard)) {
 				isReg = "1";
 			}
@@ -395,24 +399,24 @@ public class IllegalAction extends BaseAction {
 					carList.add(bean);
 				}
 				// 同步客户信息
-				String str = illegalService.custRegInfoReceive(cust, carList, openId);
+				String str = illegalService.custRegInfoReceive(cust, carList, openId,sourceOfCertification);
 				System.out.println("同步：" + str);
 			}
 			List<IllegalInfoBean> returnList = new ArrayList<IllegalInfoBean>();
 			List<IllegalInfoClaim> infos = new ArrayList<IllegalInfoClaim>();
 			BaseBean reList =new BaseBean();
 			BaseBean result = illegalService.trafficIllegalClaimBefore(licensePlateNo, licensePlateType, mobilephone,
-					openId);
+					openId,sourceOfCertification);
 			String msgCode = result.getCode();
 			String msg = result.getMsg();
 			if ("0000".equals(msgCode)) {
 				infos = (List<IllegalInfoClaim>) JSON.parseArray(result.getData().toString(), IllegalInfoClaim.class);
-				reList = illegalService.queryInfoByLicensePlateNo1(licensePlateNo, licensePlateType, vehicleIdentifyNoLast4, openId);
+				reList = illegalService.queryInfoByLicensePlateNo1(licensePlateNo, licensePlateType, vehicleIdentifyNoLast4, openId,sourceOfCertification);
 			} else {
 				if ("您好，没有查找到可用互联网方式处理的交通违法，感谢您对我局工作的支持！".equals(msg)
 						|| "由于您的驾驶证处理此宗违法后累计分已经超过12分，请到各大队违例窗口现场办理。".equals(msg)) {
 					reList = illegalService.queryInfoByLicensePlateNo1(licensePlateNo, licensePlateType,vehicleIdentifyNoLast4,
-							openId);
+							openId,sourceOfCertification);
 				} else {
 					base.setCode(msgCode);
 					base.setMsg(msg);
@@ -458,7 +462,7 @@ public class IllegalAction extends BaseAction {
 	 *            违章编号
 	 */
 	@RequestMapping(value = "trafficIllegalClaim")
-	public void trafficIllegalClaim(String illegalNo, String openId) {
+	public void trafficIllegalClaim(String illegalNo, String openId,String sourceOfCertification) {
 		BaseBean base = new BaseBean();
 		try {
 			// 参数校验
@@ -472,7 +476,12 @@ public class IllegalAction extends BaseAction {
 				base.setMsg("未获取到openId！");
 				renderJSON(base);
 			}
-			IllegalInfoSheet bean = illegalService.trafficIllegalClaim(illegalNo, openId);
+			if (StringUtil.isEmpty(sourceOfCertification)) {
+				base.setCode("0001");
+				base.setMsg("来源方式不能为空！");
+				renderJSON(base);
+			}
+			IllegalInfoSheet bean = illegalService.trafficIllegalClaim(illegalNo, openId,sourceOfCertification);
 			if (bean == null) {
 				base.setCode("0001");
 				base.setMsg("打单失败！");
@@ -532,7 +541,7 @@ public class IllegalAction extends BaseAction {
 			if (wechatUserInfo != null) {
 				logger.info("Wechat 获取用户信息:" + wechatUserInfo.toString());
 				String url = illegalService.qrCodeToQueryPage(userName, traffData, mobileNo,
-						wechatUserInfo.getOpenId());
+						wechatUserInfo.getOpenId(),"W");
 				response.sendRedirect(url);
 			} else {
 				logger.error("Wechat 获取用户信息为空！");
@@ -559,7 +568,7 @@ public class IllegalAction extends BaseAction {
 	 *            手机号码
 	 */
 	@RequestMapping(value = "toQueryPunishmentPage")
-	public void toQueryPunishmentPage(String billNo, String licensePlateNo, String mobilephone, String openId,
+	public void toQueryPunishmentPage(String billNo, String licensePlateNo, String mobilephone, String openId,String sourceOfCertification,
 			HttpServletRequest req, HttpServletResponse resp) {
 		// "4403010922403405","粤B8A3N2","18601174358");
 		BaseBean base = new BaseBean();
@@ -580,8 +589,13 @@ public class IllegalAction extends BaseAction {
 				base.setMsg("未获取到openId！");
 				renderJSON(base);
 			}
+			if (StringUtil.isEmpty(sourceOfCertification)) {
+				base.setCode("0001");
+				base.setMsg("来源方式不能为空！");
+				renderJSON(base);
+			}
 			billNo = billNo.replaceAll(" ", "");
-			String url = illegalService.toQueryPunishmentPage(billNo, licensePlateNo, mobilephone, openId);
+			String url = illegalService.toQueryPunishmentPage(billNo, licensePlateNo, mobilephone, openId,sourceOfCertification);
 			if (StringUtil.isEmpty(url)) {
 				base.setCode("0001");
 				base.setMsg("返回页面地址为空！");
@@ -1145,7 +1159,7 @@ public class IllegalAction extends BaseAction {
 	 * @param sourceOfCertification
 	 */
 	@RequestMapping(value = "toQueryElectronicReceiptPage")
-	public void toQueryElectronicReceiptPage(String billNo, String licensePlateNo, String drivingLicenceNo) {
+	public void toQueryElectronicReceiptPage(String billNo, String licensePlateNo, String drivingLicenceNo,String sourceOfCertification) {
 		BaseBean base = new BaseBean();
 		if (StringUtil.isBlank(billNo)&&StringUtil.isBlank(licensePlateNo)&&StringUtil.isBlank(drivingLicenceNo)) {
 			base.setCode("0001");
@@ -1156,7 +1170,7 @@ public class IllegalAction extends BaseAction {
 
 		try {
 			billNo = billNo.replaceAll(" ", "");
-			base=illegalService.toQueryElectronicReceiptPage(billNo, licensePlateNo, drivingLicenceNo);
+			base=illegalService.toQueryElectronicReceiptPage(billNo, licensePlateNo, drivingLicenceNo,sourceOfCertification);
 			/*String code = (String) map.get("code");
 			String msg = (String) map.get("msg");
 			if ("0000".equals(code)) {
@@ -1174,6 +1188,45 @@ public class IllegalAction extends BaseAction {
 		renderJSON(base);
 	}
 	
+	/**
+	 * 电子印章信息查询
+	 * 
+	 * @param orderNumber
+	 * @param numberPlateNumber
+	 * @param plateType
+	 * @param sourceOfCertification
+	 */
+	@RequestMapping(value = "szTrafficPoliceElecBillQry")
+	public void szTrafficPoliceElecBillQry(HttpServletResponse resp,String orderId) {
+		BaseBean base = new BaseBean();
+		if (StringUtil.isBlank(orderId)) {
+			base.setCode("0001");
+			base.setMsg("订单号不能为空！");
+			renderJSON(base);
+			return;
+		}
+
+		try {
+
+			String url=illegalService.szTrafficPoliceElecBillQry(orderId);
+			/*String code = (String) map.get("code");
+			String msg = (String) map.get("msg");
+			if ("0000".equals(code)) {
+				base.setCode(MsgCode.success);
+				base.setData(map.get("data"));
+				base.setMsg(msg);
+			} else {
+				base.setCode(MsgCode.businessError);
+				base.setMsg(msg);
+			}*/
+			resp.sendRedirect(url);
+		} catch (Exception e) {
+			DealException(base, e);
+			logger.error("电子回单记录列表查询异常：", e);
+		}
+		renderJSON(base);
+	}
+	
 	
 	/**
 	 * 车管规费缴款
@@ -1184,7 +1237,7 @@ public class IllegalAction extends BaseAction {
 	 * @param sourceOfCertification
 	 */
 	@RequestMapping(value = "toQueryFeePage")
-	public void toQueryFeePage(String billNo, String licensePlateNo, String mobilephone, String openId) {
+	public void toQueryFeePage(String billNo, String licensePlateNo, String mobilephone, String openId,String sourceOfCertification ) {
 		BaseBean base = new BaseBean();
 		try {
 			// 参数校验
@@ -1198,8 +1251,13 @@ public class IllegalAction extends BaseAction {
 				base.setMsg("未获取到openId！");
 				renderJSON(base);
 			}
+			if (StringUtil.isEmpty(sourceOfCertification)) {
+				base.setCode("0001");
+				base.setMsg("来源方式不能为空！");
+				renderJSON(base);
+			}
 			billNo = billNo.replaceAll(" ", "");
-			String url = illegalService.toPayPage(billNo, licensePlateNo, mobilephone, openId);
+			String url = illegalService.toPayPage(billNo, licensePlateNo, mobilephone, openId,sourceOfCertification);
 			if (StringUtil.isEmpty(url)) {
 				base.setCode("0001");
 				base.setMsg("返回页面地址为空！");
@@ -1240,4 +1298,5 @@ public class IllegalAction extends BaseAction {
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
 	}
+	 
 }
