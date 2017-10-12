@@ -3306,7 +3306,7 @@ public class AccountAction extends BaseAction {
       	try{
   			baseBean = accountService.informationCollection(informationCollectionVo);
   			if ("9999".equals(baseBean.getCode())) {
-				baseBean.setMsg("信息采集异常");
+				baseBean.setMsg("信息采集异常,请重试！");
 			}
   		} catch (Exception e) {
   			logger.error("信息采集异常:" + e);
@@ -3366,7 +3366,7 @@ public class AccountAction extends BaseAction {
       	try{
   			baseBean = accountService.queryInformationCollection(informationCollectionVo);
   			if ("9999".equals(baseBean.getCode())) {
-				baseBean.setMsg("信息采集查询异常");
+				baseBean.setMsg("信息查询异常，请重试！");
 			}
   		} catch (Exception e) {
   			logger.error("信息采集查询异常:" + e);
