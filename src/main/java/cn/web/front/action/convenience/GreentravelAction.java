@@ -174,6 +174,7 @@ public class GreentravelAction extends BaseAction{
 			String cdate=request.getParameter("cdate");      //申请停驶日期
 			String type=request.getParameter("type");       //申请类型
 			String openId=request.getParameter("openId");   //openId 
+			String sourceOfCertification=request.getParameter("sourceOfCertification");   //openId 
 			//验证参数车主姓名
 			if (StringUtil.isBlank(sname)) {
 				jsonMap.put("code", MsgCode.paramsError);
@@ -250,14 +251,15 @@ public class GreentravelAction extends BaseAction{
 				out.print(JSONObject.fromObject(jsonMap));
 				return;
 		    }
-			//验证参数openId
-			if (StringUtil.isBlank(openId)) {
-				jsonMap.put("code", MsgCode.paramsError);
-				jsonMap.put("msg", "openId 不能为空!");
-				out.print(JSONObject.fromObject(jsonMap));
-				return;
-			} 
-			
+			if(!"A".equals(sourceOfCertification)){
+				//验证参数openId
+				if (StringUtil.isBlank(openId)) {
+					jsonMap.put("code", MsgCode.paramsError);
+					jsonMap.put("msg", "openId 不能为空!");
+					out.print(JSONObject.fromObject(jsonMap));
+					return;
+				} 
+			}
 			GreenTravelBean greenTravelBean=new GreenTravelBean();
 			greenTravelBean.setSname(sname);
 			greenTravelBean.setHphm(hphm);   //车牌号码(带’粤’)
@@ -311,15 +313,17 @@ public class GreentravelAction extends BaseAction{
 						String url = greenTraveTemplateVo.getUrl(greenTraveTemplateVo,greentravelService.getTemplateSendUrl());
 						logger.info("返回的url是：" + url);
 						logger.info("greenTraveTemplateVo 是：" + greenTraveTemplateVo);
-						Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
-								new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-						tmap.put("first", new TemplateDataModel().new Property("您好,您的绿色出行申报以申请,具体信息如下：", "#212121"));
-						tmap.put("keyword1",
-								new TemplateDataModel().new Property("绿色出行", "#212121"));
-						tmap.put("keyword2", new TemplateDataModel().new Property(hphm, "#212121"));
-						tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
-						boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
-						logger.info("发送模板消息结果：" + flag);
+						if(!"A".equals(sourceOfCertification)){
+							Map<String, cn.message.model.wechat.TemplateDataModel.Property> tmap = 
+									new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+							tmap.put("first", new TemplateDataModel().new Property("您好,您的绿色出行申报以申请,具体信息如下：", "#212121"));
+							tmap.put("keyword1",
+									new TemplateDataModel().new Property("绿色出行", "#212121"));
+							tmap.put("keyword2", new TemplateDataModel().new Property(hphm, "#212121"));
+							tmap.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+							boolean flag = templateMessageService.sendMessage(openId, templateId, url, tmap);
+							logger.info("发送模板消息结果：" + flag);
+						}
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 				}
