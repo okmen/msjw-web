@@ -3128,9 +3128,7 @@ public class AccountAction extends BaseAction {
       	String licenseNumber = request.getParameter("licenseNumber");                  
       	String numberPlate = request.getParameter("numberPlate");                     
       	String carType = request.getParameter("carType");                         
-      	String engineNumber = request.getParameter("engineNumber");                    
       	String vehicleIdentificationNumber = request.getParameter("vehicleIdentificationNumber");     
-      	String validityOfAnnualAudit = request.getParameter("validityOfAnnualAudit");           
       	String ownerIdentityCard = request.getParameter("ownerIdentityCard");               
       	String ownerMobilephone = request.getParameter("ownerMobilephone");                
       	String ownerAddress = request.getParameter("ownerAddress");                    
@@ -3184,21 +3182,9 @@ public class AccountAction extends BaseAction {
  			renderJSON(baseBean);
  			return;
       	}
-    	if(StringUtil.isBlank(engineNumber)){
- 			baseBean.setCode(MsgCode.paramsError);
- 			baseBean.setMsg("发动机号不能为空!");
- 			renderJSON(baseBean);
- 			return;
-      	}
     	if(StringUtil.isBlank(vehicleIdentificationNumber)){
  			baseBean.setCode(MsgCode.paramsError);
  			baseBean.setMsg("车架号不能为空!");
- 			renderJSON(baseBean);
- 			return;
-      	}
-    	if(StringUtil.isBlank(validityOfAnnualAudit)){
- 			baseBean.setCode(MsgCode.paramsError);
- 			baseBean.setMsg("年审有效期不能为空!");
  			renderJSON(baseBean);
  			return;
       	}
@@ -3289,7 +3275,6 @@ public class AccountAction extends BaseAction {
     	informationCollectionVo.setCopyOfLegalEntity(copyOfLegalEntity);
     	informationCollectionVo.setCopyOfOwnerIdentityCard(copyOfOwnerIdentityCard);
     	informationCollectionVo.setCopyOfVehicleTravelLicense(copyOfVehicleTravelLicense);
-    	informationCollectionVo.setEngineNumber(engineNumber);
     	informationCollectionVo.setIdentityCard(identityCard);
     	informationCollectionVo.setLicenseNumber(licenseNumber);
     	informationCollectionVo.setLoginUser(loginUser);
@@ -3300,7 +3285,7 @@ public class AccountAction extends BaseAction {
     	informationCollectionVo.setOwnerMobilephone(ownerMobilephone);
     	informationCollectionVo.setSourceOfCertification(sourceOfCertification);
     	informationCollectionVo.setUserMobilepbone(userMobilepbone);
-    	informationCollectionVo.setValidityOfAnnualAudit(validityOfAnnualAudit);
+    	informationCollectionVo.setValidityOfAnnualAudit("");
     	informationCollectionVo.setVehicleIdentificationNumber(vehicleIdentificationNumber);
     	informationCollectionVo.setIssuingBrigade(issuingBrigade);
       	try{
