@@ -162,7 +162,7 @@ public class GreentravelAction extends BaseAction{
 		try {
 			request.setCharacterEncoding("UTF-8");
 			response.setCharacterEncoding("UTF-8");
-			response.setContentType("text/html;charset=UTF-8");
+			response.setContentType("application/json;charset=UTF-8");
 			out = response.getWriter();
 			String sname = request.getParameter("sname");      //车主姓名
 			String sfzmhm = request.getParameter("sfzmhm");      //身份证号码
