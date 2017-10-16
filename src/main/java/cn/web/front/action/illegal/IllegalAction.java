@@ -1331,7 +1331,8 @@ public class IllegalAction extends BaseAction {
             toClient.flush();
             toClient.close();*/
          
-        	String mac1= MacUtil.genMsgMac("20171016144801","c7e05df070ab5933","33","{\"carInfo\":[],\"custInfo\":null}");
+        	//String mac1= MacUtil.genMsgMac("20171016144801","c7e05df070ab5933","33","{\"carInfo\":[],\"custInfo\":null}");
+        	String mac1= MacUtil.genMsgMac("20171016144800","c7e05df070ab5933","33","{\"licensePlateNo\":\"湘MS5933\",\"licensePlateType\":\"02\",\"vehicleIdentifyNoLast4\":\"4335\"}");
         	baseBean.setData(mac1);
         	renderJSON(baseBean);
         } catch (Exception ex) {
