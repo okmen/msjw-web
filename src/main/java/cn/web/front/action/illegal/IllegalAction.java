@@ -54,6 +54,7 @@ import cn.sdk.bean.BaseBean;
 import cn.sdk.bean.BusinessType;
 import cn.sdk.util.DateUtil;
 import cn.sdk.util.DateUtil2;
+import cn.sdk.util.MacUtil;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
@@ -1309,10 +1310,11 @@ public class IllegalAction extends BaseAction {
 		logger.debug(JSON.toJSONString(baseBean));
 	}
 	
-	@RequestMapping(value = "imgspom")
+	@RequestMapping(value = "testMac")
 	public void getImage(String path,HttpServletRequest request, HttpServletResponse response) {
         try {
-            File file = new File("C:\\Users\\Mbenben\\Pictures\\Saved Pictures\\00.jpg");
+        	BaseBean baseBean = new BaseBean();
+            /*File file = new File("C:\\Users\\Mbenben\\Pictures\\Saved Pictures\\00.jpg");
             String filename = file.getName();
 
             InputStream fis = new BufferedInputStream(new FileInputStream(file));
@@ -1327,9 +1329,12 @@ public class IllegalAction extends BaseAction {
             OutputStream toClient = new BufferedOutputStream(response.getOutputStream());                
             toClient.write(buffer);
             toClient.flush();
-            toClient.close();
-            
-        } catch (IOException ex) {
+            toClient.close();*/
+         
+        	String mac1= MacUtil.genMsgMac("20171016144801","c7e05df070ab5933","33","{\"carInfo\":[],\"custInfo\":null}");
+        	baseBean.setData(mac1);
+        	renderJSON(baseBean);
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
      
