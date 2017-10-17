@@ -3138,13 +3138,15 @@ public class AccountAction extends BaseAction {
       	String copyOfOwnerIdentityCard = request.getParameter("copyOfOwnerIdentityCard");         
       	String copyOfDriverLicense = request.getParameter("copyOfDriverLicense");             
       	String copyOfVehicleTravelLicense = request.getParameter("copyOfVehicleTravelLicense");      
-      	String copyOfLegalEntity = request.getParameter("copyOfLegalEntity");               
+      	String copyOfLegalEntity = request.getParameter("copyOfLegalEntity"); 
+      	String copyOfLegalEntityA = request.getParameter("copyOfLegalEntityA"); 
       	String copyOfApplicant = request.getParameter("copyOfApplicant");                 
       	String loginUser = request.getParameter("loginUser");                      
       	String userMobilepbone = request.getParameter("userMobilepbone");                
       	String certificationType = request.getParameter("certificationType");              
       	String sourceOfCertification = request.getParameter("sourceOfCertification");
       	String issuingBrigade = request.getParameter("issuingBrigade");
+      	String isAttached = request.getParameter("isAttached");
       	if(StringUtil.isBlank(certificationType)){
       		baseBean.setCode(MsgCode.paramsError);
       		baseBean.setMsg("申请认证类型不能为空!");
@@ -3153,16 +3155,37 @@ public class AccountAction extends BaseAction {
       	}else if("2" == certificationType){
       		if(StringUtil.isBlank(copyOfLegalEntity)){
      			baseBean.setCode(MsgCode.paramsError);
-     			baseBean.setMsg("单位法人复印件不能为空!");
+     			baseBean.setMsg("单位法人反面照片不能为空!");
+     			renderJSON(baseBean);
+     			return;
+          	}
+        	if(StringUtil.isBlank(copyOfLegalEntityA)){
+     			baseBean.setCode(MsgCode.paramsError);
+     			baseBean.setMsg("单位法人正面照片不能为空!");
      			renderJSON(baseBean);
      			return;
           	}
         	if(StringUtil.isBlank(copyOfApplicant)){
      			baseBean.setCode(MsgCode.paramsError);
-     			baseBean.setMsg("申请人手持身份证+组织代码证复印件不能为空!");
+     			baseBean.setMsg("申请人手持身份证+组织代码证照片不能为空!");
      			renderJSON(baseBean);
      			return;
           	}
+      	}
+      	if(StringUtil.isBlank(isAttached)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车牌号码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}else{
+      		if ("1".equals(isAttached)) {
+      			if(StringUtil.isBlank(copyOfApplicant)){
+         			baseBean.setCode(MsgCode.paramsError);
+         			baseBean.setMsg("申请人手持身份证+组织代码证照片不能为空!");
+         			renderJSON(baseBean);
+         			return;
+              	}
+			}
       	}
     	if(StringUtil.isBlank(licenseNumber)){
  			baseBean.setCode(MsgCode.paramsError);
@@ -3273,6 +3296,7 @@ public class AccountAction extends BaseAction {
     	informationCollectionVo.setCopyOfApplicant(copyOfApplicant);
     	informationCollectionVo.setCopyOfDriverLicense(copyOfDriverLicense);
     	informationCollectionVo.setCopyOfLegalEntity(copyOfLegalEntity);
+    	informationCollectionVo.setCopyOfLegalEntityA(copyOfLegalEntityA);
     	informationCollectionVo.setCopyOfOwnerIdentityCard(copyOfOwnerIdentityCard);
     	informationCollectionVo.setCopyOfVehicleTravelLicense(copyOfVehicleTravelLicense);
     	informationCollectionVo.setIdentityCard(identityCard);
@@ -3285,9 +3309,9 @@ public class AccountAction extends BaseAction {
     	informationCollectionVo.setOwnerMobilephone(ownerMobilephone);
     	informationCollectionVo.setSourceOfCertification(sourceOfCertification);
     	informationCollectionVo.setUserMobilepbone(userMobilepbone);
-    	informationCollectionVo.setValidityOfAnnualAudit("");
     	informationCollectionVo.setVehicleIdentificationNumber(vehicleIdentificationNumber);
     	informationCollectionVo.setIssuingBrigade(issuingBrigade);
+    	informationCollectionVo.setIsAttached(isAttached);
       	try{
   			baseBean = accountService.informationCollection(informationCollectionVo);
   			if ("9999".equals(baseBean.getCode())) {
