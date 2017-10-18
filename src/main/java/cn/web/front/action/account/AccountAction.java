@@ -3174,7 +3174,7 @@ public class AccountAction extends BaseAction {
       	}
       	if(StringUtil.isBlank(isAttached)){
  			baseBean.setCode(MsgCode.paramsError);
- 			baseBean.setMsg("车牌号码不能为空!");
+ 			baseBean.setMsg("是否挂靠不能为空!");
  			renderJSON(baseBean);
  			return;
       	}else{
