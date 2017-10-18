@@ -40,6 +40,7 @@ import cn.illegal.bean.IllegalInfoBean;
 import cn.illegal.bean.IllegalInfoClaim;
 import cn.illegal.bean.IllegalInfoSheet;
 import cn.illegal.bean.IllegalProcessPointBean;
+import cn.illegal.bean.ParamRequestBean;
 import cn.illegal.bean.ReportingNoParking;
 import cn.illegal.bean.SubcribeBean;
 import cn.illegal.service.IIllegalService;
@@ -58,6 +59,7 @@ import cn.sdk.util.MacUtil;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
+import net.sf.json.JSONObject;
 /**
  * 违法处理
  * 
@@ -1311,29 +1313,24 @@ public class IllegalAction extends BaseAction {
 	}
 	
 	@RequestMapping(value = "testMac")
-	public void getImage(String path,HttpServletRequest request, HttpServletResponse response) {
+	public void getImage(String licensePlateNo, String licensePlateType, String vehicleIdentifyNoLast4,
+			String identityCard, String sourceOfCertification, String mobilephone, String openId) {
         try {
         	BaseBean baseBean = new BaseBean();
-            /*File file = new File("C:\\Users\\Mbenben\\Pictures\\Saved Pictures\\00.jpg");
-            String filename = file.getName();
-
-            InputStream fis = new BufferedInputStream(new FileInputStream(file));
-            byte[] buffer = new byte[fis.available()];
-            fis.read(buffer);
-            fis.close();
-
-            response.reset();
-            // 设置response的Header            
-            response.addHeader("Content-Length", "" + file.length());
-            response.setContentType("image/jpeg");
-            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());                
-            toClient.write(buffer);
-            toClient.flush();
-            toClient.close();*/
-         
+        	String timeStamp=DateUtil.formatDateTimeWithSec(new Date());
+        	Map<String,String> data=new HashMap<String,String>();
+    		data.put("licensePlateNo",licensePlateNo);
+    		data.put("licensePlateType", licensePlateType);
+    		data.put("vehicleIdentifyNoLast4", vehicleIdentifyNoLast4);
+    		JSONObject show1=JSONObject.fromObject(data);
+    		
+    		String mac= MacUtil.genMsgMac(timeStamp, "c7e05df070ab5933", "33", show1.toString());
         	//String mac1= MacUtil.genMsgMac("20171016144801","c7e05df070ab5933","33","{\"carInfo\":[],\"custInfo\":null}");
-        	String mac1= MacUtil.genMsgMac("20171016144800","c7e05df070ab5933","33","{\"licensePlateNo\":\"湘MS5933\",\"licensePlateType\":\"02\",\"vehicleIdentifyNoLast4\":\"4335\"}");
-        	baseBean.setData(mac1);
+        	//String mac1= MacUtil.genMsgMac("20171016144800","c7e05df070ab5933","33","{\"licensePlateNo\":\"湘MS5933\",\"licensePlateType\":\"02\",\"vehicleIdentifyNoLast4\":\"4335\"}");
+        	String mac1=illegalService.testDemo(timeStamp, "c7e05df070ab5933", show1.toString());
+    		baseBean.setCode(mac);
+    		baseBean.setData(mac1);
+    		baseBean.setMsg(timeStamp+" "+"c7e05df070ab5933"+" 33 "+show1.toString());
         	renderJSON(baseBean);
         } catch (Exception ex) {
             ex.printStackTrace();
