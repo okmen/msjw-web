@@ -3147,6 +3147,7 @@ public class AccountAction extends BaseAction {
       	String sourceOfCertification = request.getParameter("sourceOfCertification");
       	String issuingBrigade = request.getParameter("issuingBrigade");
       	String isAttached = request.getParameter("isAttached");
+      	String legalEntityName = request.getParameter("legalEntityName");
       	if(StringUtil.isBlank(certificationType)){
       		baseBean.setCode(MsgCode.paramsError);
       		baseBean.setMsg("申请认证类型不能为空!");
@@ -3190,6 +3191,12 @@ public class AccountAction extends BaseAction {
     	if(StringUtil.isBlank(licenseNumber)){
  			baseBean.setCode(MsgCode.paramsError);
  			baseBean.setMsg("车牌号码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(legalEntityName)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车主姓名不能为空!");
  			renderJSON(baseBean);
  			return;
       	}
@@ -3312,6 +3319,7 @@ public class AccountAction extends BaseAction {
     	informationCollectionVo.setVehicleIdentificationNumber(vehicleIdentificationNumber);
     	informationCollectionVo.setIssuingBrigade(issuingBrigade);
     	informationCollectionVo.setIsAttached(isAttached);
+    	informationCollectionVo.setLegalEntityName(legalEntityName);
       	try{
   			baseBean = accountService.informationCollection(informationCollectionVo);
   			if ("9999".equals(baseBean.getCode())) {
