@@ -1,11 +1,5 @@
 package cn.web.front.action.illegal;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -30,7 +23,6 @@ import com.alibaba.fastjson.JSON;
 import cn.account.bean.vo.AuthenticationBasicInformationVo;
 import cn.account.bean.vo.BindTheVehicleVo;
 import cn.account.service.IAccountService;
-import cn.handle.bean.vo.HandleTemplateVo;
 import cn.illegal.bean.AppealInfoBack;
 import cn.illegal.bean.AppealInfoBean;
 import cn.illegal.bean.CarInfoBean;
@@ -40,21 +32,16 @@ import cn.illegal.bean.IllegalInfoBean;
 import cn.illegal.bean.IllegalInfoClaim;
 import cn.illegal.bean.IllegalInfoSheet;
 import cn.illegal.bean.IllegalProcessPointBean;
-import cn.illegal.bean.ParamRequestBean;
 import cn.illegal.bean.ReportingNoParking;
 import cn.illegal.bean.SubcribeBean;
 import cn.illegal.service.IIllegalService;
 import cn.message.model.wechat.MessageChannelModel;
-import cn.message.model.wechat.TemplateDataModel;
 import cn.message.model.wechat.WechatUserInfo;
-import cn.message.model.wechat.TemplateDataModel.Property;
 import cn.message.service.IMobileMessageService;
 import cn.message.service.ITemplateMessageService;
 import cn.message.service.IWechatService;
 import cn.sdk.bean.BaseBean;
-import cn.sdk.bean.BusinessType;
 import cn.sdk.util.DateUtil;
-import cn.sdk.util.DateUtil2;
 import cn.sdk.util.MacUtil;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
@@ -1312,28 +1299,25 @@ public class IllegalAction extends BaseAction {
 		logger.debug(JSON.toJSONString(baseBean));
 	}
 	
-	@RequestMapping(value = "testMac")
-	public void getImage(String licensePlateNo, String licensePlateType, String vehicleIdentifyNoLast4,
-			String identityCard, String sourceOfCertification, String mobilephone, String openId) {
-        try {
-        	BaseBean baseBean = new BaseBean();
-        	String timeStamp=DateUtil.formatDateTimeWithSec(new Date());
-        	Map<String,String> data=new HashMap<String,String>();
-    		data.put("licensePlateNo",licensePlateNo);
-    		data.put("licensePlateType", licensePlateType);
-    		data.put("vehicleIdentifyNoLast4", vehicleIdentifyNoLast4);
-    		JSONObject show1=JSONObject.fromObject(data);
-    		
-    		String mac= MacUtil.genMsgMac(timeStamp, "c7e05df070ab5933", "33", show1.toString());
-        	//String mac1= MacUtil.genMsgMac("20171016144801","c7e05df070ab5933","33","{\"carInfo\":[],\"custInfo\":null}");
-        	//String mac1= MacUtil.genMsgMac("20171016144800","c7e05df070ab5933","33","{\"licensePlateNo\":\"湘MS5933\",\"licensePlateType\":\"02\",\"vehicleIdentifyNoLast4\":\"4335\"}");
-        	String mac1=illegalService.testDemo(timeStamp, "c7e05df070ab5933", show1.toString());
-    		baseBean.setCode(mac);
-    		baseBean.setData(mac1);
-    		baseBean.setMsg(timeStamp+" "+"c7e05df070ab5933"+" 33 "+show1.toString());
+	/**
+	 * 生成mac
+	 * @param timestamp
+	 * @param key
+	 * @param data
+	 * @param hashAlg
+	 */
+	@RequestMapping(value = "getMac")
+	public void getImage(String timestamp,String key,String data,String hashAlg) {
+		BaseBean baseBean = new BaseBean();
+        try {	
+        	logger.info(timestamp+"--"+key+"--"+hashAlg+"--"+data);
+    		String mac= MacUtil.genMsgMac(timestamp, key, hashAlg, data);
+    		baseBean.setCode(MsgCode.success);
+    		baseBean.setMsg(mac);
         	renderJSON(baseBean);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+        	DealException(baseBean, e);
+			logger.error("违停免罚发送短信异常：", e);
         }
      
     }
