@@ -155,7 +155,12 @@ public class RegisterAction extends BaseAction {
 			if (MsgCode.success.equals(code)) {// 参数校验通过
 				int result = accountService.verificatioCode(mobilephone, validateCode);
 				if (0 == result) {
-					registerVo.setCallAccount("WX02_TEST"); //默认写死，玉璞发的
+					if ("A".equals(sourceOfCertification)) {
+						registerVo.setCallAccount("YD02");
+					}else{
+						registerVo.setCallAccount("WX02_TEST");
+					}
+//					registerVo.setCallAccount("WX02_TEST"); //默认写死，玉璞发的
 					registerVo.setCertifiedType("1");
 					registerVo.setCertifiedRole("1");
 					registerVo.setCertifiedSource(sourceOfCertification);
@@ -167,19 +172,27 @@ public class RegisterAction extends BaseAction {
 					}
 					basebean.setCode(code);
 					basebean.setMsg(json.getString("MSG"));
-					
+					if ("0000".equals(code)) {
+						JSONObject jsonObject = json.getJSONObject("BODY");
+						String cid = jsonObject.getString("CID");
+						basebean.setData(cid);
+					}
 					//申请成功，发送微信模板消息
-					sendServiceMessage(openId, sourceOfCertification, code, basebean, json, businessType);
+					if ("C".equals(sourceOfCertification)) {
+						sendServiceMessage(openId, sourceOfCertification, code, basebean, json, businessType);
+					}
 					
 				}
 				if (1 == result) {
 					code=MsgCode.paramsError;
 					sb.append("验证码错误    ");
+					basebean.setCode(code);
 					basebean.setMsg(sb.toString());
 				}
 				if (2 == result) {
 					code=MsgCode.paramsError;
 					sb.append("验证码失效    ");
+					basebean.setCode(code);
 					basebean.setMsg(sb.toString());
 				}			
 			} else {
@@ -343,7 +356,11 @@ public class RegisterAction extends BaseAction {
 				int result = accountService.verificatioCode(mobilephone, validateCode);
 				if (0 == result) {
 					registerVo.setCertifiedType("2");
-					registerVo.setCallAccount("WX02_TEST");
+					if ("A".equals(sourceOfCertification)) {
+						registerVo.setCallAccount("YD02");
+					}else{
+						registerVo.setCallAccount("WX02_TEST");
+					}
 					registerVo.setCertifiedRole("1");
 					registerVo.setCertifiedSource(sourceOfCertification);
 					JSONObject json = accountService.iamALongtimeUser(registerVo);
@@ -353,19 +370,27 @@ public class RegisterAction extends BaseAction {
 					}
 					basebean.setCode(code);
 					basebean.setMsg(json.getString("MSG"));
-					
+					if ("0000".equals(code)) {
+						JSONObject jsonObject = json.getJSONObject("BODY");
+						String cid = jsonObject.getString("CID");
+						basebean.setData(cid);
+					}
 					//申请成功，发送微信模板消息
-					sendServiceMessage(openId, sourceOfCertification, code, basebean, json, businessType);
+					if ("C".equals(sourceOfCertification)) {
+						sendServiceMessage(openId, sourceOfCertification, code, basebean, json, businessType);
+					}
 					
 				}
 				if (1 == result) {
 					code=MsgCode.paramsError;
 					sb.append("验证码错误    ");
+					basebean.setCode(code);
 					basebean.setMsg(sb.toString());
 				}
 				if (2 == result) {
 					code=MsgCode.paramsError;
 					sb.append("验证码失效    ");
+					basebean.setCode(code);
 					basebean.setMsg(sb.toString());
 				}
 
@@ -480,7 +505,11 @@ public class RegisterAction extends BaseAction {
 				int result = accountService.verificatioCode(mobilephone, validateCode);
 				if (0 == result) {
 					registerVo.setCertifiedType("3"); 
-					registerVo.setCallAccount("WX02_TEST");
+					if ("A".equals(sourceOfCertification)) {
+						registerVo.setCallAccount("YD02");
+					}else{
+						registerVo.setCallAccount("WX02_TEST");
+					}
 					registerVo.setCertifiedRole("1");
 					registerVo.setCertifiedSource(sourceOfCertification);
 					JSONObject json = accountService.haveDriverLicenseNotCar(registerVo);
@@ -490,19 +519,28 @@ public class RegisterAction extends BaseAction {
 					}
 					basebean.setCode(code);
 					basebean.setMsg(json.getString("MSG"));
-					
+					if ("0000".equals(code)) {
+						JSONObject jsonObject = json.getJSONObject("BODY");
+						String cid = jsonObject.getString("CID");
+						basebean.setData(cid);
+					}
+					 
 					//申请成功，发送微信模板消息
-					sendServiceMessage(openId, sourceOfCertification, code, basebean, json, businessType);
+					if ("C".equals(sourceOfCertification)) {
+						sendServiceMessage(openId, sourceOfCertification, code, basebean, json, businessType);
+					}
 					
 				}
 				if (1 == result) {
 					code=MsgCode.paramsError;
 					sb.append("验证码错误    ");
+					basebean.setCode(code);
 					basebean.setMsg(sb.toString());
 				}
 				if (2 == result) {
 					code=MsgCode.paramsError;
 					sb.append("验证码失效    ");
+					basebean.setCode(code);
 					basebean.setMsg(sb.toString());
 				}
 
@@ -606,19 +644,27 @@ public class RegisterAction extends BaseAction {
 					}
 					basebean.setCode(code);
 					basebean.setMsg(json.getString("MSG"));
-					
-					//申请成功，发送微信模板消息
-					sendServiceMessage(openId, sourceOfCertification, code, basebean, json, businessType);
+					if ("0000".equals(code)) {
+						JSONObject jsonObject = json.getJSONObject("BODY");
+						String cid = jsonObject.getString("CID");
+						basebean.setData(cid);
+					}
+					//申请成功，发送信模板消息
+					if ("C".equals(sourceOfCertification)) {
+						sendServiceMessage(openId, sourceOfCertification, code, basebean, json, businessType);
+					}
 					
 				}
 				if (1 == result) {
 					code=MsgCode.paramsError;
 					sb.append("验证码错误    ");
+					basebean.setCode(code);
 					basebean.setMsg(sb.toString());
 				}
 				if (2 == result) {
 					code=MsgCode.paramsError;
 					sb.append("验证码失效    ");
+					basebean.setCode(code);
 					basebean.setMsg(sb.toString());
 				}
 
