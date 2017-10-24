@@ -3392,4 +3392,33 @@ public class AccountAction extends BaseAction {
   		renderJSON(baseBean);
   		logger.debug(JSON.toJSONString(baseBean));
       }
+      
+      
+      /**
+       * 获取芝麻信用biz_no
+       */
+      @RequestMapping("getBizNo")
+      public void getBizNo(String certName, String certNo){
+      	BaseBean baseBean = new BaseBean();	
+      	try{
+	    	if(StringUtil.isBlank(certName)){
+	 			baseBean.setCode(MsgCode.paramsError);
+	 			baseBean.setMsg("certName不能为空!");
+	 			renderJSON(baseBean);
+	 			return;
+	      	}
+	    	if(StringUtil.isBlank(certNo)){
+	    		baseBean.setCode(MsgCode.paramsError);
+	    		baseBean.setMsg("certNo不能为空!");
+	    		renderJSON(baseBean);
+	    		return;
+	    	}
+  			baseBean = accountService.getBizNo(certName, certNo);
+  		} catch (Exception e) {
+  			logger.error("获取芝麻信用biz_no异常:" + e);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  		logger.debug(JSON.toJSONString(baseBean));
+      }
 }
