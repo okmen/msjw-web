@@ -1019,14 +1019,6 @@ public class IllegalAction extends BaseAction {
 				}
 			}
 		}
-		if (StringUtil.isBlank(openId)) {
-			base.setCode("0001");
-			base.setMsg("openId不能为空！");
-			renderJSON(base);
-			return;
-		} else {
-			reportingNoParking.setOpenId(openId);
-		}
 		try {
 			Map<String, String> map = illegalService.reportingNoParking(reportingNoParking);
 			String code = map.get("code");
