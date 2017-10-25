@@ -1126,6 +1126,16 @@ public class AccountAction extends BaseAction {
  			sb.append("用户来源为空  ");
  		}else{
  			readilyShootVo.setUserSource(userSource);
+ 			
+ 			if (!"A".equals(userSource)) {
+ 				if (StringUtil.isBlank(openId)) {
+ 					code=MsgCode.paramsError;
+ 					sb.append("openId为空  ");
+ 				} else {
+ 					readilyShootVo.setOpenId(openId);
+ 				}
+ 			}
+ 			
  			if("Z".equals(userSource)){
  				if(StringUtil.isBlank(shsm)){
  					code=MsgCode.paramsError;
@@ -1140,12 +1150,7 @@ public class AccountAction extends BaseAction {
  			readilyShootVo.setUserSource(userSource);
  		}
     	
-    	if(StringUtil.isBlank(openId)){
- 			code=MsgCode.paramsError;
- 			sb.append("openId 为空  ");
- 		}else{
- 			readilyShootVo.setOpenId(openId);
- 		}
+ 		
        	BaseBean basebean = new  BaseBean();
        	ReadilyShoot readilyShoot = new ReadilyShoot();
     	try {

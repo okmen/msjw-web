@@ -76,11 +76,16 @@ public class RegisterAction extends BaseAction {
 		} else {
 			registerVo.setUserIdCard(identityCard);
 		}
-		if (StringUtil.isBlank(openId)) {
+		if (StringUtil.isBlank(sourceOfCertification)) {
 			code=MsgCode.paramsError;
-			sb.append("openId为空  ");
-		} else {
-			registerVo.setOpenId(openId);
+			sb.append("用户来源为空  ");
+		}else if (!"A".equals(sourceOfCertification)) {
+			if (StringUtil.isBlank(openId)) {
+				code=MsgCode.paramsError;
+				sb.append("openId为空  ");
+			} else {
+				registerVo.setOpenId(openId);
+			}
 		}
 		registerVo.setLinkAddress(linkAddress);
 
@@ -258,12 +263,6 @@ public class RegisterAction extends BaseAction {
 		} else {
 			registerVo.setOwnerIdCard(ownerIdCard);
 		}
-		if (StringUtil.isBlank(openId)) {
-			code=MsgCode.paramsError;
-			sb.append("openId为空  ");
-		} else {
-			registerVo.setOpenId(openId);
-		}
 
 //		if (StringUtil.isBlank(linkAddress)) {
 //			code=MsgCode.paramsError;
@@ -347,7 +346,18 @@ public class RegisterAction extends BaseAction {
 		} else {
 			registerVo.setOwnerIdCardImgHandHeld(ownerIdCardImgHandHeld);
 		}
-
+		
+		if (StringUtil.isBlank(sourceOfCertification)) {
+			code=MsgCode.paramsError;
+			sb.append("用户来源为空  ");
+		}else if (!"A".equals(sourceOfCertification)) {
+			if (StringUtil.isBlank(openId)) {
+				code=MsgCode.paramsError;
+				sb.append("openId为空  ");
+			} else {
+				registerVo.setOpenId(openId);
+			}
+		}
 		BaseBean basebean = new BaseBean();
 		try {
 			if (MsgCode.success.equals(code)) {// 参数校验通过
@@ -458,12 +468,16 @@ public class RegisterAction extends BaseAction {
 		} else {
 			registerVo.setMobilephone(mobilephone);
 		}
-		
-		if (StringUtil.isBlank(openId)) {
+		if (StringUtil.isBlank(sourceOfCertification)) {
 			code=MsgCode.paramsError;
-			sb.append("openId为空  ");
-		} else {
-			registerVo.setOpenId(openId);
+			sb.append("用户来源为空  ");
+		}else if (!"A".equals(sourceOfCertification)) {
+			if (StringUtil.isBlank(openId)) {
+				code=MsgCode.paramsError;
+				sb.append("openId为空  ");
+			} else {
+				registerVo.setOpenId(openId);
+			}
 		}
 
 		if (StringUtil.isBlank(validateCode)) {
@@ -598,11 +612,16 @@ public class RegisterAction extends BaseAction {
 			registerVo.setMobilephone(mobilephone);
 		}
 
-		if (StringUtil.isBlank(openId)) {
+		if (StringUtil.isBlank(sourceOfCertification)) {
 			code=MsgCode.paramsError;
-			sb.append("openId为空  ");
-		} else {
-			registerVo.setOpenId(openId);
+			sb.append("用户来源为空  ");
+		}else if (!"A".equals(sourceOfCertification)) {
+			if (StringUtil.isBlank(openId)) {
+				code=MsgCode.paramsError;
+				sb.append("openId为空  ");
+			} else {
+				registerVo.setOpenId(openId);
+			}
 		}
 		
 		if (StringUtil.isBlank(validateCode)) {

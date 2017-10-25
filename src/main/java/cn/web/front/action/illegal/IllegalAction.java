@@ -1008,6 +1008,16 @@ public class IllegalAction extends BaseAction {
 			return;
 		} else {
 			reportingNoParking.setSourceOfCertification(sourceOfCertification);
+			if (!"A".equals(sourceOfCertification)) {
+				if (StringUtil.isBlank(openId)) {
+					base.setCode("0001");
+					base.setMsg("openId不能为空！");
+					renderJSON(base);
+					return;
+				} else {
+					reportingNoParking.setOpenId(openId);
+				}
+			}
 		}
 		if (StringUtil.isBlank(openId)) {
 			base.setCode("0001");
