@@ -302,18 +302,25 @@ public class AccountAction extends BaseAction {
         		renderJSON(baseBean);
         		return;
         	}
-        	if(StringUtils.isBlank(openId)){
-        		baseBean.setMsg("openId 不能为空!");
-        		baseBean.setCode(MsgCode.paramsError);
-        		renderJSON(baseBean);
-        		return;
-        	}
         	if(StringUtils.isBlank(sourceOfCertification)){
         		baseBean.setMsg("sourceOfCertification 不能为空!");
         		baseBean.setCode(MsgCode.paramsError);
         		renderJSON(baseBean);
         		return;
         	}
+        	if (StringUtil.isBlank(sourceOfCertification)) {
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+    		}else if (!"A".equals(sourceOfCertification)) {
+    			if(StringUtils.isBlank(openId)){
+            		baseBean.setMsg("openId 不能为空!");
+            		baseBean.setCode(MsgCode.paramsError);
+            		renderJSON(baseBean);
+            		return;
+            	}
+    		}
         	LoginReturnBeanVo loginReturnBeanVo = accountService.login(loginName,password,sourceOfCertification,openId,loginClient);
         	if(null != loginReturnBeanVo && MsgCode.success.equals(loginReturnBeanVo.getCode())){
         		baseBean.setCode(MsgCode.success);
