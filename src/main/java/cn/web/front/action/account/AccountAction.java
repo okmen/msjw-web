@@ -2472,6 +2472,14 @@ public class AccountAction extends BaseAction {
 			renderJSON(baseBean);
 			return;
 		}else{
+			if (!"A".equals(sourceOfCertification)) {
+				if(StringUtil.isBlank(openId)){
+					baseBean.setCode(MsgCode.paramsError);
+					baseBean.setMsg("openId不能为空!");
+					renderJSON(baseBean);
+					return;
+				}
+			}
 			reauthenticationVo.setSourceOfCertification(sourceOfCertification);
 		}
      	if(StringUtil.isBlank(photo6)){
@@ -2489,12 +2497,6 @@ public class AccountAction extends BaseAction {
 			return;
 		}else{
 			reauthenticationVo.setPhoto9(photo9);
-		}
-     	if(StringUtil.isBlank(openId)){
-			baseBean.setCode(MsgCode.paramsError);
-			baseBean.setMsg("openId不能为空!");
-			renderJSON(baseBean);
-			return;
 		}
      	
      	try{
