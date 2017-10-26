@@ -3365,12 +3365,6 @@ public class AccountAction extends BaseAction {
  			renderJSON(baseBean);
  			return;
       	}
-    	if (!licenseNumber.startsWith("粤B")) {
-    		baseBean.setCode(MsgCode.paramsError);
- 			baseBean.setMsg("必须粤B车牌才能办理此业务!");
- 			renderJSON(baseBean);
- 			return;
-		}
     	if(StringUtil.isBlank(numberPlate)){
  			baseBean.setCode(MsgCode.paramsError);
  			baseBean.setMsg("号牌种类不能为空!");
