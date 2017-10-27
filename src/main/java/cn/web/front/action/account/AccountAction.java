@@ -2672,12 +2672,21 @@ public class AccountAction extends BaseAction {
  			renderJSON(baseBean);
  			return;
  		}
-      	if(StringUtil.isBlank(openId)){
- 			baseBean.setCode(MsgCode.paramsError);
- 			baseBean.setMsg("openId不能为空!");
- 			renderJSON(baseBean);
- 			return;
- 		}
+      	if(StringUtil.isBlank(userSource)){
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("用户来源不能为空!");
+			renderJSON(baseBean);
+			return;
+		}else{
+			if (!"A".equals(userSource)) {
+				if(StringUtil.isBlank(openId)){
+					baseBean.setCode(MsgCode.paramsError);
+					baseBean.setMsg("openId不能为空!");
+					renderJSON(baseBean);
+					return;
+				}
+			}
+		}
       	if(StringUtil.isBlank(mobilephone)){
  			baseBean.setCode(MsgCode.paramsError);
  			baseBean.setMsg("手机号号码不能为空!");
