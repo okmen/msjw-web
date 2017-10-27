@@ -1560,9 +1560,11 @@ public class AccountAction extends BaseAction {
     					Map<String, Object> modelMap = new HashMap<String, Object>();
     					String msg=json.getString("MSG");
     					JSONObject  jsonObject = json.getJSONObject("BODY");
-    					String cId = jsonObject.getString("CID");
-    			     	modelMap.put("recordNumber", cId);
-    			     	basebean.setData(modelMap);
+    					if (null != jsonObject) {
+    						String cId = jsonObject.getString("CID");
+    						modelMap.put("recordNumber", cId);
+    						basebean.setData(modelMap);
+						}
     			     	basebean.setCode(code);
     				}
     		    	basebean.setCode(code);
