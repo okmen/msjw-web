@@ -1406,7 +1406,7 @@ public class IllegalAction extends BaseAction {
 			}
 			
 			base.setCode(MsgCode.businessError);
-			base.setMsg("未匹配到相应的记录！");
+			base.setMsg("请依次处理违法");
 			renderJSON(base);		
 		} catch (Exception e) {
 			DealException(base, e);
