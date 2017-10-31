@@ -1,6 +1,7 @@
 package cn.web.front.action.illegal;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ import cn.message.service.ITemplateMessageService;
 import cn.message.service.IWechatService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.util.DateUtil;
+import cn.sdk.util.DateUtil2;
 import cn.sdk.util.MacUtil;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
@@ -73,54 +75,7 @@ public class IllegalAction extends BaseAction {
 	@Qualifier("templateMessageService")
 	private ITemplateMessageService templateMessageService;
 	    
-	/**
-	 * 
-	 * 获取业务列表
-	 */
-	@RequestMapping(value = "illegalBusinessListQuery")
-	public void getBusinessInfos() {
-		List<IllegalBusiness> list = new ArrayList<IllegalBusiness>();
-		IllegalBusiness bean1 = new IllegalBusiness();
-		bean1.setBusinessName("交通违法查询");
-		bean1.setAction("xxx");
-		bean1.setBusinessCode("M001");
-		IllegalBusiness bean2 = new IllegalBusiness();
-		bean2.setBusinessName("违法在线确认");
-		bean2.setAction("xxx");
-		bean2.setBusinessCode("M002");
-		List<IllegalBusiness> clids = new ArrayList<IllegalBusiness>();
-		IllegalBusiness clid1 = new IllegalBusiness();
-		clid1.setBusinessName("违法缴款");
-		clid1.setAction("xxx");
-		clid1.setBusinessCode("M011");
-		clid1.setParentCode("M003");
-		IllegalBusiness clid2 = new IllegalBusiness();
-		clid2.setBusinessName("交通违法预约处理");
-		clid2.setAction("xxx");
-		clid2.setBusinessCode("M012");
-		clid2.setParentCode("M003");
-		IllegalBusiness clid3 = new IllegalBusiness();
-		clid3.setBusinessName("交通违法申述");
-		clid3.setAction("xxx");
-		clid3.setBusinessCode("M013");
-		clid3.setParentCode("M003");
-		clids.add(clid1);
-		clids.add(clid2);
-		clids.add(clid3);
-		IllegalBusiness bean3 = new IllegalBusiness();
-		bean3.setBusinessName("违法在线处理");
-		bean3.setAction("xxx");
-		bean3.setBusinessCode("M013");
-		bean3.setChildren(clids);
-		list.add(bean1);
-		list.add(bean2);
-		list.add(bean3);
-		BaseBean base = new BaseBean();
-		base.setCode("0000");
-		base.setMsg("成功！");
-		base.setData(list);
-		renderJSON(base);
-	}
+
 	/**
 	 * 根据车牌号获取违章信息
 	 * 
@@ -480,6 +435,12 @@ public class IllegalAction extends BaseAction {
 				base.setCode("0001");
 				base.setMsg("打单失败！");
 			} else {
+				if("-1".equals(bean.getBillNo())){
+					base.setCode("0001");
+					base.setMsg("重复打单！");
+					renderJSON(base);
+					return;
+				}
 				base.setCode("0000");
 				base.setMsg("成功！");
 				base.setData(bean);
@@ -607,10 +568,16 @@ public class IllegalAction extends BaseAction {
 	 * 获取所有违法处理点
 	 */
 	@RequestMapping(value = "getIllegalProcessingPoint")
-	public void getIllegalProcessingPoint() {
+	public void getIllegalProcessingPoint(String sourceOfCertification) {
 		BaseBean base = new BaseBean();
+		if (StringUtil.isBlank(sourceOfCertification)) {
+			base.setCode("0001");
+			base.setMsg("来源方式不能为空！");
+			renderJSON(base);
+			return;
+		}
 		try {
-			List<IllegalProcessPointBean> list = illegalService.getIllegalProcessingPoint();
+			List<IllegalProcessPointBean> list = illegalService.getIllegalProcessingPoint(sourceOfCertification);
 			base.setCode("0000");
 			if (list != null) {
 				base.setData(list);
@@ -630,7 +597,7 @@ public class IllegalAction extends BaseAction {
 	 * @param 站点Id
 	 */
 	@RequestMapping(value = "toGetSubscribeSorts")
-	public void toGetSubscribeSorts(String cldbmid) {
+	public void toGetSubscribeSorts(String cldbmid,String sourceOfCertification) {
 		BaseBean base = new BaseBean();
 		try {
 			// 参数校验
@@ -638,8 +605,15 @@ public class IllegalAction extends BaseAction {
 				base.setCode("0001");
 				base.setMsg("违法站点编号不能为空！");
 				renderJSON(base);
+				return;
 			}
-			Map map = illegalService.toGetSubscribeSorts(cldbmid);
+			if (StringUtil.isBlank(sourceOfCertification)) {
+				base.setCode("0001");
+				base.setMsg("来源方式不能为空！");
+				renderJSON(base);
+				return;
+			}
+			Map map = illegalService.toGetSubscribeSorts(cldbmid,sourceOfCertification);
 			if (map != null && "0".equals(map.get("code"))) {
 				base.setCode("0000");
 			} else {
@@ -672,17 +646,27 @@ public class IllegalAction extends BaseAction {
 				base.setCode("0001");
 				base.setMsg("SNM编号不能为空！");
 				renderJSON(base);
+				return;
 			}
 			if (StringUtil.isEmpty(cldbmid)) {
 				base.setCode("0001");
 				base.setMsg("违法站点编号不能为空！");
 				renderJSON(base);
+				return;
 			}
 			if (StringUtil.isEmpty(cczb_id)) {
 				base.setCode("0001");
 				base.setMsg("预约场次编号不能为空！");
 				renderJSON(base);
+				return;
 			}
+			if (StringUtil.isBlank(sourceOfCertification)) {
+				base.setCode("0001");
+				base.setMsg("来源方式不能为空！");
+				renderJSON(base);
+				return;
+			}
+			
 			base = illegalService.toChangeSubscribe(snm, cldbmid, cczb_id, custInfo, carInfo, sourceOfCertification);
 			
 			/*base.setCode("0");//{"code":"0","message":"1170914100036"}
@@ -750,8 +734,15 @@ public class IllegalAction extends BaseAction {
 				bean.setCode("0001");
 				bean.setMsg("预约流水号不能为空！");
 				renderJSON(bean);
+				return;
 			}
-			bean = illegalService.toCancleSubscribe(subscribeNo);
+			if (StringUtil.isBlank(sourceOfCertification)) {
+				bean.setCode("0001");
+				bean.setMsg("来源方式不能为空！");
+				renderJSON(bean);
+				return;
+			}
+			bean = illegalService.toCancleSubscribe(subscribeNo,sourceOfCertification);
 			
 			/*bean.setCode("0");//{"code":"0","message":"1170914100036"}
 			bean.setMsg("取消成功!");
@@ -804,7 +795,7 @@ public class IllegalAction extends BaseAction {
 	 * @param mobilephone
 	 */
 	@RequestMapping(value = "toQuerySubscribe")
-	public void toQuerySubscribe(String licensePlateType, String licensePlateNo, String mobilephone) {
+	public void toQuerySubscribe(String licensePlateType, String licensePlateNo, String mobilephone,String sourceOfCertification) {
 		BaseBean base = new BaseBean();
 		if (StringUtil.isEmpty(licensePlateNo)) {
 			base.setCode("0001");
@@ -816,6 +807,12 @@ public class IllegalAction extends BaseAction {
 			base.setMsg("手机号不能为空！");
 			renderJSON(base);
 		}
+		if (StringUtil.isBlank(sourceOfCertification)) {
+			base.setCode("0001");
+			base.setMsg("来源方式不能为空！");
+			renderJSON(base);
+			return;
+		}
 		int type = 0;
 		try {
 			type = Integer.parseInt(licensePlateType);
@@ -825,7 +822,7 @@ public class IllegalAction extends BaseAction {
 			renderJSON(base);
 		}
 		try {
-			List<SubcribeBean> list = illegalService.querySubscribe(licensePlateNo, type, mobilephone);
+			List<SubcribeBean> list = illegalService.querySubscribe(licensePlateNo, type, mobilephone,sourceOfCertification);
 			base.setCode("0000");
 			if (list != null) {
 				base.setData(list);
@@ -1163,6 +1160,12 @@ public class IllegalAction extends BaseAction {
 			renderJSON(base);
 			return;
 		}
+		if (StringUtil.isBlank(sourceOfCertification)) {
+			base.setCode("0001");
+			base.setMsg("来源方式不能为空！");
+			renderJSON(base);
+			return;
+		}
 
 		try {
 			billNo = billNo.replaceAll(" ", "");
@@ -1324,4 +1327,91 @@ public class IllegalAction extends BaseAction {
      
     }
 	 
+	
+	/**
+	 * 违法查询获取打单违法编号
+	 * 
+	 * @param licensePlateNo
+	 * @param licensePlateType
+	 * @param mobilephone
+	 * @param sourceOfCertification
+	 */
+	@RequestMapping(value = "queryIllegalNoByClaimBefore")
+	public void queryIllegalNoByClaimBefore(String licensePlateNo, String licensePlateType, String mobilephone,
+			String sourceOfCertification,String openId,String illegalTime,String illegalAddr,String illegalDesc) {
+		BaseBean base = new BaseBean();
+		try {
+			// 参数校验
+			if (StringUtil.isEmpty(licensePlateNo)) {
+				base.setCode("0001");
+				base.setMsg("车牌号不能为空！");
+				renderJSON(base);
+			}
+			if (StringUtil.isEmpty(licensePlateType)) {
+				base.setCode("0001");
+				base.setMsg("车牌类型不能为空！");
+				renderJSON(base);
+			}
+			if (StringUtil.isEmpty(mobilephone)) {
+				base.setCode("0001");
+				base.setMsg("手机号码不能为空！");
+				renderJSON(base);
+			}
+			if (StringUtil.isEmpty(illegalTime)) {
+				base.setCode("0001");
+				base.setMsg("违法时间不能为空！");
+				renderJSON(base);
+			}
+			if (StringUtil.isEmpty(illegalAddr)) {
+				base.setCode("0001");
+				base.setMsg("违法地点不能为空！");
+				renderJSON(base);
+			}
+			if (StringUtil.isEmpty(illegalDesc)) {
+				base.setCode("0001");
+				base.setMsg("违法事件不能为空！");
+				renderJSON(base);
+			}
+			if (StringUtil.isEmpty(sourceOfCertification)) {
+				base.setCode("0001");
+				base.setMsg("来源方式不能为空！");
+				renderJSON(base);
+			}
+			if (StringUtil.isEmpty(openId)) {
+				base.setCode("0001");
+				base.setMsg("未获取到openId！");
+				renderJSON(base);
+			}
+			
+			BaseBean result = illegalService.trafficIllegalClaimBefore(licensePlateNo, licensePlateType, mobilephone,
+					openId,sourceOfCertification);
+			String timeStamp=DateUtil.formatDateTimeWithSec(DateUtil2.str2date(illegalTime));
+			logger.info(timeStamp);
+			if ("0000".equals(result.getCode())) {
+				List<IllegalInfoClaim> returnList=(List<IllegalInfoClaim>) JSON.parseArray(result.getData().toString(), IllegalInfoClaim.class);
+				// 拼接对象
+				for (IllegalInfoClaim bean : returnList) {
+					//匹配单号
+					if (bean.getDealType().equals("1")&&bean.getIllegalAddr().equals(illegalAddr)&&illegalDesc.contains(bean.getIllegalDesc())&&illegalTime.equals(bean.getIllegalTime())) {
+						base.setCode(MsgCode.success);
+						base.setMsg("查询匹配成功！");
+						base.setData(bean.getIllegalNo());
+						renderJSON(base);
+						return;
+					}
+				}
+			}else{
+				renderJSON(result);
+				return;
+			}
+			
+			base.setCode(MsgCode.businessError);
+			base.setMsg("未匹配到相应的记录！");
+			renderJSON(base);		
+		} catch (Exception e) {
+			DealException(base, e);
+			logger.error("获取异常：", e);
+		}
+		renderJSON(base);
+	}
 }
