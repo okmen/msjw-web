@@ -3353,7 +3353,7 @@ public class AccountAction extends BaseAction {
 				try {				   //9vbb8d_BfhE5-i1KA1u9rWcVpMcIPGVh9kUyzG26MB0
 					String templateId = "9vbb8d_BfhE5-i1KA1u9rWcVpMcIPGVh9kUyzG26MB0";
 					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(Integer.parseInt(certificationType),"柴油轻型自卸货车",licenseNumber);
-					String url = handleService.getTemplateSendUrl()+"ownerid="+certificationType+"&areaSelectMassage="+issuingBrigade+"&licenseNumber="+licenseNumber+"&JsonData="+baseBean.getData();
+					String url = handleService.getTemplateSendUrl()+"ownerid="+certificationType+"&areaSelectMassage="+issuingBrigade+"&licenseNumber="+licenseNumber+"&JsonData="+baseBean.getData()+"&type=4";
 					logger.info("返回的url是：" + url);
 					logger.info("handleTemplateVo 是：" + handleTemplateVo);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
