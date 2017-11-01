@@ -3173,6 +3173,7 @@ public class AccountAction extends BaseAction {
       	String issuingBrigade = request.getParameter("issuingBrigade");
       	String isAttached = request.getParameter("isAttached");
       	String legalEntityName = request.getParameter("legalEntityName");
+      	String openId = request.getParameter("openId");
       	if(StringUtil.isBlank(certificationType)){
       		baseBean.setCode(MsgCode.paramsError);
       		baseBean.setMsg("申请认证类型不能为空!");
@@ -3347,9 +3348,30 @@ public class AccountAction extends BaseAction {
     	informationCollectionVo.setLegalEntityName(legalEntityName);
       	try{
   			baseBean = accountService.informationCollection(informationCollectionVo);
+  			if(MsgCode.success.equals(baseBean.getCode()) && sourceOfCertification.equals("C")){
+				 //申请成功发送模板消息
+				try {
+					String templateId = "9vbb8d_BfhE5-i1KA1u9rWcVpMcIPGVh9kUyzG26MB0";
+					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(Integer.parseInt(certificationType),"柴油轻型自卸货车",licenseNumber);
+					baseBean.setData(handleTemplateVo);
+					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
+					logger.info("返回的url是：" + url);
+					logger.info("handleTemplateVo 是：" + handleTemplateVo);
+					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+					map.put("first", new TemplateDataModel().new Property("柴油轻型自卸货车提交通知","#212121"));
+					map.put("keyword1", new TemplateDataModel().new Property("柴油轻型自卸货车","#212121"));
+					map.put("keyword2", new TemplateDataModel().new Property(licenseNumber,"#212121"));
+					map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
+					logger.info("发送模板消息结果：" + flag);
+				} catch (Exception e) {
+					logger.error("发送模板消息  失败===", e);
+				}
+			}
   			if ("9999".equals(baseBean.getCode())) {
 				baseBean.setMsg("信息采集异常,请重试！");
 			}
+  			
   		} catch (Exception e) {
   			logger.error("信息采集异常:" + e);
   			DealException(baseBean, e);
