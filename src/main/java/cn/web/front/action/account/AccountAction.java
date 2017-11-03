@@ -3350,14 +3350,14 @@ public class AccountAction extends BaseAction {
   			baseBean = accountService.informationCollection(informationCollectionVo);
   			if(MsgCode.success.equals(baseBean.getCode()) && sourceOfCertification.equals("C")){
 				 //申请成功发送模板消息
-				try {				   //9vbb8d_BfhE5-i1KA1u9rWcVpMcIPGVh9kUyzG26MB0
+				try {				   
 					String templateId = "9vbb8d_BfhE5-i1KA1u9rWcVpMcIPGVh9kUyzG26MB0";
 					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(Integer.parseInt(certificationType),"柴油轻型自卸货车",licenseNumber);
 					String url = handleService.getTemplateSendUrl()+"ownerid="+certificationType+"&areaSelectMassage="+issuingBrigade+"&licenseNumber="+licenseNumber+"&JsonData="+baseBean.getData()+"&type=4";
 					logger.info("返回的url是：" + url);
 					logger.info("handleTemplateVo 是：" + handleTemplateVo);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-					map.put("first", new TemplateDataModel().new Property("您好,您的柴油轻型自卸货车申报以申请,具体信息如下：","#212121"));
+					map.put("first", new TemplateDataModel().new Property("您好,您的柴油轻型自卸货车申报已申请,具体信息如下：","#212121"));
 					map.put("keyword1", new TemplateDataModel().new Property("柴油轻型自卸货车","#212121"));
 					map.put("keyword2", new TemplateDataModel().new Property(licenseNumber,"#212121"));
 					map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));

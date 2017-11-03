@@ -2245,6 +2245,7 @@ public class HandleserviceAction extends BaseAction {
 			vo.setPHOTO31(PHOTO31);
 			vo.setIp(getIp2(request));
 			vo.setSourceOfCertification(sourceOfCertification);
+			vo.setPlaceOfDomicile(placeOfDomicile);
 			
 			//接口调用
 			Map<String, String> map = handleService.applyCarTemporaryLicence(vo);
