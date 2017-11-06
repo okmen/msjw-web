@@ -316,41 +316,37 @@ public class IllegalAction extends BaseAction {
 				base.setMsg("未获取到openId！");
 				renderJSON(base);
 			}
-			// 判断客户是否已同步
-			String isReg = illegalService.isRegisterUser(openId,sourceOfCertification);
-			if (StringUtil.isEmpty(identityCard)) {
-				isReg = "1";
+
+			
+			CustInfoBean cust = new CustInfoBean();
+			List<CarInfoBean> carList = new ArrayList<>();
+			// 获取客户信息
+			AuthenticationBasicInformationVo custVo = accountService.getAuthenticationBasicInformation(identityCard,
+					sourceOfCertification, mobilephone);
+			if (custVo != null) {
+				cust.setCertificateNo(custVo.getIdentityCard());
+				cust.setCustName(custVo.getTrueName());
+				cust.setCertificateType("02");
+				cust.setMobileNo(custVo.getMobilephone());
+				cust.setDrivingLicenceNo(custVo.getIdentityCard());
 			}
-			if (StringUtil.isEmpty(mobilephone)) {
-				isReg = "1";
+			List<BindTheVehicleVo> carVo = accountService.getBndTheVehicles(identityCard, mobilephone,
+					sourceOfCertification);
+			for (BindTheVehicleVo bindTheVehicleVo : carVo) {
+				CarInfoBean bean = new CarInfoBean();
+				bean.setLicensePlateNo(bindTheVehicleVo.getNumberPlateNumber());
+				bean.setLicensePlateType(bindTheVehicleVo.getPlateType());
+				bean.setVehicleIdentifyNoLast4(bindTheVehicleVo.getBehindTheFrame4Digits());
+				carList.add(bean);
+				
+				if(bindTheVehicleVo.getNumberPlateNumber().equals(licensePlateNo)){
+					//打单前注册 
+					BaseBean result = illegalService.trafficIllegalClaimReg(cust, bean, openId, sourceOfCertification);
+					logger.info("注册结果："+result.getMsg());
+				}				
 			}
-			// 未同步
-			if ("0".equals(isReg)) {
-				CustInfoBean cust = new CustInfoBean();
-				List<CarInfoBean> carList = new ArrayList<>();
-				// 获取客户信息
-				AuthenticationBasicInformationVo custVo = accountService.getAuthenticationBasicInformation(identityCard,
-						sourceOfCertification, mobilephone);
-				if (custVo != null) {
-					cust.setCertificateNo(custVo.getIdentityCard());
-					cust.setCustName(custVo.getTrueName());
-					cust.setCertificateType("02");
-					cust.setMobileNo(custVo.getMobilephone());
-					cust.setDrivingLicenceNo(custVo.getIdentityCard());
-				}
-				List<BindTheVehicleVo> carVo = accountService.getBndTheVehicles(identityCard, mobilephone,
-						sourceOfCertification);
-				for (BindTheVehicleVo bindTheVehicleVo : carVo) {
-					CarInfoBean bean = new CarInfoBean();
-					bean.setLicensePlateNo(bindTheVehicleVo.getNumberPlateNumber());
-					bean.setLicensePlateType(bindTheVehicleVo.getPlateType());
-					bean.setVehicleIdentifyNoLast4(bindTheVehicleVo.getBehindTheFrame4Digits());
-					carList.add(bean);
-				}
-				// 同步客户信息
-				String str = illegalService.custRegInfoReceive(cust, carList, openId,sourceOfCertification);
-				System.out.println("同步：" + str);
-			}
+			
+			
 			List<IllegalInfoBean> returnList = new ArrayList<IllegalInfoBean>();
 			List<IllegalInfoClaim> infos = new ArrayList<IllegalInfoClaim>();
 			BaseBean reList =new BaseBean();
