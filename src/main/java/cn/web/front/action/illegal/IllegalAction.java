@@ -1334,7 +1334,7 @@ public class IllegalAction extends BaseAction {
 	 */
 	@RequestMapping(value = "queryIllegalNoByClaimBefore")
 	public void queryIllegalNoByClaimBefore(String licensePlateNo, String licensePlateType, String mobilephone,
-			String sourceOfCertification,String openId,String illegalTime,String illegalAddr,String illegalDesc) {
+			String sourceOfCertification,String openId,String illegalTime,String illegalAddr,String illegalDesc,String identityCard ) {
 		BaseBean base = new BaseBean();
 		try {
 			// 参数校验
@@ -1378,6 +1378,35 @@ public class IllegalAction extends BaseAction {
 				base.setMsg("未获取到openId！");
 				renderJSON(base);
 			}
+			
+			CustInfoBean cust = new CustInfoBean();
+			List<CarInfoBean> carList = new ArrayList<>();
+			// 获取客户信息
+			AuthenticationBasicInformationVo custVo = accountService.getAuthenticationBasicInformation(identityCard,
+					sourceOfCertification, mobilephone);
+			if (custVo != null) {
+				cust.setCertificateNo(custVo.getIdentityCard());
+				cust.setCustName(custVo.getTrueName());
+				cust.setCertificateType("02");
+				cust.setMobileNo(custVo.getMobilephone());
+				cust.setDrivingLicenceNo(custVo.getIdentityCard());
+			}
+			List<BindTheVehicleVo> carVo = accountService.getBndTheVehicles(identityCard, mobilephone,
+					sourceOfCertification);
+			for (BindTheVehicleVo bindTheVehicleVo : carVo) {
+				CarInfoBean bean = new CarInfoBean();
+				bean.setLicensePlateNo(bindTheVehicleVo.getNumberPlateNumber());
+				bean.setLicensePlateType(bindTheVehicleVo.getPlateType());
+				bean.setVehicleIdentifyNoLast4(bindTheVehicleVo.getBehindTheFrame4Digits());
+				carList.add(bean);
+				
+				if(bindTheVehicleVo.getNumberPlateNumber().equals(licensePlateNo)){
+					//打单前注册 
+					BaseBean result = illegalService.trafficIllegalClaimReg(cust, bean, openId, sourceOfCertification);
+					logger.info("注册结果："+result.getMsg());
+				}				
+			}
+			
 			
 			BaseBean result = illegalService.trafficIllegalClaimBefore(licensePlateNo, licensePlateType, mobilephone,
 					openId,sourceOfCertification);
