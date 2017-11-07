@@ -640,9 +640,15 @@ public class AccountSearchAction extends BaseAction {
    	 */
        @RequestMapping(value="queryResultOfReadilyShoot")
        public void queryResultOfReadilyShoot(String reportSerialNumber,String password,HttpServletRequest request,HttpServletResponse response) throws Exception{
-       	
+       	String sourceOfCertification = request.getParameter("sourceOfCertification");
        	BaseBean baseBean = new BaseBean();
        	try {
+       		if(null == sourceOfCertification){
+           		baseBean.setMsg("sourceOfCertification 不能为空!");
+           		baseBean.setCode(MsgCode.paramsError);
+           		renderJSON(baseBean);
+           		return;
+           	}
        		if(null == reportSerialNumber){
            		baseBean.setMsg("reportSerialNumber 不能为空!");
            		baseBean.setCode(MsgCode.paramsError);
@@ -657,7 +663,7 @@ public class AccountSearchAction extends BaseAction {
            		return;
            	}
        		
-           	ResultOfReadilyShoot resultOfReadilyShoot = accountService.queryResultOfReadilyShoot(reportSerialNumber, password);
+           	ResultOfReadilyShoot resultOfReadilyShoot = accountService.queryResultOfReadilyShoot(reportSerialNumber, password,sourceOfCertification);
            	if (null == resultOfReadilyShoot) {
 				baseBean.setMsg("查询号码或密码错误");
 				baseBean.setCode(MsgCode.paramsError);
