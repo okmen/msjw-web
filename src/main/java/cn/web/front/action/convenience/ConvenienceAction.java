@@ -1,8 +1,10 @@
 package cn.web.front.action.convenience;
 
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,8 +23,13 @@ import cn.convenience.bean.ApplyForPAGoodCarOwners;
 import cn.convenience.bean.ConvenienceBean;
 import cn.convenience.bean.FeedbackResultBean;
 import cn.convenience.service.IConvenienceService;
+import cn.handle.bean.vo.HandleTemplateVo;
+import cn.message.model.wechat.TemplateDataModel;
+import cn.message.model.wechat.TemplateDataModel.Property;
+import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.WebServiceException;
+import cn.sdk.util.DateUtil;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
@@ -44,6 +51,10 @@ public class ConvenienceAction extends BaseAction{
     @Autowired
     @Qualifier("convenienceService")
     private IConvenienceService convenienceService;
+    
+    @Autowired
+	@Qualifier("templateMessageService")
+	private ITemplateMessageService templateMessageService;
 		
 	/**
 	 * @Title: equipmentDamageReport 
@@ -796,7 +807,8 @@ public class ConvenienceAction extends BaseAction{
     	String mobile = request.getParameter("mobile");                
     	String securityDeclaration = request.getParameter("securityDeclaration");    
     	String RZZP = request.getParameter("RZZP");                   
-    	String sourceOfCertification = request.getParameter("sourceOfCertification");  
+    	String sourceOfCertification = request.getParameter("sourceOfCertification");
+    	String openId = request.getParameter("openId");
     	
     	try {
     		if (StringUtil.isBlank(ownerName)) {
@@ -847,6 +859,12 @@ public class ConvenienceAction extends BaseAction{
     			renderJSON(baseBean);
 				return;
 		    }
+    		if (StringUtil.isBlank(openId)) {
+    			baseBean.setCode(MsgCode.paramsError);
+    			baseBean.setMsg("openId不能为空!");
+    			renderJSON(baseBean);
+				return;
+		    }
     		ApplyForPAGoodCarOwners applyForPAGoodCarOwners =new ApplyForPAGoodCarOwners();
     		applyForPAGoodCarOwners.setDriverLicense(driverLicense);
     		applyForPAGoodCarOwners.setLicenseNumber(licenseNumber);
@@ -857,7 +875,24 @@ public class ConvenienceAction extends BaseAction{
     		applyForPAGoodCarOwners.setSecurityDeclaration(securityDeclaration);
     		applyForPAGoodCarOwners.setSourceOfCertification(sourceOfCertification);
     		baseBean = convenienceService.applyForPAGoodCarOwners(applyForPAGoodCarOwners);
-    		
+    		if (MsgCode.success.equals(baseBean.getCode()) && "Z".equals(sourceOfCertification)) {
+				 //申请成功发送模板消息
+				try {				   
+					String templateId = "Cwi_5FWbVmJd5faWECiG7clOt4gts6hOxRHO8w4fdMU";
+					String url = convenienceService.getTemplateSendUrl()+"?businessType="+"平安好车主评选"+"&licenseNumber="+licenseNumber;
+					logger.info("返回的url是：" + url);
+					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+					map.put("first", new TemplateDataModel().new Property("您好,"+ownerName+"先生/女士"+"您的车牌号为"+licenseNumber+"的申请已提交,具体信息如下：","#212121"));
+					map.put("keyword1", new TemplateDataModel().new Property("平安好车主评选","#212121"));
+					map.put("keyword2", new TemplateDataModel().new Property(DateUtil.formatDateTime(new Date()),"#212121"));
+					map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
+					logger.info("发送模板消息结果：" + flag);
+				} catch (Exception e) {
+					logger.error("发送模板消息  失败===", e);
+				}
+				 
+			}
     		logger.info("平安好车主评选Action返回结果:" + JSON.toJSONString(baseBean));
     	} catch (Exception e) {
     		logger.error("平安好车主评选Action异常:", e);
