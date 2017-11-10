@@ -823,12 +823,6 @@ public class ConvenienceAction extends BaseAction{
     			renderJSON(baseBean);
 				return;
 		    }
-    		if (StringUtil.isBlank(numberPlate)) {
-    			baseBean.setCode(MsgCode.paramsError);
-    			baseBean.setMsg("车牌种类不能为空!");
-    			renderJSON(baseBean);
-				return;
-		    }
     		if (StringUtil.isBlank(mobile)) {
     			baseBean.setCode(MsgCode.paramsError);
     			baseBean.setMsg("手机号码不能为空!");
