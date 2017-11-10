@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alibaba.fastjson.JSON;
 
+import cn.convenience.bean.ApplyForPAGoodCarOwners;
 import cn.convenience.bean.ConvenienceBean;
 import cn.convenience.bean.FeedbackResultBean;
 import cn.convenience.service.IConvenienceService;
@@ -773,6 +774,93 @@ public class ConvenienceAction extends BaseAction{
     		logger.info("根据档案编号查询电动车档案信息Action返回结果:" + JSON.toJSONString(baseBean));
     	} catch (Exception e) {
     		logger.error("根据档案编号查询电动车档案信息Action异常:", e);
+    		DealException(baseBean, e);
+    	}
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
+    }
+    
+    
+   /**
+    * 平安好车主评选
+    * @param request
+    * @param response
+    */
+    @RequestMapping(value = "applyForPAGoodCarOwners")
+    public void applyForPAGoodCarOwners(HttpServletRequest request,HttpServletResponse response){
+    	BaseBean baseBean = new BaseBean();
+    	String ownerName = request.getParameter("ownerName");           
+    	String driverLicense  = request.getParameter("driverLicense");       
+    	String licenseNumber = request.getParameter("licenseNumber");        
+    	String numberPlate = request.getParameter("numberPlate");            
+    	String mobile = request.getParameter("mobile");                
+    	String securityDeclaration = request.getParameter("securityDeclaration");    
+    	String RZZP = request.getParameter("RZZP");                   
+    	String sourceOfCertification = request.getParameter("sourceOfCertification");  
+    	
+    	try {
+    		if (StringUtil.isBlank(ownerName)) {
+    			baseBean.setCode(MsgCode.paramsError);
+    			baseBean.setMsg("车主姓名不能为空!");
+    			renderJSON(baseBean);
+				return;
+		    }
+    		if (StringUtil.isBlank(driverLicense)) {
+    			baseBean.setCode(MsgCode.paramsError);
+    			baseBean.setMsg("驾驶证号码不能为空!");
+    			renderJSON(baseBean);
+				return;
+		    }
+    		if (StringUtil.isBlank(licenseNumber)) {
+    			baseBean.setCode(MsgCode.paramsError);
+    			baseBean.setMsg("车牌号码不能为空!");
+    			renderJSON(baseBean);
+				return;
+		    }
+    		if (StringUtil.isBlank(numberPlate)) {
+    			baseBean.setCode(MsgCode.paramsError);
+    			baseBean.setMsg("车牌种类不能为空!");
+    			renderJSON(baseBean);
+				return;
+		    }
+    		if (StringUtil.isBlank(mobile)) {
+    			baseBean.setCode(MsgCode.paramsError);
+    			baseBean.setMsg("手机号码不能为空!");
+    			renderJSON(baseBean);
+				return;
+		    }
+    		if (StringUtil.isBlank(securityDeclaration)) {
+    			baseBean.setCode(MsgCode.paramsError);
+    			baseBean.setMsg("安全宣言不能为空!");
+    			renderJSON(baseBean);
+				return;
+		    }
+    		if (StringUtil.isBlank(RZZP)) {
+    			baseBean.setCode(MsgCode.paramsError);
+    			baseBean.setMsg("认证照片不能为空!");
+    			renderJSON(baseBean);
+				return;
+		    }
+    		if (StringUtil.isBlank(sourceOfCertification)) {
+    			baseBean.setCode(MsgCode.paramsError);
+    			baseBean.setMsg("用户来源不能为空!");
+    			renderJSON(baseBean);
+				return;
+		    }
+    		ApplyForPAGoodCarOwners applyForPAGoodCarOwners =new ApplyForPAGoodCarOwners();
+    		applyForPAGoodCarOwners.setDriverLicense(driverLicense);
+    		applyForPAGoodCarOwners.setLicenseNumber(licenseNumber);
+    		applyForPAGoodCarOwners.setMobile(mobile);
+    		applyForPAGoodCarOwners.setNumberPlate(numberPlate);
+    		applyForPAGoodCarOwners.setOwnerName(ownerName);
+    		applyForPAGoodCarOwners.setRZZP(RZZP);
+    		applyForPAGoodCarOwners.setSecurityDeclaration(securityDeclaration);
+    		applyForPAGoodCarOwners.setSourceOfCertification(sourceOfCertification);
+    		baseBean = convenienceService.applyForPAGoodCarOwners(applyForPAGoodCarOwners);
+    		
+    		logger.info("平安好车主评选Action返回结果:" + JSON.toJSONString(baseBean));
+    	} catch (Exception e) {
+    		logger.error("平安好车主评选Action异常:", e);
     		DealException(baseBean, e);
     	}
     	renderJSON(baseBean);
