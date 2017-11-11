@@ -863,7 +863,7 @@ public class ConvenienceAction extends BaseAction{
     		applyForPAGoodCarOwners.setSecurityDeclaration(securityDeclaration);
     		applyForPAGoodCarOwners.setSourceOfCertification(sourceOfCertification);
     		baseBean = convenienceService.applyForPAGoodCarOwners(applyForPAGoodCarOwners);
-    		if (MsgCode.success.equals(baseBean.getCode()) && "Z".equals(sourceOfCertification)) {
+    		if (MsgCode.success.equals(baseBean.getCode()) && "C".equals(sourceOfCertification)) {
 				 //申请成功发送模板消息
 				try {				   
 					String templateId = "Cwi_5FWbVmJd5faWECiG7clOt4gts6hOxRHO8w4fdMU";
