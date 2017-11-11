@@ -867,10 +867,14 @@ public class ConvenienceAction extends BaseAction{
 				 //申请成功发送模板消息
 				try {				   
 					String templateId = "Cwi_5FWbVmJd5faWECiG7clOt4gts6hOxRHO8w4fdMU";
-					String url = convenienceService.getTemplateSendUrl2()+"?name="+ownerName+"&licenseNumber="+licenseNumber;
+					String url = convenienceService.getTemplateSendUrl2()+"name="+ownerName+"&licenseNumber="+licenseNumber;
 					logger.info("返回的url是：" + url);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-					map.put("first", new TemplateDataModel().new Property("您好,"+ownerName+"先生/女士"+"您的车牌号为"+licenseNumber+"的申请已提交,具体信息如下：","#212121"));
+					if (StringUtil.isBlank(licenseNumber)) {
+						map.put("first", new TemplateDataModel().new Property("您好,"+ownerName+"先生/女士"+"您的申请已提交,具体信息如下：","#212121"));
+					}else{
+						map.put("first", new TemplateDataModel().new Property("您好,"+ownerName+"先生/女士"+"您的车牌号为"+licenseNumber+"的申请已提交,具体信息如下：","#212121"));
+					}
 					map.put("keyword1", new TemplateDataModel().new Property("平安好车主评选","#212121"));
 					map.put("keyword2", new TemplateDataModel().new Property(DateUtil.formatDateTime(new Date()),"#212121"));
 					map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
