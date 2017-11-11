@@ -801,7 +801,7 @@ public class ConvenienceAction extends BaseAction{
     public void applyForPAGoodCarOwners(HttpServletRequest request,HttpServletResponse response){
     	BaseBean baseBean = new BaseBean();
     	String ownerName = request.getParameter("ownerName");           
-    	String driverLicense  = request.getParameter("driverLicense");       
+    	String driverLicenseNum  = request.getParameter("driverLicenseNum");       
     	String licenseNumber = request.getParameter("licenseNumber");        
     	String numberPlate = request.getParameter("numberPlate");            
     	String mobile = request.getParameter("mobile");                
@@ -817,7 +817,7 @@ public class ConvenienceAction extends BaseAction{
     			renderJSON(baseBean);
 				return;
 		    }
-    		if (StringUtil.isBlank(driverLicense)) {
+    		if (StringUtil.isBlank(driverLicenseNum)) {
     			baseBean.setCode(MsgCode.paramsError);
     			baseBean.setMsg("驾驶证号码不能为空!");
     			renderJSON(baseBean);
@@ -854,7 +854,7 @@ public class ConvenienceAction extends BaseAction{
 				return;
 		    }
     		ApplyForPAGoodCarOwners applyForPAGoodCarOwners =new ApplyForPAGoodCarOwners();
-    		applyForPAGoodCarOwners.setDriverLicense(driverLicense);
+    		applyForPAGoodCarOwners.setDriverLicense(driverLicenseNum);
     		applyForPAGoodCarOwners.setLicenseNumber(licenseNumber);
     		applyForPAGoodCarOwners.setMobile(mobile);
     		applyForPAGoodCarOwners.setNumberPlate(numberPlate);
