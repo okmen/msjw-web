@@ -871,9 +871,9 @@ public class ConvenienceAction extends BaseAction{
 					logger.info("返回的url是：" + url);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					if (StringUtil.isBlank(licenseNumber)) {
-						map.put("first", new TemplateDataModel().new Property("您好,"+ownerName+"先生/女士"+"您的申请已提交,具体信息如下：","#212121"));
+						map.put("first", new TemplateDataModel().new Property("您好，尊敬的"+ownerName+"，您的申请已提交，具体信息如下：","#212121"));
 					}else{
-						map.put("first", new TemplateDataModel().new Property("您好,"+ownerName+"先生/女士"+"您的车牌号为"+licenseNumber+"的申请已提交,具体信息如下：","#212121"));
+						map.put("first", new TemplateDataModel().new Property("您好，尊敬的"+ownerName+"，您的车牌号为"+licenseNumber+"的申请已提交，具体信息如下：","#212121"));
 					}
 					map.put("keyword1", new TemplateDataModel().new Property("平安好车主评选","#212121"));
 					map.put("keyword2", new TemplateDataModel().new Property(DateUtil.formatDateTime(new Date()),"#212121"));
