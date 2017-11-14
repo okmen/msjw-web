@@ -846,12 +846,15 @@ public class ConvenienceAction extends BaseAction{
     			baseBean.setMsg("用户来源不能为空!");
     			renderJSON(baseBean);
 				return;
-		    }
-    		if (StringUtil.isBlank(openId)) {
-    			baseBean.setCode(MsgCode.paramsError);
-    			baseBean.setMsg("openId不能为空!");
-    			renderJSON(baseBean);
-				return;
+		    } else {
+		    	if(!"P".equals(sourceOfCertification)){
+		    		if (StringUtil.isBlank(openId)) {
+		    			baseBean.setCode(MsgCode.paramsError);
+		    			baseBean.setMsg("openId不能为空!");
+		    			renderJSON(baseBean);
+		    			return;
+		    		}
+		    	}
 		    }
     		ApplyForPAGoodCarOwners applyForPAGoodCarOwners =new ApplyForPAGoodCarOwners();
     		applyForPAGoodCarOwners.setDriverLicense(driverLicenseNum);
