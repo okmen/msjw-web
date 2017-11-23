@@ -184,16 +184,4 @@ public class WechatAction extends BaseAction {
 		}
 	}
 	
-	@RequestMapping(value = "/setAuthOpenid.html") 
-	public void setAuthOpenid(HttpServletRequest request, HttpServletResponse response){
-		try {
-			String openId = request.getParameter("openId");
-			wechatService.setAuthOpenid(openId);
-			logger.info("setAuthOpenid = " + openId);
-		} catch (Exception e) {
-			logger.error("setAuthOpenid异常",e);
-			outString(response, "error"); 
-		}
-	
-	}
 }
