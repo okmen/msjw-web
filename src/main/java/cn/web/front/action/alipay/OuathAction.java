@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.message.model.alipay.AlipayUserInfo;
 import cn.message.service.IAlipayService;
+import cn.sdk.thread.BilinThreadPool;
 import cn.web.front.action.alipay.util.ParamsUtil;
 import cn.web.front.support.BaseAction;
+import cn.web.front.task.SetOpenId4VoteTask;
 
 @Controller
 @RequestMapping(value = "/oauthAlipay")
@@ -27,6 +29,10 @@ public class OuathAction extends BaseAction {
 	@Autowired
 	@Qualifier("alipayService")
 	private IAlipayService alipayService;
+	
+	@Autowired
+	@Qualifier("bilinThreadPool")
+	private BilinThreadPool bilinThreadPool; //异步调用
 	
 	@RequestMapping(value = "/callback.html")
 	public void callback(HttpServletRequest request,
@@ -41,6 +47,9 @@ public class OuathAction extends BaseAction {
 			//查询用户信息
 			AlipayUserInfo alipayUserInfo = alipayService.callback4UserId(code);
 			logger.info("alipay 获取用户信息："+alipayUserInfo.toString());
+			
+			//投票授权
+			bilinThreadPool.execute(new SetOpenId4VoteTask(alipayUserInfo.getAlipayId()));
 			
 			StringBuffer sBuffer = new StringBuffer();
 			sBuffer
