@@ -3461,4 +3461,41 @@ public class AccountAction extends BaseAction {
   		renderJSON(baseBean);
   		logger.debug(JSON.toJSONString(baseBean));
       }
+      
+      
+      /**
+       * 根据手机号和来源获取openid/userid
+       */
+      @RequestMapping("getOpenidByPhone")
+      public void getOpenidByPhone(String phone, String sourceOfCertification){
+      	BaseBean baseBean = new BaseBean();	
+      	try{
+	    	if(StringUtil.isBlank(phone)){
+	 			baseBean.setCode(MsgCode.paramsError);
+	 			baseBean.setMsg("phone不能为空!");
+	 			renderJSON(baseBean);
+	 			return;
+	      	}
+	    	if(StringUtil.isBlank(sourceOfCertification)){
+	    		baseBean.setCode(MsgCode.paramsError);
+	    		baseBean.setMsg("sourceOfCertification不能为空!");
+	    		renderJSON(baseBean);
+	    		return;
+	    	}
+  			if("C".equals(sourceOfCertification)){
+  				List<UserBind> userBind = accountService.getUserBindByPhone(phone);
+  				baseBean.setCode(MsgCode.success);
+	    		baseBean.setData(userBind);
+  			}else if("Z".equals(sourceOfCertification)){
+  				List<UserBindAlipay> userBindAlipay = accountService.getUserBindAlipayByPhone(phone);
+  				baseBean.setCode(MsgCode.success);
+	    		baseBean.setData(userBindAlipay);
+  			}
+  		} catch (Exception e) {
+  			logger.error("getOpenidByPhone异常: phone = " + phone + ",sourceOfCertification = " + sourceOfCertification);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  		logger.debug(JSON.toJSONString(baseBean));
+      }
 }
