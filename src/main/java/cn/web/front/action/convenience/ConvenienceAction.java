@@ -1,10 +1,8 @@
 package cn.web.front.action.convenience;
 
 import java.io.PrintWriter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,17 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alibaba.fastjson.JSON;
 
-import cn.convenience.bean.ApplyForPAGoodCarOwners;
 import cn.convenience.bean.ConvenienceBean;
 import cn.convenience.bean.FeedbackResultBean;
 import cn.convenience.service.IConvenienceService;
-import cn.handle.bean.vo.HandleTemplateVo;
-import cn.message.model.wechat.TemplateDataModel;
-import cn.message.model.wechat.TemplateDataModel.Property;
 import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.WebServiceException;
-import cn.sdk.util.DateUtil;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
@@ -797,7 +790,7 @@ public class ConvenienceAction extends BaseAction{
     * @param request
     * @param response
     */
-    @RequestMapping(value = "applyForPAGoodCarOwners")
+    /*@RequestMapping(value = "applyForPAGoodCarOwners")
     public void applyForPAGoodCarOwners(HttpServletRequest request,HttpServletResponse response){
     	BaseBean baseBean = new BaseBean();
     	String ownerName = request.getParameter("ownerName");           
@@ -895,5 +888,45 @@ public class ConvenienceAction extends BaseAction{
     	}
     	renderJSON(baseBean);
     	logger.debug(JSON.toJSONString(baseBean));
+    }*/
+    
+    
+    /**
+     * 获取民生警务个人信息
+     * @param identityCard 身份证号
+     * @param sourceOfCertification 认证来源
+     */
+    @RequestMapping("getMSJWinfo")
+    public void getMSJWinfo(String identityCard, String sourceOfCertification){
+    	BaseBean baseBean = new BaseBean();	
+    	try{
+	    	if(StringUtil.isBlank(identityCard)){
+	 			baseBean.setCode(MsgCode.paramsError);
+	 			baseBean.setMsg("identityCard不能为空!");
+	 			renderJSON(baseBean);
+	 			return;
+	      	}
+	    	if(StringUtil.isBlank(sourceOfCertification)){
+	    		baseBean.setCode(MsgCode.paramsError);
+	    		baseBean.setMsg("sourceOfCertification不能为空!");
+	    		renderJSON(baseBean);
+	    		return;
+	    	}else{
+	    		if(!"M".equals(sourceOfCertification)){
+	    			baseBean.setCode(MsgCode.paramsError);
+		    		baseBean.setMsg("sourceOfCertification非法!");
+		    		renderJSON(baseBean);
+		    		return;
+	    		}
+	    	}
+	    	
+	    	baseBean = convenienceService.getMSJWinfo(identityCard, sourceOfCertification);
+	    	
+		} catch (Exception e) {
+			logger.error("【民生警务】getMSJWinfo接口Action异常: identityCard = " + identityCard + ",sourceOfCertification = " + sourceOfCertification);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
     }
 }
