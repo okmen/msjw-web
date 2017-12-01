@@ -3436,6 +3436,8 @@ public class AccountAction extends BaseAction {
       
       /**
        * 获取芝麻信用biz_no
+       * @param certName 姓名
+       * @param certNo 身份证号
        */
       @RequestMapping("getBizNo")
       public void getBizNo(String certName, String certNo){
@@ -3454,6 +3456,7 @@ public class AccountAction extends BaseAction {
 	    		return;
 	    	}
   			baseBean = accountService.getBizNo(certName, certNo);
+  			logger.info("获取芝麻信用getBizNo返回结果：" + JSON.toJSONString(baseBean));
   		} catch (Exception e) {
   			logger.error("获取芝麻信用biz_no异常:" + e);
   			DealException(baseBean, e);
