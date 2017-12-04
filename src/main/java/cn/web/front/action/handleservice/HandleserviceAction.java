@@ -1677,12 +1677,12 @@ public class HandleserviceAction extends BaseAction {
 				}
 				repairOrReplaceDriverLicenseVo.setPlaceOfDomicile(placeOfDomicile);
 			}
-			if (StringUtil.isBlank(openId)) {
+			/*if (StringUtil.isBlank(openId)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("openId 不能为空!");
 				renderJSON(baseBean);
 				return;
-			} 
+			}*/ 
 			String ip = getIp2(request);
 			repairOrReplaceDriverLicenseVo.setIp(ip);
 			Map<String, String> map = handleService.replaceDriverLicense(repairOrReplaceDriverLicenseVo);
@@ -1745,12 +1745,8 @@ public class HandleserviceAction extends BaseAction {
 					baseBean.setData(waterNumber);
 				}
 			} else {
-				baseBean.setCode(MsgCode.businessError);
-				if ("9999".equals(code)) {
-					baseBean.setMsg("输入信息格式有误！");
-				} else {
-					baseBean.setMsg(msg);
-				}
+				baseBean.setCode(code);
+				baseBean.setMsg(msg);
 			}
 		} catch (Exception e) {
 			logger.error("驾驶证换证异常:" + e);
@@ -2256,33 +2252,32 @@ public class HandleserviceAction extends BaseAction {
         		baseBean.setCode(MsgCode.success);
         		baseBean.setMsg(msg);
         		
-        		HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.applyCarTemporaryLicence, map.get("number"), DateUtil2.date2str(new Date()));
-				baseBean.setData(handleTemplateVo);
-        		//推送模板消息
-				try {
-					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_sqjdclpbl";
-					//String url = HandleTemplateVo.getUrl(handleTemplateVo, handleService.getTemplateSendUrl());
-					String url = HandleTemplateVo.getUrl(handleTemplateVo, handleService.getTemplateSendUrl())+"&noTip=true";
-					logger.info("返回的url是：" + url);
-					logger.info("handleTemplateVo 是：" + handleTemplateVo);
-					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
-					map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
-					map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
-					map1.put("keyword2", new TemplateDataModel().new Property("申请机动车临牌","#212121"));
-					map1.put("keyword3", new TemplateDataModel().new Property("待受理","#212121"));
-					map1.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
-					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map1);
-					logger.info("发送模板消息结果：" + flag);
-				} catch (Exception e) {
-					logger.error("发送模板消息  失败===", e);
-				}
+        		//openId不为空,发送微信消息推送
+        		if("C".equals(sourceOfCertification) && StringUtil.isNotBlank(openId)){
+        			HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.applyCarTemporaryLicence, map.get("number"), DateUtil2.date2str(new Date()));
+        			baseBean.setData(handleTemplateVo);
+        			//推送模板消息
+        			try {
+        				String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_sqjdclpbl";
+        				//String url = HandleTemplateVo.getUrl(handleTemplateVo, handleService.getTemplateSendUrl());
+        				String url = HandleTemplateVo.getUrl(handleTemplateVo, handleService.getTemplateSendUrl())+"&noTip=true";
+        				logger.info("返回的url是：" + url);
+        				logger.info("handleTemplateVo 是：" + handleTemplateVo);
+        				Map<String, cn.message.model.wechat.TemplateDataModel.Property> map1 = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+        				map1.put("first", new TemplateDataModel().new Property("您好，您的业务办理申请已申请，具体信息如下：","#212121"));
+        				map1.put("keyword1", new TemplateDataModel().new Property(DateUtil2.date2dayStr(new Date()),"#212121"));
+        				map1.put("keyword2", new TemplateDataModel().new Property("申请机动车临牌","#212121"));
+        				map1.put("keyword3", new TemplateDataModel().new Property("待受理","#212121"));
+        				map1.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+        				boolean flag = templateMessageService.sendMessage(openId, templateId, url, map1);
+        				logger.info("发送模板消息结果：" + flag);
+        			} catch (Exception e) {
+        				logger.error("发送模板消息  失败===", e);
+        			}
+        		}
         	}else{
-        		baseBean.setCode(MsgCode.businessError);
-        		if ("9999".equals(code)) {
-        			baseBean.setMsg("输入信息格式有误！");
-				}else{
-					baseBean.setMsg(msg);
-				}
+        		baseBean.setCode(code);
+				baseBean.setMsg(msg);
         	}
 		} catch (Exception e) {
 			logger.error("申请机动车临牌Action异常:"+e);
