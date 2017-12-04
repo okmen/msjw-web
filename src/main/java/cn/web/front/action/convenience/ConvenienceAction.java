@@ -896,7 +896,7 @@ public class ConvenienceAction extends BaseAction{
      * @param identityCard 身份证号
      * @param sourceOfCertification 认证来源
      */
-    @RequestMapping("getMSJWinfo")
+    /*@RequestMapping("getMSJWinfo")
     public void getMSJWinfo(String identityCard, String sourceOfCertification){
     	BaseBean baseBean = new BaseBean();	
     	try{
@@ -928,5 +928,5 @@ public class ConvenienceAction extends BaseAction{
 		}
 		renderJSON(baseBean);
 		logger.debug(JSON.toJSONString(baseBean));
-    }
+    }*/
 }

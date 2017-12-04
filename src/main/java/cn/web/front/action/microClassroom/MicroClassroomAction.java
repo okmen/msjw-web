@@ -565,7 +565,12 @@ public class MicroClassroomAction extends BaseAction {
 		          
 		      }
 
-	 @RequestMapping("/app/newestVersion.html")
+	 
+	 /**
+	  * 获取app最新版本信息
+	  * @param request
+	  */
+	 /*@RequestMapping("/app/newestVersion.html")
 	 public void newestVersion(HttpServletRequest request) {
 		 BaseBean baseBean = new BaseBean();
 		 String system = request.getParameter("system");
@@ -590,6 +595,6 @@ public class MicroClassroomAction extends BaseAction {
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
-	 }
+	 }*/
 	
 }
