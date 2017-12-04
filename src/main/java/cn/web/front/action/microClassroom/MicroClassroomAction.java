@@ -19,7 +19,6 @@ import com.alibaba.dubbo.common.logger.Logger;
 import com.alibaba.dubbo.common.logger.LoggerFactory;
 import com.alibaba.fastjson.JSON;
 
-import cn.microclass.bean.AppVersion;
 import cn.microclass.bean.studyclassroom.Study;
 import cn.microclass.service.IMicroclassService;
 /*import cn.account.bean.studyclassroom.Answeroptions;
@@ -27,7 +26,6 @@ import cn.account.bean.studyclassroom.Study;
 import cn.account.bean.studyclassroom.StudyRecord;*/
 import cn.sdk.bean.BaseBean;
 import cn.sdk.util.MsgCode;
-import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
 
 /**
