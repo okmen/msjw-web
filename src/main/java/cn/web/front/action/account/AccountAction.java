@@ -340,6 +340,55 @@ public class AccountAction extends BaseAction {
     	logger.debug(JSON.toJSONString(baseBean));
     }
     /**
+	 * 高德登录
+	 * @param loginName 手机号或身份证
+	 * @param password 密码
+	 * @param request
+	 * @param response
+     * @throws Exception
+     * http://localhost:8080/web/user/login.html?loginName=440301199002101119&password=631312&openId=000000xxx&loginClient=weixin&sourceOfCertification=C
+	 */
+    @RequestMapping(value="gdLogin")
+    public void gdLogin(String sourceOfCertification,String loginName,String password,HttpServletRequest request,HttpServletResponse response) throws Exception{
+    	BaseBean baseBean = new BaseBean();
+    	try {
+        	if(StringUtils.isBlank(loginName)){
+        		baseBean.setMsg("loginName 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+        	if(StringUtils.isBlank(password)){
+        		baseBean.setMsg("password 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+        	if(StringUtils.isBlank(sourceOfCertification)){
+        		baseBean.setMsg("sourceOfCertification 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
+        	LoginReturnBeanVo loginReturnBeanVo = accountService.gdLogin(loginName,password,sourceOfCertification);
+        	if(null != loginReturnBeanVo && MsgCode.success.equals(loginReturnBeanVo.getCode())){
+        		baseBean.setCode(MsgCode.success);
+            	baseBean.setMsg("");
+            	baseBean.setData(loginReturnBeanVo);
+        	}else{
+        		baseBean.setCode(MsgCode.businessError);
+            	baseBean.setMsg(loginReturnBeanVo.getMsg());
+            	baseBean.setData("");
+        	}
+        	renderJSON(baseBean);
+		} catch (Exception e) {
+			DealException(baseBean, e);
+        	logger.error("login 错误", e);
+		}
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
+    }
+    /**
      * 支付宝生活号 登录接口
      * http://192.168.1.161/web/user/alipayLogin.html?loginName=18603017278&openId=000000xxx&sourceOfCertification=Z
      * @param sourceOfCertification 认证来源 支付宝Z
