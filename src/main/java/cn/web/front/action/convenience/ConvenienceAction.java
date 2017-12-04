@@ -890,43 +890,4 @@ public class ConvenienceAction extends BaseAction{
     	logger.debug(JSON.toJSONString(baseBean));
     }*/
     
-    
-    /**
-     * 获取民生警务个人信息
-     * @param identityCard 身份证号
-     * @param sourceOfCertification 认证来源
-     */
-    /*@RequestMapping("getMSJWinfo")
-    public void getMSJWinfo(String identityCard, String sourceOfCertification){
-    	BaseBean baseBean = new BaseBean();	
-    	try{
-	    	if(StringUtil.isBlank(identityCard)){
-	 			baseBean.setCode(MsgCode.paramsError);
-	 			baseBean.setMsg("identityCard不能为空!");
-	 			renderJSON(baseBean);
-	 			return;
-	      	}
-	    	if(StringUtil.isBlank(sourceOfCertification)){
-	    		baseBean.setCode(MsgCode.paramsError);
-	    		baseBean.setMsg("sourceOfCertification不能为空!");
-	    		renderJSON(baseBean);
-	    		return;
-	    	}else{
-	    		if(!"M".equals(sourceOfCertification)){
-	    			baseBean.setCode(MsgCode.paramsError);
-		    		baseBean.setMsg("sourceOfCertification非法!");
-		    		renderJSON(baseBean);
-		    		return;
-	    		}
-	    	}
-	    	
-	    	baseBean = convenienceService.getMSJWinfo(identityCard, sourceOfCertification);
-	    	
-		} catch (Exception e) {
-			logger.error("【民生警务】getMSJWinfo接口Action异常: identityCard = " + identityCard + ",sourceOfCertification = " + sourceOfCertification);
-			DealException(baseBean, e);
-		}
-		renderJSON(baseBean);
-		logger.debug(JSON.toJSONString(baseBean));
-    }*/
 }
