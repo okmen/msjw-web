@@ -69,16 +69,16 @@ public class MsjwAction extends BaseAction{
 	    	}
 	    	
 	    	//校验是否为民生警务平台合法用户
-	    	JSONObject json = msjwService.checkIsValidUser(openId, identityCard);
+	    	/*JSONObject json = msjwService.checkIsValidUser(openId, identityCard);
 	    	String code = json.getString("code");
 	    	
-	    	if("200".equals(code)){
+	    	if("200".equals(code)){*/
 	    		//用户已登录，拉取警视通用户信息
 	    		baseBean = msjwService.getMSJWinfo(identityCard, sourceOfCertification);
-	    	}else{
+	    	/*}else{
 	    		baseBean.setCode(code);
 	    		baseBean.setMsg(json.getString("message"));
-	    	}
+	    	}*/
 	    	
 		} catch (Exception e) {
 			logger.error("【民生警务】getMSJWinfo接口Action异常: identityCard = " + identityCard + ",sourceOfCertification = " + sourceOfCertification);
