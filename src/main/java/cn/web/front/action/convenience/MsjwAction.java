@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.convenience.service.IMsjwService;
@@ -39,18 +40,12 @@ public class MsjwAction extends BaseAction{
      * @param sourceOfCertification 认证来源
      */
     @RequestMapping("getMSJWinfo")
-    public void getMSJWinfo(String openId, String identityCard, String sourceOfCertification){
+    public void getMSJWinfo(String openId, String sourceOfCertification){
     	BaseBean baseBean = new BaseBean();	
     	try{
     		if(StringUtil.isBlank(openId)){
 	 			baseBean.setCode(MsgCode.paramsError);
 	 			baseBean.setMsg("openId不能为空!");
-	 			renderJSON(baseBean);
-	 			return;
-	      	}
-	    	if(StringUtil.isBlank(identityCard)){
-	 			baseBean.setCode(MsgCode.paramsError);
-	 			baseBean.setMsg("identityCard不能为空!");
 	 			renderJSON(baseBean);
 	 			return;
 	      	}
@@ -68,20 +63,30 @@ public class MsjwAction extends BaseAction{
 	    		}
 	    	}
 	    	
-	    	//校验是否为民生警务平台合法用户
-	    	/*JSONObject json = msjwService.checkIsValidUser(openId, identityCard);
+	    	//根据openid获取民生警务平台用户信息
+	    	JSONObject json = msjwService.getUserInfoFromMsjw(openId);
 	    	String code = json.getString("code");
 	    	
-	    	if("200".equals(code)){*/
-	    		//用户已登录，拉取警视通用户信息
-	    		baseBean = msjwService.getMSJWinfo(identityCard, sourceOfCertification);
-	    	/*}else{
+	    	//用户已登录，拉取警视通用户信息
+	    	if("200".equals(code)){
+	    		JSONArray jsonArray = json.getJSONArray("datas");
+	    		String identityId = jsonArray.getJSONObject(0).getString("identityId");
+	    		if(StringUtil.isBlank(identityId)){
+	    			baseBean.setCode(MsgCode.businessError);
+		    		baseBean.setMsg("获取identityId为空！");
+		    		renderJSON(baseBean);
+		    		return;
+	    		}else{
+	    			baseBean = msjwService.getMSJWinfo(identityId, sourceOfCertification);
+	    		}
+	    		
+	    	}else{
 	    		baseBean.setCode(code);
 	    		baseBean.setMsg(json.getString("message"));
-	    	}*/
+	    	}
 	    	
 		} catch (Exception e) {
-			logger.error("【民生警务】getMSJWinfo接口Action异常: identityCard = " + identityCard + ",sourceOfCertification = " + sourceOfCertification);
+			logger.error("【民生警务】getMSJWinfo接口Action异常: openId = " + openId + ",sourceOfCertification = " + sourceOfCertification);
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
