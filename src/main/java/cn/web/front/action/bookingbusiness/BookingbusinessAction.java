@@ -28,12 +28,14 @@ import cn.booking.business.bean.OrgVO;
 import cn.booking.business.bean.SmsInfoVO;
 import cn.booking.business.bean.UseCharater;
 import cn.booking.business.service.IBookingBusinessService;
+import cn.convenience.service.IMsjwService;
 import cn.handle.bean.vo.HandleTemplateVo;
 import cn.message.model.wechat.MessageChannelModel;
 import cn.message.model.wechat.TemplateDataModel;
 import cn.message.service.ITemplateMessageService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.bean.BusinessType;
+import cn.sdk.util.Constants;
 import cn.sdk.util.DateUtil2;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.SXStringUtils;
@@ -57,6 +59,10 @@ public class BookingbusinessAction extends BaseAction {
 	@Autowired
     @Qualifier("templateMessageService")
 	private ITemplateMessageService templateMessageService;
+	
+	@Autowired
+	@Qualifier("msjwService")
+	private IMsjwService msjwService;
 	
 	/**
 	 * 取消预约
@@ -2827,6 +2833,31 @@ public class BookingbusinessAction extends BaseAction {
 						logger.info("发送模板消息结果：" + flag);
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
+					}
+				}
+				
+				//民生警务来源，模板推送
+				else if("M".equals(sourceOfCertification) && StringUtil.isNotBlank(openId)){
+					try {
+						String waterNumber = refBean.getData().toString();
+						String appTime = vo.getAppointmentDate() + " " + vo.getAppointmentTime();
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD37, waterNumber, platNumber, carTypeName, orgName, orgAddr, appointmentDate, appointmentTime, name);
+						baseBean.setData(bookingTemplateVo);
+						String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getTemplateSendUrl());
+						JSONObject templateData = new JSONObject();
+						templateData.put("templateId", Constants.TEST_BOOK_BUSINESS_TEMPLATE_ID);
+						templateData.put("firstData", "您好，您的业务办理预约申请已成功提交，具体信息如下：");
+						templateData.put("keyword1Data", "机动车在线预约-抵押/解押登记现场办理");	templateData.put("keyword1Color", "#212121");
+						templateData.put("keyword2Data", waterNumber);					templateData.put("keyword2Color", "#212121");
+						templateData.put("keyword3Data", appTime);						templateData.put("keyword3Color", "#212121");
+						templateData.put("keyword4Data", orgName);						templateData.put("keyword4Color", "#212121");
+						templateData.put("remarkData", "更多信息请点击详情查看");
+						templateData.put("redirectUrl", url);
+						String params = templateData.toJSONString();
+						JSONObject json = msjwService.sendTemplateMsg2Msjw(params);
+						logger.info("【民生警务】发送模板消息结果：" + json);
+					} catch (Exception e) {
+						logger.error("【民生警务】发送模板消息  失败===", e);
 					}
 				}
 			}else if("01".equals(code) || "02".equals(code)){
