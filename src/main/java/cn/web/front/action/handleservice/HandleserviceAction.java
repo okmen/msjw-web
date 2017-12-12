@@ -564,7 +564,8 @@ public class HandleserviceAction extends BaseAction {
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
 						JSONObject templateData = new JSONObject();
-						templateData .put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
+						templateData.put("openid", openId);
+						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
 						templateData.put("keyword1Data", "驾驶证年审");	templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
@@ -1519,7 +1520,8 @@ public class HandleserviceAction extends BaseAction {
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
 						JSONObject templateData = new JSONObject();
-						templateData .put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
+						templateData.put("openid", openId);
+						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
 						templateData.put("keyword1Data", "驾驶证补证");	templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
@@ -1806,7 +1808,8 @@ public class HandleserviceAction extends BaseAction {
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
 						JSONObject templateData = new JSONObject();
-						templateData .put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
+						templateData.put("openid", openId);
+						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
 						templateData.put("keyword1Data", "驾驶证换证");	templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
@@ -2363,7 +2366,8 @@ public class HandleserviceAction extends BaseAction {
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
 						JSONObject templateData = new JSONObject();
-						templateData .put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
+						templateData.put("openid", openId);
+						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
 						templateData.put("keyword1Data", "申请机动车临牌");templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
@@ -2965,7 +2969,8 @@ public class HandleserviceAction extends BaseAction {
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
 						JSONObject templateData = new JSONObject();
-						templateData .put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
+						templateData.put("openid", openId);
+						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
 						templateData.put("keyword1Data", "检验合格标志");templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
@@ -3197,7 +3202,8 @@ public class HandleserviceAction extends BaseAction {
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
 						JSONObject templateData = new JSONObject();
-						templateData .put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
+						templateData.put("openid", openId);
+						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
 						templateData.put("keyword1Data", "机动车委托异地年审");templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
@@ -3819,7 +3825,8 @@ public class HandleserviceAction extends BaseAction {
 					baseBean.setData(handleTemplateVo);
 					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
 					JSONObject templateData = new JSONObject();
-					templateData .put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
+					templateData.put("openid", vo.getOpenId());
+					templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
 					templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
 					templateData.put("keyword1Data", "补领机动车号牌");templateData.put("keyword1Color", "#212121");
 					templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
