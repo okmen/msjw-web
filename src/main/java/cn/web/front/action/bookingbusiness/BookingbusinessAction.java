@@ -2843,7 +2843,7 @@ public class BookingbusinessAction extends BaseAction {
 						String appTime = vo.getAppointmentDate() + " " + vo.getAppointmentTime();
 						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD37, waterNumber, platNumber, carTypeName, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						baseBean.setData(bookingTemplateVo);
-						String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getTemplateSendUrl());
+						String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getMsjwTemplateSendUrl());
 						JSONObject templateData = new JSONObject();
 						templateData.put("openid", openId);
 						templateData.put("templateId", Constants.TEST_BOOK_BUSINESS_TEMPLATE_ID);
