@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import cn.convenience.bean.MsjwApplyingBusinessVo;
 import cn.convenience.service.IMsjwService;
 import cn.handle.bean.vo.ApplyCarTemporaryLicenceVo;
 import cn.handle.bean.vo.ApplyGatePassVo;
@@ -578,6 +579,21 @@ public class HandleserviceAction extends BaseAction {
 						String params = templateData.toJSONString();
 						JSONObject json = msjwService.sendTemplateMsg2Msjw(params);
 						logger.info("【民生警务】发送模板消息结果：" + json);
+						
+						//新增到民生警务平台个人中心
+						try {
+							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+							businessVo.setTylsbh(waterNumber);
+							businessVo.setOpenid(openId);
+							businessVo.setEventname("驾驶证年审");
+							businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+							businessVo.setJinduUrlWx(url);//进度查询跳转地址
+							msjwService.addApplyingBusiness(businessVo);
+						} catch (Exception e) {
+							logger.error("【民生警务】新增在办业务到民生警务平台异常", e);
+							e.printStackTrace();
+						}
+						
 					} catch (Exception e) {
 						logger.error("【民生警务】发送模板消息  失败===", e);
 					}
@@ -588,11 +604,7 @@ public class HandleserviceAction extends BaseAction {
 				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				if ("9999".equals(code)) {
-					baseBean.setMsg("输入信息格式有误！");
-				} else {
-					baseBean.setMsg(msg);
-				}
+				baseBean.setMsg(msg);
 			}
 		} catch (Exception e) {
 			logger.error("驾驶证年审异常:" + e);
@@ -1536,6 +1548,21 @@ public class HandleserviceAction extends BaseAction {
 						String params = templateData.toJSONString();
 						JSONObject json = msjwService.sendTemplateMsg2Msjw(params);
 						logger.info("【民生警务】发送模板消息结果：" + json);
+
+						//新增到民生警务平台个人中心
+						try {
+							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+							businessVo.setTylsbh(waterNumber);
+							businessVo.setOpenid(openId);
+							businessVo.setEventname("驾驶证补证");
+							businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+							businessVo.setJinduUrlWx(url);//进度查询跳转地址
+							msjwService.addApplyingBusiness(businessVo);
+						} catch (Exception e) {
+							logger.error("【民生警务】新增在办业务到民生警务平台异常", e);
+							e.printStackTrace();
+						}
+						
 					} catch (Exception e) {
 						logger.error("【民生警务】发送模板消息  失败===", e);
 					}
@@ -1546,11 +1573,7 @@ public class HandleserviceAction extends BaseAction {
 				}
 			} else {
 				baseBean.setCode(MsgCode.businessError);
-				if ("9999".equals(code)) {
-					baseBean.setMsg("输入信息格式有误！");
-				} else {
-					baseBean.setMsg(msg);
-				}
+				baseBean.setMsg(msg);
 			}
 		} catch (Exception e) {
 			logger.error("驾驶证补证异常:" + e);
@@ -1824,6 +1847,21 @@ public class HandleserviceAction extends BaseAction {
 						String params = templateData.toJSONString();
 						JSONObject json = msjwService.sendTemplateMsg2Msjw(params);
 						logger.info("【民生警务】发送模板消息结果：" + json);
+						
+						//新增到民生警务平台个人中心
+						try {
+							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+							businessVo.setTylsbh(waterNumber);
+							businessVo.setOpenid(openId);
+							businessVo.setEventname("驾驶证换证");
+							businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+							businessVo.setJinduUrlWx(url);//进度查询跳转地址
+							msjwService.addApplyingBusiness(businessVo);
+						} catch (Exception e) {
+							logger.error("【民生警务】新增在办业务到民生警务平台异常", e);
+							e.printStackTrace();
+						}
+						
 					} catch (Exception e) {
 						logger.error("【民生警务】发送模板消息  失败===", e);
 					}
@@ -2382,6 +2420,21 @@ public class HandleserviceAction extends BaseAction {
 						String params = templateData.toJSONString();
 						JSONObject json = msjwService.sendTemplateMsg2Msjw(params);
 						logger.info("【民生警务】发送模板消息结果：" + json);
+
+						//新增到民生警务平台个人中心
+						try {
+							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+							businessVo.setTylsbh(map.get("number"));
+							businessVo.setOpenid(openId);
+							businessVo.setEventname("申请机动车临牌");
+							businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+							businessVo.setJinduUrlWx(url);//进度查询跳转地址
+							msjwService.addApplyingBusiness(businessVo);
+						} catch (Exception e) {
+							logger.error("【民生警务】新增在办业务到民生警务平台异常", e);
+							e.printStackTrace();
+						}
+						
 					} catch (Exception e) {
 						logger.error("【民生警务】发送模板消息  失败===", e);
 					}
@@ -2985,6 +3038,21 @@ public class HandleserviceAction extends BaseAction {
 						String params = templateData.toJSONString();
 						JSONObject json = msjwService.sendTemplateMsg2Msjw(params);
 						logger.info("【民生警务】发送模板消息结果：" + json);
+						
+						//新增到民生警务平台个人中心
+						try {
+							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+							businessVo.setTylsbh(number);
+							businessVo.setOpenid(openId);
+							businessVo.setEventname("检验合格标志");
+							businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+							businessVo.setJinduUrlWx(url);//进度查询跳转地址
+							msjwService.addApplyingBusiness(businessVo);
+						} catch (Exception e) {
+							logger.error("【民生警务】新增在办业务到民生警务平台异常", e);
+							e.printStackTrace();
+						}
+						
 					} catch (Exception e) {
 						logger.error("【民生警务】发送模板消息  失败===", e);
 					}
@@ -3841,6 +3909,21 @@ public class HandleserviceAction extends BaseAction {
 					String params = templateData.toJSONString();
 					JSONObject json = msjwService.sendTemplateMsg2Msjw(params);
 					logger.info("【民生警务】发送模板消息结果：" + json);
+					
+					//新增到民生警务平台个人中心
+					try {
+						MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+						businessVo.setTylsbh(waterNumber);
+						businessVo.setOpenid(vo.getOpenId());
+						businessVo.setEventname("补领机动车号牌");
+						businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+						businessVo.setJinduUrlWx(url);//进度查询跳转地址
+						msjwService.addApplyingBusiness(businessVo);
+					} catch (Exception e) {
+						logger.error("【民生警务】新增在办业务到民生警务平台异常", e);
+						e.printStackTrace();
+					}
+					
 				} catch (Exception e) {
 					logger.error("【民生警务】发送模板消息  失败===", e);
 				}

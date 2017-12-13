@@ -70,16 +70,21 @@ public class MsjwAction extends BaseAction{
 	    	//用户已登录，拉取警视通用户信息
 	    	if("200".equals(code)){
 	    		JSONArray jsonArray = json.getJSONArray("datas");
-	    		String identityId = jsonArray.getJSONObject(0).getString("identityId");
-	    		if(StringUtil.isBlank(identityId)){
-	    			baseBean.setCode(MsgCode.businessError);
-		    		baseBean.setMsg("获取identityId为空！");
-		    		renderJSON(baseBean);
-		    		return;
-	    		}else{
-	    			baseBean = msjwService.getMSJWinfo(identityId, sourceOfCertification);
-	    		}
-	    		
+				for(int i = 0; i < jsonArray.size(); i++){
+					JSONObject jsonObject = jsonArray.getJSONObject(i);
+					String loginType = jsonObject.getString("loginType");//个人用户信息(loginType=1)
+					if("1".equals(loginType)){//1-个人 2-企业
+						String identityId = jsonObject.getString("identityId");
+			    		if(StringUtil.isBlank(identityId)){
+			    			baseBean.setCode(MsgCode.businessError);
+				    		baseBean.setMsg("获取identityId为空！");
+				    		renderJSON(baseBean);
+				    		return;
+			    		}else{
+			    			baseBean = msjwService.getMSJWinfo(identityId, sourceOfCertification);
+			    		}
+					}
+				}
 	    	}else{
 	    		baseBean.setCode(code);
 	    		baseBean.setMsg(json.getString("message"));
