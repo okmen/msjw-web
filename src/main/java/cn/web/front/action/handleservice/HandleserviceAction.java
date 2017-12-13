@@ -490,12 +490,15 @@ public class HandleserviceAction extends BaseAction {
 			} else {
 				driverLicenseAnnualVerificationVo.setUserSource(userSource);
 			}
-			if (StringUtil.isBlank(openId)) {
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("openId 不能为空!");
-				renderJSON(baseBean);
-				return;
-			} 
+			if (!"G".equals(sourceOfCertification)) {
+				if (StringUtil.isBlank(openId)) {
+					baseBean.setCode(MsgCode.paramsError);
+					baseBean.setMsg("openId 不能为空!");
+					renderJSON(baseBean);
+					return;
+				} 
+			}
+			
 			String ip = getIp2(request);
 			driverLicenseAnnualVerificationVo.setIp(ip);
 			Map<String, String> map = handleService.driverLicenseAnnualVerification(driverLicenseAnnualVerificationVo);
@@ -1445,12 +1448,14 @@ public class HandleserviceAction extends BaseAction {
 			}
 			repairOrReplaceDriverLicenseVo.setRepairReason(repairReason);
 			repairOrReplaceDriverLicenseVo.setPostalcode(postCode);
-			if (StringUtil.isBlank(openId)) {
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("openId 不能为空!");
-				renderJSON(baseBean);
-				return;
-			} 
+			if (!"G".equals(sourceOfCertification)) {
+				if (StringUtil.isBlank(openId)) {
+					baseBean.setCode(MsgCode.paramsError);
+					baseBean.setMsg("openId 不能为空!");
+					renderJSON(baseBean);
+					return;
+				} 
+			}
 			String ip = getIp2(request);
 			repairOrReplaceDriverLicenseVo.setIp(ip);
 			Map<String, String> map = handleService.repairDriverLicense(repairOrReplaceDriverLicenseVo);
