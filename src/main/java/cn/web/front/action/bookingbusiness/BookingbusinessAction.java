@@ -2844,6 +2844,7 @@ public class BookingbusinessAction extends BaseAction {
 						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD37, waterNumber, platNumber, carTypeName, orgName, orgAddr, appointmentDate, appointmentTime, name);
 						baseBean.setData(bookingTemplateVo);
 						String url = bookingTemplateVo.getUrl(bookingTemplateVo, bookingBusinessService.getMsjwTemplateSendUrl());
+						logger.info("【民生警务】结果页url：" + url);
 						JSONObject templateData = new JSONObject();
 						templateData.put("openid", openId);
 						templateData.put("templateId", Constants.TEST_BOOK_BUSINESS_TEMPLATE_ID);

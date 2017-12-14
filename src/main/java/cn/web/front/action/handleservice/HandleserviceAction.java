@@ -567,6 +567,7 @@ public class HandleserviceAction extends BaseAction {
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseAnnualVerification, waterNumber, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+						logger.info("【民生警务】结果页url：" + url);
 						JSONObject templateData = new JSONObject();
 						templateData.put("openid", openId);
 						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
@@ -1536,6 +1537,7 @@ public class HandleserviceAction extends BaseAction {
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.repairDriverLicense, waterNumber, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+						logger.info("【民生警务】结果页url：" + url);
 						JSONObject templateData = new JSONObject();
 						templateData.put("openid", openId);
 						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
@@ -1835,6 +1837,7 @@ public class HandleserviceAction extends BaseAction {
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.replaceDriverLicense, waterNumber, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+						logger.info("【民生警务】结果页url：" + url);
 						JSONObject templateData = new JSONObject();
 						templateData.put("openid", openId);
 						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
@@ -2408,6 +2411,7 @@ public class HandleserviceAction extends BaseAction {
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.applyCarTemporaryLicence, map.get("number"), DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+						logger.info("【民生警务】结果页url：" + url);
 						JSONObject templateData = new JSONObject();
 						templateData.put("openid", openId);
 						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
@@ -3026,6 +3030,7 @@ public class HandleserviceAction extends BaseAction {
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.replaceInspectionMark, number, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+						logger.info("【民生警务】结果页url：" + url);
 						JSONObject templateData = new JSONObject();
 						templateData.put("openid", openId);
 						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
@@ -3274,6 +3279,7 @@ public class HandleserviceAction extends BaseAction {
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.inspectionDeclaration, waterNumber, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+						logger.info("【民生警务】结果页url：" + url);
 						JSONObject templateData = new JSONObject();
 						templateData.put("openid", openId);
 						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
@@ -3897,6 +3903,7 @@ public class HandleserviceAction extends BaseAction {
 					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.replaceMotorVehicleLicensePlate, waterNumber, DateUtil2.date2str(new Date()));
 					baseBean.setData(handleTemplateVo);
 					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+					logger.info("【民生警务】结果页url：" + url);
 					JSONObject templateData = new JSONObject();
 					templateData.put("openid", vo.getOpenId());
 					templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);

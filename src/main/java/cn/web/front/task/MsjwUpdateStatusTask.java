@@ -41,7 +41,7 @@ public class MsjwUpdateStatusTask {
 		
 		long begin = System.currentTimeMillis();
 		try {
-			logger.info("开始定时修改【民生警务】办理状态,服务器ip("+curIp+")----------------------------------------------------------------------------");
+			logger.info("开始定时修改【民生警务】办理状态,服务器ip("+curIp+")-----------------------------------------------------------");
 			//获取所有不同身份证
 			List<String> identityIdList = msjwService.selectIdentityIdAll();
 			logger.info("查询到不同身份证总数为：" + identityIdList.size() + "个");
