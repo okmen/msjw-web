@@ -99,14 +99,14 @@ public class HandleserviceAction extends BaseAction {
     		String livePhoto1,String livePhoto2,String PHOTO9, String PHOTO10, String DJZSFYJ,
     		String ip,String sourceOfCertification,String foreignPeopleLivingOnTheTable,String openId,String XSZZP,
     		HttpServletRequest request,HttpServletResponse response) throws Exception{
-    	Enumeration enu=request.getParameterNames();  
+    	/*Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();
 			String value = request.getParameter(paraName);
 			if(null != value && value.length() <= 30){
 				logger.info("补领机动车行驶证参数为：" + paraName+": "+request.getParameter(paraName));
 			}
-		}
+		}*/
 		
 		
     	BaseBean baseBean = new BaseBean();
@@ -338,14 +338,14 @@ public class HandleserviceAction extends BaseAction {
 			String PHOTO31, String postCode, String loginUser, String sourceOfCertification, String userSource,String openId ,
 			HttpServletRequest request, HttpServletResponse response) {
 		
-		Enumeration enu=request.getParameterNames();  
+		/*Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();
 			String value = request.getParameter(paraName);
 			if(null != value && value.length() <= 30){
 				logger.info("驾驶证年审参数为：" + paraName+": "+request.getParameter(paraName));
 			}
-		}
+		}*/
 		
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
 		DriverLicenseAnnualVerificationVo driverLicenseAnnualVerificationVo = new DriverLicenseAnnualVerificationVo();
@@ -570,7 +570,7 @@ public class HandleserviceAction extends BaseAction {
 						logger.info("【民生警务】结果页url：" + url);
 						JSONObject templateData = new JSONObject();
 						templateData.put("openid", openId);
-						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
+						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
 						templateData.put("keyword1Data", "驾驶证年审");	templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
@@ -642,14 +642,14 @@ public class HandleserviceAction extends BaseAction {
 			String loginUser, String PHOTO9, String PHOTO10, String JSZZP, String YQZMZP, String receiverName,
 			String receiverNumber, String receiverAddress, String openId ,HttpServletRequest request, HttpServletResponse response) {
 		
-		Enumeration enu=request.getParameterNames();  
+		/*Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();
 			String value = request.getParameter(paraName);
 			if(null != value && value.length() <= 30){
 				logger.info("驾驶证延期换证参数为：" + paraName+": "+request.getParameter(paraName));
 			}
-		}
+		}*/
 		
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
 		RenewalDriverLicenseVo renewalDriverLicenseVo = new RenewalDriverLicenseVo();
@@ -866,14 +866,14 @@ public class HandleserviceAction extends BaseAction {
 			String receiverNumber, String receiverAddress, String sourceOfCertification, String loginUser,
 			String PHOTO9, String PHOTO10, String JSZZP, String STTJSQB, String openId ,HttpServletRequest request,
 			HttpServletResponse response) {
-		Enumeration enu=request.getParameterNames();  
+		/*Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();
 			String value = request.getParameter(paraName);
 			if(null != value && value.length() <= 30){
 				logger.info("驾驶证转入参数为：" + paraName+": "+request.getParameter(paraName));
 			}
-		}
+		}*/
 		
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
 		DriverLicenseIntoVo driverLicenseIntoVo = new DriverLicenseIntoVo();
@@ -1089,14 +1089,14 @@ public class HandleserviceAction extends BaseAction {
 			String receiverName, String receiverNumber, String receiverAddress, String sourceOfCertification,
 			String userSource, String PHOTO9, String PHOTO10, String JSZZP, String openId ,HttpServletRequest request,
 			HttpServletResponse response) {
-		Enumeration enu=request.getParameterNames();  
+		/*Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();
 			String value = request.getParameter(paraName);
 			if(null != value && value.length() <= 30){
 				logger.info("驾驶证自愿降级参数为：" + paraName+": "+request.getParameter(paraName));
 			}
-		}
+		}*/
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
 		DriverLicenseVoluntaryDemotionVo driverLicenseVoluntaryDemotionVo = new DriverLicenseVoluntaryDemotionVo();
 		String businessType = "J";
@@ -1308,14 +1308,14 @@ public class HandleserviceAction extends BaseAction {
 			String placeOfDomicile, String postCode, String receiverName, String receiverNumber, String receiverAddress,
 			String JZZA, String JZZB, String loginUser, String sourceOfCertification, String userSource,String openId ,
 			HttpServletRequest request, HttpServletResponse response) {
-		Enumeration enu=request.getParameterNames();  
+		/*Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();
 			String value = request.getParameter(paraName);
 			if(null != value && value.length() <= 30){
 				logger.info("驾驶证补证参数为：" + paraName+": "+request.getParameter(paraName));
 			}
-		}
+		}*/
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
 		RepairOrReplaceDriverLicenseVo repairOrReplaceDriverLicenseVo = new RepairOrReplaceDriverLicenseVo();
 		try {
@@ -1540,7 +1540,7 @@ public class HandleserviceAction extends BaseAction {
 						logger.info("【民生警务】结果页url：" + url);
 						JSONObject templateData = new JSONObject();
 						templateData.put("openid", openId);
-						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
+						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
 						templateData.put("keyword1Data", "驾驶证补证");	templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
@@ -1613,14 +1613,14 @@ public class HandleserviceAction extends BaseAction {
 			String receiverName, String receiverNumber, String receiverAddress, String JZZA, String JZZB,
 			String loginUser, String sourceOfCertification, String userSource, String openId ,HttpServletRequest request,
 			HttpServletResponse response) {
-		Enumeration enu=request.getParameterNames();  
+		/*Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();
 			String value = request.getParameter(paraName);
 			if(null != value && value.length() <= 30){
 				logger.info("驾驶证换证参数为：" + paraName+": "+request.getParameter(paraName));
 			}
-		}
+		}*/
 		
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
 		RepairOrReplaceDriverLicenseVo repairOrReplaceDriverLicenseVo = new RepairOrReplaceDriverLicenseVo();
@@ -1840,7 +1840,7 @@ public class HandleserviceAction extends BaseAction {
 						logger.info("【民生警务】结果页url：" + url);
 						JSONObject templateData = new JSONObject();
 						templateData.put("openid", openId);
-						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
+						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
 						templateData.put("keyword1Data", "驾驶证换证");	templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
@@ -1906,14 +1906,14 @@ public class HandleserviceAction extends BaseAction {
 	public void driverChangeContact(String userName, String gender, String identificationNO, String identificationNum,
 			String driverLicense, String receiverAddress, String mobilephone, String loginUser, String userSource,
 			String PHOTO9, String PHOTO10, String JSZZP, String openId ,HttpServletRequest request, HttpServletResponse response) {
-		Enumeration enu=request.getParameterNames();  
+		/*Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();
 			String value = request.getParameter(paraName);
 			if(null != value && value.length() <= 30){
 				logger.info("驾驶人联系方式变更参数为：" + paraName+": "+request.getParameter(paraName));
 			}
-		}
+		}*/
 		BaseBean baseBean = new BaseBean(); // 创建返回结果
 		DriverChangeContactVo driverChangeContactVo = new DriverChangeContactVo();
 		String businessType = "L";
@@ -2081,14 +2081,14 @@ public class HandleserviceAction extends BaseAction {
 	public void applyGatePass(HttpServletRequest request,HttpServletResponse response){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
     	ApplyGatePassVo vo = new ApplyGatePassVo();
-    	Enumeration enu=request.getParameterNames();  
+    	/*Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();
 			String value = request.getParameter(paraName);
 			if(null != value && value.length() <= 30){
 				logger.info("applyGatePass参数为：" + paraName+": "+request.getParameter(paraName));
 			}
-		}
+		}*/
 		try {
 			String plateType = request.getParameter("plateType");   //号牌种类
 			String cartype = request.getParameter("cartype");  //车辆类型
@@ -2224,14 +2224,14 @@ public class HandleserviceAction extends BaseAction {
 	public void applyCarTemporaryLicence(HttpServletRequest request,HttpServletResponse response){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
     	ApplyCarTemporaryLicenceVo vo = new ApplyCarTemporaryLicenceVo();
-    	Enumeration enu=request.getParameterNames();  
+    	/*Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();
 			String value = request.getParameter(paraName);
 			if(null != value && value.length() <= 30){
 				logger.info("applyCarTemporaryLicence参数为：" + paraName+": "+request.getParameter(paraName));
 			}
-		}
+		}*/
 		try {
 			String userName = request.getParameter("userName");   //姓名
 			String identityCard = request.getParameter("identityCard");  //身份证号
@@ -2414,7 +2414,7 @@ public class HandleserviceAction extends BaseAction {
 						logger.info("【民生警务】结果页url：" + url);
 						JSONObject templateData = new JSONObject();
 						templateData.put("openid", openId);
-						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
+						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
 						templateData.put("keyword1Data", "申请机动车临牌");templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
@@ -2466,14 +2466,14 @@ public class HandleserviceAction extends BaseAction {
 	 */
 	@RequestMapping("iocomotiveCarChangeContact")
 	public void iocomotiveCarChangeContact(HttpServletRequest request,HttpServletResponse response){
-		Enumeration enu=request.getParameterNames();  
+		/*Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();
 			String value = request.getParameter(paraName);
 			if(null != value && value.length() <= 30){
 				logger.info("机动车联系方式变更参数为：" + paraName+": "+request.getParameter(paraName));
 			}
-		}
+		}*/
 		
 		BaseBean baseBean = new BaseBean();		//创建返回结果
 		IocomotiveCarChangeContactVo iocomotiveCarChangeContactVo = new IocomotiveCarChangeContactVo();
@@ -2642,14 +2642,14 @@ public class HandleserviceAction extends BaseAction {
      */
     @RequestMapping("iocomotiveCarReplace")
     public void iocomotiveCarReplace(HttpServletRequest request,HttpServletResponse response){
-    	Enumeration enu=request.getParameterNames();  
+    	/*Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();
 			String value = request.getParameter(paraName);
 			if(null != value && value.length() <= 30){
 				logger.info("换领机动车行驶证参数为：" + paraName+": "+request.getParameter(paraName));
 			}
-		}
+		}*/
     	BaseBean baseBean = new BaseBean();		//创建返回结果
     	IocomotiveCarReplaceVo iocomotiveCarReplaceVo = new IocomotiveCarReplaceVo();
     	try {
@@ -2829,14 +2829,14 @@ public class HandleserviceAction extends BaseAction {
 	public void replaceInspectionMark(HttpServletRequest request,HttpServletResponse response){
    		BaseBean baseBean = new BaseBean();		//创建返回结果
    		ApplyInspectionMarkVo vo = new ApplyInspectionMarkVo();
-   		Enumeration enu=request.getParameterNames();  
+   		/*Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();
 			String value = request.getParameter(paraName);
 			if(null != value && value.length() <= 30){
 				logger.info("replaceInspectionMark参数为：" + paraName+": "+request.getParameter(paraName));
 			}
-		}
+		}*/
 		try {
 			String userName = request.getParameter("userName");   //姓名
 			String identityCard = request.getParameter("identityCard");  //身份证号
@@ -3033,7 +3033,7 @@ public class HandleserviceAction extends BaseAction {
 						logger.info("【民生警务】结果页url：" + url);
 						JSONObject templateData = new JSONObject();
 						templateData.put("openid", openId);
-						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
+						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
 						templateData.put("keyword1Data", "检验合格标志");templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
@@ -3088,14 +3088,14 @@ public class HandleserviceAction extends BaseAction {
 	public void inspectionDeclaration(HttpServletRequest request,HttpServletResponse response){
    		BaseBean baseBean = new BaseBean();		//创建返回结果
    		ApplyRemoteEntrustedBusinessVo vo = new ApplyRemoteEntrustedBusinessVo();
-   		Enumeration enu=request.getParameterNames();  
+   		/*Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();
 			String value = request.getParameter(paraName);
 			if(null != value && value.length() <= 30){
 				logger.info("inspectionDeclaration参数为：" + paraName+": "+request.getParameter(paraName));
 			}
-		}
+		}*/
 		try {
 			String name = request.getParameter("name");   //车主姓名
 			String identityCard = request.getParameter("identityCard");  //身份证号
@@ -3282,7 +3282,7 @@ public class HandleserviceAction extends BaseAction {
 						logger.info("【民生警务】结果页url：" + url);
 						JSONObject templateData = new JSONObject();
 						templateData.put("openid", openId);
-						templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
+						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
 						templateData.put("keyword1Data", "机动车委托异地年审");templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
@@ -3320,14 +3320,14 @@ public class HandleserviceAction extends BaseAction {
     */
    @RequestMapping(value="/inspectionDeclarationQuery.html")
 	public void inspectionDeclarationQuery(HttpServletRequest request,HttpServletResponse response){
-	   Enumeration enu=request.getParameterNames();  
+	   /*Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();
 			String value = request.getParameter(paraName);
 			if(null != value && value.length() <= 30){
 				logger.info("inspectionDeclarationQuery参数为：" + paraName+": "+request.getParameter(paraName));
 			}
-		}
+		}*/
    		BaseBean baseBean = new BaseBean();		//创建返回结果    	
 		try {
 			String identityCard = request.getParameter("proposerIdentityCard");  //身份证号
@@ -3408,14 +3408,14 @@ public class HandleserviceAction extends BaseAction {
  			String mobilephone, String validateCode ,String telno, String receiverName, String receiverNumber, String postCode,
  			String receiverAddress, String effectiveDate, String terminationDate, String inform, String bookerName,
  			String bookerIdentityCard, String bookerType, String carTypeId, String sourceOfCertification, String openId,HttpServletRequest request) {
- 		Enumeration enu=request.getParameterNames();  
+ 		/*Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();
 			String value = request.getParameter(paraName);
 			if(null != value && value.length() <= 30){
 				logger.info("createVehicleInspection参数为：" + paraName+": "+request.getParameter(paraName));
 			}
-		}
+		}*/
  		BaseBean baseBean = new BaseBean();
  		CreateVehicleInspectionVo createVehicleInspectionVo = new CreateVehicleInspectionVo();
  		if (StringUtil.isBlank(numberPlate)) {
@@ -3731,14 +3731,14 @@ public class HandleserviceAction extends BaseAction {
 	 */
     @RequestMapping("replaceMotorVehicleLicensePlate")
     public void replaceMotorVehicleLicensePlate(ReplaceMotorVehicleLicensePlateVo vo, HttpServletRequest request){
-    	Enumeration enu=request.getParameterNames();  
+    	/*Enumeration enu=request.getParameterNames();  
 		while(enu.hasMoreElements()){  
 			String paraName=(String)enu.nextElement();
 			String value = request.getParameter(paraName);
 			if(null != value && value.length() <= 30){
 				logger.info("replaceMotorVehicleLicensePlate参数为：" + paraName+": "+request.getParameter(paraName));
 			}
-		}
+		}*/
     	BaseBean baseBean = new BaseBean();
     	try {
     		if(StringUtils.isBlank(vo.getName())){
@@ -3906,7 +3906,7 @@ public class HandleserviceAction extends BaseAction {
 					logger.info("【民生警务】结果页url：" + url);
 					JSONObject templateData = new JSONObject();
 					templateData.put("openid", vo.getOpenId());
-					templateData.put("templateId", Constants.TEST_HANDLE_BUSINESS_TEMPLATE_ID);
+					templateData.put("templateId", handleService.getMsjwHandleTemplateId());
 					templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
 					templateData.put("keyword1Data", "补领机动车号牌");templateData.put("keyword1Color", "#212121");
 					templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");

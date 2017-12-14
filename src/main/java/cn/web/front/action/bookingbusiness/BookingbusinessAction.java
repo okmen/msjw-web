@@ -2847,7 +2847,7 @@ public class BookingbusinessAction extends BaseAction {
 						logger.info("【民生警务】结果页url：" + url);
 						JSONObject templateData = new JSONObject();
 						templateData.put("openid", openId);
-						templateData.put("templateId", Constants.TEST_BOOK_BUSINESS_TEMPLATE_ID);
+						templateData.put("templateId", bookingBusinessService.getMsjwBookTemplateId());
 						templateData.put("firstData", "您好，您的业务办理预约申请已成功提交，具体信息如下：");
 						templateData.put("keyword1Data", "机动车在线预约-抵押/解押登记现场办理");	templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", waterNumber);					templateData.put("keyword2Color", "#212121");
