@@ -572,7 +572,7 @@ public class HandleserviceAction extends BaseAction {
 						templateData.put("openid", openId);
 						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
-						templateData.put("keyword1Data", "驾驶证年审");	templateData.put("keyword1Color", "#212121");
+						templateData.put("keyword1Data", "机动车驾驶证年度审验");	templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
 						templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
 						templateData.put("remarkData", "更多信息请点击详情查看");
@@ -586,7 +586,7 @@ public class HandleserviceAction extends BaseAction {
 							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
 							businessVo.setTylsbh(waterNumber);
 							businessVo.setOpenid(openId);
-							businessVo.setEventname("驾驶证年审");
+							businessVo.setEventname("机动车驾驶证年度审验");
 							businessVo.setApplyingUrlWx(url);//微信在办跳转地址
 							businessVo.setJinduUrlWx(url);//进度查询跳转地址
 							msjwService.addApplyingBusiness(businessVo);
@@ -1542,7 +1542,7 @@ public class HandleserviceAction extends BaseAction {
 						templateData.put("openid", openId);
 						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
-						templateData.put("keyword1Data", "驾驶证补证");	templateData.put("keyword1Color", "#212121");
+						templateData.put("keyword1Data", "机动车驾驶证补办");	templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
 						templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
 						templateData.put("remarkData", "更多信息请点击详情查看");
@@ -1556,7 +1556,7 @@ public class HandleserviceAction extends BaseAction {
 							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
 							businessVo.setTylsbh(waterNumber);
 							businessVo.setOpenid(openId);
-							businessVo.setEventname("驾驶证补证");
+							businessVo.setEventname("机动车驾驶证补办");
 							businessVo.setApplyingUrlWx(url);//微信在办跳转地址
 							businessVo.setJinduUrlWx(url);//进度查询跳转地址
 							msjwService.addApplyingBusiness(businessVo);
@@ -1842,7 +1842,7 @@ public class HandleserviceAction extends BaseAction {
 						templateData.put("openid", openId);
 						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
-						templateData.put("keyword1Data", "驾驶证换证");	templateData.put("keyword1Color", "#212121");
+						templateData.put("keyword1Data", "机动车驾驶证换证");	templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
 						templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
 						templateData.put("remarkData", "更多信息请点击详情查看");
@@ -1856,7 +1856,7 @@ public class HandleserviceAction extends BaseAction {
 							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
 							businessVo.setTylsbh(waterNumber);
 							businessVo.setOpenid(openId);
-							businessVo.setEventname("驾驶证换证");
+							businessVo.setEventname("机动车驾驶证换证");
 							businessVo.setApplyingUrlWx(url);//微信在办跳转地址
 							businessVo.setJinduUrlWx(url);//进度查询跳转地址
 							msjwService.addApplyingBusiness(businessVo);
@@ -2416,7 +2416,7 @@ public class HandleserviceAction extends BaseAction {
 						templateData.put("openid", openId);
 						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
-						templateData.put("keyword1Data", "申请机动车临牌");templateData.put("keyword1Color", "#212121");
+						templateData.put("keyword1Data", "办理临时行驶车号牌");templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
 						templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
 						templateData.put("remarkData", "更多信息请点击详情查看");
@@ -2430,7 +2430,7 @@ public class HandleserviceAction extends BaseAction {
 							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
 							businessVo.setTylsbh(map.get("number"));
 							businessVo.setOpenid(openId);
-							businessVo.setEventname("申请机动车临牌");
+							businessVo.setEventname("办理临时行驶车号牌");
 							businessVo.setApplyingUrlWx(url);//微信在办跳转地址
 							businessVo.setJinduUrlWx(url);//进度查询跳转地址
 							msjwService.addApplyingBusiness(businessVo);
@@ -3035,7 +3035,7 @@ public class HandleserviceAction extends BaseAction {
 						templateData.put("openid", openId);
 						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
-						templateData.put("keyword1Data", "检验合格标志");templateData.put("keyword1Color", "#212121");
+						templateData.put("keyword1Data", "核发机动车检验合格标志");templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
 						templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
 						templateData.put("remarkData", "更多信息请点击详情查看");
@@ -3049,7 +3049,7 @@ public class HandleserviceAction extends BaseAction {
 							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
 							businessVo.setTylsbh(number);
 							businessVo.setOpenid(openId);
-							businessVo.setEventname("检验合格标志");
+							businessVo.setEventname("核发机动车检验合格标志");
 							businessVo.setApplyingUrlWx(url);//微信在办跳转地址
 							businessVo.setJinduUrlWx(url);//进度查询跳转地址
 							msjwService.addApplyingBusiness(businessVo);
@@ -3284,7 +3284,7 @@ public class HandleserviceAction extends BaseAction {
 						templateData.put("openid", openId);
 						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
-						templateData.put("keyword1Data", "机动车委托异地年审");templateData.put("keyword1Color", "#212121");
+						templateData.put("keyword1Data", "委托核发机动车检验合格标志");templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
 						templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
 						templateData.put("remarkData", "更多信息请点击详情查看");
@@ -3908,7 +3908,7 @@ public class HandleserviceAction extends BaseAction {
 					templateData.put("openid", vo.getOpenId());
 					templateData.put("templateId", handleService.getMsjwHandleTemplateId());
 					templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
-					templateData.put("keyword1Data", "补领机动车号牌");templateData.put("keyword1Color", "#212121");
+					templateData.put("keyword1Data", "办理补领、换领机动车号牌");templateData.put("keyword1Color", "#212121");
 					templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
 					templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
 					templateData.put("remarkData", "更多信息请点击详情查看");
@@ -3922,7 +3922,7 @@ public class HandleserviceAction extends BaseAction {
 						MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
 						businessVo.setTylsbh(waterNumber);
 						businessVo.setOpenid(vo.getOpenId());
-						businessVo.setEventname("补领机动车号牌");
+						businessVo.setEventname("办理补领、换领机动车号牌");
 						businessVo.setApplyingUrlWx(url);//微信在办跳转地址
 						businessVo.setJinduUrlWx(url);//进度查询跳转地址
 						msjwService.addApplyingBusiness(businessVo);

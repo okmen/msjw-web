@@ -31,7 +31,7 @@ public class MsjwUpdateStatusTask {
 	@Autowired
 	private IAccountService accountService;
 	
-	@Scheduled(cron="0 0 8 * * ?")//每天早上8点更新
+	@Scheduled(cron="0 0 17 * * ?")//每天下午5点更新
 	public void execute(){
 		String curIp = NetWorkIp.getIp();
 		logger.info("定时任务，当前服务器ip：" + curIp);

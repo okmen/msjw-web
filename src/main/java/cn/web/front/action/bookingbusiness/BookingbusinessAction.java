@@ -2849,7 +2849,7 @@ public class BookingbusinessAction extends BaseAction {
 						templateData.put("openid", openId);
 						templateData.put("templateId", bookingBusinessService.getMsjwBookTemplateId());
 						templateData.put("firstData", "您好，您的业务办理预约申请已成功提交，具体信息如下：");
-						templateData.put("keyword1Data", "机动车在线预约-抵押/解押登记现场办理");	templateData.put("keyword1Color", "#212121");
+						templateData.put("keyword1Data", "机动车抵押/解除抵押登记");			templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", waterNumber);					templateData.put("keyword2Color", "#212121");
 						templateData.put("keyword3Data", appTime);						templateData.put("keyword3Color", "#212121");
 						templateData.put("keyword4Data", orgName);						templateData.put("keyword4Color", "#212121");
