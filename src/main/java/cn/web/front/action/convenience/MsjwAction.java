@@ -85,7 +85,8 @@ public class MsjwAction extends BaseAction{
 						if(!"3".equals(authStatus)){//未认证通过，返回状态
 							baseBean.setCode(MsgCode.businessError);
 							JSONObject authStatusMap = new JSONObject();
-				    		baseBean.setData(authStatusMap.put("authStatus", authStatus));
+							authStatusMap.put("authStatus", authStatus);
+				    		baseBean.setData(authStatusMap);
 				    		renderJSON(baseBean);
 				    		return;
 						}
