@@ -101,6 +101,7 @@ public class MsjwAction extends BaseAction{
 			    			baseBean = msjwService.getMSJWinfo(identityId, sourceOfCertification);
 			    			//未注册星级用户,调用一键注册接口
 			    			if("0001".equals(baseBean.getCode())){
+			    				logger.info("【民生警务】警视通多合一接口返回结果： baseBean = " + net.sf.json.JSONObject.fromObject(baseBean));
 			    				BrushFaceVo bf = new BrushFaceVo();
 			    				bf.setIdentityCard(jsonObject.getString("identityId"));
 			    				bf.setMobilephone(jsonObject.getString("phone"));
@@ -111,7 +112,7 @@ public class MsjwAction extends BaseAction{
 			    				bf.setCertificationType("4");//4-自然人
 			    				logger.info("【民生警务】刷脸一键注册接口请求参数： BrushFaceVo = " + bf);
 								baseBean = accountService.weChatBrushFaceAuthentication(bf);
-								logger.info("【民生警务】刷脸一键注册接口返回结果： baseBean = " + JSON.toJSONString(baseBean));
+								logger.info("【民生警务】刷脸一键注册接口返回结果： baseBean = " + net.sf.json.JSONObject.fromObject(baseBean));
 			    			}
 			    		}
 					}
