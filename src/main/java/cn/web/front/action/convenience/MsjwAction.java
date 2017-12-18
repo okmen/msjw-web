@@ -107,7 +107,7 @@ public class MsjwAction extends BaseAction{
 			    				bf.setName(jsonObject.getString("username"));
 			    				bf.setOpenId(openId);
 			    				bf.setPhoto6("");//图片为空
-			    				bf.setUserSource("C");
+			    				bf.setUserSource("M");//民生警务来源
 			    				bf.setCertificationType("4");//4-自然人
 			    				logger.info("【民生警务】刷脸一键注册接口请求参数： BrushFaceVo = " + bf);
 								baseBean = accountService.weChatBrushFaceAuthentication(bf);
