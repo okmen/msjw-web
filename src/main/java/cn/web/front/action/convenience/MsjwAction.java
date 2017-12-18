@@ -111,7 +111,7 @@ public class MsjwAction extends BaseAction{
 			    				bf.setCertificationType("4");//4-自然人
 			    				logger.info("【民生警务】刷脸一键注册接口请求参数： BrushFaceVo = " + bf);
 								baseBean = accountService.weChatBrushFaceAuthentication(bf);
-								logger.info("【民生警务】刷脸一键注册接口返回结果： baseBean = " + baseBean.toJson());
+								logger.info("【民生警务】刷脸一键注册接口返回结果： baseBean = " + JSON.toJSONString(baseBean));
 			    			}
 			    		}
 					}

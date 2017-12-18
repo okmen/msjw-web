@@ -39,7 +39,7 @@ public class H5Action extends BaseAction {
 	@RequestMapping(value = "/sdkConfig.html")
 	public void sdkConfig(HttpServletRequest request,HttpServletResponse response){
 		String url = request.getParameter("url");
-		logger.info("h5 url 参数:"+url);
+		logger.debug("h5 url 参数:"+url);
 		try {
 			if(!StringUtils.isNotBlank(url)){
 				renderJSON(new ErrorBean(MsgCode.paramsError, "url不能为空"));

@@ -1311,7 +1311,7 @@ public class IllegalAction extends BaseAction {
 	public void getImage(String timestamp,String key,String data,String hashAlg) {
 		BaseBean baseBean = new BaseBean();
         try {	
-        	logger.info(timestamp+"--"+key+"--"+hashAlg+"--"+data);
+        	logger.debug(timestamp+"--"+key+"--"+hashAlg+"--"+data);
     		String mac= MacUtil.genMsgMac(timestamp, key, hashAlg, data);
     		baseBean.setCode(MsgCode.success);
     		baseBean.setMsg(mac);

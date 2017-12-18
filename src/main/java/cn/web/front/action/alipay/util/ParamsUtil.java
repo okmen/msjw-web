@@ -34,7 +34,7 @@ public class ParamsUtil {
             for(String key : paramsKey){
             	String value = request.getParameter(key);
                 params.put(key, value);
-                logger.info(key+":"+value);
+                logger.debug(key+":"+value);
             }
         }
         return params;
