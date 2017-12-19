@@ -63,6 +63,7 @@ import cn.sdk.bean.StVo;
 import cn.sdk.exception.ResultCode;
 import cn.sdk.msg.MsgTemplate;
 import cn.sdk.thread.BilinThreadPool;
+import cn.sdk.util.Base64Decoder;
 import cn.sdk.util.DateUtil;
 import cn.sdk.util.DateUtil2;
 import cn.sdk.util.MsgCode;
@@ -370,6 +371,7 @@ public class AccountAction extends BaseAction {
         		renderJSON(baseBean);
         		return;
         	}
+        	password = Base64Decoder.decode(password);
         	LoginReturnBeanVo loginReturnBeanVo = accountService.gdLogin(loginName,password,sourceOfCertification);
         	if(null != loginReturnBeanVo && MsgCode.success.equals(loginReturnBeanVo.getCode())){
         		baseBean.setCode(MsgCode.success);
