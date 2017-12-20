@@ -1439,4 +1439,74 @@ public class IllegalAction extends BaseAction {
 		}
 		renderJSON(base);
 	}
+	/**
+	 * 申诉结果评价星级
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value = "evaluateResult")
+	public void evaluateResult(HttpServletRequest request ,HttpServletResponse response) {
+		BaseBean baseBean = new BaseBean();
+		String businessType = request.getParameter("businessType");
+		String serialNumber = request.getParameter("serialNumber");
+		String stars = request.getParameter("stars");
+		String sourceOfCertification = request.getParameter("sourceOfCertification");
+        try {
+        	if (StringUtil.isBlank(businessType)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("businessType不能为空！");
+				renderJSON(baseBean);
+			}
+        	if (StringUtil.isBlank(serialNumber)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("流水号不能为空！");
+				renderJSON(baseBean);
+			}
+        	if (StringUtil.isBlank(stars)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("评价星级不能为空！");
+				renderJSON(baseBean);
+			}
+        	if (StringUtil.isBlank(sourceOfCertification)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("sourceOfCertification不能为空！");
+				renderJSON(baseBean);
+			}
+        	baseBean = illegalService.evaluateResult(businessType, serialNumber, stars, sourceOfCertification);
+        	renderJSON(baseBean);
+        } catch (Exception e) {
+        	DealException(baseBean, e);
+			logger.error("申诉结果评价星级异常：", e);
+        }
+     
+    }
+	/**
+	 * 申诉评价结果查询
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value = "queryEvaluateResult")
+	public void queryEvaluateResult(HttpServletRequest request ,HttpServletResponse response) {
+		BaseBean baseBean = new BaseBean();
+		String serialNumber = request.getParameter("serialNumber");
+		String sourceOfCertification = request.getParameter("sourceOfCertification");
+        try {
+        	if (StringUtil.isBlank(serialNumber)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("流水号不能为空！");
+				renderJSON(baseBean);
+			}
+        	if (StringUtil.isBlank(sourceOfCertification)) {
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("sourceOfCertification不能为空！");
+				renderJSON(baseBean);
+			}
+        	baseBean = illegalService.queryEvaluateResult(serialNumber, sourceOfCertification);
+        	renderJSON(baseBean);
+        } catch (Exception e) {
+        	DealException(baseBean, e);
+			logger.error("申诉评价结果查询异常：", e);
+        }
+     
+    }
 }
