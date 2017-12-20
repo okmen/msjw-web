@@ -3443,10 +3443,11 @@ public class HandleserviceAction extends BaseAction {
  			createVehicleInspectionVo.setPersonType(personType);
  		}
  		if (StringUtil.isBlank(driveLicenseNumber)) {
- 			baseBean.setCode(MsgCode.paramsError);
- 			baseBean.setMsg("行驶证编号不能为空!");
- 			renderJSON(baseBean);
- 			return;
+// 			baseBean.setCode(MsgCode.paramsError);
+// 			baseBean.setMsg("行驶证编号不能为空!");
+// 			renderJSON(baseBean);
+// 			return;
+ 			createVehicleInspectionVo.setDriveLicenseNumber("");
  		} else {
  			createVehicleInspectionVo.setDriveLicenseNumber(driveLicenseNumber);
  		}
