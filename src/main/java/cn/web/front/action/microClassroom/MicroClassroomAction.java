@@ -19,6 +19,7 @@ import com.alibaba.dubbo.common.logger.Logger;
 import com.alibaba.dubbo.common.logger.LoggerFactory;
 import com.alibaba.fastjson.JSON;
 
+import cn.microclass.bean.AppVersion;
 import cn.microclass.bean.studyclassroom.Study;
 import cn.microclass.service.IMicroclassService;
 /*import cn.account.bean.studyclassroom.Answeroptions;
@@ -26,6 +27,7 @@ import cn.account.bean.studyclassroom.Study;
 import cn.account.bean.studyclassroom.StudyRecord;*/
 import cn.sdk.bean.BaseBean;
 import cn.sdk.util.MsgCode;
+import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
 
 /**
@@ -568,16 +570,23 @@ public class MicroClassroomAction extends BaseAction {
 	  * 获取app最新版本信息
 	  * @param request
 	  */
-	 /*@RequestMapping("/app/newestVersion.html")
+	 @RequestMapping("/app/newestVersion.html")
 	 public void newestVersion(HttpServletRequest request) {
 		 BaseBean baseBean = new BaseBean();
 		 String system = request.getParameter("system");
 		 try {
-			if(StringUtil.isBlank(system)){
+			 if(StringUtil.isBlank(system)){
 				 baseBean.setCode(MsgCode.paramsError);
 				 baseBean.setMsg("system不能为空");
 				 renderJSON(baseBean);
 				 return;
+			 }else{
+				 if(!"iOS".equals(system) && !"Android".equals(system)){
+					 baseBean.setCode(MsgCode.paramsError);
+					 baseBean.setMsg("system非法");
+					 renderJSON(baseBean);
+					 return;
+				 }
 			 }
 			 
 			 AppVersion appVersion = iMicroclassServer.queryNewestAppVersion(system);
@@ -593,6 +602,6 @@ public class MicroClassroomAction extends BaseAction {
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
-	 }*/
+	 }
 	
 }
