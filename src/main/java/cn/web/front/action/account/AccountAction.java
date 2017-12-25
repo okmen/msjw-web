@@ -3564,6 +3564,7 @@ public class AccountAction extends BaseAction {
       	String licenseNumber = request.getParameter("licenseNumber");                  
       	String numberPlate = request.getParameter("numberPlate");                     
       	String sourceOfCertification = request.getParameter("sourceOfCertification");
+      	String rfId = request.getParameter("rfId");
       	String openId = request.getParameter("openId");
     	if(StringUtil.isBlank(licenseNumber)){
  			baseBean.setCode(MsgCode.paramsError);
@@ -3583,13 +3584,40 @@ public class AccountAction extends BaseAction {
  			renderJSON(baseBean);
  			return;
       	}
+    	if(StringUtil.isBlank(rfId)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("rfId不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
     	InformationCollection informationCollection = new InformationCollection();
     	informationCollection.setLicenseNumber(licenseNumber);
     	informationCollection.setNumberPlate(numberPlate);
     	informationCollection.setSourceOfCertification(sourceOfCertification);
+    	informationCollection.setRfId(rfId);
       	try{
   			baseBean = accountService.informationCollection2(informationCollection);
   			logger.info("小金刚绑定结果 ： " + baseBean.toJson());
+  			if(MsgCode.success.equals(baseBean.getCode()) && sourceOfCertification.equals("C")){
+				 //申请成功发送模板消息
+				try {				   
+					String templateId = "9vbb8d_BfhE5-i1KA1u9rWcVpMcIPGVh9kUyzG26MB0";
+					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1,"绑定已有的RFID",licenseNumber);
+//					String url = handleService.getTemplateSendUrl()+"ownerid="+1+"&areaSelectMassage="+issuingBrigade+"&licenseNumber="+licenseNumber+"&JsonData="+baseBean.getData()+"&type=4";
+					String url = "";
+					logger.info("返回的url是：" + url);
+					logger.info("handleTemplateVo 是：" + handleTemplateVo);
+					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+					map.put("first", new TemplateDataModel().new Property("您好,您的柴油轻型自卸货车申报已申请,具体信息如下：","#212121"));
+					map.put("keyword1", new TemplateDataModel().new Property("绑定已有的RFID(RFID号码为" + rfId +")","#212121"));
+					map.put("keyword2", new TemplateDataModel().new Property(licenseNumber,"#212121"));
+					map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
+					logger.info("发送模板消息结果：" + flag);
+				} catch (Exception e) {
+					logger.error("发送模板消息  失败===", e);
+				}
+			}
   		} catch (Exception e) {
   			logger.error("信息采集(小金刚绑定)异常:" + e);
   			DealException(baseBean, e);
