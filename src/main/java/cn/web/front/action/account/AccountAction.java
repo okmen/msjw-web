@@ -29,6 +29,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import cn.account.bean.Documentation;
 import cn.account.bean.ElectronicPolicyBean;
+import cn.account.bean.InformationCollection;
 import cn.account.bean.IssuingLicenceAuthority;
 import cn.account.bean.ReadilyShoot;
 import cn.account.bean.UserBind;
@@ -3545,6 +3546,88 @@ public class AccountAction extends BaseAction {
   			}
   		} catch (Exception e) {
   			logger.error("getOpenidByPhone异常: phone = " + phone + ",sourceOfCertification = " + sourceOfCertification);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  		logger.debug(JSON.toJSONString(baseBean));
+      }
+      
+      
+      /**
+       * 信息采集(小金刚绑定)
+       * @param request
+       * @param response
+       */
+      @RequestMapping("informationCollection2")
+      public void informationCollection2(HttpServletRequest request,HttpServletResponse response){
+      	BaseBean baseBean = new BaseBean();
+      	String licenseNumber = request.getParameter("licenseNumber");                  
+      	String numberPlate = request.getParameter("numberPlate");                     
+      	String sourceOfCertification = request.getParameter("sourceOfCertification");
+      	String openId = request.getParameter("openId");
+    	if(StringUtil.isBlank(licenseNumber)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车牌号码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(numberPlate)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("号牌种类不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(sourceOfCertification)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("认证来源不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	InformationCollection informationCollection = new InformationCollection();
+    	informationCollection.setLicenseNumber(licenseNumber);
+    	informationCollection.setNumberPlate(numberPlate);
+    	informationCollection.setSourceOfCertification(sourceOfCertification);
+      	try{
+  			baseBean = accountService.informationCollection2(informationCollection);
+  			logger.info("小金刚绑定结果 ： " + baseBean.toJson());
+  		} catch (Exception e) {
+  			logger.error("信息采集(小金刚绑定)异常:" + e);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  		logger.debug(JSON.toJSONString(baseBean));
+      }
+      
+      /**
+       * 信息采集查询(小金刚绑定)
+       * @param request
+       * @param response
+       */
+      @RequestMapping("queryInformationCollection2")
+      public void queryInformationCollection2(HttpServletRequest request,HttpServletResponse response){
+      	BaseBean baseBean = new BaseBean();	
+      	String loginUser = request.getParameter("loginUser");
+      	String sourceOfCertification = request.getParameter("sourceOfCertification");
+    	if(StringUtil.isBlank(loginUser)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("星级用户不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(sourceOfCertification)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("认证来源不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	InformationCollection informationCollection= new InformationCollection();
+    	informationCollection.setLoginUser(loginUser);
+    	informationCollection.setSourceOfCertification(sourceOfCertification);
+      	try{
+  			baseBean = accountService.queryInformationCollection2(informationCollection);
+  			logger.info("小金刚绑定查询结果 ： " + baseBean.toJson());
+  		} catch (Exception e) {
+  			logger.error("信息采集查询(小金刚绑定)异常:" + e);
   			DealException(baseBean, e);
   		}
   		renderJSON(baseBean);
