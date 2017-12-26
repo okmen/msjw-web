@@ -38,7 +38,7 @@ public class OuathAction extends BaseAction {
 		String code = params.get("auth_code");
 		//需要跳转的url
 		String state = params.get("state");
-		logger.info("回调参数：" + params);
+		logger.debug("回调参数：" + params);
 		try {
 			//查询用户信息
 			AlipayUserInfo alipayUserInfo = alipayService.callback4UserId(code);

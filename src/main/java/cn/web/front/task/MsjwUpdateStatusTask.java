@@ -1,5 +1,6 @@
 package cn.web.front.task;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -8,12 +9,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 import cn.account.bean.vo.DriverLicenseToSupplementThePermitBusinessVo;
 import cn.account.bean.vo.MotorVehicleBusiness;
 import cn.account.service.IAccountService;
 import cn.convenience.bean.MsjwApplyingBusinessVo;
 import cn.convenience.bean.MsjwApplyingRecordVo;
+import cn.convenience.bean.MsjwVehicleInspectionVo;
 import cn.convenience.service.IMsjwService;
+import cn.handle.bean.vo.VehicleInspectionVO;
+import cn.handle.service.IHandleService;
+import cn.sdk.util.DateUtil2;
+import cn.sdk.util.StringUtil;
 import cn.web.front.common.NetWorkIp;
 
 /**
@@ -31,11 +40,16 @@ public class MsjwUpdateStatusTask {
 	@Autowired
 	private IAccountService accountService;
 	
-	@Scheduled(cron="0 0 17 * * ?")//每天下午5点更新
+	@Autowired
+	private IHandleService handleService;
+	
+	//@Scheduled(cron="0 0 17 * * ?")//每天下午5点更新
+	@Scheduled(cron="0 0 12 * * ?")//每天下午5点更新
 	public void execute(){
 		String curIp = NetWorkIp.getIp();
 		logger.info("定时任务，当前服务器ip：" + curIp);
-		if(!"192.168.2.187".equals(curIp)){//阿里云服务器地址10.24.193.212
+		//if(!"192.168.2.187".equals(curIp)){//阿里云服务器地址10.24.193.212
+		if(!"10.24.193.212".equals(curIp)){//阿里云服务器地址10.24.193.212
 			return;
 		}
 		
@@ -67,6 +81,9 @@ public class MsjwUpdateStatusTask {
 					}
 				}
 			}
+			
+			//更新六年免检状态
+			updateVehicleInspectionStatus();
 		} catch (Exception e) {
 			logger.error("定时修改【民生警务】办理状态异常", e);
 		} finally{
@@ -142,5 +159,95 @@ public class MsjwUpdateStatusTask {
 				}
 			}
 		}
+	}
+	
+	
+	public void updateVehicleInspectionStatus() throws Exception{
+		logger.info("【民生警务】开始-六年免检状态定时更新.............................");
+		//查询数据库中审核状态为0-待审核记录
+		List<MsjwVehicleInspectionVo> list = msjwService.selectMsjwVehicleInspectionStatusZero(null, null);
+		logger.info("查询到数据库中审核状态为0-待审核记录总数：" + list.size());
+		for (MsjwVehicleInspectionVo msjwVehicleInspectionVo : list) {
+			String tylsbh = msjwVehicleInspectionVo.getTylsbh();
+			String platNumber = msjwVehicleInspectionVo.getPlatNumber();
+			JSONObject jsonObject = null;
+			try {
+				//根据tylsbh和platNumber查询车管所最新状态
+				jsonObject = handleService.getVehicleInspection(tylsbh, platNumber, "");
+			} catch (Exception e) {
+				logger.error("【民生警务】定时任务，根据tylsbh和platNumber查询车管所最新状态异常", e);
+				e.printStackTrace();
+			}
+			if(jsonObject != null){
+				String code = jsonObject.getString("code");
+				if("00".equals(code)){
+					String resultStr = jsonObject.getString("result");
+					VehicleInspectionVO vehicleInspectionVO = null;
+					if(StringUtil.isNotBlank(resultStr)){
+						JSONObject parseObject = JSON.parseObject(resultStr);
+						vehicleInspectionVO = JSON.parseObject(parseObject.getString("VehicleInspectionVO"), VehicleInspectionVO.class);
+					}
+					if(vehicleInspectionVO != null){
+						String approveState = vehicleInspectionVO.getApproveState();
+						if("2".equals(approveState)){//审核状态为2-已审核
+							//根据tylsbh更新msjw记录
+							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+							BeanUtils.copyProperties(businessVo, msjwVehicleInspectionVo);
+							//修改msjw平台状态，显示位置，url
+							String msjwUrl = generateUrl(handleService.getMsjwSixyearsUrl(), vehicleInspectionVO);
+							businessVo.setApplyingUrlWx(msjwUrl);
+							businessVo.setJinduUrlWx(msjwUrl);
+							businessVo.setShowstatus("已审核");
+							businessVo.setListstatus("04");//只在msjw平台进度查询中显示
+							try {
+								msjwService.updateApplyingBusiness(businessVo);
+							} catch (Exception e) {
+								logger.error("【民生警务】定时任务，根据tylsbh更新民生警务个人中心异常", e);
+								e.printStackTrace();
+							}
+							
+							try {
+								//根据tylsbh和platNumber更新数据库状态
+								msjwVehicleInspectionVo.setApplyingUrlWx(msjwUrl);
+								msjwVehicleInspectionVo.setJinduUrlWx(msjwUrl);
+								msjwVehicleInspectionVo.setApproveState(approveState);
+								msjwVehicleInspectionVo.setLastupddate(DateUtil2.date2str(new Date()));
+								msjwVehicleInspectionVo.setListstatus("04");
+								msjwVehicleInspectionVo.setShowstatus("已审核");
+								msjwService.updateMsjwVehicleInspection(msjwVehicleInspectionVo);
+							} catch (Exception e) {
+								logger.error("【民生警务】定时任务，根据tylsbh和platNumber更新数据库状态异常", e);
+								e.printStackTrace();
+							}
+							
+							/*try {
+								//根据tylsbh和platNumber删除记录
+								msjwService.deleteMsjwVehicleInspection(tylsbh, platNumber);
+							} catch (Exception e) {
+								logger.error("【民生警务】定时任务，根据tylsbh和platNumber删除数据库记录异常", e);
+								e.printStackTrace();
+							}*/
+						}
+					}
+				}
+			}
+		}
+		logger.info("【民生警务】结束-六年免检状态定时更新.............................");
+	}
+	
+	public String generateUrl(String baseUrl, VehicleInspectionVO vo){
+		StringBuffer sb = new StringBuffer();
+		sb.append(baseUrl)
+		.append("&yyh=").append(vo.getBookNumber())//预约号
+		.append("&xm=").append(vo.getName())//姓名
+		.append("&sjhm=").append(vo.getMobile())//手机号码
+		.append("&bxsxrq=").append(vo.getEffectiveDate())//保险生效日期
+		.append("&slgzfs=").append(vo.getInform())//受理告知方式
+		.append("&cjrq=").append(vo.getCreateDate())//创建日期
+		.append("&yyzt=").append(vo.getBookState())//预约状态
+		.append("&shzt=").append(vo.getApproveState())//审核状态
+		.append("&shjg=").append(vo.getApproveFlag())//审核结果
+		.append("&slyjnr=").append(vo.getApproveInfo());//受理意见内容
+		return sb.toString();
 	}
 }

@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.convenience.bean.MsjwApplyingBusinessVo;
+import cn.convenience.bean.MsjwVehicleInspectionVo;
 import cn.convenience.service.IMsjwService;
 import cn.handle.bean.vo.ApplyCarTemporaryLicenceVo;
 import cn.handle.bean.vo.ApplyGatePassVo;
@@ -3587,13 +3588,41 @@ public class HandleserviceAction extends BaseAction {
 						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
 						templateData.put("keyword1Data", "核发机动车检验合格标志");templateData.put("keyword1Color", "#212121");
-						templateData.put("keyword2Data", "待受理");templateData.put("keyword2Color", "#212121");
+						templateData.put("keyword2Data", "待审核");templateData.put("keyword2Color", "#212121");
 						templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
 						templateData.put("remarkData", "更多信息请点击详情查看");
 						templateData.put("redirectUrl", url);
 						String params = templateData.toJSONString();
 						JSONObject json = msjwService.sendTemplateMsg2Msjw(params);
 						logger.info("【民生警务】发送模板消息结果：" + json);
+						
+						//新增到民生警务平台个人中心
+						try {
+							//调用查询接口，获取业务数据
+							JSONObject inspectionJson = handleService.getVehicleInspection(result, numberPlate, "");
+							if("00".equals(inspectionJson.getString("code"))){
+								String resultStr = inspectionJson.getString("result");
+								VehicleInspectionVO vehicleInspectionVO = null;
+								if(StringUtil.isNotBlank(resultStr)){
+									JSONObject parseObject = JSON.parseObject(resultStr);
+									vehicleInspectionVO = JSON.parseObject(parseObject.getString("VehicleInspectionVO"), VehicleInspectionVO.class);
+									
+									MsjwVehicleInspectionVo businessVo = new MsjwVehicleInspectionVo();
+									businessVo.setTylsbh("P170907167");
+									businessVo.setOpenid(openId);
+									businessVo.setEventname("核发机动车检验合格标志");
+									String msjwUrl = generateUrl(handleService.getMsjwSixyearsUrl(), vehicleInspectionVO);
+									businessVo.setApplyingUrlWx(msjwUrl);//微信在办跳转地址
+									businessVo.setJinduUrlWx(msjwUrl);//进度查询跳转地址
+									businessVo.setPlatNumber("粤B5S1W7");//车牌号码
+									msjwService.addVehicleInspectionBusiness(businessVo);
+								}
+							}
+						} catch (Exception e) {
+							logger.error("【民生警务】新增六年免检到民生警务平台异常", e);
+							e.printStackTrace();
+						}
+						
 					} catch (Exception e) {
 						logger.error("【民生警务】发送模板消息  失败===", e);
 					}
@@ -3614,6 +3643,27 @@ public class HandleserviceAction extends BaseAction {
  		renderJSON(baseBean);
  		logger.debug(JSON.toJSONString(baseBean));
  	}
+ 	
+ 	/**
+ 	 * 生成六年免检结果页地址
+ 	 * @param baseUrl
+ 	 * @param vo
+ 	 * @return
+ 	 */
+ 	public String generateUrl(String baseUrl, VehicleInspectionVO vo){
+		StringBuffer sb = new StringBuffer();
+		sb.append(baseUrl)
+		.append("&yyh=").append(vo.getBookNumber())//预约号
+		.append("&xm=").append(vo.getName())//姓名
+		.append("&sjhm=").append(vo.getMobile())//手机号码
+		.append("&bxsxrq=").append(vo.getEffectiveDate())//保险生效日期
+		.append("&slgzfs=").append(vo.getInform())//受理告知方式
+		.append("&cjrq=").append(vo.getCreateDate())//创建日期
+		.append("&yyzt=").append(vo.getBookState())//预约状态
+		.append("&shzt=").append(vo.getApproveState());//审核状态
+		return sb.toString();
+	}
+ 	
  	/**
  	 * 获取车辆类型Id
  	 * 
@@ -3677,7 +3727,7 @@ public class HandleserviceAction extends BaseAction {
  		
  		if (StringUtil.isBlank(bookNumber)) {
  			baseBean.setCode(MsgCode.paramsError);
- 			baseBean.setMsg("车牌号码不能为空!");
+ 			baseBean.setMsg("bookNumber不能为空!");
  			renderJSON(baseBean);
  			return;
  		}
@@ -3694,6 +3744,22 @@ public class HandleserviceAction extends BaseAction {
  			String msg = jsonObject.getString("msg");
  			String result = jsonObject.getString("result");
  			if ("00".equals(code)) {
+ 				//民生警务平台，删除记录
+				try {
+					//根据tylsbh和platNumber删除数据库记录
+					msjwService.deleteMsjwVehicleInspection(bookNumber, numberPlate);
+				} catch (Exception e) {
+					logger.error("【民生警务】deleteMsjwVehicleInspection接口异常: bookNumber="+bookNumber+",numberPlate="+numberPlate, e);
+					e.printStackTrace();
+				}
+				try {
+					//根据tylsbh删除民生警务记录
+					msjwService.deleteApplyingBusiness(bookNumber);
+				} catch (Exception e) {
+					logger.error("【民生警务】deleteApplyingBusiness接口异常: bookNumber="+bookNumber, e);
+					e.printStackTrace();
+				}
+ 				
  				baseBean.setCode("0000");
  				baseBean.setData(result);
  				baseBean.setMsg(msg);
