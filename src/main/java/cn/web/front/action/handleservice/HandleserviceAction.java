@@ -3654,6 +3654,7 @@ public class HandleserviceAction extends BaseAction {
 		StringBuffer sb = new StringBuffer();
 		sb.append(baseUrl)
 		.append("&yyh=").append(vo.getBookNumber())//预约号
+		.append("&cphm=").append(vo.getPlatNumber())//车牌号码
 		.append("&xm=").append(vo.getName())//姓名
 		.append("&sjhm=").append(vo.getMobile())//手机号码
 		.append("&bxsxrq=").append(vo.getEffectiveDate())//保险生效日期
