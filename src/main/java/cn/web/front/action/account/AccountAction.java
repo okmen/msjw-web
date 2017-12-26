@@ -3565,7 +3565,27 @@ public class AccountAction extends BaseAction {
       	String numberPlate = request.getParameter("numberPlate");                     
       	String sourceOfCertification = request.getParameter("sourceOfCertification");
       	String rfId = request.getParameter("rfId");
+      	String loginUser = request.getParameter("loginUser");
+      	String mobilePhone = request.getParameter("mobilePhone");
       	String openId = request.getParameter("openId");
+      	if(StringUtil.isBlank(loginUser)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("loginUser不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+      	if(StringUtil.isBlank(mobilePhone)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("mobilePhone不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+      	if(StringUtil.isBlank(openId)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("openId不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
     	if(StringUtil.isBlank(licenseNumber)){
  			baseBean.setCode(MsgCode.paramsError);
  			baseBean.setMsg("车牌号码不能为空!");
@@ -3595,6 +3615,9 @@ public class AccountAction extends BaseAction {
     	informationCollection.setNumberPlate(numberPlate);
     	informationCollection.setSourceOfCertification(sourceOfCertification);
     	informationCollection.setRfId(rfId);
+    	informationCollection.setLoginUser(loginUser);
+    	informationCollection.setOpenId(openId);
+    	informationCollection.setMobilePhone(mobilePhone);
       	try{
   			baseBean = accountService.informationCollection2(informationCollection);
   			logger.info("小金刚绑定结果 ： " + baseBean.toJson());
