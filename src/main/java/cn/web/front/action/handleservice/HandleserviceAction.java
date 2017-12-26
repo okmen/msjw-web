@@ -3608,13 +3608,13 @@ public class HandleserviceAction extends BaseAction {
 									vehicleInspectionVO = JSON.parseObject(parseObject.getString("VehicleInspectionVO"), VehicleInspectionVO.class);
 									
 									MsjwVehicleInspectionVo businessVo = new MsjwVehicleInspectionVo();
-									businessVo.setTylsbh("P170907167");
+									businessVo.setTylsbh(result);
 									businessVo.setOpenid(openId);
 									businessVo.setEventname("核发机动车检验合格标志");
 									String msjwUrl = generateUrl(handleService.getMsjwSixyearsUrl(), vehicleInspectionVO);
 									businessVo.setApplyingUrlWx(msjwUrl);//微信在办跳转地址
 									businessVo.setJinduUrlWx(msjwUrl);//进度查询跳转地址
-									businessVo.setPlatNumber("粤B5S1W7");//车牌号码
+									businessVo.setPlatNumber(numberPlate);//车牌号码
 									msjwService.addVehicleInspectionBusiness(businessVo);
 								}
 							}

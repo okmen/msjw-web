@@ -43,13 +43,11 @@ public class MsjwUpdateStatusTask {
 	@Autowired
 	private IHandleService handleService;
 	
-	//@Scheduled(cron="0 0 17 * * ?")//每天下午5点更新
-	@Scheduled(cron="0 0 12 * * ?")//每天下午5点更新
+	@Scheduled(cron="0 0 17 * * ?")//每天下午5点更新
 	public void execute(){
 		String curIp = NetWorkIp.getIp();
 		logger.info("定时任务，当前服务器ip：" + curIp);
-		//if(!"192.168.2.187".equals(curIp)){//阿里云服务器地址10.24.193.212
-		if(!"10.24.193.212".equals(curIp)){//阿里云服务器地址10.24.193.212
+		if(!"192.168.2.187".equals(curIp)){//阿里云服务器地址10.24.193.212
 			return;
 		}
 		
