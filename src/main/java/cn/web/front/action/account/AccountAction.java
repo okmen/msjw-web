@@ -3620,7 +3620,7 @@ public class AccountAction extends BaseAction {
     	informationCollection.setMobilePhone(mobilePhone);
       	try{
   			baseBean = accountService.informationCollection2(informationCollection);
-  			logger.info("小金刚绑定结果 ： " + baseBean.toJson());
+  			logger.info("小金刚二期绑定结果 ： " + baseBean.toJson());
   			if(MsgCode.success.equals(baseBean.getCode()) && sourceOfCertification.equals("C")){
 				 //申请成功发送模板消息
 				try {				   
@@ -3675,7 +3675,7 @@ public class AccountAction extends BaseAction {
     	informationCollection.setSourceOfCertification(sourceOfCertification);
       	try{
   			baseBean = accountService.queryInformationCollection2(informationCollection);
-  			logger.info("小金刚绑定查询结果 ： " + baseBean.toJson());
+  			logger.info("小金刚二期绑定查询结果 ： " + baseBean.toJson());
   		} catch (Exception e) {
   			logger.error("信息采集查询(小金刚绑定)异常:" + e);
   			DealException(baseBean, e);
