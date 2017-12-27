@@ -3625,10 +3625,8 @@ public class AccountAction extends BaseAction {
 				 //申请成功发送模板消息
 				try {				   
 					String templateId = "9vbb8d_BfhE5-i1KA1u9rWcVpMcIPGVh9kUyzG26MB0";
-					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1,"绑定已有的RFID",licenseNumber);
-					String url = handleService.getTemplateSendUrl() + "rfId=" + rfId + "&licenseNumber=" + licenseNumber;
+					String url = handleService.getTemplateSendUrl() + "businessType=informationCollection2"+"&rfId=" + rfId + "&licenseNumber=" + licenseNumber;
 					logger.info("返回的url是：" + url);
-					logger.info("handleTemplateVo 是：" + handleTemplateVo);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map.put("first", new TemplateDataModel().new Property("您好,您的信息已成功提交,具体信息如下：","#212121"));
 					map.put("keyword1", new TemplateDataModel().new Property("绑定已有的RFID(RFID号码为" + rfId +")","#212121"));
