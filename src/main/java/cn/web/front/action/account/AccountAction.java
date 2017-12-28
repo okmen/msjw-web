@@ -3633,7 +3633,8 @@ public class AccountAction extends BaseAction {
 				 //申请成功发送模板消息
 				try {				   
 					String templateId = "9vbb8d_BfhE5-i1KA1u9rWcVpMcIPGVh9kUyzG26MB0";
-					String url = handleService.getTemplateSendUrl() + "state=1&businessType=informationCollection2"+"&rfId=" + rfId + "&licenseNumber=" + licenseNumber;
+					String url =  "http://testh5.chudaokeji.com/h5/#/submitSuccessCommon?state=1&businessType=informationCollection2&rfId="
+					+ rfId + "&licenseNumber=" + licenseNumber;
 					logger.info("返回的url是：" + url);
 					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
 					map.put("first", new TemplateDataModel().new Property("您好,您的信息已成功提交,具体信息如下：","#212121"));
