@@ -3568,6 +3568,13 @@ public class AccountAction extends BaseAction {
       	String loginUser = request.getParameter("loginUser");
       	String mobilePhone = request.getParameter("mobilePhone");
       	String openId = request.getParameter("openId");
+      	String carType = request.getParameter("carType");
+      	if(StringUtil.isBlank(carType)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("carType不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
       	if(StringUtil.isBlank(loginUser)){
  			baseBean.setCode(MsgCode.paramsError);
  			baseBean.setMsg("loginUser不能为空!");
@@ -3618,6 +3625,7 @@ public class AccountAction extends BaseAction {
     	informationCollection.setLoginUser(loginUser);
     	informationCollection.setOpenId(openId);
     	informationCollection.setMobilePhone(mobilePhone);
+    	informationCollection.setCarType(carType);
       	try{
   			baseBean = accountService.informationCollection2(informationCollection);
   			logger.info("小金刚二期绑定结果 ： " + baseBean.toJson());
