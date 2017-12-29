@@ -1444,7 +1444,7 @@ public class IllegalAction extends BaseAction {
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping(value = "evaluateResult")
+	/*@RequestMapping(value = "evaluateResult")
 	public void evaluateResult(HttpServletRequest request ,HttpServletResponse response) {
 		BaseBean baseBean = new BaseBean();
 		String businessType = request.getParameter("businessType");
@@ -1480,11 +1480,11 @@ public class IllegalAction extends BaseAction {
         }
      
     }
-	/**
+	*//**
 	 * 申诉评价结果查询
 	 * @param request
 	 * @param response
-	 */
+	 *//*
 	@RequestMapping(value = "queryEvaluateResult")
 	public void queryEvaluateResult(HttpServletRequest request ,HttpServletResponse response) {
 		BaseBean baseBean = new BaseBean();
@@ -1508,5 +1508,5 @@ public class IllegalAction extends BaseAction {
 			logger.error("申诉评价结果查询异常：", e);
         }
      
-    }
+    }*/
 }
