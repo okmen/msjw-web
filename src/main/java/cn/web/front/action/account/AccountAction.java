@@ -29,6 +29,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import cn.account.bean.Documentation;
 import cn.account.bean.ElectronicPolicyBean;
+import cn.account.bean.InformationCollection;
 import cn.account.bean.IssuingLicenceAuthority;
 import cn.account.bean.ReadilyShoot;
 import cn.account.bean.UserBind;
@@ -3547,6 +3548,157 @@ public class AccountAction extends BaseAction {
   			}
   		} catch (Exception e) {
   			logger.error("getOpenidByPhone异常: phone = " + phone + ",sourceOfCertification = " + sourceOfCertification);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  		logger.debug(JSON.toJSONString(baseBean));
+      }
+      
+      
+      /**
+       * 信息采集(小金刚绑定)
+       * @param request
+       * @param response
+       */
+      @RequestMapping("informationCollection2")
+      public void informationCollection2(HttpServletRequest request,HttpServletResponse response){
+      	BaseBean baseBean = new BaseBean();
+      	String licenseNumber = request.getParameter("licenseNumber");                  
+      	String numberPlate = request.getParameter("numberPlate");                     
+      	String sourceOfCertification = request.getParameter("sourceOfCertification");
+      	String rfId = request.getParameter("rfId");
+      	String loginUser = request.getParameter("loginUser");
+      	String mobilePhone = request.getParameter("mobilePhone");
+      	String openId = request.getParameter("openId");
+      	String carType = request.getParameter("carType");
+      	String cjh4 = request.getParameter("cjh4");
+      	
+      	if(StringUtil.isBlank(cjh4)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车架号不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+      	if(StringUtil.isBlank(carType)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("carType不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+      	if(StringUtil.isBlank(loginUser)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("loginUser不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+      	if(StringUtil.isBlank(mobilePhone)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("mobilePhone不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+      	if(StringUtil.isBlank(openId)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("openId不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(licenseNumber)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("车牌号码不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(numberPlate)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("号牌种类不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(sourceOfCertification)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("认证来源不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(rfId)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("rfId不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	
+    	InformationCollection informationCollection = new InformationCollection();
+    	informationCollection.setLicenseNumber(licenseNumber);
+    	informationCollection.setNumberPlate(numberPlate);
+    	informationCollection.setSourceOfCertification(sourceOfCertification);
+    	informationCollection.setRfId(rfId);
+    	informationCollection.setLoginUser(loginUser);
+    	informationCollection.setOpenId(openId);
+    	informationCollection.setMobilePhone(mobilePhone);
+    	informationCollection.setCarType(carType);
+    	informationCollection.setCjh4(cjh4);
+    	
+      	try{
+  			baseBean = accountService.informationCollection2(informationCollection);
+  			logger.info("小金刚二期绑定结果 ： " + baseBean.toJson());
+  			if(MsgCode.success.equals(baseBean.getCode()) && sourceOfCertification.equals("C")){
+				 //申请成功发送模板消息
+				try {				   
+					String templateId = "9vbb8d_BfhE5-i1KA1u9rWcVpMcIPGVh9kUyzG26MB0";
+					String url =  "http://testh5.chudaokeji.com/h5/#/submitSuccessCommon?state=2";
+//					+ "&businessType=informationCollection2&rfId="
+//					+ rfId + "&licenseNumber=" + licenseNumber;
+					logger.info("返回的url是：" + url);
+					Map<String, cn.message.model.wechat.TemplateDataModel.Property> map = new HashMap<String, cn.message.model.wechat.TemplateDataModel.Property>();
+					map.put("first", new TemplateDataModel().new Property("您好，您提交的信息已通过，提交信息如下：","#212121"));
+					map.put("keyword1", new TemplateDataModel().new Property("绑定已有的RFID(RFID号码为" + rfId +")","#212121"));
+					map.put("keyword2", new TemplateDataModel().new Property(licenseNumber,"#212121"));
+					map.put("remark", new TemplateDataModel().new Property("更多信息请点击详情查看", "#212121"));
+					boolean flag = templateMessageService.sendMessage(openId, templateId, url, map);
+					logger.info("发送模板消息结果：" + flag);
+				} catch (Exception e) {
+					logger.error("发送模板消息  失败===", e);
+				}
+			}
+  		} catch (Exception e) {
+  			logger.error("信息采集(小金刚绑定)异常:" + e);
+  			DealException(baseBean, e);
+  		}
+  		renderJSON(baseBean);
+  		logger.debug(JSON.toJSONString(baseBean));
+      }
+      
+      /**
+       * 信息采集查询(小金刚绑定)
+       * @param request
+       * @param response
+       */
+      @RequestMapping("queryInformationCollection2")
+      public void queryInformationCollection2(HttpServletRequest request,HttpServletResponse response){
+      	BaseBean baseBean = new BaseBean();	
+      	String loginUser = request.getParameter("loginUser");
+      	String sourceOfCertification = request.getParameter("sourceOfCertification");
+    	if(StringUtil.isBlank(loginUser)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("星级用户不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	if(StringUtil.isBlank(sourceOfCertification)){
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("认证来源不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+      	}
+    	InformationCollection informationCollection= new InformationCollection();
+    	informationCollection.setLoginUser(loginUser);
+    	informationCollection.setSourceOfCertification(sourceOfCertification);
+      	try{
+  			baseBean = accountService.queryInformationCollection2(informationCollection);
+  			logger.info("小金刚二期绑定查询结果 ： " + baseBean.toJson());
+  		} catch (Exception e) {
+  			logger.error("信息采集查询(小金刚绑定)异常:" + e);
   			DealException(baseBean, e);
   		}
   		renderJSON(baseBean);
