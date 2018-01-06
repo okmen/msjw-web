@@ -83,10 +83,10 @@ public class WechatAction extends BaseAction {
 	        
 	        String xml = requestMap.get("xml");
 	        String keyStandard = requestMap.get("KeyStandard");
-	        logger.debug("xml:"+xml);
+	        logger.info("xml:"+xml);
 	        //领卡消息
 	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_USER_GET_CARD.toLowerCase().equals(event)){
-	        	logger.info("xml:"+xml);
+	        	logger.info("领卡消息xml:"+xml);
 	        }
 	        
 	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_TYPE_SCAN.toLowerCase().equals(event)){
