@@ -91,7 +91,7 @@ public class WechatAction extends BaseAction {
 	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_USER_GET_CARD.toLowerCase().equals(event)){
 	        	logger.info("领卡消息xml:"+xml);
 	        	
-	        	try {
+	        	/*try {
 					//根据opneid和cardid查询数据库记录,近期的一条记录
 					WxMembercard selectWxMembercard = wechatService.selectWxMembercard(fromUserName, cardId);
 					
@@ -119,7 +119,7 @@ public class WechatAction extends BaseAction {
 				} catch (Exception e) {
 					logger.error("【微信卡包】领卡消息处理异常，领卡消息xml:"+xml);
 					e.printStackTrace();
-				}
+				}*/
 	        }
 	        
 	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_TYPE_SCAN.toLowerCase().equals(event)){
