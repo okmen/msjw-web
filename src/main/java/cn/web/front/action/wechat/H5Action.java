@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 
 import cn.message.service.IWechatService;
@@ -135,6 +137,7 @@ public class H5Action extends BaseAction {
 	 */
 	@RequestMapping(value = "/activeXsCard.html")
 	public void activeXsCard(HttpServletRequest request,HttpServletResponse response){
+		BaseBean baseBean = null;
 		String openId = request.getParameter("openid");
 		String cardId = request.getParameter("card_id");
 		String encryptCode = request.getParameter("encrypt_code");
@@ -154,15 +157,17 @@ public class H5Action extends BaseAction {
 				return;
 			}
 			
-			boolean bool = wechatService.activeXsCard(openId, cardId, encryptCode);
-			if(!bool){
+			baseBean = wechatService.activeXsCard(openId, cardId, encryptCode);
+			/*if(!bool){
 				outString(response, new ErrorBean(MsgCode.exception, MsgCode.systemMsg).toJson());
 				return;
 			}
-			outString(response, new SuccessBean(MsgCode.success, null).toJson());
+			outString(response, new SuccessBean(MsgCode.success, null).toJson());*/
 		} catch (Exception e) {
-			DealException(new ErrorBean(), e);
-			logger.error("服务器异常:openId="+openId + ",cardId="+cardId, e);
+			logger.error("【微信卡包】activeXsCard异常:openId="+openId + ",cardId="+cardId + ",encryptCode="+encryptCode, e);
+			DealException(baseBean, e);
 		}
+		renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
 	}
 }

@@ -90,36 +90,6 @@ public class WechatAction extends BaseAction {
 	        //领卡消息
 	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_USER_GET_CARD.toLowerCase().equals(event)){
 	        	logger.info("领卡消息xml:"+xml);
-	        	
-	        	/*try {
-					//根据opneid和cardid查询数据库记录,近期的一条记录
-					WxMembercard selectWxMembercard = wechatService.selectWxMembercard(fromUserName, cardId);
-					
-					if(selectWxMembercard == null){//如果为null，新增领卡记录
-						WxMembercard insertWxMembercard = new WxMembercard();
-						insertWxMembercard.setOpenid(fromUserName);
-						insertWxMembercard.setCardid(cardId);
-						insertWxMembercard.setCode(code);
-						insertWxMembercard.setIsgivebyfriend(StringUtil.isNotBlank(isGiveByFriend) ? Integer.parseInt(isGiveByFriend) : null);
-						insertWxMembercard.setGiveopenid(giveOpenId);
-						insertWxMembercard.setState(0);//0-未激活
-						insertWxMembercard.setIntime(new Date());
-						int addcount = wechatService.insertWxMembercard(insertWxMembercard);
-						logger.info("【微信卡包】新增领卡记录结果："+addcount);
-					}else{//有领卡记录
-						Integer state = selectWxMembercard.getState();
-						if(state == 0){//未激活
-							logger.info("【微信卡包】已领卡但未激活");
-						}else if(state == 1){//已激活
-							logger.info("【微信卡包】已激活卡");
-						}else{
-							logger.info("【微信卡包】其他卡状态，state=" + state);
-						}
-					}
-				} catch (Exception e) {
-					logger.error("【微信卡包】领卡消息处理异常，领卡消息xml:"+xml);
-					e.printStackTrace();
-				}*/
 	        }
 	        
 	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_TYPE_SCAN.toLowerCase().equals(event)){
