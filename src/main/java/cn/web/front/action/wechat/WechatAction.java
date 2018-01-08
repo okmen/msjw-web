@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import cn.account.bean.vo.MyDriverLicenseVo;
+import cn.account.service.IAccountService;
 import cn.message.bean.WxMembercard;
 import cn.message.model.wechat.WechatPostMessageModel;
 import cn.message.model.wechat.message.IEvent;
@@ -41,6 +43,10 @@ public class WechatAction extends BaseAction {
 	@Autowired
 	@Qualifier("templateMessageService")
 	private ITemplateMessageService templateMessageService;
+	
+	@Autowired
+	@Qualifier("accountService")
+	private IAccountService accountService;
 
 	@RequestMapping(value = "/doGet.html", method = RequestMethod.GET)
 	public void getway(
@@ -90,6 +96,28 @@ public class WechatAction extends BaseAction {
 	        //领卡消息
 	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_USER_GET_CARD.toLowerCase().equals(event)){
 	        	logger.info("领卡消息xml:"+xml);
+	        }
+	        //查看电子驾驶证消息
+	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_USER_VIEW_CARD.toLowerCase().equals(event)){
+	        	if("pILMDwCdXZ-ir95D8p1C0jWw8f_o".equals(cardId) || "pPyqQjq_2LnZeey0y5XK-ArtZDSo".equals(cardId)){
+	        		logger.info("查看电子驾驶证消息xml:"+xml);
+	        		//获取身份证号
+	        		String openId = fromUserName;
+	        		String idCard = wechatService.queryIdCardByOpenId(openId);
+	        		//调JST接口获取  记分，审验日期，准驾车型
+	        		try {
+	        			MyDriverLicenseVo myDriverLicense = accountService.getMyDriverLicense(idCard, "C");
+	        			String ljjf = myDriverLicense.getDeductScore();//记分
+	        			String syrq = myDriverLicense.getEffectiveDate();//审验日期
+	        			String zjcx = myDriverLicense.getCarType();//准驾车型
+	        			//调用微信修改用户卡信息接口
+	        			boolean updateJsCard = wechatService.updateJsCard(code, cardId, ljjf, syrq, zjcx);
+	        			logger.info("【微信卡包】更新电子驾驶证返回结果：" + updateJsCard);
+	        		} catch (Exception e) {
+	        			logger.error("【微信卡包】查看电子驾驶证事件异常：idCard="+idCard,e);
+	        			e.printStackTrace();
+	        		}
+	        	}
 	        }
 	        
 	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_TYPE_SCAN.toLowerCase().equals(event)){

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 
+import cn.account.bean.vo.MyDriverLicenseVo;
+import cn.account.service.IAccountService;
 import cn.message.service.IWechatService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.bean.ErrorBean;
@@ -32,6 +34,10 @@ public class H5Action extends BaseAction {
 	@Autowired
 	@Qualifier("wechatService")
 	private IWechatService wechatService;
+	
+	@Autowired
+	@Qualifier("accountService")
+	private IAccountService accountService;
 	
 	/**
 	 * h5获取config参数 用于调用sdk
@@ -99,6 +105,7 @@ public class H5Action extends BaseAction {
 	 */
 	@RequestMapping(value = "/activeJsCard.html")
 	public void activeJsCard(HttpServletRequest request,HttpServletResponse response){
+		BaseBean baseBean = null;
 		String openId = request.getParameter("openid");
 		String cardId = request.getParameter("card_id");
 		String encryptCode = request.getParameter("encrypt_code");
@@ -118,16 +125,29 @@ public class H5Action extends BaseAction {
 				return;
 			}
 			
-			boolean bool = wechatService.activeJsCard(openId, cardId, encryptCode);
-			if(!bool){
-				outString(response, new ErrorBean(MsgCode.exception, MsgCode.systemMsg).toJson());
-				return;
+			String identityCard = wechatService.queryIdCardByOpenId(openId);
+			
+			//调JST查询 记分，审验日期，准驾车型
+			MyDriverLicenseVo myDriverLicense = accountService.getMyDriverLicense(identityCard, "C");
+			String ljjf = myDriverLicense.getDeductScore();
+			String syrq = myDriverLicense.getEffectiveDate();
+			String zjcx = myDriverLicense.getCarType();
+			
+			baseBean = wechatService.activeJsCard(openId, cardId, encryptCode, ljjf, syrq, zjcx);
+			String code = baseBean.getCode();
+			if(MsgCode.success.equals(code)){
+				//重定向到成功页面
+				response.sendRedirect(wechatService.getCardH5Domain()+"/h5/#/activateSuccess?code="+baseBean.getData());
+			}else{
+				//重定向到失败页面
+				response.sendRedirect(wechatService.getCardH5Domain()+"/h5/#/activateFail?msg="+baseBean.getMsg());
 			}
-			outString(response, new SuccessBean(MsgCode.success, null).toJson());
 		} catch (Exception e) {
-			DealException(new ErrorBean(), e);
-			logger.error("服务器异常:openId="+openId + ",cardId="+cardId, e);
+			logger.error("【微信卡包】activeJsCard异常:openId="+openId + ",cardId="+cardId + ",encryptCode="+encryptCode, e);
+			DealException(baseBean, e);
 		}
+		renderJSON(baseBean);
+    	logger.info("【微信卡包】激活电子驾驶证结果："+JSON.toJSONString(baseBean));
 	}
 	
 	/**
@@ -158,16 +178,19 @@ public class H5Action extends BaseAction {
 			}
 			
 			baseBean = wechatService.activeXsCard(openId, cardId, encryptCode);
-			/*if(!bool){
-				outString(response, new ErrorBean(MsgCode.exception, MsgCode.systemMsg).toJson());
-				return;
+			String code = baseBean.getCode();
+			if(MsgCode.success.equals(code)){
+				//重定向到成功页面
+				response.sendRedirect(wechatService.getCardH5Domain()+"/h5/#/activateSuccess?code="+baseBean.getData());
+			}else{
+				//重定向到失败页面
+				response.sendRedirect(wechatService.getCardH5Domain()+"/h5/#/activateFail?msg="+baseBean.getMsg());
 			}
-			outString(response, new SuccessBean(MsgCode.success, null).toJson());*/
 		} catch (Exception e) {
 			logger.error("【微信卡包】activeXsCard异常:openId="+openId + ",cardId="+cardId + ",encryptCode="+encryptCode, e);
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
-    	logger.debug(JSON.toJSONString(baseBean));
+    	logger.info("【微信卡包】激活电子行驶证结果："+JSON.toJSONString(baseBean));
 	}
 }
