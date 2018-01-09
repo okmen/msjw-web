@@ -111,8 +111,13 @@ public class WechatAction extends BaseAction {
 	        			String syrq = myDriverLicense.getEffectiveDate();//审验日期
 	        			String zjcx = myDriverLicense.getCarType();//准驾车型
 	        			//调用微信修改用户卡信息接口
-	        			boolean updateJsCard = wechatService.updateJsCard(code, cardId, ljjf, syrq, zjcx);
-	        			logger.info("【微信卡包】更新电子驾驶证返回结果：" + updateJsCard);
+	        			boolean result = false;
+	        			if("pILMDwCdXZ-ir95D8p1C0jWw8f_o".equals(cardId)){//一摇惊喜
+	        				result = wechatService.updateJsCardTest(code, cardId, ljjf, syrq, zjcx);
+	        			}else if("pPyqQjq_2LnZeey0y5XK-ArtZDSo".equals(cardId)){//深圳交警
+	        				result = wechatService.updateJsCard(code, cardId, ljjf, syrq, zjcx);
+	        			}
+	        			logger.info("【微信卡包】更新电子驾驶证返回结果：" + result);
 	        		} catch (Exception e) {
 	        			logger.error("【微信卡包】查看电子驾驶证事件异常：idCard="+idCard,e);
 	        			e.printStackTrace();

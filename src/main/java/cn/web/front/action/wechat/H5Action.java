@@ -99,12 +99,12 @@ public class H5Action extends BaseAction {
 	}
 	
 	/**
-	 * 驾驶证激活
+	 * 驾驶证激活（一摇惊喜）
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping(value = "/activeJsCard.html")
-	public void activeJsCard(HttpServletRequest request,HttpServletResponse response){
+	@RequestMapping(value = "/activateJsCardTest.html")
+	public void activateJsCardTest(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = null;
 		String openId = request.getParameter("openid");
 		String cardId = request.getParameter("card_id");
@@ -133,17 +133,17 @@ public class H5Action extends BaseAction {
 			String syrq = myDriverLicense.getEffectiveDate();
 			String zjcx = myDriverLicense.getCarType();
 			
-			baseBean = wechatService.activeJsCard(openId, cardId, encryptCode, ljjf, syrq, zjcx);
+			baseBean = wechatService.activateJsCardTest(openId, cardId, encryptCode, ljjf, syrq, zjcx);
 			String code = baseBean.getCode();
 			if(MsgCode.success.equals(code)){
 				//重定向到成功页面
-				response.sendRedirect(wechatService.getCardH5Domain()+"/h5/#/activateSuccess?code="+baseBean.getData());
+				response.sendRedirect("http://testh5.chudaokeji.com/h5/#/activateSuccess?type=1&code="+baseBean.getData());
 			}else{
 				//重定向到失败页面
-				response.sendRedirect(wechatService.getCardH5Domain()+"/h5/#/activateFail?msg="+baseBean.getMsg());
+				response.sendRedirect("http://testh5.chudaokeji.com/h5/#/activateFail?type=1&msg="+baseBean.getMsg());
 			}
 		} catch (Exception e) {
-			logger.error("【微信卡包】activeJsCard异常:openId="+openId + ",cardId="+cardId + ",encryptCode="+encryptCode, e);
+			logger.error("【微信卡包】activateJsCardTest异常:openId="+openId + ",cardId="+cardId + ",encryptCode="+encryptCode, e);
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
@@ -151,12 +151,12 @@ public class H5Action extends BaseAction {
 	}
 	
 	/**
-	 * 行驶证激活
+	 * 行驶证激活（一摇惊喜）
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping(value = "/activeXsCard.html")
-	public void activeXsCard(HttpServletRequest request,HttpServletResponse response){
+	@RequestMapping(value = "/activateXsCardTest.html")
+	public void activateXsCardTest(HttpServletRequest request,HttpServletResponse response){
 		BaseBean baseBean = null;
 		String openId = request.getParameter("openid");
 		String cardId = request.getParameter("card_id");
@@ -177,20 +177,116 @@ public class H5Action extends BaseAction {
 				return;
 			}
 			
-			baseBean = wechatService.activeXsCard(openId, cardId, encryptCode);
+			baseBean = wechatService.activateXsCardTest(openId, cardId, encryptCode);
 			String code = baseBean.getCode();
 			if(MsgCode.success.equals(code)){
 				//重定向到成功页面
-				response.sendRedirect(wechatService.getCardH5Domain()+"/h5/#/activateSuccess?code="+baseBean.getData());
+				response.sendRedirect("http://testh5.chudaokeji.com/h5/#/activateSuccess?type=2&code="+baseBean.getData());
 			}else{
 				//重定向到失败页面
-				response.sendRedirect(wechatService.getCardH5Domain()+"/h5/#/activateFail?msg="+baseBean.getMsg());
+				response.sendRedirect("http://testh5.chudaokeji.com/h5/#/activateFail?type=2&msg="+baseBean.getMsg());
 			}
 		} catch (Exception e) {
-			logger.error("【微信卡包】activeXsCard异常:openId="+openId + ",cardId="+cardId + ",encryptCode="+encryptCode, e);
+			logger.error("【微信卡包】activateXsCardTest异常:openId="+openId + ",cardId="+cardId + ",encryptCode="+encryptCode, e);
 			DealException(baseBean, e);
 		}
 		renderJSON(baseBean);
     	logger.info("【微信卡包】激活电子行驶证结果："+JSON.toJSONString(baseBean));
+	}
+	
+	/**
+	 * 驾驶证激活（深圳交警）
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value = "/activateJsCard.html")
+	public void activateJsCard(HttpServletRequest request,HttpServletResponse response){
+		BaseBean baseBean = null;
+		String openId = request.getParameter("openid");
+		String cardId = request.getParameter("card_id");
+		String encryptCode = request.getParameter("encrypt_code");
+		try {
+			if(StringUtil.isBlank(openId)){
+				renderJSON(new ErrorBean(MsgCode.paramsError, "openid不能为空"));
+				return;
+			}
+			
+			if(StringUtil.isBlank(cardId)){
+				renderJSON(new ErrorBean(MsgCode.paramsError, "card_id不能为空"));
+				return;
+			}
+			
+			if(StringUtil.isBlank(encryptCode)){
+				renderJSON(new ErrorBean(MsgCode.paramsError, "encrypt_code不能为空"));
+				return;
+			}
+			
+			String identityCard = wechatService.queryIdCardByOpenId(openId);
+			
+			//调JST查询 记分，审验日期，准驾车型
+			MyDriverLicenseVo myDriverLicense = accountService.getMyDriverLicense(identityCard, "C");
+			String ljjf = myDriverLicense.getDeductScore();
+			String syrq = myDriverLicense.getEffectiveDate();
+			String zjcx = myDriverLicense.getCarType();
+			
+			baseBean = wechatService.activateJsCard(openId, cardId, encryptCode, ljjf, syrq, zjcx);
+			String code = baseBean.getCode();
+			if(MsgCode.success.equals(code)){
+				//重定向到成功页面
+				response.sendRedirect("http://gzh.stc.gov.cn/h5/#/activateSuccess?type=1&code="+baseBean.getData());
+			}else{
+				//重定向到失败页面
+				response.sendRedirect("http://gzh.stc.gov.cn/h5/#/activateFail?type=1&msg="+baseBean.getMsg());
+			}
+		} catch (Exception e) {
+			logger.error("【微信卡包】activateJsCard异常:openId="+openId + ",cardId="+cardId + ",encryptCode="+encryptCode, e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.info("【微信卡包】激活电子驾驶证结果："+JSON.toJSONString(baseBean));
+	}
+	
+	/**
+	 * 行驶证激活（深圳交警）
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value = "/activateXsCard.html")
+	public void activateXsCard(HttpServletRequest request,HttpServletResponse response){
+		BaseBean baseBean = null;
+		String openId = request.getParameter("openid");
+		String cardId = request.getParameter("card_id");
+		String encryptCode = request.getParameter("encrypt_code");
+		try {
+			if(StringUtil.isBlank(openId)){
+				renderJSON(new ErrorBean(MsgCode.paramsError, "openid不能为空"));
+				return;
+			}
+			
+			if(StringUtil.isBlank(cardId)){
+				renderJSON(new ErrorBean(MsgCode.paramsError, "card_id不能为空"));
+				return;
+			}
+			
+			if(StringUtil.isBlank(encryptCode)){
+				renderJSON(new ErrorBean(MsgCode.paramsError, "encrypt_code不能为空"));
+				return;
+			}
+			
+			baseBean = wechatService.activateXsCard(openId, cardId, encryptCode);
+			String code = baseBean.getCode();
+			if(MsgCode.success.equals(code)){
+				//重定向到成功页面
+				response.sendRedirect("http://gzh.stc.gov.cn/h5/#/activateSuccess?type=2&code="+baseBean.getData());
+			}else{
+				//重定向到失败页面
+				response.sendRedirect("http://gzh.stc.gov.cn/h5/#/activateFail?type=2&msg="+baseBean.getMsg());
+			}
+		} catch (Exception e) {
+			logger.error("【微信卡包】activateXsCard异常:openId="+openId + ",cardId="+cardId + ",encryptCode="+encryptCode, e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.info("【微信卡包】激活电子行驶证结果："+JSON.toJSONString(baseBean));
 	}
 }
