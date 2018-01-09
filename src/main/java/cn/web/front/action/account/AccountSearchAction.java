@@ -323,7 +323,7 @@ public class AccountSearchAction extends BaseAction {
         	baseBean.setMsg("");
         	ElectronicDriverLicenseVo electronicDriverLicenseVo = accountService.getElectronicDriverLicense(driverLicenseNumber, userName, mobileNumber,sourceOfCertification);
         	if(StringUtils.isBlank(electronicDriverLicenseVo.getElectronicDriverLicense())){
-        		baseBean.setMsg("未查询到该用户的星级用户身份认证信息");
+        		baseBean.setMsg(electronicDriverLicenseVo.getMsg());
         	}
         	baseBean.setData(electronicDriverLicenseVo);
         	renderJSON(baseBean);
@@ -383,7 +383,7 @@ public class AccountSearchAction extends BaseAction {
         	baseBean.setMsg("");
         	DrivingLicenseVo drivingLicenseVo = accountService.getDrivingLicense(numberPlatenumber, plateType, mobileNumber, sourceOfCertification);
         	if(StringUtils.isBlank(drivingLicenseVo.getElectronicDrivingLicense())){
-        		baseBean.setMsg("未查询到该用户的星级用户身份认证信息");
+        		baseBean.setMsg(drivingLicenseVo.getMsg());
         	}
         	baseBean.setData(drivingLicenseVo);
         	renderJSON(baseBean);
