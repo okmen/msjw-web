@@ -48,12 +48,12 @@ public class AlipayAction extends BaseAction {
 	public void isReceiveCardTest(HttpServletRequest request, HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();
 		
-		String userId = request.getParameter("userId");
+		String userId = request.getParameter("openId");
 		String type = request.getParameter("type");//领取类型
 		String sourceOfCertification = request.getParameter("sourceOfCertification");
 		
 		if(StringUtils.isBlank(userId)){
-    		baseBean.setMsg("userId 不能为空!");
+    		baseBean.setMsg("openId 不能为空!");
     		baseBean.setCode(MsgCode.paramsError);
     		renderJSON(baseBean);
     		return;
@@ -223,7 +223,7 @@ public class AlipayAction extends BaseAction {
 							json.put("file_name", "certificate.png");
 							json.put("file", eCardBase64);
 							
-							//上传证件照片到支付宝
+							//调支付宝sdk上传证件照片
 							
 							
 							//
