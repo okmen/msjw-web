@@ -124,6 +124,10 @@ public class WechatAction extends BaseAction {
 	        		}
 	        	}
 	        }
+	        //删卡事件
+	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_USER_DEL_CARD.toLowerCase().equals(event)){
+	        	logger.info("删卡消息xml:"+xml);
+	        }
 	        
 	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_TYPE_SCAN.toLowerCase().equals(event)){
 	        	 logger.info("微信消息xml:"+xml);
