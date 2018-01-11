@@ -94,7 +94,7 @@ public class H5Action extends BaseAction {
 	 * 驾驶证激活
 	 * @param request
 	 * @param response
-	 */
+	 *//*
 	@RequestMapping(value = "/activeJsCard.html")
 	public void activeJsCard(HttpServletRequest request,HttpServletResponse response){
 		String openId = request.getParameter("openid");
@@ -128,11 +128,11 @@ public class H5Action extends BaseAction {
 		}
 	}
 	
-	/**
+	*//**
 	 * 行驶证激活
 	 * @param request
 	 * @param response
-	 */
+	 *//*
 	@RequestMapping(value = "/activeXsCard.html")
 	public void activeXsCard(HttpServletRequest request,HttpServletResponse response){
 		String openId = request.getParameter("openid");
@@ -164,5 +164,5 @@ public class H5Action extends BaseAction {
 			DealException(new ErrorBean(), e);
 			logger.error("服务器异常:openId="+openId + ",cardId="+cardId, e);
 		}
-	}
+	}*/
 }
