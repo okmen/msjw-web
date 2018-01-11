@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.account.bean.UserBindAlipay;
+import cn.account.bean.vo.BindTheVehicleVo;
 import cn.account.bean.vo.ElectronicDriverLicenseVo;
 import cn.account.bean.vo.IdentificationOfAuditResultsVo;
 import cn.account.bean.vo.MyDriverLicenseVo;
@@ -47,12 +48,12 @@ public class AlipayAction extends BaseAction {
 	public void isReceiveCardTest(HttpServletRequest request, HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();
 		
-		String certNo = request.getParameter("certNo");//身份证号
+		String userId = request.getParameter("userId");
 		String type = request.getParameter("type");//领取类型
 		String sourceOfCertification = request.getParameter("sourceOfCertification");
 		
-		if(StringUtils.isBlank(certNo)){
-    		baseBean.setMsg("certNo 不能为空!");
+		if(StringUtils.isBlank(userId)){
+    		baseBean.setMsg("userId 不能为空!");
     		baseBean.setCode(MsgCode.paramsError);
     		renderJSON(baseBean);
     		return;
@@ -62,6 +63,17 @@ public class AlipayAction extends BaseAction {
     		baseBean.setCode(MsgCode.paramsError);
     		renderJSON(baseBean);
     		return;
+    	}else{
+    		if("1".equals(type)){
+    			type = CardReceiveConstants.CARD_RECEIVE_TYPE_DRIVER;//驾驶证
+    		}else if("2".equals(type)){
+    			type = CardReceiveConstants.CARD_RECEIVE_TYPE_CAR;//行驶证
+    		}else{
+    			baseBean.setMsg("type 非法！");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+    		}
     	}
 		if(StringUtils.isBlank(sourceOfCertification)){
     		baseBean.setMsg("sourceOfCertification 不能为空!");
@@ -71,6 +83,17 @@ public class AlipayAction extends BaseAction {
     	}
 		
 		try {
+			//获取数据库的用户信息
+			UserBindAlipay userBindAlipay = accountService.queryUserBindAlipayByUserid(userId);
+			if(userBindAlipay == null){
+				//用户授权异常
+				response.sendRedirect("http://testh5.chudaokeji.com/h5/#/getCardFail?type=1&msg=用户授权异常!");
+				return;
+			}
+			
+			String certNo = userBindAlipay.getIdCard();
+			String mobileNumber = userBindAlipay.getMobileNumber();
+			
 			//查询身份认证是否审核通过
 			List<IdentificationOfAuditResultsVo> auditResults = accountService.getIdentificationOfAuditResults(certNo, sourceOfCertification);
 			if(auditResults != null){
@@ -85,17 +108,38 @@ public class AlipayAction extends BaseAction {
 							response.sendRedirect("alipays://platformapi/startapp?appId=60000032");
 							return;
 						}else{
-							logger.debug("【支付宝】未领取，获取我的驾驶证信息给前端展示");
-							//获取我的驾驶证信息
-							MyDriverLicenseVo myDriverLicense = accountService.getMyDriverLicense(certNo, sourceOfCertification);
-							if(MsgCode.success.equals(myDriverLicense.getCode())){
+							if(CardReceiveConstants.CARD_RECEIVE_TYPE_DRIVER.equals(type)){
+								logger.debug("【支付宝】未领取，获取我的驾驶证信息给前端展示");
+								//获取我的驾驶证信息
+								MyDriverLicenseVo myDriverLicense = accountService.getMyDriverLicense(certNo, sourceOfCertification);
+								if(MsgCode.success.equals(myDriverLicense.getCode())){
+									baseBean.setCode(MsgCode.success);
+									baseBean.setData(myDriverLicense);
+									renderJSON(baseBean);
+									return;
+								}else{
+									baseBean.setCode(myDriverLicense.getCode());
+									baseBean.setMsg(myDriverLicense.getMsg());
+									renderJSON(baseBean);
+									return;
+								}
+							}else if(CardReceiveConstants.CARD_RECEIVE_TYPE_CAR.equals(type)){
+								logger.debug("【支付宝】未领取，获取绑定行驶证信息给前端展示");
+								//获取绑定行驶证信息
+								List<BindTheVehicleVo> bndTheVehicles = accountService.getBndTheVehicles(certNo, mobileNumber, sourceOfCertification);
+								for (BindTheVehicleVo bindTheVehicleVo : bndTheVehicles) {
+									String code = bindTheVehicleVo.getCode();
+									if(code != null){
+										//没有绑定机动车
+										baseBean.setCode(code);
+										baseBean.setMsg(bindTheVehicleVo.getMsg());
+										renderJSON(baseBean);
+										return;
+									}
+								}
+								//有绑定机动车
 								baseBean.setCode(MsgCode.success);
-								baseBean.setData(myDriverLicense);
-								renderJSON(baseBean);
-								return;
-							}else{
-								baseBean.setCode(myDriverLicense.getCode());
-								baseBean.setMsg(myDriverLicense.getMsg());
+								baseBean.setData(bndTheVehicles);
 								renderJSON(baseBean);
 								return;
 							}
@@ -110,7 +154,7 @@ public class AlipayAction extends BaseAction {
 			return;
 			
 		} catch (Exception e) {
-			logger.error("【支付宝卡包】isReceiveCardTest异常：certNo="+certNo+",type="+type+",sourceOfCertification="+sourceOfCertification, e);
+			logger.error("【支付宝卡包】isReceiveCardTest异常：userId="+userId+",type="+type+",sourceOfCertification="+sourceOfCertification, e);
 			DealException(baseBean, e);
 		}
 	}
