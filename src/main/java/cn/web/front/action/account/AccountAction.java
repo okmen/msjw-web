@@ -1097,11 +1097,23 @@ public class AccountAction extends BaseAction {
     public void readilyShoot(String licensePlateNumber,String licensePlateType,String illegalActivitieOne, String illegalTime, String illegalSections, 
     		String reportImgOne, String reportImgTwo,String reportImgThree,String reportImgOneT1,String reportImgOneT2,String reportImgOneT3,
     		String inputMan,String inputManName,String inputManPhone,String identityCard,String userSource,String openId,String wfxw1,
-    		String sourceOfCertification,String shsm) {
+    		String sourceOfCertification,String shsm,String gpsx,String gpsy) {
     	String code=MsgCode.success;
  		StringBuffer sb = new StringBuffer("");
  		int imgNumber=0;//传入的图片数量
     	ReadilyShootVo readilyShootVo = new ReadilyShootVo();
+    	if (StringUtil.isBlank(gpsx)) {
+    		code=MsgCode.paramsError;
+ 			sb.append("经度不能为空  ");
+		}else{
+			readilyShootVo.setGpsx(gpsx);
+		}
+    	if (StringUtil.isBlank(gpsy)) {
+    		code=MsgCode.paramsError;
+ 			sb.append("纬度不能为空  ");
+		}else{
+			readilyShootVo.setGpsy(gpsy);
+		}
     	if(StringUtil.isBlank(licensePlateNumber)){
     		readilyShootVo.setLicensePlateNumber("");
     	}else{
