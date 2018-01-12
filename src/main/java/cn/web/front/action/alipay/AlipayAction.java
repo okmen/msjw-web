@@ -12,15 +12,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.account.bean.UserBindAlipay;
 import cn.account.bean.vo.AuthenticationBasicInformationVo;
 import cn.account.bean.vo.BindTheVehicleVo;
 import cn.account.bean.vo.ElectronicDriverLicenseVo;
-import cn.account.bean.vo.IdentificationOfAuditResultsVo;
 import cn.account.bean.vo.MyDriverLicenseVo;
 import cn.account.service.IAccountService;
+import cn.illegal.bean.IllegalInfoBean;
+import cn.illegal.service.IIllegalService;
+import cn.message.bean.CardReceive;
 import cn.message.model.alipay.CardReceiveConstants;
 import cn.message.service.IAlipayService;
 import cn.sdk.bean.BaseBean;
@@ -39,6 +42,10 @@ public class AlipayAction extends BaseAction {
 	@Autowired
 	@Qualifier("accountService")
 	private IAccountService accountService;
+	
+	@Autowired
+    @Qualifier("illegalService")
+	private IIllegalService illegalService;
 	
 	/**
 	 * （测试）是否领过卡
@@ -88,7 +95,10 @@ public class AlipayAction extends BaseAction {
 			UserBindAlipay userBindAlipay = accountService.queryUserBindAlipayByUserid(userId);
 			if(userBindAlipay == null){
 				//用户授权异常
-				response.sendRedirect("http://zhifubao.chudaokeji.com/#/getCardFail?type="+type+"&msg=用户授权异常!");
+				//response.sendRedirect("http://zhifubao.chudaokeji.com/#/getCardFail?type="+type+"&msg=用户授权异常!");
+				baseBean.setCode(MsgCode.businessError);
+				baseBean.setMsg("用户授权异常!");
+				renderJSON(baseBean);
 				return;
 			}
 			
@@ -106,11 +116,14 @@ public class AlipayAction extends BaseAction {
 					if(count > 0){
 						logger.info("【支付宝卡包】跳转到支付宝“证件夹”页面");
 						//已领取，跳转到支付宝“证件夹”页面
-						response.sendRedirect("alipays://platformapi/startapp?appId=60000032");
+						//response.sendRedirect("alipays://platformapi/startapp?appId=60000032");
+						baseBean.setCode("0003");
+						baseBean.setMsg("alipays://platformapi/startapp?appId=60000032");
+						renderJSON(baseBean);
 						return;
 					}else{
 						if(CardReceiveConstants.CARD_RECEIVE_TYPE_DRIVER.equals(type)){
-							logger.info("【支付宝】未领取，获取我的驾驶证信息给前端展示");
+							logger.info("【支付宝卡包】未领取，获取我的驾驶证信息给前端展示");
 							//获取我的驾驶证信息
 							MyDriverLicenseVo myDriverLicense = accountService.getMyDriverLicense(certNo, sourceOfCertification);
 							if(MsgCode.success.equals(myDriverLicense.getCode())){
@@ -125,7 +138,7 @@ public class AlipayAction extends BaseAction {
 								return;
 							}
 						}else if(CardReceiveConstants.CARD_RECEIVE_TYPE_CAR.equals(type)){
-							logger.info("【支付宝】未领取，获取绑定行驶证信息给前端展示");
+							logger.info("【支付宝卡包】未领取，获取绑定行驶证信息给前端展示");
 							//获取绑定行驶证信息
 							List<BindTheVehicleVo> bndTheVehicles = accountService.getBndTheVehicles(certNo, mobileNumber, sourceOfCertification);
 							for (BindTheVehicleVo bindTheVehicleVo : bndTheVehicles) {
@@ -165,7 +178,7 @@ public class AlipayAction extends BaseAction {
 							return;
 						}else{
 							if(CardReceiveConstants.CARD_RECEIVE_TYPE_DRIVER.equals(type)){
-								logger.info("【支付宝】未领取，获取我的驾驶证信息给前端展示");
+								logger.info("【支付宝卡包】未领取，获取我的驾驶证信息给前端展示");
 								//获取我的驾驶证信息
 								MyDriverLicenseVo myDriverLicense = accountService.getMyDriverLicense(certNo, sourceOfCertification);
 								if(MsgCode.success.equals(myDriverLicense.getCode())){
@@ -180,7 +193,7 @@ public class AlipayAction extends BaseAction {
 									return;
 								}
 							}else if(CardReceiveConstants.CARD_RECEIVE_TYPE_CAR.equals(type)){
-								logger.info("【支付宝】未领取，获取绑定行驶证信息给前端展示");
+								logger.info("【支付宝卡包】未领取，获取绑定行驶证信息给前端展示");
 								//获取绑定行驶证信息
 								List<BindTheVehicleVo> bndTheVehicles = accountService.getBndTheVehicles(certNo, mobileNumber, sourceOfCertification);
 								for (BindTheVehicleVo bindTheVehicleVo : bndTheVehicles) {
@@ -206,13 +219,17 @@ public class AlipayAction extends BaseAction {
 			
 			logger.info("【支付宝卡包】非星级用户！");
 			//非星级用户
-			response.sendRedirect("http://zhifubao.chudaokeji.com/#/getCardFail?type="+type+"&msg=亲，需要成为星级用户才能享受服务！");
+			//response.sendRedirect("http://zhifubao.chudaokeji.com/#/getCardFail?type="+type+"&msg=亲，需要成为星级用户才能享受服务！");
+			baseBean.setCode(MsgCode.businessError);
+			baseBean.setMsg("亲，需要成为星级用户才能享受服务！");
+			renderJSON(baseBean);
 			return;
 			
 		} catch (Exception e) {
 			logger.error("【支付宝卡包】isReceiveCardTest异常：userId="+userId+",type="+type+",sourceOfCertification="+sourceOfCertification, e);
 			DealException(baseBean, e);
 		}
+		logger.info("【支付宝卡包】isReceiveCardTest结果："+JSON.toJSONString(baseBean));
 	}
 	
 	
@@ -262,8 +279,9 @@ public class AlipayAction extends BaseAction {
 						response.sendRedirect("http://zhifubao.chudaokeji.com/#/getCardSuccess?type=1&msg=您好！您的深圳交警电子驾驶证已经领取");
 						return;
 					}else{
-						logger.info("【支付宝卡包】未领取驾驶证");
 						//未领取驾驶证
+						
+						logger.info("【支付宝卡包】未领取驾驶证");
 						//调JST接口获取电子驾驶证
 						ElectronicDriverLicenseVo eCardInfo = accountService.getElectronicDriverLicense(certNo, realName, mobileNumber, "Z");
 						if(!MsgCode.success.equals(eCardInfo.getCode())){
@@ -298,7 +316,46 @@ public class AlipayAction extends BaseAction {
 							return;
 						}
 						
-						//统计车辆未处理违章数
+						String unresolvedIllegalCount = "0";//未处理违章数
+						//查询绑定机动车
+						List<BindTheVehicleVo> bndTheVehicles = accountService.getBndTheVehicles(certNo, mobileNumber, sourceOfCertification);
+						for (BindTheVehicleVo bindTheVehicleVo : bndTheVehicles) {
+			        		String isMyself = bindTheVehicleVo.getIsMyself();
+			        		if("本人".equals(isMyself)){
+			        			String licensePlateNo = bindTheVehicleVo.getNumberPlateNumber();
+			        			String licensePlateType = bindTheVehicleVo.getPlateType();
+			        			String vehicleIdentifyNoLast4 = bindTheVehicleVo.getBehindTheFrame4Digits();
+			        			//查询未处理违章数
+			        			BaseBean baseBean = illegalService.queryInfoByLicensePlateNo(licensePlateNo, licensePlateType, vehicleIdentifyNoLast4, userId, sourceOfCertification);
+			        			if(MsgCode.success.equals(baseBean.getCode())){
+			        				List<IllegalInfoBean> illegalInfoBeans = (List<IllegalInfoBean>) baseBean.getData();
+			        				unresolvedIllegalCount = illegalInfoBeans.size()+"";
+			        			}
+			        		}
+						}
+						logger.info("【支付宝卡包】领取驾驶证查询未处理违章数："+unresolvedIllegalCount);
+						
+						//封装驾驶证信息
+						
+						//调支付宝sdk提交驾驶证信息
+						
+						//提交成功，写入数据库
+						CardReceive cardReceive = new CardReceive();
+						cardReceive.setAlipayUserId(userId);
+						cardReceive.setArchiveNumber(myDriverLicense.getFileNumber());//档案编号
+						cardReceive.setCertNo(certNo);
+						cardReceive.setGender("1".equals(myDriverLicense.getGender()) ? "男" : "女");
+						cardReceive.setRealName(realName);
+						cardReceive.setType(CardReceiveConstants.CARD_RECEIVE_TYPE_DRIVER);
+						alipayService.insertCardReceive(cardReceive);
+						
+						logger.info("【支付宝卡包】跳转到领取成功页面");
+						//领取成功，跳转到领取成功页面
+						response.sendRedirect("http://zhifubao.chudaokeji.com/#/getCardSuccess?type=1&msg=您好！您的深圳交警电子驾驶证已经领取");
+						return;
+						
+						//提交失败，提示用户
+						
 						
 					}
 				}
