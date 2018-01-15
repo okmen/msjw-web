@@ -22,6 +22,7 @@ import cn.handle.bean.vo.ApplyCarTemporaryLicenceVo;
 import cn.handle.bean.vo.ApplyGatePassVo;
 import cn.handle.bean.vo.ApplyInspectionMarkVo;
 import cn.handle.bean.vo.ApplyRemoteEntrustedBusinessVo;
+import cn.handle.bean.vo.CarMortgageVo;
 import cn.handle.bean.vo.CreateVehicleInspectionVo;
 import cn.handle.bean.vo.DelegateVehiclesVo;
 import cn.handle.bean.vo.DriverChangeContactVo;
@@ -4202,6 +4203,293 @@ public class HandleserviceAction extends BaseAction {
  			baseBean = handleService.electronicDelegateVehicles(delegateVehiclesVo);
  		} catch (Exception e) {
  			logger.error("车管电子委托机动车业务申报业务异常:" + e);
+ 			DealException(baseBean, e);
+ 		}
+ 		renderJSON(baseBean);
+ 		logger.debug(JSON.toJSONString(baseBean));
+ 	}
+	
+	/**
+	 * 机动车抵押/取消抵押
+	 * @param request
+	 */
+	@RequestMapping("applyOrCancleCarMortgage")
+ 	public void applyOrCancleCarMortgage(HttpServletRequest request) {
+ 		BaseBean baseBean = new BaseBean();
+ 		
+ 		String businessType = request.getParameter("businessType");
+ 		String sqlx = request.getParameter("sqlx");          
+ 		String mainContractNo = request.getParameter("mainContractNo");
+ 		String mortgageContactNo = request.getParameter("mortgageContactNo");
+ 		String carNumber = request.getParameter("carNumber");     
+ 		String numberPlate = request.getParameter("numberPlate");   
+ 		String carCode = request.getParameter("carCode"); 
+ 		String registrationNO = request.getParameter("registrationNO");
+ 		String ownerPhone = request.getParameter("ownerPhone");  
+ 		String mortgageeIDcard = request.getParameter("mortgageeIDcard");
+ 		String mortgageeName = request.getParameter("mortgageeName");
+ 		String mortgageeSex = request.getParameter("mortgageeSex"); 
+ 		String mortgageeAddr = request.getParameter("mortgageeAddr");
+ 		String carType = request.getParameter("carType");
+ 		String mortgagerIDcard = request.getParameter("mortgagerIDcard");
+ 		String mortgagerName = request.getParameter("mortgagerName");
+ 		String mortgagerSex = request.getParameter("mortgagerSex");
+ 		String mortgagerAddr = request.getParameter("mortgagerAddr");
+ 		String recipientName = request.getParameter("recipientName");
+ 		String recipientPhone = request.getParameter("recipientPhone");
+ 		String recipientAddr = request.getParameter("recipientAddr");
+ 		String recipientCode = request.getParameter("recipientCode");
+ 		String receiverName = request.getParameter("receiverName");
+ 		String receiverPhone = request.getParameter("receiverPhone");
+ 		String receiverAddr = request.getParameter("receiverAddr");
+ 		String receiverCode = request.getParameter("receiverCode");
+ 		String sourceOfCertification = request.getParameter("sourceOfCertification");
+ 		
+ 		if (StringUtil.isBlank(businessType)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("业务类型不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}else if("A".equals(businessType)){
+ 			if (StringUtil.isBlank(mainContractNo)) {			
+ 	 			baseBean.setCode(MsgCode.paramsError);
+ 	 			baseBean.setMsg("mainContractNo不能为空!");
+ 	 			renderJSON(baseBean);
+ 	 			return;
+ 	 		}
+ 			if (StringUtil.isBlank(mortgageContactNo)) {			
+ 	 			baseBean.setCode(MsgCode.paramsError);
+ 	 			baseBean.setMsg("mortgageContactNo不能为空!");
+ 	 			renderJSON(baseBean);
+ 	 			return;
+ 	 		}
+ 		}
+ 		if (StringUtil.isBlank(sqlx)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("sqlx不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(carNumber)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("carNumber不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(numberPlate)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("numberPlate不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(carCode)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("carCode不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(registrationNO)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("registrationNO不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(ownerPhone)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("ownerPhone不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(mortgageeIDcard)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("mortgageeIDcard不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(mortgageeName)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("mortgageeName不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(mortgageeSex)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("mortgageeSex不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(mortgageeAddr)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("mortgageeAddr不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(carType)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("carType不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}else if ("0".equals(carType)) {
+ 			if (StringUtil.isBlank(mortgagerSex)) {			
+ 	 			baseBean.setCode(MsgCode.paramsError);
+ 	 			baseBean.setMsg("mortgagerSex不能为空!");
+ 	 			renderJSON(baseBean);
+ 	 			return;
+ 	 		}
+		}
+ 		if (StringUtil.isBlank(mortgagerIDcard)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("mortgagerIDcard不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(mortgagerName)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("mortgagerName不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(mortgagerAddr)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("mortgagerAddr不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(recipientName)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("recipientName不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(recipientPhone)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("recipientPhone不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(recipientAddr)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("recipientAddr不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(recipientCode)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("recipientCode不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		
+ 		if (StringUtil.isBlank(receiverName)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("receiverName不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		
+ 		if (StringUtil.isBlank(receiverPhone)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("receiverPhone不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(receiverAddr)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("receiverAddr不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(receiverCode)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("receiverCode不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(sourceOfCertification)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("sourceOfCertification不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+
+ 		CarMortgageVo carMortgageVo = new CarMortgageVo();
+ 		carMortgageVo.setBusinessType(businessType);
+		carMortgageVo.setCarCode(carCode);
+		carMortgageVo.setCarNumber(carNumber);
+		carMortgageVo.setCarType(carType);
+		carMortgageVo.setMainContractNo(mainContractNo);
+		carMortgageVo.setMortgageContactNo(mortgageContactNo);
+		carMortgageVo.setMortgageeAddr(mortgageeAddr);
+		carMortgageVo.setMortgageeIDcard(mortgageeIDcard);
+		carMortgageVo.setMortgageeName(mortgageeName);
+		carMortgageVo.setMortgageeSex(mortgageeSex);
+		carMortgageVo.setMortgagerAddr(mortgagerAddr);
+		carMortgageVo.setMortgagerIDcard(mortgagerIDcard);
+		carMortgageVo.setMortgagerName(mortgagerName);
+		carMortgageVo.setMortgagerSex(mortgagerSex);
+		carMortgageVo.setNumberPlate(numberPlate);
+		carMortgageVo.setOwnerPhone(ownerPhone);
+		carMortgageVo.setReceiverAddr(receiverAddr);
+		carMortgageVo.setReceiverCode(receiverCode);
+		carMortgageVo.setReceiverName(receiverName);
+		carMortgageVo.setReceiverPhone(receiverPhone);
+		carMortgageVo.setRecipientAddr(recipientAddr);
+		carMortgageVo.setRecipientCode(recipientCode);
+		carMortgageVo.setRecipientName(recipientName);
+		carMortgageVo.setRecipientPhone(recipientPhone);
+		carMortgageVo.setRegistrationNO(registrationNO);
+		carMortgageVo.setSourceOfCertification(sourceOfCertification);
+		carMortgageVo.setSqlx(sqlx);
+		
+ 		try {
+ 			// 创建返回结果
+ 			baseBean = handleService.applyOrCancleCarMortgage(carMortgageVo);
+ 			logger.info("机动车抵押业务返回结果：" + baseBean.toJson());
+ 		} catch (Exception e) {
+ 			logger.error("机动车抵押业务异常:" + e);
+ 			DealException(baseBean, e);
+ 		}
+ 		renderJSON(baseBean);
+ 		logger.debug(JSON.toJSONString(baseBean));
+ 	}
+	
+	/**
+	 * 机动车抵押业务查询
+	 * @param request
+	 */
+	@RequestMapping("queryCarMortgage")
+ 	public void queryCarMortgage(HttpServletRequest request) {
+ 		BaseBean baseBean = new BaseBean();
+ 		
+ 		String loginUser = request.getParameter("loginUser");
+ 		String sqlx = request.getParameter("sqlx");          
+ 		String sourceOfCertification = request.getParameter("sourceOfCertification");
+ 		
+ 		if (StringUtil.isBlank(loginUser)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("loginUser不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(sqlx)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("sqlx不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		if (StringUtil.isBlank(sourceOfCertification)) {			
+ 			baseBean.setCode(MsgCode.paramsError);
+ 			baseBean.setMsg("sourceOfCertification不能为空!");
+ 			renderJSON(baseBean);
+ 			return;
+ 		}
+ 		
+ 		try {
+ 			// 创建返回结果
+ 			baseBean = handleService.queryCarMortgage(loginUser, sqlx, sourceOfCertification);
+ 			logger.info("机动车抵押业务查询返回结果：" + baseBean.toJson());
+ 		} catch (Exception e) {
+ 			logger.error("机动车抵押业务查询异常:" + e);
  			DealException(baseBean, e);
  		}
  		renderJSON(baseBean);
