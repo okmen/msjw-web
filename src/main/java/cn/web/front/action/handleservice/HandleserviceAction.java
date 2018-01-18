@@ -4449,7 +4449,7 @@ public class HandleserviceAction extends BaseAction {
  			String msg = baseBean.getMsg();
  			if (MsgCode.success.equals(code)) {
  				String waterNumber = msg.substring(msg.indexOf("：")+1);
-				String url = handleService.getMsjwTemplateSendUrl()+"loginUser="+mortgageeIDcard+"&sqlx="+sqlx+"&sourceOfCertification="+sourceOfCertification;
+				String url = handleService.getMsjwCarMortgageUrl()+"loginUser="+mortgageeIDcard+"&sqlx="+sqlx+"&source="+sourceOfCertification;
 				logger.info("机动车抵押业务返回的url : " + url);
  				//新增到民生警务平台个人中心
  				try {
