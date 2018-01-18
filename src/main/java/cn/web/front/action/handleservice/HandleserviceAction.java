@@ -4244,7 +4244,7 @@ public class HandleserviceAction extends BaseAction {
  		String receiverAddr = request.getParameter("receiverAddr");
  		String receiverCode = request.getParameter("receiverCode");
  		String sourceOfCertification = request.getParameter("sourceOfCertification");
- 		
+ 		String openId = request.getParameter("openId");
  		if (StringUtil.isBlank(businessType)) {			
  			baseBean.setCode(MsgCode.paramsError);
  			baseBean.setMsg("业务类型不能为空!");
@@ -4445,6 +4445,27 @@ public class HandleserviceAction extends BaseAction {
  			// 创建返回结果
  			baseBean = handleService.applyOrCancleCarMortgage(carMortgageVo);
  			logger.info("机动车抵押业务返回结果：" + baseBean.toJson());
+ 			String code = baseBean.getCode();
+ 			String msg = baseBean.getMsg();
+ 			if (MsgCode.success.equals(code)) {
+ 				String waterNumber = msg.substring(msg.indexOf("：")+1);
+				String url = handleService.getMsjwTemplateSendUrl()+"loginUser="+mortgageeIDcard+"&sqlx="+sqlx+"&sourceOfCertification="+sourceOfCertification;
+				logger.info("机动车抵押业务返回的url : " + url);
+ 				//新增到民生警务平台个人中心
+ 				try {
+ 					MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+ 					businessVo.setTylsbh(waterNumber);
+ 					businessVo.setOpenid(openId);
+ 					businessVo.setEventname("机动车个人抵押解押登记");
+ 					businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+ 					businessVo.setJinduUrlWx(url);//进度查询跳转地址
+ 					msjwService.addCarMortgageBusiness(businessVo);
+ 				} catch (Exception e) {
+ 					logger.error("【民生警务】新增在办业务到民生警务平台异常", e);
+ 					e.printStackTrace();
+ 				}
+			}
+ 		
  		} catch (Exception e) {
  			logger.error("机动车抵押业务异常:" + e);
  			DealException(baseBean, e);

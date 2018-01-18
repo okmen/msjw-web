@@ -19,8 +19,10 @@ import cn.convenience.bean.MsjwApplyingBusinessVo;
 import cn.convenience.bean.MsjwApplyingRecordVo;
 import cn.convenience.bean.MsjwVehicleInspectionVo;
 import cn.convenience.service.IMsjwService;
+import cn.handle.bean.vo.CarMortgageBean;
 import cn.handle.bean.vo.VehicleInspectionVO;
 import cn.handle.service.IHandleService;
+import cn.sdk.bean.BaseBean;
 import cn.sdk.util.DateUtil2;
 import cn.sdk.util.StringUtil;
 import cn.web.front.common.NetWorkIp;
@@ -78,6 +80,18 @@ public class MsjwUpdateStatusTask {
 						updateStatus(LYBZ, WWLSH, ZHCLZT);
 					}
 				}
+				
+				BaseBean queryCarMortgage = handleService.queryCarMortgage(identityId, "sqlx", "M");
+				@SuppressWarnings("unchecked")
+				List<CarMortgageBean> carMortgageList = (List<CarMortgageBean>) queryCarMortgage.getData();
+				if (null != carMortgageList && carMortgageList.size()>0) {
+					for (CarMortgageBean vo : carMortgageList) {
+						String LYBZ = "M";
+						String WWLSH = vo.getSerialNumber();//流水号
+						String ZHCLZT = vo.getState();//业务状态
+						updateCarMortgageStatus(LYBZ, WWLSH, ZHCLZT);
+					}
+				}
 			}
 			
 			//更新六年免检状态
@@ -89,7 +103,30 @@ public class MsjwUpdateStatusTask {
 			logger.info("结束定时修改【民生警务】办理状态,耗时"+(end-begin)+"----------------------------------------------------------------------------");
 		}
 	}
+	/**
+	 * 更新
+	 * @param LYBZ 来源标志
+	 * @param WWLSH 流水号
+	 * @param ZHCLZT 业务状态
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 * @throws Exception
+	 */
+	public void updateCarMortgageStatus(String LYBZ, String WWLSH, String ZHCLZT)throws Exception {
+		MsjwApplyingRecordVo msjwApplyingRecordVo = msjwService.selectMsjwApplyingRecordByTylsbh(WWLSH);
+		if(msjwApplyingRecordVo != null){
+			MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+			BeanUtils.copyProperties(businessVo, msjwApplyingRecordVo);
+			//修改msjw平台状态说明
+			businessVo.setShowstatus(ZHCLZT);
+			msjwService.updateApplyingBusiness(businessVo);
+			//修改数据库状态
+			msjwApplyingRecordVo.setStatus(ZHCLZT);//业务状态
+			msjwApplyingRecordVo.setShowstatus(ZHCLZT);//状态说明
+			msjwService.updateMsjwApplyingRecordById(msjwApplyingRecordVo);
+		}
 
+	}
 	/**
 	 * 更新
 	 * @param LYBZ 来源标志
