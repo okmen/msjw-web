@@ -19,6 +19,7 @@ import cn.message.service.IWechatService;
 import cn.sdk.thread.BilinThreadPool;
 import cn.web.front.support.BaseAction;
 import cn.web.front.task.SetOpenId4VoteTask;
+import cn.sdk.thread.BilinThreadPool;
 
 @Controller
 @RequestMapping(value = "/oauth")
@@ -27,6 +28,10 @@ public class OauthAction extends BaseAction{
 	@Autowired
 	@Qualifier("wechatService")
 	private IWechatService wechatService;
+	
+	@Autowired
+	@Qualifier("bilinThreadPool")
+	private BilinThreadPool bilinThreadPool; //异步调用
 	
 	/**
 	 * 微信用户授权获取openId 回调函数
@@ -45,6 +50,9 @@ public class OauthAction extends BaseAction{
 			//获取微信用户信息
 			WechatUserInfo wechatUserInfo = wechatService.callback4OpenId(code, state);
 			logger.info("Wechat 获取用户信息:"+wechatUserInfo.toString());
+			
+			//投票授权
+			bilinThreadPool.execute(new SetOpenId4VoteTask(wechatUserInfo.getOpenId()));
 			
 			state = URLDecoder.decode(state);
 			

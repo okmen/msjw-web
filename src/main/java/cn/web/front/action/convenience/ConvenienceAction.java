@@ -1,6 +1,7 @@
 package cn.web.front.action.convenience;
 
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,10 +20,15 @@ import com.alibaba.fastjson.JSON;
 
 import cn.convenience.bean.ConvenienceBean;
 import cn.convenience.bean.FeedbackResultBean;
+import cn.convenience.bean.SzjjVote;
+import cn.convenience.bean.SzjjVoteRecord;
 import cn.convenience.service.IConvenienceService;
 import cn.message.service.ITemplateMessageService;
+import cn.message.service.IWechatService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.exception.WebServiceException;
+import cn.sdk.util.DateUtil;
+import cn.sdk.util.DateUtil2;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
@@ -48,7 +54,10 @@ public class ConvenienceAction extends BaseAction{
     @Autowired
 	@Qualifier("templateMessageService")
 	private ITemplateMessageService templateMessageService;
-		
+	
+    @Autowired
+    @Qualifier("wechatService")
+    private IWechatService wechatService;
 	/**
 	 * @Title: equipmentDamageReport 
 	 * @Description: TODO(设备损坏通报) 
@@ -784,6 +793,128 @@ public class ConvenienceAction extends BaseAction{
     	logger.debug(JSON.toJSONString(baseBean));
     }
     
+    /**
+     * 深圳交警投票
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "szjjVote")
+    public void szjjVote(HttpServletRequest request,HttpServletResponse response){
+    	String voteKey = "SZJJ_VOTE_KEY_";
+    	BaseBean baseBean = new BaseBean();
+    	String voteId = request.getParameter("voteId");
+    	String openId = request.getParameter("openId");
+    	String str="2018-01-30 00:00:00";
+		String dataStr=DateUtil2.date2str(DateUtil2.dayStr2date(str));
+		Date date=new Date();
+	    boolean ret=date.before(DateUtil2.dayStr2date(str));
+    	DateUtil.getEndOfDay(new Date()).getTime();
+    	if (!ret) {
+    		baseBean.setCode(MsgCode.businessError);
+			baseBean.setMsg("活动已结束!");
+			renderJSON(baseBean);
+			return;
+		}
+    	try {
+    		if (!StringUtil.isNumber(voteId)) {
+    			baseBean.setCode(MsgCode.paramsError);
+    			baseBean.setMsg("id不能为空!");
+    			renderJSON(baseBean);
+				return;
+		    }
+    		
+			if (StringUtil.isBlank(openId)) {
+    			baseBean.setCode(MsgCode.paramsError);
+    			baseBean.setMsg("openId不能为空!");
+    			renderJSON(baseBean);
+				return;
+		    }
+    		String authOpenid = wechatService.getAuthOpenid(openId);
+    		if (StringUtil.isBlank(authOpenid)) {
+    			baseBean.setCode(MsgCode.businessError);
+				baseBean.setMsg("请先授权再进行投票！");
+				renderJSON(baseBean);
+				return;
+			}
+    		
+    		String[] voteIds = voteId.split(",");
+    		long currentTimeMillis = System.currentTimeMillis();
+			long endOfDayTime = DateUtil.getEndOfDay(new Date()).getTime();
+			int remainTime = (int) (endOfDayTime - currentTimeMillis);
+			
+			boolean flag = convenienceService.exists(voteKey+openId);
+    		if (flag) {
+    			int szjjVote = convenienceService.getSzjjVote(voteKey+openId);
+    			if (szjjVote == 3) {
+    				baseBean.setCode(MsgCode.businessError);
+    				baseBean.setMsg("您已参加过三次投票，请明天再来吧！");
+    				renderJSON(baseBean);
+    				return;
+				}else{
+					convenienceService.setSzjjVoteKey(voteKey+openId, szjjVote+1, remainTime/1000);
+				}
+			}else{
+				convenienceService.setSzjjVoteKey(voteKey+openId, 1, remainTime/1000);
+			}
+    		int result  = convenienceService.updateBySzjjId(voteIds);
+    		if (result > 0) {
+    			try{
+    				SzjjVoteRecord record = new SzjjVoteRecord();
+    				record.setIp(getIp2(request));
+    				record.setOpenId(openId);
+    				record.setVoteDate(new Date());
+    				record.setVoteId(voteId);
+    				int addVoteRecord = convenienceService.addSzjjVoteRecord(record);
+    				if (addVoteRecord>0) {
+    					logger.info("插入投票记录成功");
+    				}
+    			}catch(Exception e){
+    				logger.info("插入投票记录异常："+e);
+    				e.printStackTrace();
+    			}
+				baseBean.setCode(MsgCode.success);
+				baseBean.setData("投票成功");
+			}else{
+				baseBean.setCode(MsgCode.businessError);
+				baseBean.setMsg("投票失败");
+			}
+    		logger.info("深圳交警投票返回结果:" + JSON.toJSONString(baseBean));
+    	} catch (Exception e) {
+    		logger.error("深圳交警投票Action异常:", e);
+    		DealException(baseBean, e);
+    	}
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
+    }
+    
+    
+    /**
+     * 获取所有信息
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "getAllVote")
+    public void getAllVote(HttpServletRequest request,HttpServletResponse response){
+    	BaseBean baseBean = new BaseBean();
+    	try {
+   
+    		List<SzjjVote> allVote = convenienceService.getAllVote();
+    		if (allVote != null && allVote.size() > 0) {
+ 
+				baseBean.setCode(MsgCode.success);
+				baseBean.setData(allVote);
+			}else{
+				baseBean.setCode(MsgCode.businessError);
+				baseBean.setMsg("未查询到相关数据");
+			}
+    		logger.info("深圳交警投票返回结果:" + JSON.toJSONString(baseBean));
+    	} catch (Exception e) {
+    		logger.error("深圳交警投票ActionAction异常:", e);
+    		DealException(baseBean, e);
+    	}
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
+    }
     
    /**
     * 平安好车主评选
