@@ -816,7 +816,7 @@ public class ConvenienceAction extends BaseAction{
 			return;
 		}
     	try {
-    		if (!StringUtil.isNumber(voteId)) {
+    		if (StringUtil.isBlank(voteId)) {
     			baseBean.setCode(MsgCode.paramsError);
     			baseBean.setMsg("id不能为空!");
     			renderJSON(baseBean);
