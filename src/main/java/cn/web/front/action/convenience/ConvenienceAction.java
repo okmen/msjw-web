@@ -1021,4 +1021,123 @@ public class ConvenienceAction extends BaseAction{
     	logger.debug(JSON.toJSONString(baseBean));
     }*/
     
+<<<<<<< Updated upstream
+=======
+    /**
+     * 获取所有信息
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "getVoteByPage")
+    public void getVoteByPage(HttpServletRequest request,HttpServletResponse response){
+    	BaseBean baseBean = new BaseBean();
+    	String page = request.getParameter("page");
+    	String pageSize = request.getParameter("pageSize");
+    	try {
+    		if (!StringUtil.isNumber(page)) {
+    			baseBean.setCode(MsgCode.paramsError);
+    			baseBean.setMsg("page不能为空!");
+    			renderJSON(baseBean);
+				return;
+		    }
+    		if (!StringUtil.isNumber(pageSize)) {
+    			baseBean.setCode(MsgCode.paramsError);
+    			baseBean.setMsg("pageSize不能为空!");
+    			renderJSON(baseBean);
+				return;
+		    }
+    		RequestPage requestPage = new RequestPage(Integer.parseInt(page), Integer.parseInt(pageSize));
+    		List<ActivityVote> activityVoteList = convenienceService.getVoteByPage(requestPage.getPage(),requestPage.getPageSize());
+    		int queryCount = convenienceService.queryCount();
+    		Map<String, Object> map = new HashMap<>();
+    		if (activityVoteList != null && activityVoteList.size() > 0) {
+    			int sum = convenienceService.queryCountSum();
+    			map.put("activityVoteList", activityVoteList);
+    			map.put("totalCount", queryCount);
+    			map.put("totalVote", sum);
+				baseBean.setCode(MsgCode.success);
+				baseBean.setData(map);
+			}else{
+				baseBean.setCode(MsgCode.businessError);
+				baseBean.setMsg("未查询到相关数据");
+			}
+    		logger.info("平安好车主投票Action返回结果:" + JSON.toJSONString(baseBean));
+    	} catch (Exception e) {
+    		logger.error("平安好车主投票ActionAction异常:", e);
+    		DealException(baseBean, e);
+    	}
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
+    }
+    
+    /**
+     * 获取前多少位排名
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "getFrontVote")
+    public void getFrontVote(HttpServletRequest request,HttpServletResponse response){
+    	BaseBean baseBean = new BaseBean();
+    	String total = request.getParameter("total");
+    	List<ActivityVote>  activityVoteList  = null;
+    	try {
+    		if (!StringUtil.isNumber(total)) {
+    			baseBean.setCode(MsgCode.paramsError);
+    			baseBean.setMsg("total不能为空!");
+    			renderJSON(baseBean);
+				return;
+		    }
+    		activityVoteList = (List<ActivityVote>) convenienceService.getFront15();
+    		if(activityVoteList == null){
+    			activityVoteList = convenienceService.getFrontVote(Integer.parseInt(total));
+    			convenienceService.setFront15(activityVoteList);
+    		}
+    		if (activityVoteList != null && activityVoteList.size() > 0) {
+				baseBean.setCode(MsgCode.success);
+				baseBean.setData(activityVoteList);
+			}else{
+				baseBean.setCode(MsgCode.businessError);
+				baseBean.setMsg("未查询到相关数据");
+			}
+    		logger.info("平安好车主投票Action返回结果:" + JSON.toJSONString(baseBean));
+    	} catch (Exception e) {
+    		logger.error("平安好车主投票ActionAction异常:", e);
+    		DealException(baseBean, e);
+    	}
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
+    }
+    /**
+     * 投票流量监控
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "netCounter")
+    public void netCounter(HttpServletRequest request,HttpServletResponse response){
+    	BaseBean baseBean = new BaseBean();
+    	String sourceOfCertification = request.getParameter("sourceOfCertification");
+    	try {
+    		if (StringUtil.isBlank(sourceOfCertification)) {
+    			baseBean.setCode(MsgCode.paramsError);
+    			baseBean.setMsg("sourceOfCertification不能为空!");
+    			renderJSON(baseBean);
+				return;
+		    }else if ("C".equals(sourceOfCertification)) {
+				convenienceService.goodCarOwnerWechat();
+			}else if ("Z".equals(sourceOfCertification)) {
+				convenienceService.goodCarOwnerAlipay();
+			}else if ("P".equals(sourceOfCertification)) {
+				convenienceService.goodCarOwnerPingan();
+			}
+    		
+    		//logger.info("平安好车主投票流量监控Action返回结果:" + JSON.toJSONString(baseBean));
+    	} catch (Exception e) {
+    		logger.error("平安好车主投票流量监控ActionAction异常:", e);
+    		DealException(baseBean, e);
+    	}
+    	renderJSON(baseBean);
+    	logger.debug(JSON.toJSONString(baseBean));
+    }
+    
+>>>>>>> Stashed changes
 }
