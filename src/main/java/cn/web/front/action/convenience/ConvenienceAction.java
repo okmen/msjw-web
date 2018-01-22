@@ -851,7 +851,7 @@ public class ConvenienceAction extends BaseAction{
 			boolean flag = convenienceService.existsSzjjVoteKey(voteKey+openId);
     		if (flag) {
     			int szjjVote = convenienceService.getSzjjVote(voteKey+openId);
-    			logger.info("szjjVote = " + szjjVote);
+//    			logger.info("szjjVote = " + szjjVote);
     			if (szjjVote == 3) {
     				baseBean.setCode(MsgCode.businessError);
     				baseBean.setMsg("您已参加过三次投票，请明天再来吧！");
@@ -885,7 +885,7 @@ public class ConvenienceAction extends BaseAction{
 				baseBean.setCode(MsgCode.businessError);
 				baseBean.setMsg("投票失败");
 			}
-    		logger.info("深圳交警投票返回结果:" + JSON.toJSONString(baseBean));
+//    		logger.info("深圳交警投票返回结果:" + JSON.toJSONString(baseBean));
     	} catch (Exception e) {
     		logger.error("深圳交警投票Action异常:", e);
     		DealException(baseBean, e);
@@ -914,7 +914,7 @@ public class ConvenienceAction extends BaseAction{
 				baseBean.setCode(MsgCode.businessError);
 				baseBean.setMsg("未查询到相关数据");
 			}
-    		logger.info("深圳交警投票返回结果:" + JSON.toJSONString(baseBean));
+//    		logger.info("深圳交警投票返回结果:" + JSON.toJSONString(baseBean));
     	} catch (Exception e) {
     		logger.error("深圳交警投票ActionAction异常:", e);
     		DealException(baseBean, e);
