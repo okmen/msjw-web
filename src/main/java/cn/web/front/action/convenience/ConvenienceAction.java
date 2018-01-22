@@ -842,7 +842,7 @@ public class ConvenienceAction extends BaseAction{
 			long endOfDayTime = DateUtil.getEndOfDay(new Date()).getTime();
 			int remainTime = (int) (endOfDayTime - currentTimeMillis);
 			
-			boolean flag = convenienceService.exists(voteKey+openId);
+			boolean flag = convenienceService.existsSzjjVoteKey(voteKey+openId);
     		if (flag) {
     			int szjjVote = convenienceService.getSzjjVote(voteKey+openId);
     			logger.info("szjjVote = " + szjjVote);
