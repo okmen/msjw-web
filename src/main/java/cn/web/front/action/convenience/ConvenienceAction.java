@@ -829,13 +829,13 @@ public class ConvenienceAction extends BaseAction{
     			renderJSON(baseBean);
 				return;
 		    }
-    		String authOpenid = wechatService.getAuthOpenid(openId);
-    		if (StringUtil.isBlank(authOpenid)) {
-    			baseBean.setCode(MsgCode.businessError);
-				baseBean.setMsg("请先授权再进行投票！");
-				renderJSON(baseBean);
-				return;
-			}
+//    		String authOpenid = wechatService.getAuthOpenid(openId);
+//    		if (StringUtil.isBlank(authOpenid)) {
+//    			baseBean.setCode(MsgCode.businessError);
+//				baseBean.setMsg("请先授权再进行投票！");
+//				renderJSON(baseBean);
+//				return;
+//			}
     		
     		String[] voteIds = voteId.split(",");
     		long currentTimeMillis = System.currentTimeMillis();
