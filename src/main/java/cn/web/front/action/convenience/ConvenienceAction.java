@@ -804,11 +804,11 @@ public class ConvenienceAction extends BaseAction{
     	BaseBean baseBean = new BaseBean();
     	String voteId = request.getParameter("voteId");
     	String openId = request.getParameter("openId");
-    	String str="2018-01-30 00:00:00";
-		String dataStr=DateUtil2.date2str(DateUtil2.dayStr2date(str));
+    	String str="2018-01-31 00:00:00";
+//		String dataStr=DateUtil2.date2str(DateUtil2.dayStr2date(str));
 		Date date=new Date();
 	    boolean ret=date.before(DateUtil2.dayStr2date(str));
-    	DateUtil.getEndOfDay(new Date()).getTime();
+//    	DateUtil.getEndOfDay(new Date()).getTime();
     	if (!ret) {
     		baseBean.setCode(MsgCode.businessError);
 			baseBean.setMsg("活动已结束!");
@@ -829,15 +829,21 @@ public class ConvenienceAction extends BaseAction{
     			renderJSON(baseBean);
 				return;
 		    }
-//    		String authOpenid = wechatService.getAuthOpenid(openId);
-//    		if (StringUtil.isBlank(authOpenid)) {
-//    			baseBean.setCode(MsgCode.businessError);
-//				baseBean.setMsg("请先授权再进行投票！");
-//				renderJSON(baseBean);
-//				return;
-//			}
+    		String authOpenid = wechatService.getAuthOpenid(openId);
+    		if (StringUtil.isBlank(authOpenid)) {
+    			baseBean.setCode(MsgCode.businessError);
+				baseBean.setMsg("请先授权再进行投票！");
+				renderJSON(baseBean);
+				return;
+			}
     		
     		String[] voteIds = voteId.split(",");
+    		if (voteIds.length > 10) {
+    			baseBean.setCode(MsgCode.businessError);
+				baseBean.setMsg("每次投票不能超过10个！");
+				renderJSON(baseBean);
+				return;
+			}
     		long currentTimeMillis = System.currentTimeMillis();
 			long endOfDayTime = DateUtil.getEndOfDay(new Date()).getTime();
 			int remainTime = (int) (endOfDayTime - currentTimeMillis);
