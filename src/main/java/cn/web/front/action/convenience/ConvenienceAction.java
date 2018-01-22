@@ -1021,13 +1021,12 @@ public class ConvenienceAction extends BaseAction{
     	logger.debug(JSON.toJSONString(baseBean));
     }*/
     
-<<<<<<< Updated upstream
-=======
-    /**
+
+   /* *//**
      * 获取所有信息
      * @param request
      * @param response
-     */
+     *//*
     @RequestMapping(value = "getVoteByPage")
     public void getVoteByPage(HttpServletRequest request,HttpServletResponse response){
     	BaseBean baseBean = new BaseBean();
@@ -1070,11 +1069,11 @@ public class ConvenienceAction extends BaseAction{
     	logger.debug(JSON.toJSONString(baseBean));
     }
     
-    /**
+    *//**
      * 获取前多少位排名
      * @param request
      * @param response
-     */
+     *//*
     @RequestMapping(value = "getFrontVote")
     public void getFrontVote(HttpServletRequest request,HttpServletResponse response){
     	BaseBean baseBean = new BaseBean();
@@ -1107,11 +1106,11 @@ public class ConvenienceAction extends BaseAction{
     	renderJSON(baseBean);
     	logger.debug(JSON.toJSONString(baseBean));
     }
-    /**
+    *//**
      * 投票流量监控
      * @param request
      * @param response
-     */
+     *//*
     @RequestMapping(value = "netCounter")
     public void netCounter(HttpServletRequest request,HttpServletResponse response){
     	BaseBean baseBean = new BaseBean();
@@ -1137,7 +1136,7 @@ public class ConvenienceAction extends BaseAction{
     	}
     	renderJSON(baseBean);
     	logger.debug(JSON.toJSONString(baseBean));
-    }
+    }*/
     
->>>>>>> Stashed changes
+
 }
