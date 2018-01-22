@@ -51,8 +51,14 @@ public class OauthAction extends BaseAction{
 			WechatUserInfo wechatUserInfo = wechatService.callback4OpenId(code, state);
 			logger.info("Wechat 获取用户信息:"+wechatUserInfo.toString());
 			
+			try{
+				wechatService.setAuthOpenid(wechatUserInfo.getOpenId());
+			}catch(Exception e){
+				logger.info("深圳交警投票存openId异常");
+			}
+			
 			//投票授权
-			bilinThreadPool.execute(new SetOpenId4VoteTask(wechatUserInfo.getOpenId()));
+//			bilinThreadPool.execute(new SetOpenId4VoteTask(wechatUserInfo.getOpenId()));
 			
 			state = URLDecoder.decode(state);
 			
