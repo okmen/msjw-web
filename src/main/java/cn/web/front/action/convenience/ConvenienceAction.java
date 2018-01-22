@@ -845,6 +845,7 @@ public class ConvenienceAction extends BaseAction{
 			boolean flag = convenienceService.exists(voteKey+openId);
     		if (flag) {
     			int szjjVote = convenienceService.getSzjjVote(voteKey+openId);
+    			logger.info("szjjVote = " + szjjVote);
     			if (szjjVote == 3) {
     				baseBean.setCode(MsgCode.businessError);
     				baseBean.setMsg("您已参加过三次投票，请明天再来吧！");
