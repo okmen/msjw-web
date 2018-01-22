@@ -35,6 +35,7 @@ public class SetOpenId4VoteTask implements Runnable, Serializable {
 			map.put("openId", openId);
 			HttpClientUtil.post("http://testjava.chudaokeji.com/wechat/setAuthOpenid.html", map, null);
 			HttpClientUtil.post("http://gzh.stc.gov.cn/api/wechat/setAuthOpenid.html", map, null);*/
+			logger.info("深圳交警授权openId : " + openId);
 			wechatService.setAuthOpenid(openId);
 		} catch (Exception e) {
 			logger.error("SetOpenId4VoteTask 异常:",e);
