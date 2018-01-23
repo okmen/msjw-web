@@ -2104,7 +2104,7 @@ public class HandleserviceAction extends BaseAction {
 			String openId = request.getParameter("openId");  //openId
 			
 			//验证号牌种类
-			if(StringUtil.isBlank(mobilephone)){
+			if(StringUtil.isBlank(plateType)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("号牌种类不能为空!");
 				renderJSON(baseBean);
