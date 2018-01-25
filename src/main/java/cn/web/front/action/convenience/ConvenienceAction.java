@@ -1143,7 +1143,11 @@ public class ConvenienceAction extends BaseAction{
     	}
     	renderJSON(baseBean);
     	logger.debug(JSON.toJSONString(baseBean));
+<<<<<<< Updated upstream
     }*/
+    
+
+
     
 
 }
