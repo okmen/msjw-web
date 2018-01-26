@@ -743,7 +743,7 @@ public class AlipayAction extends BaseAction {
 	 * TODO:（供支付宝调用）驾驶证信息查询
 	 */
 	@RequestMapping(value = "/jsCardInfo.html")
-	public JSONObject jsCardInfo(HttpServletRequest request, HttpServletResponse response){
+	public void jsCardInfo(HttpServletRequest request, HttpServletResponse response){
 		JSONObject json = new JSONObject();
 		
 		String userId = request.getParameter("userId");
@@ -751,7 +751,8 @@ public class AlipayAction extends BaseAction {
 			json.put("code", MsgCode.paramsError);
 			json.put("msg", "userId不能为空");
 			json.put("result", "");
-			return json;
+			outString(response, json.toJSONString());
+			return;
     	}
 		
 		try {
@@ -763,7 +764,8 @@ public class AlipayAction extends BaseAction {
 				json.put("code", MsgCode.businessError);
 				json.put("msg", "获取用户信息异常");
 				json.put("result", "");
-				return json;
+				outString(response, json.toJSONString());
+				return;
 			}else{
 				certNo = userBindAlipay.getIdCard();
 				mobileNo = userBindAlipay.getMobileNumber();
@@ -793,14 +795,15 @@ public class AlipayAction extends BaseAction {
 			logger.error("【支付宝卡包】jsCardInfo驾驶证信息查询异常：userId="+userId, e);
 			e.printStackTrace();
 		}
-		return json;
+		outString(response, json.toJSONString());
+		return;
 	}
 
 	/**
 	 * TODO:（供支付宝调用）驾驶证二维码查询
 	 */
 	@RequestMapping(value = "/jsCardQRCode.html")
-	public JSONObject jsCardQRCode(HttpServletRequest request, HttpServletResponse response){
+	public void jsCardQRCode(HttpServletRequest request, HttpServletResponse response){
 		JSONObject json = new JSONObject();
 		
 		String userId = request.getParameter("userId");
@@ -808,7 +811,8 @@ public class AlipayAction extends BaseAction {
 			json.put("code", MsgCode.paramsError);
 			json.put("msg", "userId不能为空");
 			json.put("result", "");
-			return json;
+			outString(response, json.toJSONString());
+			return;
     	}
 		
 		try {
@@ -821,7 +825,8 @@ public class AlipayAction extends BaseAction {
 				json.put("code", MsgCode.businessError);
 				json.put("msg", "获取用户信息异常");
 				json.put("result", "");
-				return json;
+				outString(response, json.toJSONString());
+				return;
 			}else{
 				certNo = userBindAlipay.getIdCard();
 				realName = userBindAlipay.getRealName();
@@ -846,14 +851,15 @@ public class AlipayAction extends BaseAction {
 			logger.error("【支付宝卡包】jsCardQRCode驾驶证二维码查询异常：userId="+userId, e);
 			e.printStackTrace();
 		}
-		return json;
+		outString(response, json.toJSONString());
+		return;
 	}
 
 	/**
 	 * TODO:（供支付宝调用）行驶证二维码查询
 	 */
 	@RequestMapping(value = "/xsCardQRCode.html")
-	public JSONObject xsCardQRCode(HttpServletRequest request, HttpServletResponse response){
+	public void xsCardQRCode(HttpServletRequest request, HttpServletResponse response){
 		JSONObject json = new JSONObject();
 		
 		String plateNo = request.getParameter("plateNo");
@@ -863,19 +869,22 @@ public class AlipayAction extends BaseAction {
 			json.put("code", MsgCode.paramsError);
 			json.put("msg", "plateNo不能为空");
 			json.put("result", "");
-			return json;
+			outString(response, json.toJSONString());
+			return;
     	}
 		if(StringUtils.isBlank(plateType)){
 			json.put("code", MsgCode.paramsError);
 			json.put("msg", "plateType不能为空");
 			json.put("result", "");
-			return json;
+			outString(response, json.toJSONString());
+			return;
 		}
 		if(StringUtils.isBlank(mobileNo)){
 			json.put("code", MsgCode.paramsError);
 			json.put("msg", "mobileNo不能为空");
 			json.put("result", "");
-			return json;
+			outString(response, json.toJSONString());
+			return;
 		}
 		
 		try {
@@ -898,7 +907,8 @@ public class AlipayAction extends BaseAction {
 			logger.error("【支付宝卡包】xsCardQRCode行驶证二维码查询异常：plateNo="+plateNo, e);
 			e.printStackTrace();
 		}
-		return json;
+		outString(response, json.toJSONString());
+		return;
 	}
 	
 	
