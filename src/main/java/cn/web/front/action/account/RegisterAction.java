@@ -122,10 +122,10 @@ public class RegisterAction extends BaseAction {
 			registerVo.setIdCardImgPositive(idCardImgPositive);
 		}
 
-		if (StringUtil.isBlank(idCardImgNegative)) {
+		/*if (StringUtil.isBlank(idCardImgNegative)) {
 			code=MsgCode.paramsError;
 			sb.append("身份证反面为空 ");
-		}
+		}*/
 
 		if (StringUtil.isBlank(idCardImgHandHeld)) {
 			code=MsgCode.paramsError;
@@ -506,10 +506,10 @@ public class RegisterAction extends BaseAction {
 			registerVo.setIdCardImgPositive(idCardImgPositive);
 		}
 
-		if (StringUtil.isBlank(idCardImgNegative)) {
+		/*if (StringUtil.isBlank(idCardImgNegative)) {
 			code=MsgCode.paramsError;
 			sb.append("身份证反面为空 ");
-		}
+		}*/
 
 		if (StringUtil.isBlank(idCardImgHandHeld)) {
 			code=MsgCode.paramsError;
@@ -643,10 +643,10 @@ public class RegisterAction extends BaseAction {
 			registerVo.setIdCardImgPositive(idCardImgPositive);
 		}
 
-		if (StringUtil.isBlank(idCardImgNegative)) {
+		/*if (StringUtil.isBlank(idCardImgNegative)) {
 			code=MsgCode.paramsError;
 			sb.append("身份证反面为空 ");
-		}
+		}*/
 
 		if (StringUtil.isBlank(idCardImgHandHeld)) {
 			code=MsgCode.paramsError;
