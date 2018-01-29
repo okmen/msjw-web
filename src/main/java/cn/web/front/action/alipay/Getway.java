@@ -57,9 +57,38 @@ public class Getway extends HttpServlet {
 			JSONObject json = (JSONObject) new XMLSerializer().read(bizContent);
 			
 			String msgType = json.getString("MsgType");
+			logger.info("支付宝消息推送biz_content="+bizContent);
 			if (IMessage.MESSAGE_TYPE_EVENT.equals(msgType)) {
 				eventType = json.getString("EventType");
 				actionParam = json.getString("ActionParam");
+				
+				if(IEvent.EVENT_TYPE_NOTIFY.equals(eventType)){
+					try {
+						JSONObject fromObject = JSONObject.fromObject(actionParam);
+						String action = fromObject.getString("action");
+						//删除卡包消息
+						if("REMOVE".equals(action)){
+							logger.info("【支付宝卡包】删除卡包消息biz_content：" + bizContent);
+							//actionParam={"action":"REMOVE","cardno":"321111111111111111","cardtype":"LYG_E_IDENTITY_CARD","uid":"2088302019288966"}
+							String cardno = fromObject.getString("cardno");
+							String cardtype = fromObject.getString("cardtype");
+							String uid = fromObject.getString("uid");
+							
+							// 手动取得service　
+							ApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
+							IAlipayService alipayService = (IAlipayService) ctx.getBean("alipayService");
+							boolean isSuccess = alipayService.updateCardReceiveType(cardno, cardtype, uid);
+							if(isSuccess){
+								logger.info("【支付宝卡包】修改卡包状态成功，cardno="+cardno+"，cardtype="+cardtype+"，uid="+uid);
+							}else{
+								logger.info("【支付宝卡包】修改卡包状态失败，cardno="+cardno+"，cardtype="+cardtype+"，uid="+uid);
+							}
+						}
+					} catch (Exception e) {
+						logger.error("【支付宝卡包】删除卡包处理异常，biz_content="+bizContent, e);
+						e.printStackTrace();
+					}
+				}
 			}
 			// 验证网关消息 不做处理 直接走finally
 			if (!IEvent.EVENT_TYPE_VERIFYGW.equals(eventType)) {

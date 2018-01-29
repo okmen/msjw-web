@@ -1162,6 +1162,9 @@ public class IllegalAction extends BaseAction {
 			renderJSON(base);
 			return;
 		}
+		if (licenseType == null) {
+			licenseType = "";//车牌类型为空时，查询该车牌所有车类型记录
+		}
 
 		try {
 			billNo = billNo.replaceAll(" ", "");
