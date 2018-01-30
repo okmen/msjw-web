@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
 
 import cn.account.bean.UserBindAlipay;
@@ -314,9 +315,9 @@ public class AlipayAction extends BaseAction {
 							return;
 						}
 						
-						//未处理违章数
+						/*//未处理违章数
 						int unresolvedIllegalCount = getUnresolvedIllegalCount(certNo, mobileNumber, sourceOfCertification, userId);
-						
+						*/
 						//获取电子驾驶证照片
 						ElectronicDriverLicenseVo eCardInfo = accountService.getElectronicDriverLicense(certNo, realName, mobileNumber, sourceOfCertification);
 						if(!MsgCode.success.equals(eCardInfo.getCode())){
@@ -329,7 +330,7 @@ public class AlipayAction extends BaseAction {
 						
 						String eCardImgBase64 = eCardInfo.getElectronicDriverLicense();//证件图片base64
 						
-						//调支付宝sdk上传证件照片
+						/*//调支付宝sdk上传证件照片
 						BaseBean uploadJsCardImg = alipayService.uploadJsCardImg(eCardImgBase64);
 						//上传失败
 						if(!MsgCode.success.equals(uploadJsCardImg.getCode())){
@@ -343,7 +344,9 @@ public class AlipayAction extends BaseAction {
 						
 						//封装驾驶证信息
 						String imgUrl = (String) uploadJsCardImg.getData();
-						JSONObject jsCardInfo = jsCardInfo(userBindAlipay, myDriverLicense, String.valueOf(unresolvedIllegalCount), imgUrl);
+						JSONObject jsCardInfo = jsCardInfo(userBindAlipay, myDriverLicense, String.valueOf(unresolvedIllegalCount), imgUrl);*/
+						
+						JSONObject jsCardInfo = jsCardInfo(userBindAlipay, myDriverLicense, eCardImgBase64);
 						
 						//调支付宝sdk提交驾驶证信息
 						BaseBean sendCardInfo = alipayService.sendCardInfo(jsCardInfo.toJSONString());
@@ -501,7 +504,7 @@ public class AlipayAction extends BaseAction {
 					if(MsgCode.success.equals(eCardInfo.getCode())){
 						String eCardImgBase64 = eCardInfo.getElectronicDrivingLicense();//证件图片base64
 						
-						//调支付宝sdk上传证件照片
+						/*//调支付宝sdk上传证件照片
 						BaseBean uploadXsCardImg = alipayService.uploadXsCardImg(eCardImgBase64);
 						//上传失败
 						if(!MsgCode.success.equals(uploadXsCardImg.getCode())){
@@ -514,7 +517,9 @@ public class AlipayAction extends BaseAction {
 						
 						//封装行驶证信息
 						String imgUrl = (String) uploadXsCardImg.getData();
-						JSONObject xsCardInfo = xsCardInfo(userBindAlipay, bindTheVehicleVo, imgUrl);
+						JSONObject xsCardInfo = xsCardInfo(userBindAlipay, bindTheVehicleVo, imgUrl);*/
+						
+						JSONObject xsCardInfo = xsCardInfo(userBindAlipay, bindTheVehicleVo, eCardImgBase64);
 						
 						//上传成功，调支付宝sdk提交行驶证信息
 						BaseBean sendCardInfo = alipayService.sendCardInfo(xsCardInfo.toJSONString());
@@ -558,185 +563,101 @@ public class AlipayAction extends BaseAction {
 	 * TODO:驾驶证信息组装
 	 * @return
 	 */
-	public JSONObject jsCardInfo(UserBindAlipay userInfo, MyDriverLicenseVo vo, String unresolvedIllegalCount, String imgUrl){
+	public JSONObject jsCardInfo(UserBindAlipay userInfo, MyDriverLicenseVo vo, String eCardImgBase64){
+		JSONObject extInfo = new JSONObject();
+		extInfo.put("mobileNo", userInfo.getMobileNumber());// 手机号码
+		extInfo.put("drivingLicenseNo", vo.getDriverLicenseNumber());// 证号
+		extInfo.put("sex", "1".equals(vo.getGender()) ? "男" : "女");// 性别
+		extInfo.put("nationality", "");// 国籍
+		extInfo.put("address", "");// 住址
+		extInfo.put("dateOfBirth", "");// 出生日期
+		extInfo.put("dateOfFirstIssue", "");// 初次领证日期
+		extInfo.put("clazz", vo.getCarType());// 准驾车型
+		extInfo.put("fileNo", vo.getFileNumber());// 档案编号
+		extInfo.put("issuingAuthority", "");// 签发机关
+		extInfo.put("valideDate", "");// 生效日期
+		extInfo.put("expireDate", vo.getEffectiveDate());// 失效日期
+		extInfo.put("source", "");// 采集来源
 		
-		JSONObject cardImg = new JSONObject();
-		cardImg.put("driving_license_home_page", imgUrl);//驾照正面图片
-		cardImg.put("driving_license_sub_page", "");//驾照副页图片
+		JSONObject homePage = new JSONObject();
+		homePage.put("type", "DRIVING_LICENSE_HOME_PAGE");
+		homePage.put("data", eCardImgBase64);//图片的base64字符串，不需要base64头(data:image/jpeg;base64,)
+		JSONArray picList = new JSONArray();
+		picList.add(homePage);
 		
 		JSONObject cardInfo = new JSONObject();
-		cardInfo.put("vd_license_number", vo.getDriverLicenseNumber());			//驾驶证号
-		cardInfo.put("vd_name", vo.getName());									//姓名
-		cardInfo.put("gender", "1".equals(vo.getGender()) ? "男" : "女");			//性别
-		cardInfo.put("vd_license_u_number", vo.getFileNumber());				//驾驶证档案编号(U)
-		cardInfo.put("vd_grant_time", "");										//发证时间
-		cardInfo.put("valid_thru", vo.getEffectiveDate());						//有效期限
-		cardInfo.put("vd_address", "");											//住址
-		cardInfo.put("vd_first_time", "");										//初次领证的时间
-		cardInfo.put("vd_driving_type", vo.getCarType());						//准驾车型
-		cardInfo.put("vd_nationality", "");										//国籍
-		cardInfo.put("issuing_authority", "");									//签发机关
-		cardInfo.put("vd_city_code", "");										//发证的地市Code
-		cardInfo.put("vd_city_name", "");										//发证的地市名称
-		cardInfo.put("license_cetify_level", "ORG");							//证件认证等级
-		cardInfo.put("illegal_violation_count", unresolvedIllegalCount);		//未处理违章条数
-		cardInfo.put("cumulative_score", vo.getDeductScore());					//累计记分
-		cardInfo.put("factual_validity_check", vo.getPhysicalExaminationDate());//审验有效期止
-		cardInfo.put("date_of_inspection", vo.getPhysicalExaminationDate());	//审验日期
-		cardInfo.put("status", vo.getStatus());									//状态
-		cardInfo.put("cert_doc_type", "SZ_E_DRIVING_LICENSE");					//证件类型
-		cardInfo.put("mobile_no", userInfo.getMobileNumber());					//手机号码
-		cardInfo.put("license_pics", cardImg);									//驾照图片
+		cardInfo.put("cert_type", "SZ_E_DRIVING_LICENSE");//驾驶证
+		cardInfo.put("cert_no", userInfo.getIdCard());//证件号
+		cardInfo.put("user_id", userInfo.getUserId());//蚂蚁统一会员ID
+		cardInfo.put("name", userInfo.getRealName());//证件主体用户姓名。证件类型+证件号+证件姓名需要唯一。
+		cardInfo.put("ext_info", extInfo);
+		cardInfo.put("pic_list", picList);
 		
-		JSONObject sceneData = new JSONObject();
-		JSONArray jsonArray = new JSONArray();
-		jsonArray.add(cardInfo);
-		sceneData.put("info", jsonArray);
-		
-		JSONObject baseInfo = new JSONObject();
-		baseInfo.put("scene_code", "vehicle_driving_licence");
-		baseInfo.put("op_code", "data_save");
-		baseInfo.put("channel", "SZJJ");
-		baseInfo.put("version", "1.0");
-		baseInfo.put("target_id", userInfo.getUserId());
-		baseInfo.put("target_id_type", "");
-		baseInfo.put("scene_data", sceneData);
-		
-		return baseInfo;
-		
-		/*{ "scene_code", "vehicle_driving_licence" },
-        { "op_code", "data_save" },
-        { "channel", "SZJJ" },
-        { "version", "1.0" },
-        { "target_id", AliUserInfo["alipay_user_id"].ToString() },
-        { "target_id_type", "" },
-        { "scene_data", 
-            new JObject(){
-                { "info", 
-                    new JArray(){
-                        new JObject(){
-                            { "vd_license_number", Data["result"]["sfzmhm"] },                            //驾驶证号
-                            { "vd_name", Data["result"]["xm"] },                                          //姓名
-                            { "gender", (Data["result"]["xb"].ToString() == "1" ? "男" : "女") },         //性别
-                            { "vd_license_u_number", Data["result"]["dabh"] },                            //驾驶证档案编号(U)
-                            { "vd_grant_time", "" },                                                      //发证时间
-                            { "valid_thru", Data["result"]["yxqz"] },                                     //有效期限
-                            { "vd_address", "" },                                                         //住址
-                            { "vd_first_time", "" },                                                      //初次领证的时间
-                            { "vd_driving_type", Data["result"]["zjcx"] },                                //准驾车型
-                            { "vd_nationality", "" },                                                     //国籍
-                            { "issuing_authority", "" },                                                  //签发机关
-                            { "vd_city_code", "" },                                                       //发证的地市Code
-                            { "vd_city_name", "" },                                                       //发证的地市名称
-                            { "license_cetify_level", "ORG" },                                            //证件认证等级
-                            { "illegal_violation_count", EndorsedNumber },                                //未处理违章条数
-                            { "cumulative_score", Data["result"]["ljjf"] },                               //累计记分
-                            { "factual_validity_check", Data["result"]["syyxqz"] },                       //审验有效期止
-                            { "date_of_inspection", Data["result"]["syrq"] },                             //审验日期
-                            { "status", Data["result"]["zt"] },                                           //状态
-                            { "cert_doc_type", "SZ_E_DRIVING_LICENSE" },                                  //证件类型
-                            { "mobile_no", AliUserInfo["mobile"].ToString() },                                //手机号码
-                            { "license_pics",                                                             //驾照图片
-                                new JObject(){
-                                    { "driving_license_home_page", ImageUploadResult["alipay_zdatafront_datatransfered_fileupload_response"]["result_data"] },                        //驾照正面图片
-                                    { "driving_license_sub_page", "" },                                   //驾照副页图片
-                                }
-                            },
-                        }
-                    }
-                }
-            }
-        },
-		*/
+		return cardInfo;
 	}
 	
 	/**
 	 * TODO:行驶证信息组装
 	 * @return
 	 */
-	public JSONObject xsCardInfo(UserBindAlipay userInfo, BindTheVehicleVo vo, String imgUrl){
+	public JSONObject xsCardInfo(UserBindAlipay userInfo, BindTheVehicleVo vo, String eCardImgBase64){
+		JSONObject extInfo = new JSONObject();
+		extInfo.put("plateNo", vo.getNumberPlateNumber());// 号牌号码
+		extInfo.put("vehicleType", vo.getPlateType());// 车辆类型
+		extInfo.put("owner", vo.getName());// 所有人
+		extInfo.put("address", "");// 住址
+		extInfo.put("useCharacter", "");// 使用性质
+		extInfo.put("model", "");// 品牌型号
+		extInfo.put("vin", vo.getBehindTheFrame4Digits());// 车辆识别代号
+		extInfo.put("engineNo", "");// 发动机号码
+		extInfo.put("registerDate", "");// 注册日期
+		extInfo.put("issueDate", "");// 发证日期
+		extInfo.put("issuingAuthority", "");// 签发机关
+		extInfo.put("approvedPassengersCapacity", "");// 核定载人数
+		extInfo.put("weight", "");// 总质量
+		extInfo.put("equipmentWeight", "");// 装备质量
+		extInfo.put("approvedLoad", "");// 核定载质量
+		extInfo.put("overallDimension", "");// 外廓尺寸
+		extInfo.put("tractionMass", "");// 牵引总质量
+		extInfo.put("checkDate", vo.getAnnualReviewDate());// 校验有效期
+		extInfo.put("source", "");// 采集来源
 		
-		JSONObject cardImg = new JSONObject();
-		cardImg.put("vehicle_license_home_page", imgUrl);//行驶证正面图片
-		cardImg.put("vehicle_license_sub_page", "");//行驶证副页图片
+		JSONObject homePage = new JSONObject();
+		homePage.put("type", "VEHICLE_LICENSE_HOME_PAGE");
+		homePage.put("data", eCardImgBase64);//图片的base64字符串，不需要base64头(data:image/jpeg;base64,)
+		JSONArray picList = new JSONArray();
+		picList.add(homePage);
 		
 		JSONObject cardInfo = new JSONObject();
-		cardInfo.put("plate_no", vo.getNumberPlateNumber());	//车牌号
-		cardInfo.put("plate_type", vo.getPlateType());			//车牌号类型
-		cardInfo.put("vehicle_type", "");						//车辆类型
-		cardInfo.put("owner", vo.getName());					//车辆所有人
-		cardInfo.put("owener_cert_no", vo.getIdentityCard());	//车辆所有人身份证号码
-		cardInfo.put("vin", vo.getBehindTheFrame4Digits());		//车辆识别代号
-		cardInfo.put("engine_no", "");							//发动机号
-		cardInfo.put("check_date", vo.getAnnualReviewDate());	//车辆审验日期
-		cardInfo.put("whether_one_self", "本人".equals(vo.getIsMyself()) ? "是" : "否");//是否本人车辆
-		cardInfo.put("check_date_remind", "");					//下次审验日期提醒
-		cardInfo.put("status_remind", "");						//状态提醒？？
-		cardInfo.put("abandoned_remind", "");					//强制报废期止提醒？？
-		cardInfo.put("mobile_no", vo.getMobilephone());			//申领人手机号码
-		cardInfo.put("user_character", "");						//使用性质
-		cardInfo.put("regisger_date", "");						//注册时间
-		cardInfo.put("issue_date", "");							//发证日期
-		cardInfo.put("city_code", "");							//车辆归属地
-		cardInfo.put("city_name", "");							//车辆归属地名称
-		cardInfo.put("ac", "");									//核载人数
-		cardInfo.put("cert_doc_type", "SZ_E_VEHICLE_LICENSE");	//类型
-		cardInfo.put("license_pics", cardImg);					//行驶证图片
+		cardInfo.put("cert_type", "SZ_E_VEHICLE_LICENSE");//行驶证
+		cardInfo.put("cert_no", userInfo.getIdCard());//证件号
+		cardInfo.put("user_id", userInfo.getUserId());//蚂蚁统一会员ID
+		cardInfo.put("name", userInfo.getRealName());//证件主体用户姓名。证件类型+证件号+证件姓名需要唯一。
+		cardInfo.put("ext_info", extInfo);
+		cardInfo.put("pic_list", picList);
 		
-		JSONObject sceneData = new JSONObject();
-		JSONArray jsonArray = new JSONArray();
-		jsonArray.add(cardInfo);
-		sceneData.put("info", jsonArray);
-		
-		JSONObject baseInfo = new JSONObject();
-		baseInfo.put("scene_code", "vehicle_license");
-		baseInfo.put("op_code", "data_save");
-		baseInfo.put("channel", "SZJJ");
-		baseInfo.put("version", "1.0");
-		baseInfo.put("target_id", userInfo.getUserId());
-		baseInfo.put("target_id_type", "ALIPAY_USER_ID");
-		baseInfo.put("scene_data", sceneData);
-		
-		return baseInfo;
-		
-		/*{ "scene_code", "vehicle_license" },
-        { "op_code", "data_save" },
-        { "channel", "SZJJ" },
-        { "version", "1.0" },
-        { "target_id", AliUserInfo["alipay_user_id"].ToString() },
-        { "target_id_type", "ALIPAY_USER_ID" },
-        { "scene_data", 
-            new JObject(){
-                { "info", sendInfoData }
-            }
-        },*/
-		
-		/*{ "plate_no", plate_no },                                                                                       //车牌号
-        { "plate_type", carData["result"]["row"][i]["hpzl"].ToString() },                                               //车牌号类型
-        { "vehicle_type", "" },                                                                                         //车辆类型
-        { "owner", carData["result"]["row"][i]["czxm"].ToString() },                                                    //车辆所有人
-        { "owener_cert_no", carData["result"]["row"][i]["czsfzmhm"].ToString() },                                       //车辆所有人身份证号码
-        { "vin", carData["result"]["row"][i]["cjh4"].ToString() },                                                      //车辆识别代号
-        { "engine_no", "" },                                                                                            //发动机号
-        { "check_date", carData["result"]["row"][i]["syrq"].ToString() },                                               //车辆审验日期
-        { "whether_one_self", (carData["result"]["row"][i]["sfbr"].ToString() == "本人") ? "是" : "否" },               //是否本人车辆
-        { "check_date_remind", "" },                                                                                    //下次审验日期提醒
-        { "status_remind", carData["result"]["row"][i]["zt"].ToString() },                                              //状态提醒
-        { "abandoned_remind", carData["result"]["row"][i]["qzbfqz"].ToString() },                                       //强制报废期止提醒
-        { "mobile_no", AliUserInfo["mobile"].ToString() },                                                              //申领人手机号码
-        { "user_character", "" },                                                                                       //使用性质
-        { "regisger_date", "" },                                                                                        //注册时间
-        { "issue_date", "" },                                                                                           //发证日期
-        { "city_code", "" },                                                                                            //车辆归属地
-        { "city_name", "" },                                                                                            //车辆归属地名称
-        { "ac", "" },                                                                                                   //核载人数
-        { "cert_doc_type", "SZ_E_VEHICLE_LICENSE" },                                                                    //类型
-        { "license_pics",                                                                                               //行驶证图片
-            new JObject(){
-                { "vehicle_license_home_page", ImageUploadResult["alipay_zdatafront_datatransfered_fileupload_response"]["result_data"] },                                                                    //行驶证正面图片
-                { "vehicle_license_sub_page", "" },                                                                     //行驶证副页图片
-            }
-        },*/
+		return cardInfo;
+	}
+	
+	
+	public String rsaEncrypt(String content){
+		try {
+			return AlipaySignature.rsaEncrypt(content, AlipayServiceEnvConstants.PUBLIC_KEY, AlipayServiceEnvConstants.CHARSET);
+		} catch (AlipayApiException e) {
+			logger.error("【支付宝卡包】rsaEncrypt数据加密异常：content=" + content);
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String rsaDecrypt(String content){
+		try {
+			return AlipaySignature.rsaDecrypt(content, AlipayServiceEnvConstants.PRIVATE_KEY, AlipayServiceEnvConstants.CHARSET);
+		} catch (AlipayApiException e) {
+			logger.error("【支付宝卡包】rsaDecrypt数据解密异常：content=" + content);
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	/**
@@ -746,14 +667,16 @@ public class AlipayAction extends BaseAction {
 	public void jsCardInfo(HttpServletRequest request, HttpServletResponse response){
 		JSONObject json = new JSONObject();
 		
-		String userId = request.getParameter("userId");
-		if(StringUtils.isBlank(userId)){
-			json.put("code", MsgCode.paramsError);
-			json.put("msg", "userId不能为空");
-			json.put("result", "");
+		String encryptUserId = rsaEncrypt(request.getParameter("userId"));
+		if(StringUtils.isBlank(encryptUserId)){
+			json.put("result", "false");
+			json.put("resultMsg", rsaEncrypt("userId不能为空"));
 			outString(response, json.toJSONString());
 			return;
-    	}
+		}
+		
+		String userId = rsaDecrypt(encryptUserId);
+		logger.info("【支付宝卡包】支付宝调用驾驶证信息查询，userId="+userId);
 		
 		try {
 			String certNo = "";
@@ -761,9 +684,8 @@ public class AlipayAction extends BaseAction {
 			//获取数据库的用户信息
 			UserBindAlipay userBindAlipay = accountService.queryUserBindAlipayByUserid(userId);
 			if(userBindAlipay == null){
-				json.put("code", MsgCode.businessError);
-				json.put("msg", "获取用户信息异常");
-				json.put("result", "");
+				json.put("result", "false");
+				json.put("resultMsg", rsaEncrypt("获取用户信息异常"));
 				outString(response, json.toJSONString());
 				return;
 			}else{
@@ -773,27 +695,24 @@ public class AlipayAction extends BaseAction {
 				
 			//获取驾驶证信息
 			MyDriverLicenseVo myDriverLicense = accountService.getMyDriverLicense(certNo, "Z");
-			JSONObject info = new JSONObject();
 			String code = myDriverLicense.getCode();
 			String msg = myDriverLicense.getMsg();
-			String result = "";
 			if(MsgCode.success.equals(code)){
 				int unresolvedIllegalCount = getUnresolvedIllegalCount(certNo, mobileNo, "Z", userId);
-				info.put("illegal_violation_count", String.valueOf(unresolvedIllegalCount));//未处理违章条数
-				info.put("cumulative_score", myDriverLicense.getDeductScore());//累计记分
-				info.put("factual_validity_check", myDriverLicense.getEffectiveDate());//审验有效期止
-				info.put("date_of_inspection", myDriverLicense.getPhysicalExaminationDate());//审验日期
-				info.put("status", myDriverLicense.getStatus());
-				
-				result = AlipaySignature.rsaEncrypt(info.toJSONString(), AlipayServiceEnvConstants.PUBLIC_KEY, AlipayServiceEnvConstants.CHARSET);
+				json.put("result", "true");
+				json.put("cumulative_score", rsaEncrypt(myDriverLicense.getDeductScore()));//累计记分
+				json.put("date_of_inspection", rsaEncrypt(myDriverLicense.getPhysicalExaminationDate()));//审验日期
+				json.put("illegal_violation_count", rsaEncrypt(String.valueOf(unresolvedIllegalCount)));//未处理违章条数
+			}else{
+				json.put("result", "false");
+				json.put("resultMsg", rsaEncrypt(msg));
 			}
 			
-			json.put("code", code);
-			json.put("msg", msg);
-			json.put("result", result);
 		} catch (Exception e) {
 			logger.error("【支付宝卡包】jsCardInfo驾驶证信息查询异常：userId="+userId, e);
 			e.printStackTrace();
+			json.put("result", "false");
+			json.put("resultMsg", rsaEncrypt("系统异常，请稍后重试"));
 		}
 		outString(response, json.toJSONString());
 		return;
@@ -806,14 +725,16 @@ public class AlipayAction extends BaseAction {
 	public void jsCardQRCode(HttpServletRequest request, HttpServletResponse response){
 		JSONObject json = new JSONObject();
 		
-		String userId = request.getParameter("userId");
-		if(StringUtils.isBlank(userId)){
-			json.put("code", MsgCode.paramsError);
-			json.put("msg", "userId不能为空");
-			json.put("result", "");
+		String encryptUserId = rsaEncrypt(request.getParameter("userId"));
+		if(StringUtils.isBlank(encryptUserId)){
+			json.put("result", "false");
+			json.put("resultMsg", rsaEncrypt("userId不能为空"));
 			outString(response, json.toJSONString());
 			return;
-    	}
+		}
+		
+		String userId = rsaDecrypt(encryptUserId);
+		logger.info("【支付宝卡包】支付宝调用驾驶证二维码查询，userId="+userId);
 		
 		try {
 			String certNo = "";
@@ -822,9 +743,8 @@ public class AlipayAction extends BaseAction {
 			//获取数据库的用户信息
 			UserBindAlipay userBindAlipay = accountService.queryUserBindAlipayByUserid(userId);
 			if(userBindAlipay == null){
-				json.put("code", MsgCode.businessError);
-				json.put("msg", "获取用户信息异常");
-				json.put("result", "");
+				json.put("result", "false");
+				json.put("resultMsg", rsaEncrypt("获取用户信息异常"));
 				outString(response, json.toJSONString());
 				return;
 			}else{
@@ -834,22 +754,21 @@ public class AlipayAction extends BaseAction {
 			}
 			//获取电子驾驶证照片
 			ElectronicDriverLicenseVo eCardInfo = accountService.getElectronicDriverLicense(certNo, realName, mobileNo, "Z");
-			JSONObject info = new JSONObject();
 			String code = eCardInfo.getCode();
 			String msg = eCardInfo.getMsg();
-			String result = "";
 			if(MsgCode.success.equals(code)){
-				info.put("QRCode", eCardInfo.getElectronicDriverLicenseQRCode());
-				
-				result = AlipaySignature.rsaEncrypt(info.toJSONString(), AlipayServiceEnvConstants.PUBLIC_KEY, AlipayServiceEnvConstants.CHARSET);
+				json.put("result", "true");
+				json.put("QRCode", rsaEncrypt(eCardInfo.getElectronicDriverLicenseQRCode()));
+			}else{
+				json.put("result", "false");
+				json.put("resultMsg", rsaEncrypt(msg));
 			}
 			
-			json.put("code", code);
-			json.put("msg", msg);
-			json.put("result", result);
 		} catch (Exception e) {
 			logger.error("【支付宝卡包】jsCardQRCode驾驶证二维码查询异常：userId="+userId, e);
 			e.printStackTrace();
+			json.put("result", "false");
+			json.put("resultMsg", rsaEncrypt("系统异常，请稍后重试"));
 		}
 		outString(response, json.toJSONString());
 		return;
@@ -862,24 +781,24 @@ public class AlipayAction extends BaseAction {
 	public void xsCardQRCode(HttpServletRequest request, HttpServletResponse response){
 		JSONObject json = new JSONObject();
 		
-		String plateNo = request.getParameter("plateNo");
-		String plateType = request.getParameter("plateType");
-		String mobileNo = request.getParameter("mobileNo");
-		if(StringUtils.isBlank(plateNo)){
+		String encryptPlateNo = request.getParameter("plateNo");
+		String encryptPlateType = request.getParameter("plateType");
+		String encryptMobileNo = request.getParameter("mobileNo");
+		if(StringUtils.isBlank(encryptPlateNo)){
 			json.put("code", MsgCode.paramsError);
 			json.put("msg", "plateNo不能为空");
 			json.put("result", "");
 			outString(response, json.toJSONString());
 			return;
-    	}
-		if(StringUtils.isBlank(plateType)){
+		}
+		if(StringUtils.isBlank(encryptPlateType)){
 			json.put("code", MsgCode.paramsError);
 			json.put("msg", "plateType不能为空");
 			json.put("result", "");
 			outString(response, json.toJSONString());
 			return;
 		}
-		if(StringUtils.isBlank(mobileNo)){
+		if(StringUtils.isBlank(encryptMobileNo)){
 			json.put("code", MsgCode.paramsError);
 			json.put("msg", "mobileNo不能为空");
 			json.put("result", "");
@@ -887,25 +806,29 @@ public class AlipayAction extends BaseAction {
 			return;
 		}
 		
+		String plateNo = rsaDecrypt(encryptPlateNo);
+		String plateType = rsaDecrypt(encryptPlateType);
+		String mobileNo = rsaDecrypt(encryptMobileNo);
+		logger.info("【支付宝卡包】支付宝调用行驶证二维码查询，plateNo="+plateNo);
+		
 		try {
 			//获取电子行驶证照片
 			DrivingLicenseVo eCardInfo = accountService.getDrivingLicense(plateNo, plateType, mobileNo, "Z");
-			JSONObject info = new JSONObject();
 			String code = eCardInfo.getCode();
 			String msg = eCardInfo.getMsg();
-			String result = "";
 			if(MsgCode.success.equals(code)){
-				info.put("QRCode", eCardInfo.getElectronicDrivingLicenseQRCode());
-				
-				result = AlipaySignature.rsaEncrypt(info.toJSONString(), AlipayServiceEnvConstants.PUBLIC_KEY, AlipayServiceEnvConstants.CHARSET);
+				json.put("result", "true");
+				json.put("QRCode", rsaEncrypt(eCardInfo.getElectronicDrivingLicenseQRCode()));
+			}else{
+				json.put("result", "false");
+				json.put("resultMsg", rsaEncrypt(msg));
 			}
 			
-			json.put("code", code);
-			json.put("msg", msg);
-			json.put("result", result);
 		} catch (Exception e) {
 			logger.error("【支付宝卡包】xsCardQRCode行驶证二维码查询异常：plateNo="+plateNo, e);
 			e.printStackTrace();
+			json.put("result", "false");
+			json.put("resultMsg", rsaEncrypt("系统异常，请稍后重试"));
 		}
 		outString(response, json.toJSONString());
 		return;
