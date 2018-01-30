@@ -667,7 +667,7 @@ public class AlipayAction extends BaseAction {
 	public void jsCardInfo(HttpServletRequest request, HttpServletResponse response){
 		JSONObject json = new JSONObject();
 		
-		String encryptUserId = rsaEncrypt(request.getParameter("userId"));
+		String encryptUserId = request.getParameter("userId");
 		if(StringUtils.isBlank(encryptUserId)){
 			json.put("result", "false");
 			json.put("resultMsg", rsaEncrypt("userId不能为空"));
@@ -725,7 +725,7 @@ public class AlipayAction extends BaseAction {
 	public void jsCardQRCode(HttpServletRequest request, HttpServletResponse response){
 		JSONObject json = new JSONObject();
 		
-		String encryptUserId = rsaEncrypt(request.getParameter("userId"));
+		String encryptUserId = request.getParameter("userId");
 		if(StringUtils.isBlank(encryptUserId)){
 			json.put("result", "false");
 			json.put("resultMsg", rsaEncrypt("userId不能为空"));
