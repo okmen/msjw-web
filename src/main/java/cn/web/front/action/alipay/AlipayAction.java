@@ -1,5 +1,6 @@
 package cn.web.front.action.alipay;
 
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -642,7 +643,7 @@ public class AlipayAction extends BaseAction {
 	
 	public String rsaEncrypt(String content){
 		try {
-			return AlipaySignature.rsaEncrypt(content, AlipayServiceEnvConstants.PUBLIC_KEY, AlipayServiceEnvConstants.CHARSET);
+			return AlipaySignature.rsaEncrypt(content, AlipayServiceEnvConstants.CARD_PUBLIC_KEY, AlipayServiceEnvConstants.CHARSET);
 		} catch (AlipayApiException e) {
 			logger.error("【支付宝卡包】rsaEncrypt数据加密异常：content=" + content);
 			e.printStackTrace();
@@ -670,8 +671,8 @@ public class AlipayAction extends BaseAction {
 		String encryptUserId = request.getParameter("userId");
 		if(StringUtils.isBlank(encryptUserId)){
 			json.put("result", "false");
-			json.put("resultMsg", rsaEncrypt("userId不能为空"));
-			outString(response, json.toJSONString());
+			json.put("resultMsg", "userId不能为空");
+			outEncryptString(response, json.toJSONString());
 			return;
 		}
 		
@@ -685,8 +686,8 @@ public class AlipayAction extends BaseAction {
 			UserBindAlipay userBindAlipay = accountService.queryUserBindAlipayByUserid(userId);
 			if(userBindAlipay == null){
 				json.put("result", "false");
-				json.put("resultMsg", rsaEncrypt("获取用户信息异常"));
-				outString(response, json.toJSONString());
+				json.put("resultMsg", "获取用户信息异常");
+				outEncryptString(response, json.toJSONString());
 				return;
 			}else{
 				certNo = userBindAlipay.getIdCard();
@@ -700,21 +701,21 @@ public class AlipayAction extends BaseAction {
 			if(MsgCode.success.equals(code)){
 				int unresolvedIllegalCount = getUnresolvedIllegalCount(certNo, mobileNo, "Z", userId);
 				json.put("result", "true");
-				json.put("cumulative_score", rsaEncrypt(myDriverLicense.getDeductScore()));//累计记分
-				json.put("date_of_inspection", rsaEncrypt(myDriverLicense.getPhysicalExaminationDate()));//审验日期
-				json.put("illegal_violation_count", rsaEncrypt(String.valueOf(unresolvedIllegalCount)));//未处理违章条数
+				json.put("cumulative_score", myDriverLicense.getDeductScore());//累计记分
+				json.put("date_of_inspection", myDriverLicense.getPhysicalExaminationDate());//审验日期
+				json.put("illegal_violation_count", String.valueOf(unresolvedIllegalCount));//未处理违章条数
 			}else{
 				json.put("result", "false");
-				json.put("resultMsg", rsaEncrypt(msg));
+				json.put("resultMsg", msg);
 			}
 			
 		} catch (Exception e) {
 			logger.error("【支付宝卡包】jsCardInfo驾驶证信息查询异常：userId="+userId, e);
 			e.printStackTrace();
 			json.put("result", "false");
-			json.put("resultMsg", rsaEncrypt("系统异常，请稍后重试"));
+			json.put("resultMsg", "系统异常，请稍后重试");
 		}
-		outString(response, json.toJSONString());
+		outEncryptString(response, json.toJSONString());
 		return;
 	}
 
@@ -728,8 +729,8 @@ public class AlipayAction extends BaseAction {
 		String encryptUserId = request.getParameter("userId");
 		if(StringUtils.isBlank(encryptUserId)){
 			json.put("result", "false");
-			json.put("resultMsg", rsaEncrypt("userId不能为空"));
-			outString(response, json.toJSONString());
+			json.put("resultMsg", "userId不能为空");
+			outEncryptString(response, json.toJSONString());
 			return;
 		}
 		
@@ -744,8 +745,8 @@ public class AlipayAction extends BaseAction {
 			UserBindAlipay userBindAlipay = accountService.queryUserBindAlipayByUserid(userId);
 			if(userBindAlipay == null){
 				json.put("result", "false");
-				json.put("resultMsg", rsaEncrypt("获取用户信息异常"));
-				outString(response, json.toJSONString());
+				json.put("resultMsg", "获取用户信息异常");
+				outEncryptString(response, json.toJSONString());
 				return;
 			}else{
 				certNo = userBindAlipay.getIdCard();
@@ -758,19 +759,19 @@ public class AlipayAction extends BaseAction {
 			String msg = eCardInfo.getMsg();
 			if(MsgCode.success.equals(code)){
 				json.put("result", "true");
-				json.put("QRCode", rsaEncrypt(eCardInfo.getElectronicDriverLicenseQRCode()));
+				json.put("QRCode", eCardInfo.getElectronicDriverLicenseQRCode());
 			}else{
 				json.put("result", "false");
-				json.put("resultMsg", rsaEncrypt(msg));
+				json.put("resultMsg", msg);
 			}
 			
 		} catch (Exception e) {
 			logger.error("【支付宝卡包】jsCardQRCode驾驶证二维码查询异常：userId="+userId, e);
 			e.printStackTrace();
 			json.put("result", "false");
-			json.put("resultMsg", rsaEncrypt("系统异常，请稍后重试"));
+			json.put("resultMsg", "系统异常，请稍后重试");
 		}
-		outString(response, json.toJSONString());
+		outEncryptString(response, json.toJSONString());
 		return;
 	}
 
@@ -785,24 +786,21 @@ public class AlipayAction extends BaseAction {
 		String encryptPlateType = request.getParameter("plateType");
 		String encryptMobileNo = request.getParameter("mobileNo");
 		if(StringUtils.isBlank(encryptPlateNo)){
-			json.put("code", MsgCode.paramsError);
-			json.put("msg", "plateNo不能为空");
-			json.put("result", "");
-			outString(response, json.toJSONString());
+			json.put("result", "false");
+			json.put("resultMsg", "plateNo不能为空");
+			outEncryptString(response, json.toJSONString());
 			return;
 		}
 		if(StringUtils.isBlank(encryptPlateType)){
-			json.put("code", MsgCode.paramsError);
-			json.put("msg", "plateType不能为空");
-			json.put("result", "");
-			outString(response, json.toJSONString());
+			json.put("result", "false");
+			json.put("resultMsg", "plateType不能为空");
+			outEncryptString(response, json.toJSONString());
 			return;
 		}
 		if(StringUtils.isBlank(encryptMobileNo)){
-			json.put("code", MsgCode.paramsError);
-			json.put("msg", "mobileNo不能为空");
-			json.put("result", "");
-			outString(response, json.toJSONString());
+			json.put("result", "false");
+			json.put("resultMsg", "mobileNo不能为空");
+			outEncryptString(response, json.toJSONString());
 			return;
 		}
 		
@@ -818,21 +816,34 @@ public class AlipayAction extends BaseAction {
 			String msg = eCardInfo.getMsg();
 			if(MsgCode.success.equals(code)){
 				json.put("result", "true");
-				json.put("QRCode", rsaEncrypt(eCardInfo.getElectronicDrivingLicenseQRCode()));
+				json.put("QRCode", eCardInfo.getElectronicDrivingLicenseQRCode());
 			}else{
 				json.put("result", "false");
-				json.put("resultMsg", rsaEncrypt(msg));
+				json.put("resultMsg", msg);
 			}
 			
 		} catch (Exception e) {
 			logger.error("【支付宝卡包】xsCardQRCode行驶证二维码查询异常：plateNo="+plateNo, e);
 			e.printStackTrace();
 			json.put("result", "false");
-			json.put("resultMsg", rsaEncrypt("系统异常，请稍后重试"));
+			json.put("resultMsg", "系统异常，请稍后重试");
 		}
-		outString(response, json.toJSONString());
+		outEncryptString(response, json.toJSONString());
 		return;
 	}
 	
-	
+	/**
+	 * 加密返回结果
+	 * @param response
+	 * @param str
+	 */
+	public void outEncryptString(HttpServletResponse response,String str){
+    	try {
+    		logger.info("【支付宝卡包】返回结果待加密前：" + str);
+    		PrintWriter out = response.getWriter();
+        	out.print(rsaEncrypt(str));//加密返回
+		} catch (Exception e) {
+			logger.error("写字符串异常");
+		}
+    }
 }
