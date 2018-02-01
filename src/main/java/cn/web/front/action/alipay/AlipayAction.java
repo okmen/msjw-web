@@ -653,14 +653,8 @@ public class AlipayAction extends BaseAction {
 		return null;
 	}
 	
-	public String rsaDecrypt(String content){
-		try {
-			return AlipaySignature.rsaDecrypt(content, AlipayServiceEnvConstants.PRIVATE_KEY, AlipayServiceEnvConstants.CHARSET);
-		} catch (AlipayApiException e) {
-			logger.error("【支付宝卡包】rsaDecrypt数据解密异常：content=" + content, e);
-			e.printStackTrace();
-		}
-		return null;
+	public String rsaDecrypt(String content) throws AlipayApiException{
+		return AlipaySignature.rsaDecrypt(content, AlipayServiceEnvConstants.PRIVATE_KEY, AlipayServiceEnvConstants.CHARSET);
 	}
 	
 	/**
@@ -671,35 +665,15 @@ public class AlipayAction extends BaseAction {
 		JSONObject json = new JSONObject();
 		
 		String requestBody = getPostParams(request);
-		String decryptBody = rsaDecrypt(requestBody);
-		JSONObject parseObject = JSONObject.parseObject(decryptBody);
-		String userId = parseObject.getString("userId");
-		
-		/*String encryptUserId = request.getParameter("userId");
-		if(StringUtils.isBlank(encryptUserId)){
-			json.put("result", "false");
-			json.put("resultMsg", "userId不能为空");
-			outEncryptString(response, json.toJSONString());
-			return;
-		}
-		String userId = rsaDecrypt(encryptUserId);*/
-		logger.info("【支付宝卡包】支付宝调用驾驶证信息查询入参，userId="+userId);
-		
 		try {
-			String certNo = "";
-			String mobileNo = "";
-			//获取数据库的用户信息
-			UserBindAlipay userBindAlipay = accountService.queryUserBindAlipayByUserid(userId);
-			if(userBindAlipay == null){
-				json.put("result", "false");
-				json.put("resultMsg", "获取用户信息异常");
-				outEncryptString(response, json.toJSONString());
-				return;
-			}else{
-				certNo = userBindAlipay.getIdCard();
-				mobileNo = userBindAlipay.getMobileNumber();
-			}
-				
+			String decryptBody = rsaDecrypt(requestBody);
+			JSONObject parseObject = JSONObject.parseObject(decryptBody);
+			String userId = parseObject.getString("userId");
+			String certNo = parseObject.getString("certNo");
+			String mobileNo = parseObject.getString("mobileNo");
+			
+			logger.info("【支付宝卡包】jsCardInfo解密后的入参，userId="+userId+"，certNo="+certNo+"，mobileNo="+mobileNo);
+			
 			//获取驾驶证信息
 			MyDriverLicenseVo myDriverLicense = accountService.getMyDriverLicense(certNo, "Z");
 			String code = myDriverLicense.getCode();
@@ -716,10 +690,17 @@ public class AlipayAction extends BaseAction {
 			}
 			
 		} catch (Exception e) {
-			logger.error("【支付宝卡包】jsCardInfo驾驶证信息查询异常：userId="+userId, e);
-			e.printStackTrace();
-			json.put("result", "false");
-			json.put("resultMsg", "系统异常，请稍后重试");
+			if(e instanceof AlipayApiException){
+				logger.error("【支付宝卡包】jsCardInfo参数解密异常：requestBody="+requestBody, e);
+				e.printStackTrace();
+				json.put("result", "false");
+				json.put("resultMsg", "参数解密异常");
+			}else{
+				logger.error("【支付宝卡包】jsCardInfo驾驶证信息查询异常：requestBody="+requestBody, e);
+				e.printStackTrace();
+				json.put("result", "false");
+				json.put("resultMsg", "系统异常，请稍后重试");
+			}
 		}
 		outEncryptString(response, json.toJSONString());
 		return;
@@ -733,36 +714,16 @@ public class AlipayAction extends BaseAction {
 		JSONObject json = new JSONObject();
 		
 		String requestBody = getPostParams(request);
-		String decryptBody = rsaDecrypt(requestBody);
-		JSONObject parseObject = JSONObject.parseObject(decryptBody);
-		String userId = parseObject.getString("userId");
-		
-		/*String encryptUserId = request.getParameter("userId");
-		if(StringUtils.isBlank(encryptUserId)){
-			json.put("result", "false");
-			json.put("resultMsg", "userId不能为空");
-			outEncryptString(response, json.toJSONString());
-			return;
-		}
-		String userId = rsaDecrypt(encryptUserId);*/
-		logger.info("【支付宝卡包】支付宝调用驾驶证二维码查询入参，userId="+userId);
 		
 		try {
-			String certNo = "";
-			String realName = "";
-			String mobileNo = "";
-			//获取数据库的用户信息
-			UserBindAlipay userBindAlipay = accountService.queryUserBindAlipayByUserid(userId);
-			if(userBindAlipay == null){
-				json.put("result", "false");
-				json.put("resultMsg", "获取用户信息异常");
-				outEncryptString(response, json.toJSONString());
-				return;
-			}else{
-				certNo = userBindAlipay.getIdCard();
-				realName = userBindAlipay.getRealName();
-				mobileNo = userBindAlipay.getMobileNumber();
-			}
+			String decryptBody = rsaDecrypt(requestBody);
+			JSONObject parseObject = JSONObject.parseObject(decryptBody);
+			String certNo = parseObject.getString("certNo");
+			String realName = parseObject.getString("realName");
+			String mobileNo = parseObject.getString("mobileNo");
+			
+			logger.info("【支付宝卡包】jsCardQRCode解密后的入参，certNo="+certNo+"，realName="+realName+"，mobileNo="+mobileNo);
+			
 			//获取电子驾驶证照片
 			ElectronicDriverLicenseVo eCardInfo = accountService.getElectronicDriverLicense(certNo, realName, mobileNo, "Z");
 			String code = eCardInfo.getCode();
@@ -776,10 +737,17 @@ public class AlipayAction extends BaseAction {
 			}
 			
 		} catch (Exception e) {
-			logger.error("【支付宝卡包】jsCardQRCode驾驶证二维码查询异常：userId="+userId, e);
-			e.printStackTrace();
-			json.put("result", "false");
-			json.put("resultMsg", "系统异常，请稍后重试");
+			if(e instanceof AlipayApiException){
+				logger.error("【支付宝卡包】jsCardQRCode参数解密异常：requestBody="+requestBody, e);
+				e.printStackTrace();
+				json.put("result", "false");
+				json.put("resultMsg", "参数解密异常");
+			}else{
+				logger.error("【支付宝卡包】jsCardQRCode驾驶证二维码查询异常：requestBody="+requestBody, e);
+				e.printStackTrace();
+				json.put("result", "false");
+				json.put("resultMsg", "系统异常，请稍后重试");
+			}
 		}
 		outEncryptString(response, json.toJSONString());
 		return;
@@ -793,39 +761,15 @@ public class AlipayAction extends BaseAction {
 		JSONObject json = new JSONObject();
 		
 		String requestBody = getPostParams(request);
-		String decryptBody = rsaDecrypt(requestBody);
-		JSONObject parseObject = JSONObject.parseObject(decryptBody);
-		String plateNo = parseObject.getString("plateNo");
-		String plateType = parseObject.getString("plateType");
-		String mobileNo = parseObject.getString("mobileNo");
-		
-		/*String encryptPlateNo = request.getParameter("plateNo");
-		String encryptPlateType = request.getParameter("plateType");
-		String encryptMobileNo = request.getParameter("mobileNo");
-		if(StringUtils.isBlank(encryptPlateNo)){
-			json.put("result", "false");
-			json.put("resultMsg", "plateNo不能为空");
-			outEncryptString(response, json.toJSONString());
-			return;
-		}
-		if(StringUtils.isBlank(encryptPlateType)){
-			json.put("result", "false");
-			json.put("resultMsg", "plateType不能为空");
-			outEncryptString(response, json.toJSONString());
-			return;
-		}
-		if(StringUtils.isBlank(encryptMobileNo)){
-			json.put("result", "false");
-			json.put("resultMsg", "mobileNo不能为空");
-			outEncryptString(response, json.toJSONString());
-			return;
-		}
-		String plateNo = rsaDecrypt(encryptPlateNo);
-		String plateType = rsaDecrypt(encryptPlateType);
-		String mobileNo = rsaDecrypt(encryptMobileNo);*/
-		logger.info("【支付宝卡包】支付宝调用行驶证二维码查询入参，plateNo="+plateNo+"，plateType="+plateType+"，mobileNo="+mobileNo);
-		
 		try {
+			String decryptBody = rsaDecrypt(requestBody);
+			JSONObject parseObject = JSONObject.parseObject(decryptBody);
+			String plateNo = parseObject.getString("plateNo");
+			String plateType = parseObject.getString("plateType");
+			String mobileNo = parseObject.getString("mobileNo");
+			
+			logger.info("【支付宝卡包】xsCardQRCode解密后的入参，plateNo="+plateNo+"，plateType="+plateType+"，mobileNo="+mobileNo);
+			
 			//获取电子行驶证照片
 			DrivingLicenseVo eCardInfo = accountService.getDrivingLicense(plateNo, plateType, mobileNo, "Z");
 			String code = eCardInfo.getCode();
@@ -839,10 +783,17 @@ public class AlipayAction extends BaseAction {
 			}
 			
 		} catch (Exception e) {
-			logger.error("【支付宝卡包】xsCardQRCode行驶证二维码查询异常：plateNo="+plateNo+"，plateType="+plateType+"，mobileNo="+mobileNo, e);
-			e.printStackTrace();
-			json.put("result", "false");
-			json.put("resultMsg", "系统异常，请稍后重试");
+			if(e instanceof AlipayApiException){
+				logger.error("【支付宝卡包】xsCardQRCode参数解密异常：requestBody="+requestBody, e);
+				e.printStackTrace();
+				json.put("result", "false");
+				json.put("resultMsg", "参数解密异常");
+			}else{
+				logger.error("【支付宝卡包】xsCardQRCode行驶证二维码查询异常：requestBody="+requestBody, e);
+				e.printStackTrace();
+				json.put("result", "false");
+				json.put("resultMsg", "系统异常，请稍后重试");
+			}
 		}
 		outEncryptString(response, json.toJSONString());
 		return;
