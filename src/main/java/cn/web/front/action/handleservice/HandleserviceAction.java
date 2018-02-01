@@ -3307,7 +3307,7 @@ public class HandleserviceAction extends BaseAction {
 						templateData.put("openid", openId);
 						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
-						templateData.put("keyword1Data", "核发机动车检验合格标志");templateData.put("keyword1Color", "#212121");
+						templateData.put("keyword1Data", "补换检验合格标志");templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
 						templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
 						templateData.put("remarkData", "更多信息请点击详情查看");
