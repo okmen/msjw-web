@@ -270,6 +270,48 @@ public class HandleserviceAction extends BaseAction {
     		Map<String, Object> map = handleService.complementTheMotorVehicleDrivingLicense(vehicleDrivingLicenseVo);
     		String code = map.get("code").toString();
 			String msg = map.get("msg").toString();
+			if(MsgCode.success.equals(baseBean.getCode()) && "M".equals(sourceOfCertification)){
+				try {
+					String waterNumber = "";
+					waterNumber = SXStringUtils.deleteChineseCharactertoString(msg);
+					waterNumber = waterNumber.replace("，", "");
+					waterNumber = waterNumber.replace("：", "");
+					waterNumber = waterNumber.replace("。", "");
+					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.complementTheMotorVehicleDrivingLicense, waterNumber, DateUtil2.date2str(new Date()));
+					baseBean.setData(handleTemplateVo);
+					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+					logger.info("【民生警务】结果页url：" + url);
+					JSONObject templateData = new JSONObject();
+					templateData.put("openid", openId);
+					templateData.put("templateId", handleService.getMsjwHandleTemplateId());
+					templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
+					templateData.put("keyword1Data", "补领行驶证");	templateData.put("keyword1Color", "#212121");
+					templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
+					templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
+					templateData.put("remarkData", "更多信息请点击详情查看");
+					templateData.put("redirectUrl", url);
+					String params = templateData.toJSONString();
+					JSONObject json = msjwService.sendTemplateMsg2Msjw(params);
+					logger.info("【民生警务】发送模板消息结果：" + json);
+
+					//新增到民生警务平台个人中心
+					try {
+						MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+						businessVo.setTylsbh(waterNumber);
+						businessVo.setOpenid(openId);
+						businessVo.setEventname("补领行驶证");
+						businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+						businessVo.setJinduUrlWx(url);//进度查询跳转地址
+						msjwService.addApplyingBusiness(businessVo);
+					} catch (Exception e) {
+						logger.error("【民生警务】新增在办业务到民生警务平台异常", e);
+						e.printStackTrace();
+					}
+					
+				} catch (Exception e) {
+					logger.error("【民生警务】发送模板消息  失败===", e);
+				}
+			}
 			if(MsgCode.success.equals(baseBean.getCode()) && "C".equals(sourceOfCertification)){
 				String waterNumber = "";
 				waterNumber = SXStringUtils.deleteChineseCharactertoString(msg);
@@ -822,7 +864,46 @@ public class HandleserviceAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
-				}else{
+				}
+				//民生警务来源，模板推送
+				else if("M".equals(sourceOfCertification) && StringUtil.isNotBlank(openId)){
+					try {
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.renewalDriverLicense, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+						logger.info("【民生警务】结果页url：" + url);
+						JSONObject templateData = new JSONObject();
+						templateData.put("openid", openId);
+						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
+						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
+						templateData.put("keyword1Data", "驾驶证延期换证");	templateData.put("keyword1Color", "#212121");
+						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
+						templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
+						templateData.put("remarkData", "更多信息请点击详情查看");
+						templateData.put("redirectUrl", url);
+						String params = templateData.toJSONString();
+						JSONObject json = msjwService.sendTemplateMsg2Msjw(params);
+						logger.info("【民生警务】发送模板消息结果：" + json);
+
+						//新增到民生警务平台个人中心
+						try {
+							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+							businessVo.setTylsbh(waterNumber);
+							businessVo.setOpenid(openId);
+							businessVo.setEventname("驾驶证延期换证");
+							businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+							businessVo.setJinduUrlWx(url);//进度查询跳转地址
+							msjwService.addApplyingBusiness(businessVo);
+						} catch (Exception e) {
+							logger.error("【民生警务】新增在办业务到民生警务平台异常", e);
+							e.printStackTrace();
+						}
+						
+					} catch (Exception e) {
+						logger.error("【民生警务】发送模板消息  失败===", e);
+					}
+				}
+				else{
 					baseBean.setData(waterNumber);
 				}
 			} else {
@@ -1046,7 +1127,46 @@ public class HandleserviceAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
-				}else{
+				}
+				//民生警务来源，模板推送
+				else if("M".equals(sourceOfCertification) && StringUtil.isNotBlank(openId)){
+					try {
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseInto, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+						logger.info("【民生警务】结果页url：" + url);
+						JSONObject templateData = new JSONObject();
+						templateData.put("openid", openId);
+						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
+						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
+						templateData.put("keyword1Data", "驾驶证转入");	templateData.put("keyword1Color", "#212121");
+						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
+						templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
+						templateData.put("remarkData", "更多信息请点击详情查看");
+						templateData.put("redirectUrl", url);
+						String params = templateData.toJSONString();
+						JSONObject json = msjwService.sendTemplateMsg2Msjw(params);
+						logger.info("【民生警务】发送模板消息结果：" + json);
+
+						//新增到民生警务平台个人中心
+						try {
+							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+							businessVo.setTylsbh(waterNumber);
+							businessVo.setOpenid(openId);
+							businessVo.setEventname("驾驶证转入");
+							businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+							businessVo.setJinduUrlWx(url);//进度查询跳转地址
+							msjwService.addApplyingBusiness(businessVo);
+						} catch (Exception e) {
+							logger.error("【民生警务】新增在办业务到民生警务平台异常", e);
+							e.printStackTrace();
+						}
+						
+					} catch (Exception e) {
+						logger.error("【民生警务】发送模板消息  失败===", e);
+					}
+				}
+				else{
 					baseBean.setData(waterNumber);
 				}
 			} else {
@@ -1260,7 +1380,46 @@ public class HandleserviceAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
-				}else{
+				}
+				//民生警务来源，模板推送
+				else if("M".equals(sourceOfCertification) && StringUtil.isNotBlank(openId)){
+					try {
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseVoluntaryDemotion, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+						logger.info("【民生警务】结果页url：" + url);
+						JSONObject templateData = new JSONObject();
+						templateData.put("openid", openId);
+						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
+						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
+						templateData.put("keyword1Data", "驾驶证自愿降级");	templateData.put("keyword1Color", "#212121");
+						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
+						templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
+						templateData.put("remarkData", "更多信息请点击详情查看");
+						templateData.put("redirectUrl", url);
+						String params = templateData.toJSONString();
+						JSONObject json = msjwService.sendTemplateMsg2Msjw(params);
+						logger.info("【民生警务】发送模板消息结果：" + json);
+
+						//新增到民生警务平台个人中心
+						try {
+							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+							businessVo.setTylsbh(waterNumber);
+							businessVo.setOpenid(openId);
+							businessVo.setEventname("驾驶证自愿降级");
+							businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+							businessVo.setJinduUrlWx(url);//进度查询跳转地址
+							msjwService.addApplyingBusiness(businessVo);
+						} catch (Exception e) {
+							logger.error("【民生警务】新增在办业务到民生警务平台异常", e);
+							e.printStackTrace();
+						}
+						
+					} catch (Exception e) {
+						logger.error("【民生警务】发送模板消息  失败===", e);
+					}
+				}
+				else{
 					baseBean.setData(waterNumber);
 				}
 				baseBean.setMsg(msg);
@@ -2035,7 +2194,7 @@ public class HandleserviceAction extends BaseAction {
 				if (userSource.equals("C")) {
 					try {
 						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseAnnualVerification, waterNumber, DateUtil2.date2str(new Date()));
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverChangeContact, waterNumber, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
 						logger.info("返回的url是：" + url);
@@ -2053,7 +2212,46 @@ public class HandleserviceAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
-				}else{
+				}
+				//民生警务来源，模板推送
+				else if("M".equals(userSource) && StringUtil.isNotBlank(openId)){
+					try {
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverChangeContact, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+						logger.info("【民生警务】结果页url：" + url);
+						JSONObject templateData = new JSONObject();
+						templateData.put("openid", openId);
+						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
+						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
+						templateData.put("keyword1Data", "驾驶人联系方式变更");	templateData.put("keyword1Color", "#212121");
+						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
+						templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
+						templateData.put("remarkData", "更多信息请点击详情查看");
+						templateData.put("redirectUrl", url);
+						String params = templateData.toJSONString();
+						JSONObject json = msjwService.sendTemplateMsg2Msjw(params);
+						logger.info("【民生警务】发送模板消息结果：" + json);
+
+						//新增到民生警务平台个人中心
+						try {
+							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+							businessVo.setTylsbh(waterNumber);
+							businessVo.setOpenid(openId);
+							businessVo.setEventname("驾驶人联系方式变更");
+							businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+							businessVo.setJinduUrlWx(url);//进度查询跳转地址
+							msjwService.addApplyingBusiness(businessVo);
+						} catch (Exception e) {
+							logger.error("【民生警务】新增在办业务到民生警务平台异常", e);
+							e.printStackTrace();
+						}
+						
+					} catch (Exception e) {
+						logger.error("【民生警务】发送模板消息  失败===", e);
+					}
+				}
+				else{
 					baseBean.setData(waterNumber);
 				}
 			} else {
@@ -2102,7 +2300,6 @@ public class HandleserviceAction extends BaseAction {
 			String applyDate = request.getParameter("applyDate");  //申请日期
 			String remarks = request.getParameter("remarks");  //备注
 			String openId = request.getParameter("openId");  //openId
-			
 			//验证号牌种类
 			if(StringUtil.isBlank(plateType)){
 				baseBean.setCode(MsgCode.paramsError);
@@ -2177,9 +2374,8 @@ public class HandleserviceAction extends BaseAction {
 			if("0000".equals(code)){
         		baseBean.setCode(MsgCode.success);
         		baseBean.setMsg(msg);
-        		
         		HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.applyGatePass, plateType, abbreviation + numberPlate, mobilephone, applyDate);
-				baseBean.setData(handleTemplateVo);
+        		baseBean.setData(handleTemplateVo);
         		//推送模板消息
 				try {
 					String templateId = "OHe4a5_6nqj3VuN3QKmKYKPiEk54Y_w3oYQRUn0I34o";
@@ -2600,6 +2796,43 @@ public class HandleserviceAction extends BaseAction {
 				waterNumber = waterNumber.replace("。", "");
         		baseBean.setCode(MsgCode.success);
         		baseBean.setMsg(msg);
+        		if("M".equals(sourceOfCertification)){
+    				try {
+    					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.iocomotiveCarChangeContact, waterNumber, DateUtil2.date2str(new Date()));
+    					baseBean.setData(handleTemplateVo);
+    					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+    					logger.info("【民生警务】结果页url：" + url);
+    					JSONObject templateData = new JSONObject();
+    					templateData.put("openid", openId);
+    					templateData.put("templateId", handleService.getMsjwHandleTemplateId());
+    					templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
+    					templateData.put("keyword1Data", "机动车联系方式变更");	templateData.put("keyword1Color", "#212121");
+    					templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
+    					templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
+    					templateData.put("remarkData", "更多信息请点击详情查看");
+    					templateData.put("redirectUrl", url);
+    					String params = templateData.toJSONString();
+    					JSONObject json = msjwService.sendTemplateMsg2Msjw(params);
+    					logger.info("【民生警务】发送模板消息结果：" + json);
+
+    					//新增到民生警务平台个人中心
+    					try {
+    						MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+    						businessVo.setTylsbh(waterNumber);
+    						businessVo.setOpenid(openId);
+    						businessVo.setEventname("机动车联系方式变更");
+    						businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+    						businessVo.setJinduUrlWx(url);//进度查询跳转地址
+    						msjwService.addApplyingBusiness(businessVo);
+    					} catch (Exception e) {
+    						logger.error("【民生警务】新增在办业务到民生警务平台异常", e);
+    						e.printStackTrace();
+    					}
+    					
+    				} catch (Exception e) {
+    					logger.error("【民生警务】发送模板消息  失败===", e);
+    				}
+    			}
         		
         		//推送模板消息
 				try {
@@ -2784,7 +3017,44 @@ public class HandleserviceAction extends BaseAction {
 				waterNumber = waterNumber.replace("。", "");
         		baseBean.setCode(MsgCode.success);
         		baseBean.setMsg(msg);
-        		
+        		//民生警务来源，模板推送
+				if("M".equals(sourceOfCertification) && StringUtil.isNotBlank(openId)){
+					try {
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.iocomotiveCarReplace, waterNumber, DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+						logger.info("【民生警务】结果页url：" + url);
+						JSONObject templateData = new JSONObject();
+						templateData.put("openid", openId);
+						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
+						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
+						templateData.put("keyword1Data", "换领行驶证");	templateData.put("keyword1Color", "#212121");
+						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
+						templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
+						templateData.put("remarkData", "更多信息请点击详情查看");
+						templateData.put("redirectUrl", url);
+						String params = templateData.toJSONString();
+						JSONObject json = msjwService.sendTemplateMsg2Msjw(params);
+						logger.info("【民生警务】发送模板消息结果：" + json);
+
+						//新增到民生警务平台个人中心
+						try {
+							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+							businessVo.setTylsbh(waterNumber);
+							businessVo.setOpenid(openId);
+							businessVo.setEventname("换领行驶证");
+							businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+							businessVo.setJinduUrlWx(url);//进度查询跳转地址
+							msjwService.addApplyingBusiness(businessVo);
+						} catch (Exception e) {
+							logger.error("【民生警务】新增在办业务到民生警务平台异常", e);
+							e.printStackTrace();
+						}
+						
+					} catch (Exception e) {
+						logger.error("【民生警务】发送模板消息  失败===", e);
+					}
+				}
         		try {
 					String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A_xszbhlbl";
 					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.iocomotiveCarReplace, waterNumber, DateUtil2.date2str(new Date()));
@@ -3027,7 +3297,7 @@ public class HandleserviceAction extends BaseAction {
         		}
 				
 				//民生警务来源，模板推送
-				/*else if("M".equals(sourceOfCertification) && StringUtil.isNotBlank(openId)){
+				else if("M".equals(sourceOfCertification) && StringUtil.isNotBlank(openId)){
 					try {
 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.replaceInspectionMark, number, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
@@ -3037,7 +3307,7 @@ public class HandleserviceAction extends BaseAction {
 						templateData.put("openid", openId);
 						templateData.put("templateId", handleService.getMsjwHandleTemplateId());
 						templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
-						templateData.put("keyword1Data", "核发机动车检验合格标志");templateData.put("keyword1Color", "#212121");
+						templateData.put("keyword1Data", "补换检验合格标志");templateData.put("keyword1Color", "#212121");
 						templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
 						templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
 						templateData.put("remarkData", "更多信息请点击详情查看");
@@ -3051,7 +3321,7 @@ public class HandleserviceAction extends BaseAction {
 							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
 							businessVo.setTylsbh(number);
 							businessVo.setOpenid(openId);
-							businessVo.setEventname("核发机动车检验合格标志");
+							businessVo.setEventname("补换检验合格标志");
 							businessVo.setApplyingUrlWx(url);//微信在办跳转地址
 							businessVo.setJinduUrlWx(url);//进度查询跳转地址
 							msjwService.addApplyingBusiness(businessVo);
@@ -3063,7 +3333,7 @@ public class HandleserviceAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("【民生警务】发送模板消息  失败===", e);
 					}
-				}*/
+				}
 				
 	       	}else{
 	       		baseBean.setCode(MsgCode.businessError);
@@ -4244,7 +4514,7 @@ public class HandleserviceAction extends BaseAction {
  		String receiverAddr = request.getParameter("receiverAddr");
  		String receiverCode = request.getParameter("receiverCode");
  		String sourceOfCertification = request.getParameter("sourceOfCertification");
- 		
+ 		String openId = request.getParameter("openId");
  		if (StringUtil.isBlank(businessType)) {			
  			baseBean.setCode(MsgCode.paramsError);
  			baseBean.setMsg("业务类型不能为空!");
@@ -4445,6 +4715,52 @@ public class HandleserviceAction extends BaseAction {
  			// 创建返回结果
  			baseBean = handleService.applyOrCancleCarMortgage(carMortgageVo);
  			logger.info("机动车抵押业务返回结果：" + baseBean.toJson());
+ 			String code = baseBean.getCode();
+ 			String msg = baseBean.getMsg();
+ 			if (MsgCode.success.equals(code)) {
+ 				String waterNumber = msg.substring(msg.indexOf("：")+1);
+				String url = handleService.getMsjwCarMortgageUrl()+"loginUser="+mortgageeIDcard+"&sqlx="+sqlx+"&source="+sourceOfCertification;
+				logger.info("机动车抵押业务返回的url : " + url);
+				if("M".equals(sourceOfCertification)){
+    				try {
+    					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "applyOrCancleCarMortgage", waterNumber, DateUtil2.date2str(new Date()));
+    					baseBean.setData(handleTemplateVo);
+    					String url2 = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+    					logger.info("【民生警务】结果页url：" + url);
+    					JSONObject templateData = new JSONObject();
+    					templateData.put("openid", openId);
+    					templateData.put("templateId", handleService.getMsjwHandleTemplateId());
+    					templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
+    					templateData.put("keyword1Data", "机动车个人抵押解押登记");	templateData.put("keyword1Color", "#212121");
+    					templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
+    					templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
+    					templateData.put("remarkData", "更多信息请点击详情查看");
+    					templateData.put("redirectUrl", url2);
+    					String params = templateData.toJSONString();
+    					JSONObject json = msjwService.sendTemplateMsg2Msjw(params);
+    					logger.info("【民生警务】发送模板消息结果：" + json);
+    					
+    					//新增到民生警务平台个人中心
+    	 				try {
+    	 					MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+    	 					businessVo.setTylsbh(waterNumber);
+    	 					businessVo.setOpenid(openId);
+    	 					businessVo.setEventname("机动车个人抵押解押登记");
+    	 					businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+    	 					businessVo.setJinduUrlWx(url);//进度查询跳转地址
+    	 					msjwService.addCarMortgageBusiness(businessVo);
+    	 				} catch (Exception e) {
+    	 					logger.error("【民生警务】新增在办业务到民生警务平台异常", e);
+    	 					e.printStackTrace();
+    	 				}
+    					
+    				} catch (Exception e) {
+    					logger.error("【民生警务】发送模板消息  失败===", e);
+    				}
+    			}
+ 				
+			}
+ 		
  		} catch (Exception e) {
  			logger.error("机动车抵押业务异常:" + e);
  			DealException(baseBean, e);

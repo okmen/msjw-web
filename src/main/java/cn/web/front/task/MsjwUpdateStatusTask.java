@@ -19,8 +19,10 @@ import cn.convenience.bean.MsjwApplyingBusinessVo;
 import cn.convenience.bean.MsjwApplyingRecordVo;
 import cn.convenience.bean.MsjwVehicleInspectionVo;
 import cn.convenience.service.IMsjwService;
+import cn.handle.bean.vo.CarMortgageBean;
 import cn.handle.bean.vo.VehicleInspectionVO;
 import cn.handle.service.IHandleService;
+import cn.sdk.bean.BaseBean;
 import cn.sdk.util.DateUtil2;
 import cn.sdk.util.StringUtil;
 import cn.web.front.common.NetWorkIp;
@@ -78,6 +80,18 @@ public class MsjwUpdateStatusTask {
 						updateStatus(LYBZ, WWLSH, ZHCLZT);
 					}
 				}
+				
+				BaseBean queryCarMortgage = handleService.queryCarMortgage(identityId, "sqlx", "M");
+				@SuppressWarnings("unchecked")
+				List<CarMortgageBean> carMortgageList = (List<CarMortgageBean>) queryCarMortgage.getData();
+				if (null != carMortgageList && carMortgageList.size()>0) {
+					for (CarMortgageBean vo : carMortgageList) {
+						String LYBZ = "M";
+						String WWLSH = vo.getSerialNumber();//流水号
+						String ZHCLZT = vo.getState();//业务状态
+						updateCarMortgageStatus(LYBZ, WWLSH, ZHCLZT);
+					}
+				}
 			}
 			
 			//更新六年免检状态
@@ -89,7 +103,54 @@ public class MsjwUpdateStatusTask {
 			logger.info("结束定时修改【民生警务】办理状态,耗时"+(end-begin)+"----------------------------------------------------------------------------");
 		}
 	}
+	/**
+	 * 更新
+	 * @param LYBZ 来源标志
+	 * @param WWLSH 流水号
+	 * @param ZHCLZT 业务状态
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 * @throws Exception
+	 */
+	public void updateCarMortgageStatus(String LYBZ, String WWLSH, String ZHCLZT)throws Exception {
+		String status = "车管已签注资料移交邮政，邮政回填EMS单号，车管所退办，邮政退办，车管退办资料移交邮政，资料退办";
+		MsjwApplyingRecordVo msjwApplyingRecordVo = msjwService.selectMsjwApplyingRecordByTylsbh(WWLSH);
+		if (status.contains(ZHCLZT)) {
+			//根据流水号查询数据库
+			//MsjwApplyingRecord表中有记录，修改状态并移除记录
+			if(msjwApplyingRecordVo != null){
+				MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+				BeanUtils.copyProperties(businessVo, msjwApplyingRecordVo);
+				//修改msjw平台状态和显示
+				businessVo.setShowstatus(ZHCLZT);
+				businessVo.setListstatus("04");//只在msjw平台进度查询中显示
+				msjwService.updateApplyingBusiness(businessVo);
+				
+				//从MsjwApplyingRecord表中根据id删除数据
+				msjwService.deleteMsjwApplyingRecordById(msjwApplyingRecordVo.getId());
+				
+				//新增到MsjwFinishedRecord
+				msjwApplyingRecordVo.setShowstatus(ZHCLZT);
+				msjwApplyingRecordVo.setListstatus("04");
+				msjwApplyingRecordVo.setStatus(ZHCLZT);
+				msjwService.addMsjwFinishedRecord(msjwApplyingRecordVo);
+			}
+		}else{
+			if(msjwApplyingRecordVo != null){
+				MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+				BeanUtils.copyProperties(businessVo, msjwApplyingRecordVo);
+				//修改msjw平台状态说明
+				businessVo.setShowstatus(ZHCLZT);
+				msjwService.updateApplyingBusiness(businessVo);
+				//修改数据库状态
+				msjwApplyingRecordVo.setStatus(ZHCLZT);//业务状态
+				msjwApplyingRecordVo.setShowstatus(ZHCLZT);//状态说明
+				msjwService.updateMsjwApplyingRecordById(msjwApplyingRecordVo);
+			}
+		}
+		
 
+	}
 	/**
 	 * 更新
 	 * @param LYBZ 来源标志
