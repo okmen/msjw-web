@@ -2194,7 +2194,7 @@ public class HandleserviceAction extends BaseAction {
 				if (userSource.equals("C")) {
 					try {
 						String templateId = "9k6RflslCxwEVw_Sz12vShnTzOUsw5hS2TdrjHXs_4A";
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseAnnualVerification, waterNumber, DateUtil2.date2str(new Date()));
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverChangeContact, waterNumber, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getTemplateSendUrl());
 						logger.info("返回的url是：" + url);
@@ -2216,7 +2216,7 @@ public class HandleserviceAction extends BaseAction {
 				//民生警务来源，模板推送
 				else if("M".equals(userSource) && StringUtil.isNotBlank(openId)){
 					try {
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverLicenseAnnualVerification, waterNumber, DateUtil2.date2str(new Date()));
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.driverChangeContact, waterNumber, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
 						logger.info("【民生警务】结果页url：" + url);
@@ -4721,19 +4721,44 @@ public class HandleserviceAction extends BaseAction {
  				String waterNumber = msg.substring(msg.indexOf("：")+1);
 				String url = handleService.getMsjwCarMortgageUrl()+"loginUser="+mortgageeIDcard+"&sqlx="+sqlx+"&source="+sourceOfCertification;
 				logger.info("机动车抵押业务返回的url : " + url);
- 				//新增到民生警务平台个人中心
- 				try {
- 					MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
- 					businessVo.setTylsbh(waterNumber);
- 					businessVo.setOpenid(openId);
- 					businessVo.setEventname("机动车个人抵押解押登记");
- 					businessVo.setApplyingUrlWx(url);//微信在办跳转地址
- 					businessVo.setJinduUrlWx(url);//进度查询跳转地址
- 					msjwService.addCarMortgageBusiness(businessVo);
- 				} catch (Exception e) {
- 					logger.error("【民生警务】新增在办业务到民生警务平台异常", e);
- 					e.printStackTrace();
- 				}
+				if("M".equals(sourceOfCertification)){
+    				try {
+    					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, "applyOrCancleCarMortgage", waterNumber, DateUtil2.date2str(new Date()));
+    					baseBean.setData(handleTemplateVo);
+    					String url2 = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+    					logger.info("【民生警务】结果页url：" + url);
+    					JSONObject templateData = new JSONObject();
+    					templateData.put("openid", openId);
+    					templateData.put("templateId", handleService.getMsjwHandleTemplateId());
+    					templateData.put("firstData", "您好，您的业务办理申请已提交，具体信息如下：");
+    					templateData.put("keyword1Data", "机动车个人抵押解押登记");	templateData.put("keyword1Color", "#212121");
+    					templateData.put("keyword2Data", "待初审");templateData.put("keyword2Color", "#212121");
+    					templateData.put("keyword3Data", DateUtil.formatDateTime(new Date()));templateData.put("keyword3Color", "#212121");
+    					templateData.put("remarkData", "更多信息请点击详情查看");
+    					templateData.put("redirectUrl", url2);
+    					String params = templateData.toJSONString();
+    					JSONObject json = msjwService.sendTemplateMsg2Msjw(params);
+    					logger.info("【民生警务】发送模板消息结果：" + json);
+    					
+    					//新增到民生警务平台个人中心
+    	 				try {
+    	 					MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+    	 					businessVo.setTylsbh(waterNumber);
+    	 					businessVo.setOpenid(openId);
+    	 					businessVo.setEventname("机动车个人抵押解押登记");
+    	 					businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+    	 					businessVo.setJinduUrlWx(url);//进度查询跳转地址
+    	 					msjwService.addCarMortgageBusiness(businessVo);
+    	 				} catch (Exception e) {
+    	 					logger.error("【民生警务】新增在办业务到民生警务平台异常", e);
+    	 					e.printStackTrace();
+    	 				}
+    					
+    				} catch (Exception e) {
+    					logger.error("【民生警务】发送模板消息  失败===", e);
+    				}
+    			}
+ 				
 			}
  		
  		} catch (Exception e) {
