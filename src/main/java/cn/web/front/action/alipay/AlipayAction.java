@@ -566,6 +566,7 @@ public class AlipayAction extends BaseAction {
 	 */
 	public JSONObject jsCardInfo(UserBindAlipay userInfo, MyDriverLicenseVo vo, String eCardImgBase64){
 		JSONObject extInfo = new JSONObject();
+		extInfo.put("userId", userInfo.getUserId());// 支付宝id
 		extInfo.put("mobileNo", userInfo.getMobileNumber());// 手机号码
 		extInfo.put("drivingLicenseNo", vo.getDriverLicenseNumber());// 证号
 		extInfo.put("sex", "1".equals(vo.getGender()) ? "男" : "女");// 性别
@@ -669,16 +670,20 @@ public class AlipayAction extends BaseAction {
 	public void jsCardInfo(HttpServletRequest request, HttpServletResponse response){
 		JSONObject json = new JSONObject();
 		
-		String encryptUserId = request.getParameter("userId");
+		String requestBody = getPostParams(request);
+		String decryptBody = rsaDecrypt(requestBody);
+		JSONObject parseObject = JSONObject.parseObject(decryptBody);
+		String userId = parseObject.getString("userId");
+		
+		/*String encryptUserId = request.getParameter("userId");
 		if(StringUtils.isBlank(encryptUserId)){
 			json.put("result", "false");
 			json.put("resultMsg", "userId不能为空");
 			outEncryptString(response, json.toJSONString());
 			return;
 		}
-		
-		String userId = rsaDecrypt(encryptUserId);
-		logger.info("【支付宝卡包】支付宝调用驾驶证信息查询，userId="+userId);
+		String userId = rsaDecrypt(encryptUserId);*/
+		logger.info("【支付宝卡包】支付宝调用驾驶证信息查询入参，userId="+userId);
 		
 		try {
 			String certNo = "";
@@ -727,16 +732,20 @@ public class AlipayAction extends BaseAction {
 	public void jsCardQRCode(HttpServletRequest request, HttpServletResponse response){
 		JSONObject json = new JSONObject();
 		
-		String encryptUserId = request.getParameter("userId");
+		String requestBody = getPostParams(request);
+		String decryptBody = rsaDecrypt(requestBody);
+		JSONObject parseObject = JSONObject.parseObject(decryptBody);
+		String userId = parseObject.getString("userId");
+		
+		/*String encryptUserId = request.getParameter("userId");
 		if(StringUtils.isBlank(encryptUserId)){
 			json.put("result", "false");
 			json.put("resultMsg", "userId不能为空");
 			outEncryptString(response, json.toJSONString());
 			return;
 		}
-		
-		String userId = rsaDecrypt(encryptUserId);
-		logger.info("【支付宝卡包】支付宝调用驾驶证二维码查询，userId="+userId);
+		String userId = rsaDecrypt(encryptUserId);*/
+		logger.info("【支付宝卡包】支付宝调用驾驶证二维码查询入参，userId="+userId);
 		
 		try {
 			String certNo = "";
@@ -783,7 +792,14 @@ public class AlipayAction extends BaseAction {
 	public void xsCardQRCode(HttpServletRequest request, HttpServletResponse response){
 		JSONObject json = new JSONObject();
 		
-		String encryptPlateNo = request.getParameter("plateNo");
+		String requestBody = getPostParams(request);
+		String decryptBody = rsaDecrypt(requestBody);
+		JSONObject parseObject = JSONObject.parseObject(decryptBody);
+		String plateNo = parseObject.getString("plateNo");
+		String plateType = parseObject.getString("plateType");
+		String mobileNo = parseObject.getString("mobileNo");
+		
+		/*String encryptPlateNo = request.getParameter("plateNo");
 		String encryptPlateType = request.getParameter("plateType");
 		String encryptMobileNo = request.getParameter("mobileNo");
 		if(StringUtils.isBlank(encryptPlateNo)){
@@ -804,11 +820,10 @@ public class AlipayAction extends BaseAction {
 			outEncryptString(response, json.toJSONString());
 			return;
 		}
-		
 		String plateNo = rsaDecrypt(encryptPlateNo);
 		String plateType = rsaDecrypt(encryptPlateType);
-		String mobileNo = rsaDecrypt(encryptMobileNo);
-		logger.info("【支付宝卡包】支付宝调用行驶证二维码查询，plateNo="+plateNo);
+		String mobileNo = rsaDecrypt(encryptMobileNo);*/
+		logger.info("【支付宝卡包】支付宝调用行驶证二维码查询入参，plateNo="+plateNo+"，plateType="+plateType+"，mobileNo="+mobileNo);
 		
 		try {
 			//获取电子行驶证照片
@@ -824,7 +839,7 @@ public class AlipayAction extends BaseAction {
 			}
 			
 		} catch (Exception e) {
-			logger.error("【支付宝卡包】xsCardQRCode行驶证二维码查询异常：plateNo="+plateNo, e);
+			logger.error("【支付宝卡包】xsCardQRCode行驶证二维码查询异常：plateNo="+plateNo+"，plateType="+plateType+"，mobileNo="+mobileNo, e);
 			e.printStackTrace();
 			json.put("result", "false");
 			json.put("resultMsg", "系统异常，请稍后重试");

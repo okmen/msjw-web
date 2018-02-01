@@ -1,6 +1,8 @@
 package cn.web.front.support;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletOutputStream;
@@ -187,4 +189,27 @@ public class BaseAction extends cn.web.front.common.BaseAction {
     	}
     	return true;
     }
+    
+    
+    /**
+	 * 获取POST参数
+	 * @param req
+	 * @return
+	 */
+	public String getPostParams(HttpServletRequest req) {
+		String sInput = "";
+		try {
+			String responseData = "";
+			BufferedReader dataInput = new BufferedReader(
+					new InputStreamReader(req.getInputStream(),"utf-8"));
+			while ((responseData = dataInput.readLine()) != null)
+				sInput = sInput + responseData;
+			dataInput.close();
+			logger.info("PARSE DATA FOR POST:"+sInput);
+			return sInput;
+		} catch (IOException e) {
+			logger.error("获取post参数异常");
+		}
+		return null;
+	}
 }
