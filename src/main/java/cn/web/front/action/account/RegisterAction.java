@@ -329,7 +329,14 @@ public class RegisterAction extends BaseAction {
 			code=MsgCode.paramsError;
 			sb.append("车牌号码为空  ");
 		} else {
-			registerVo.setLicensePlateNumber(licensePlateNumber);
+			//车牌号如果有省简称，去掉
+			if(licensePlateNumber.contains(provinceAbbreviation)){
+				String substring = licensePlateNumber.substring(1);
+				logger.info("【我是车主】处理后的车牌号码：" + substring);
+				registerVo.setLicensePlateNumber(substring);
+			}else{
+				registerVo.setLicensePlateNumber(licensePlateNumber);
+			}
 		}
 
 		if (StringUtil.isBlank(ownerName)) {
