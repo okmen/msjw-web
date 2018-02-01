@@ -62,7 +62,7 @@ public class Getway extends HttpServlet {
 				eventType = json.getString("EventType");
 				actionParam = json.getString("ActionParam");
 				
-				if(IEvent.EVENT_TYPE_NOTIFY.equals(eventType)){
+				/*if(IEvent.EVENT_TYPE_NOTIFY.equals(eventType)){
 					try {
 						JSONObject fromObject = JSONObject.fromObject(actionParam);
 						String action = fromObject.getString("action");
@@ -88,7 +88,7 @@ public class Getway extends HttpServlet {
 						logger.error("【支付宝卡包】删除卡包处理异常，biz_content="+bizContent, e);
 						e.printStackTrace();
 					}
-				}
+				}*/
 			}
 			// 验证网关消息 不做处理 直接走finally
 			if (!IEvent.EVENT_TYPE_VERIFYGW.equals(eventType)) {

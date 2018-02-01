@@ -603,6 +603,7 @@ public class AlipayAction extends BaseAction {
 	 */
 	public JSONObject xsCardInfo(UserBindAlipay userInfo, BindTheVehicleVo vo, String eCardImgBase64){
 		JSONObject extInfo = new JSONObject();
+		//extInfo.put("mobileNo", userInfo.getMobileNumber());// 手机号码
 		extInfo.put("plateNo", vo.getNumberPlateNumber());// 号牌号码
 		extInfo.put("vehicleType", vo.getPlateType());// 车辆类型
 		extInfo.put("owner", vo.getName());// 所有人
@@ -645,7 +646,7 @@ public class AlipayAction extends BaseAction {
 		try {
 			return AlipaySignature.rsaEncrypt(content, AlipayServiceEnvConstants.CARD_PUBLIC_KEY, AlipayServiceEnvConstants.CHARSET);
 		} catch (AlipayApiException e) {
-			logger.error("【支付宝卡包】rsaEncrypt数据加密异常：content=" + content);
+			logger.error("【支付宝卡包】rsaEncrypt数据加密异常：content=" + content, e);
 			e.printStackTrace();
 		}
 		return null;
@@ -655,7 +656,7 @@ public class AlipayAction extends BaseAction {
 		try {
 			return AlipaySignature.rsaDecrypt(content, AlipayServiceEnvConstants.PRIVATE_KEY, AlipayServiceEnvConstants.CHARSET);
 		} catch (AlipayApiException e) {
-			logger.error("【支付宝卡包】rsaDecrypt数据解密异常：content=" + content);
+			logger.error("【支付宝卡包】rsaDecrypt数据解密异常：content=" + content, e);
 			e.printStackTrace();
 		}
 		return null;
