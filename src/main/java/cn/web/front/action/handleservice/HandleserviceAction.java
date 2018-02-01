@@ -3321,7 +3321,7 @@ public class HandleserviceAction extends BaseAction {
 							MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
 							businessVo.setTylsbh(number);
 							businessVo.setOpenid(openId);
-							businessVo.setEventname("核发机动车检验合格标志");
+							businessVo.setEventname("补换检验合格标志");
 							businessVo.setApplyingUrlWx(url);//微信在办跳转地址
 							businessVo.setJinduUrlWx(url);//进度查询跳转地址
 							msjwService.addApplyingBusiness(businessVo);
