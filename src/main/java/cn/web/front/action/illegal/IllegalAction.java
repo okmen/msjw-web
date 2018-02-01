@@ -1148,7 +1148,7 @@ public class IllegalAction extends BaseAction {
 	 * @param sourceOfCertification
 	 */
 	@RequestMapping(value = "toQueryElectronicReceiptPage")
-	public void toQueryElectronicReceiptPage(String billNo, String licensePlateNo, String drivingLicenceNo,String sourceOfCertification) {
+	public void toQueryElectronicReceiptPage(String billNo, String licensePlateNo, String drivingLicenceNo,String sourceOfCertification,String licenseType) {
 		BaseBean base = new BaseBean();
 		if (StringUtil.isBlank(billNo)&&StringUtil.isBlank(licensePlateNo)&&StringUtil.isBlank(drivingLicenceNo)) {
 			base.setCode("0001");
@@ -1165,7 +1165,7 @@ public class IllegalAction extends BaseAction {
 
 		try {
 			billNo = billNo.replaceAll(" ", "");
-			base=illegalService.toQueryElectronicReceiptPage(billNo, licensePlateNo, drivingLicenceNo,sourceOfCertification);
+			base=illegalService.toQueryElectronicReceiptPage(billNo, licensePlateNo, drivingLicenceNo,sourceOfCertification,licenseType);
 			/*String code = (String) map.get("code");
 			String msg = (String) map.get("msg");
 			if ("0000".equals(code)) {
