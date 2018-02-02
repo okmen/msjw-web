@@ -62,33 +62,35 @@ public class Getway extends HttpServlet {
 				eventType = json.getString("EventType");
 				actionParam = json.getString("ActionParam");
 				
-				/*if(IEvent.EVENT_TYPE_NOTIFY.equals(eventType)){
+				if(IEvent.EVENT_TYPE_NOTIFY.equals(eventType)){
 					try {
 						JSONObject fromObject = JSONObject.fromObject(actionParam);
-						String action = fromObject.getString("action");
+						String eventBizType = fromObject.getString("eventBizType");
 						//删除卡包消息
-						if("REMOVE".equals(action)){
+						//驾驶证：{"eventBizType": "removeCertDoc","certDocType":"证件类型","drivingLicenseNo":"对应证件号","userId":"用户id"}
+						//行驶证：{"eventBizType": "removeCertDoc","certDocType":"证件类型","plateNo":"对应车牌号","userId":"用户id"}
+						if("removeCertDoc".equals(eventBizType)){
 							logger.info("【支付宝卡包】删除卡包消息biz_content：" + bizContent);
-							//actionParam={"action":"REMOVE","cardno":"321111111111111111","cardtype":"LYG_E_IDENTITY_CARD","uid":"2088302019288966"}
-							String cardno = fromObject.getString("cardno");
-							String cardtype = fromObject.getString("cardtype");
-							String uid = fromObject.getString("uid");
+							String certDocType = fromObject.getString("certDocType");
+							String userId = fromObject.getString("userId");
+							String drivingLicenseNo = fromObject.getString("drivingLicenseNo");
+							String plateNo = fromObject.getString("plateNo");
 							
 							// 手动取得service　
 							ApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
 							IAlipayService alipayService = (IAlipayService) ctx.getBean("alipayService");
-							boolean isSuccess = alipayService.updateCardReceiveType(cardno, cardtype, uid);
+							boolean isSuccess = alipayService.updateCardReceiveType(drivingLicenseNo, certDocType, userId);
 							if(isSuccess){
-								logger.info("【支付宝卡包】修改卡包状态成功，cardno="+cardno+"，cardtype="+cardtype+"，uid="+uid);
+								logger.info("【支付宝卡包】修改卡包状态成功，certDocType="+certDocType+"，userId="+userId+"，drivingLicenseNo="+drivingLicenseNo+"，plateNo="+plateNo);
 							}else{
-								logger.info("【支付宝卡包】修改卡包状态失败，cardno="+cardno+"，cardtype="+cardtype+"，uid="+uid);
+								logger.info("【支付宝卡包】修改卡包状态失败，certDocType="+certDocType+"，userId="+userId+"，drivingLicenseNo="+drivingLicenseNo+"，plateNo="+plateNo);
 							}
 						}
 					} catch (Exception e) {
 						logger.error("【支付宝卡包】删除卡包处理异常，biz_content="+bizContent, e);
 						e.printStackTrace();
 					}
-				}*/
+				}
 			}
 			// 验证网关消息 不做处理 直接走finally
 			if (!IEvent.EVENT_TYPE_VERIFYGW.equals(eventType)) {

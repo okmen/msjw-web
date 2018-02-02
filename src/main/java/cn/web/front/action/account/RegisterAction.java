@@ -332,7 +332,7 @@ public class RegisterAction extends BaseAction {
 			//车牌号如果有省简称，去掉
 			if(licensePlateNumber.contains(provinceAbbreviation)){
 				String substring = licensePlateNumber.substring(1);
-				logger.info("【我是车主】处理后的车牌号码：" + substring);
+				logger.info("【我是长期使用人】处理后的车牌号码：" + substring);
 				registerVo.setLicensePlateNumber(substring);
 			}else{
 				registerVo.setLicensePlateNumber(licensePlateNumber);

@@ -604,14 +604,15 @@ public class AlipayAction extends BaseAction {
 	 */
 	public JSONObject xsCardInfo(UserBindAlipay userInfo, BindTheVehicleVo vo, String eCardImgBase64){
 		JSONObject extInfo = new JSONObject();
-		//extInfo.put("mobileNo", userInfo.getMobileNumber());// 手机号码
+		extInfo.put("mobileNo", vo.getMobilephone());// 手机号码
+		extInfo.put("whetherOneself", "本人".equals(vo.getIsMyself()) ? "是" : "否");// 是否本人
 		extInfo.put("plateNo", vo.getNumberPlateNumber());// 号牌号码
-		extInfo.put("vehicleType", vo.getPlateType());// 车辆类型
+		extInfo.put("plateType", vo.getPlateType());// 车辆类型
 		extInfo.put("owner", vo.getName());// 所有人
 		extInfo.put("address", "");// 住址
 		extInfo.put("useCharacter", "");// 使用性质
 		extInfo.put("model", "");// 品牌型号
-		extInfo.put("vin", vo.getBehindTheFrame4Digits());// 车辆识别代号
+		extInfo.put("vin_4", vo.getBehindTheFrame4Digits());// 车辆识别代号
 		extInfo.put("engineNo", "");// 发动机号码
 		extInfo.put("registerDate", "");// 注册日期
 		extInfo.put("issueDate", "");// 发证日期
@@ -633,7 +634,7 @@ public class AlipayAction extends BaseAction {
 		
 		JSONObject cardInfo = new JSONObject();
 		cardInfo.put("cert_type", "SZ_E_VEHICLE_LICENSE");//行驶证
-		cardInfo.put("cert_no", userInfo.getIdCard());//证件号
+		cardInfo.put("cert_no", vo.getNumberPlateNumber());//***此处为车牌号***
 		cardInfo.put("user_id", userInfo.getUserId());//蚂蚁统一会员ID
 		cardInfo.put("name", userInfo.getRealName());//证件主体用户姓名。证件类型+证件号+证件姓名需要唯一。
 		cardInfo.put("ext_info", extInfo);
