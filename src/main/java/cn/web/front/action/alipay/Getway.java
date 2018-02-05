@@ -73,8 +73,13 @@ public class Getway extends HttpServlet {
 							logger.info("【支付宝卡包】删除卡包消息biz_content：" + bizContent);
 							String certDocType = fromObject.getString("certDocType");
 							String userId = fromObject.getString("userId");
-							String drivingLicenseNo = fromObject.getString("drivingLicenseNo");
-							String plateNo = fromObject.getString("plateNo");
+							String drivingLicenseNo = "";
+							String plateNo = "";
+							if("SZ_E_DRIVING_LICENSE".equals(certDocType)){//驾驶证
+								drivingLicenseNo = fromObject.getString("drivingLicenseNo");
+							}else if("SZ_E_VEHICLE_LICENSE".equals(certDocType)){//行驶证
+								plateNo = fromObject.getString("plateNo");
+							}
 							
 							// 手动取得service　
 							ApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
