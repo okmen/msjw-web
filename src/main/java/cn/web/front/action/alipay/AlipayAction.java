@@ -316,9 +316,6 @@ public class AlipayAction extends BaseAction {
 							return;
 						}
 						
-						/*//未处理违章数
-						int unresolvedIllegalCount = getUnresolvedIllegalCount(certNo, mobileNumber, sourceOfCertification, userId);
-						*/
 						//获取电子驾驶证照片
 						ElectronicDriverLicenseVo eCardInfo = accountService.getElectronicDriverLicense(certNo, realName, mobileNumber, sourceOfCertification);
 						if(!MsgCode.success.equals(eCardInfo.getCode())){
@@ -330,22 +327,6 @@ public class AlipayAction extends BaseAction {
 						}
 						
 						String eCardImgBase64 = eCardInfo.getElectronicDriverLicense();//证件图片base64
-						
-						/*//调支付宝sdk上传证件照片
-						BaseBean uploadJsCardImg = alipayService.uploadJsCardImg(eCardImgBase64);
-						//上传失败
-						if(!MsgCode.success.equals(uploadJsCardImg.getCode())){
-							logger.info("【支付宝卡包】上传驾驶证正面失败，certNo=" + certNo + "，上传结果：" + JSON.toJSONString(uploadJsCardImg));
-							baseBean.setCode(MsgCode.businessError);
-							baseBean.setMsg("传输异常！");
-							renderJSON(baseBean);
-							return;
-						}
-						
-						
-						//封装驾驶证信息
-						String imgUrl = (String) uploadJsCardImg.getData();
-						JSONObject jsCardInfo = jsCardInfo(userBindAlipay, myDriverLicense, String.valueOf(unresolvedIllegalCount), imgUrl);*/
 						
 						JSONObject jsCardInfo = jsCardInfo(userBindAlipay, myDriverLicense, eCardImgBase64);
 						
@@ -505,24 +486,9 @@ public class AlipayAction extends BaseAction {
 					if(MsgCode.success.equals(eCardInfo.getCode())){
 						String eCardImgBase64 = eCardInfo.getElectronicDrivingLicense();//证件图片base64
 						
-						/*//调支付宝sdk上传证件照片
-						BaseBean uploadXsCardImg = alipayService.uploadXsCardImg(eCardImgBase64);
-						//上传失败
-						if(!MsgCode.success.equals(uploadXsCardImg.getCode())){
-							logger.info("【支付宝卡包】上传行驶证正面失败，certNo=" + certNo + "，上传结果：" + JSON.toJSONString(uploadXsCardImg));
-							baseBean.setCode(MsgCode.businessError);
-							baseBean.setMsg("传输异常！");
-							renderJSON(baseBean);
-							return;
-						}
-						
-						//封装行驶证信息
-						String imgUrl = (String) uploadXsCardImg.getData();
-						JSONObject xsCardInfo = xsCardInfo(userBindAlipay, bindTheVehicleVo, imgUrl);*/
-						
 						JSONObject xsCardInfo = xsCardInfo(userBindAlipay, bindTheVehicleVo, eCardImgBase64);
 						
-						//上传成功，调支付宝sdk提交行驶证信息
+						//调支付宝sdk提交行驶证信息
 						BaseBean sendCardInfo = alipayService.sendCardInfo(xsCardInfo.toJSONString());
 						//提交失败
 						if(!MsgCode.success.equals(sendCardInfo.getCode())){
