@@ -50,7 +50,8 @@ public class ParamsUtil {
 		builder.append("<success>").append(Boolean.TRUE.toString())
 				.append("</success>");
 		builder.append("<biz_content>")
-				.append(AlipayServiceEnvConstants.PUBLIC_KEY)
+				//.append(AlipayServiceEnvConstants.PUBLIC_KEY)
+				.append(AlipayServiceEnvConstants.PUBLIC_KEY_TEST)
 				.append("</biz_content>");
 		return builder.toString();
 	}
