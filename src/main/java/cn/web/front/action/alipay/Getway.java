@@ -98,7 +98,7 @@ public class Getway extends HttpServlet {
 				}
 			}
 			// 验证网关消息 不做处理 直接走finally
-			if (!IEvent.EVENT_TYPE_VERIFYGW.equals(eventType)) {
+			else if (!IEvent.EVENT_TYPE_VERIFYGW.equals(eventType)) {
 				String fromUserId = json.getString("FromUserId");
 				String fromAlipayUserId = json.getString("FromAlipayUserId");
 				if (IMessage.MESSAGE_TYPE_TEXT.equals(msgType)) {
