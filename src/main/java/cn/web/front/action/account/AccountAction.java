@@ -39,9 +39,11 @@ import cn.account.bean.vo.BindCompanyCarVo;
 import cn.account.bean.vo.BindDriverLicenseVo;
 import cn.account.bean.vo.BrushFaceVo;
 import cn.account.bean.vo.CompanyRegisterVo;
+import cn.account.bean.vo.CompanyUserLoginVo;
 import cn.account.bean.vo.IdentificationOfAuditResultsVo;
 import cn.account.bean.vo.InformationCollectionVo;
 import cn.account.bean.vo.LoginReturnBeanVo;
+import cn.account.bean.vo.MyCompanyCarsVo;
 import cn.account.bean.vo.ReadilyShootVo;
 import cn.account.bean.vo.ReauthenticationVo;
 import cn.account.bean.vo.TrafficQueryVo;
@@ -3062,6 +3064,20 @@ public class AccountAction extends BaseAction {
  		}
       	try{
   			baseBean = accountService.companyUserLogin(loginUser, loginPwd, sourceOfCertification);
+  			String code = baseBean.getCode();
+  			if (MsgCode.success.equals(code)) {
+  				Map<String, Object> map = new HashMap<>();
+  				CompanyUserLoginVo companyUserLoginVo  = (CompanyUserLoginVo) baseBean.getData();
+  				map.put("CompanyUserLoginVo", companyUserLoginVo);
+  				BaseBean myCompanyCars = accountService.getMyCompanyCars(loginUser, sourceOfCertification);
+  				String carCode = myCompanyCars.getCode();
+  				if (MsgCode.success.equals(carCode)) {
+  					List<MyCompanyCarsVo> carsVos = (List<MyCompanyCarsVo>) baseBean.getData();
+  					map.put("CarsVos", carsVos);
+				}
+  				baseBean.setData(map);
+			}
+  			
   		} catch (Exception e) {
   			logger.error("单位用户登录异常:" + e);
   			DealException(baseBean, e);
