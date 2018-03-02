@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import cn.account.bean.vo.MyDriverLicenseVo;
 import cn.account.service.IAccountService;
+import cn.illegal.service.IIllegalService;
 import cn.message.bean.WxMembercard;
 import cn.message.model.wechat.WechatPostMessageModel;
 import cn.message.model.wechat.message.IEvent;
@@ -22,6 +23,7 @@ import cn.message.model.wechat.message.IMessage;
 import cn.message.service.IMobileMessageService;
 import cn.message.service.ITemplateMessageService;
 import cn.message.service.IWechatService;
+import cn.sdk.bean.BaseBean;
 import cn.sdk.util.StringUtil;
 import cn.web.front.action.wechat.util.HttpRequest;
 import cn.web.front.action.wechat.util.RoundUtil;
@@ -47,6 +49,10 @@ public class WechatAction extends BaseAction {
 	@Autowired
 	@Qualifier("accountService")
 	private IAccountService accountService;
+	
+	@Autowired
+	@Qualifier("illegalService")
+	private IIllegalService illegalService;
 
 	@RequestMapping(value = "/doGet.html", method = RequestMethod.GET)
 	public void getway(
@@ -93,6 +99,16 @@ public class WechatAction extends BaseAction {
 	        String xml = requestMap.get("xml");
 	        String keyStandard = requestMap.get("KeyStandard");
 	        logger.info("xml:"+xml);
+	        //平安接收消息
+	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && eventKey.startsWith("qrscene_F")){
+	        	try {
+					BaseBean receiveMessage = illegalService.receiveMessage(eventKey.substring(eventKey.indexOf("F")), msgType, event, "C");
+					logger.info("平安接收消息返回结果 ：" + receiveMessage.toJson());
+	        	} catch (Exception e) {
+					logger.error("平安接收消息异常");
+					e.printStackTrace();
+				}
+	        }
 	        //领卡消息
 	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_USER_GET_CARD.toLowerCase().equals(event)){
 	        	logger.info("领卡消息xml:"+xml);
