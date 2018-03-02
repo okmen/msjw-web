@@ -100,7 +100,7 @@ public class WechatAction extends BaseAction {
 	        String keyStandard = requestMap.get("KeyStandard");
 	        logger.info("xml:"+xml);
 	        //平安接收消息
-	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && eventKey.startsWith("qrscene_F")){
+	        if(eventKey.startsWith("qrscene_F")){
 	        	try {
 					BaseBean receiveMessage = illegalService.receiveMessage(eventKey.substring(eventKey.indexOf("F")), msgType, event, "C");
 					logger.info("平安接收消息返回结果 ：" + receiveMessage.toJson());
