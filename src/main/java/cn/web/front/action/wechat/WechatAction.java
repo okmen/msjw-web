@@ -110,7 +110,7 @@ public class WechatAction extends BaseAction {
 						logger.error("平安接收消息异常");
 						e.printStackTrace();
 					}
-		        }else if(null == eventKey){
+		        }else if(null == eventKey || "" == eventKey){
 		        	try {
 						BaseBean receiveMessage = illegalService.receiveMessage("F00", msgType, event, "C");
 						logger.info("平安接收消息返回结果 ：" + receiveMessage.toJson());
