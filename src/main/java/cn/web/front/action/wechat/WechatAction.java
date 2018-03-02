@@ -100,15 +100,29 @@ public class WechatAction extends BaseAction {
 	        String keyStandard = requestMap.get("KeyStandard");
 	        logger.info("xml:"+xml);
 	        //平安接收消息
-	        if(eventKey.startsWith("qrscene_F")){
-	        	try {
-					BaseBean receiveMessage = illegalService.receiveMessage(eventKey.substring(eventKey.indexOf("F")), msgType, event, "C");
-					logger.info("平安接收消息返回结果 ：" + receiveMessage.toJson());
-	        	} catch (Exception e) {
-					logger.error("平安接收消息异常");
-					e.printStackTrace();
-				}
+
+	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_TYPE_SCAN.toLowerCase().equals(event)){
+	        	if(eventKey.startsWith("qrscene_F")){
+		        	try {
+						BaseBean receiveMessage = illegalService.receiveMessage(eventKey.substring(eventKey.indexOf("F")), msgType, event, "C");
+						logger.info("平安接收消息返回结果 ：" + receiveMessage.toJson());
+		        	} catch (Exception e) {
+						logger.error("平安接收消息异常");
+						e.printStackTrace();
+					}
+		        }else if(null == eventKey){
+		        	try {
+						BaseBean receiveMessage = illegalService.receiveMessage("F00", msgType, event, "C");
+						logger.info("平安接收消息返回结果 ：" + receiveMessage.toJson());
+		        	} catch (Exception e) {
+						logger.error("平安接收消息异常");
+						e.printStackTrace();
+					}
+		        }
+	        	outString(response, "");
+	        	return;
 	        }
+	        
 	        //领卡消息
 	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_USER_GET_CARD.toLowerCase().equals(event)){
 	        	logger.info("领卡消息xml:"+xml);
@@ -145,7 +159,7 @@ public class WechatAction extends BaseAction {
 	        	logger.info("删卡消息xml:"+xml);
 	        }
 	        
-	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_TYPE_SCAN.toLowerCase().equals(event)){
+	        /*if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_TYPE_SCAN.toLowerCase().equals(event)){
 	        	 logger.info("微信消息xml:"+xml);
 	        	 String pinganResult = "";
 	    		 if("code128".equals(keyStandard)){
@@ -156,14 +170,14 @@ public class WechatAction extends BaseAction {
 	    		 }
 	    		 outString(response,pinganResult);		
 	    		 return;
-	        }
+	        }*/
 			
 			IMessage mesasge = wechatService.processPostMessage(new WechatPostMessageModel(fromUserName, toUserName, msgType, event,eventKey,content,msgId,cardId,code,outerStr,isGiveByFriend,giveOpenId));
 			if(null != mesasge){
 				outString(response, mesasge.toXml());
 			} else{
 				response.setContentType("text/xml;charset=UTF-8");
-				outString(response, "success");
+				outString(response, "");
 			}
 			long end = System.currentTimeMillis();
 			
@@ -172,7 +186,7 @@ public class WechatAction extends BaseAction {
 			}
 		} catch (IOException e) {
 			response.setContentType("text/xml;charset=UTF-8");
-			outString(response, "success");
+			outString(response, "");
 			logger.error("接收微信post消息异常",e);
 		}
 	}
