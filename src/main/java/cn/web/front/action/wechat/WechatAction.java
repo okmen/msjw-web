@@ -101,7 +101,7 @@ public class WechatAction extends BaseAction {
 	        logger.info("xml:"+xml);
 	        //平安接收消息
 
-	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_TYPE_SCAN.toLowerCase().equals(event)){
+	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_TYPE_SUBSCRIBE.toLowerCase().equals(event)){
 	        	if(eventKey.startsWith("qrscene_F")){
 		        	try {
 						BaseBean receiveMessage = illegalService.receiveMessage(eventKey.substring(eventKey.indexOf("F")), msgType, event, "C");
