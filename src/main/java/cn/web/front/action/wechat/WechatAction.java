@@ -111,7 +111,7 @@ public class WechatAction extends BaseAction {
 						logger.error("平安接收消息异常");
 						e.printStackTrace();
 					}
-		        }else if(null == eventKey || " " == eventKey){
+		        }else if(StringUtil.isBlank(eventKey)){
 		        	logger.info("无参数二维码  。。。。。。。。");
 		        	try {
 						BaseBean receiveMessage = illegalService.receiveMessage("F00", msgType, event, "C");
