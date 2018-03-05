@@ -3069,7 +3069,7 @@ public class AccountAction extends BaseAction {
   				Map<String, Object> map = new HashMap<>();
   				CompanyUserLoginVo companyUserLoginVo  = (CompanyUserLoginVo) baseBean.getData();
   				map.put("CompanyUserLoginVo", companyUserLoginVo);
-  				BaseBean myCompanyCars = accountService.getMyCompanyCars(loginUser, sourceOfCertification);
+  				BaseBean myCompanyCars = accountService.getMyCompanyCars(companyUserLoginVo.getManagerIdentityCard(), sourceOfCertification);
   				String carCode = myCompanyCars.getCode();
   				if (MsgCode.success.equals(carCode)) {
   					List<MyCompanyCarsVo> carsVos = (List<MyCompanyCarsVo>) myCompanyCars.getData();
