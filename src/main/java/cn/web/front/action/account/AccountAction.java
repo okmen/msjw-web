@@ -2546,6 +2546,8 @@ public class AccountAction extends BaseAction {
 					baseBean.setMsg("openId不能为空!");
 					renderJSON(baseBean);
 					return;
+				}else{
+					reauthenticationVo.setOpenId(openId);
 				}
 			}
 			reauthenticationVo.setSourceOfCertification(sourceOfCertification);
