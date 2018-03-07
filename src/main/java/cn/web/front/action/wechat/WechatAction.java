@@ -89,7 +89,6 @@ public class WechatAction extends BaseAction {
 	        String content = requestMap.get("Content");
 	        String msgId = requestMap.get("MsgId");
 	        String eventKey = requestMap.get("EventKey");
-	        String openId = requestMap.get("FormUserName");
 	        
 	        String cardId = requestMap.get("CardId");
 	        String code = requestMap.get("UserCardCode");
@@ -103,10 +102,10 @@ public class WechatAction extends BaseAction {
 	        //平安接收消息
 
 	        if(IMessage.MESSAGE_TYPE_EVENT.equals(msgType) && IEvent.EVENT_TYPE_SUBSCRIBE.toLowerCase().equals(event)){
-	        	logger.info("平安接收消息 ： msgType = " + msgType + ", event = " + event  + " ,eventKey = " + eventKey + ", openId = " + openId);
+	        	logger.info("平安接收消息 ： msgType = " + msgType + ", event = " + event  + " ,eventKey = " + eventKey + ", openId = " + fromUserName);
 	        	if(eventKey.startsWith("qrscene_F")){
 		        	try {
-						BaseBean receiveMessage = illegalService.receiveMessage(eventKey.substring(eventKey.indexOf("F")), msgType, event, "C",openId);
+						BaseBean receiveMessage = illegalService.receiveMessage(eventKey.substring(eventKey.indexOf("F")), msgType, event, "C",fromUserName);
 						logger.info("平安接收消息返回结果 ：" + receiveMessage.toJson());
 		        	} catch (Exception e) {
 						logger.error("平安接收消息异常");
@@ -115,7 +114,7 @@ public class WechatAction extends BaseAction {
 		        }else if(StringUtil.isBlank(eventKey)){
 		        	logger.info("无参数二维码  。。。。。。。。");
 		        	try {
-						BaseBean receiveMessage = illegalService.receiveMessage("F00", msgType, event, "C",openId);
+						BaseBean receiveMessage = illegalService.receiveMessage("F00", msgType, event, "C",fromUserName);
 						logger.info("平安接收消息返回结果 ：" + receiveMessage.toJson());
 		        	} catch (Exception e) {
 						logger.error("平安接收消息异常");
