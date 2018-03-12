@@ -117,12 +117,6 @@ public class FaceautonymAction  extends BaseAction{
      		renderJSON(baseBean);
      		return;
      	}
-     	else if(StringUtils.isBlank(szjjToken.getPhone())){
-     		baseBean.setMsg("手机号不能为空!");
-     		baseBean.setCode(MsgCode.paramsError);
-     		renderJSON(baseBean);
-     		return;
-     	}
      	else if(StringUtils.isBlank(szjjToken.getOpenId())){
      		baseBean.setMsg("openId不能为空!");
      		baseBean.setCode(MsgCode.paramsError);
