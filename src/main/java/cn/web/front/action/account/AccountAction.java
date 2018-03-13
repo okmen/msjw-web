@@ -944,7 +944,7 @@ public class AccountAction extends BaseAction {
      */
     @RequestMapping(value = "updateMobile",method = RequestMethod.POST)
     public void updateMobile( String oldMobile, String validateCode
-    		,String newMobile,String identityCard) {
+    		,String newMobile,String identityCard,String type) {
     	
     	String code=MsgCode.success;
  		StringBuffer sb = new StringBuffer("");
@@ -972,12 +972,21 @@ public class AccountAction extends BaseAction {
  			code=MsgCode.paramsError;
  			sb.append("验证码为空  ");
  		}
+    	if(StringUtil.isBlank(type)){
+ 			code=MsgCode.paramsError;
+ 			sb.append("type为空  ");
+ 		}
     	
     	BaseBean basebean = new  BaseBean();
     	try {
-    		if(MsgCode.success.equals(code)){//参数校验通过    			
+    		if(MsgCode.success.equals(code)){//参数校验通过   
+    			int result = 0;
     			// 0-验证成功，1-验证失败，2-验证码失效     以前是给老手机号码发送短信，业务变成给新手机号发短信  2017年6月29日又还原了
-        		int result = accountService.verificatioCode(newMobile, validateCode);
+    			if ("1".equals(type)) {
+    				result = accountService.verificatioCode(oldMobile, validateCode);
+				}else if("2".equals(type)){
+					result = accountService.verificatioCode(newMobile, validateCode);
+				}
         		if(0 == result){
         			userBasicVo.setUserSource("C");
         			JSONObject json = accountService.updateMobile(userBasicVo);
@@ -1011,7 +1020,6 @@ public class AccountAction extends BaseAction {
     	logger.debug(JSON.toJSONString(basebean));
     
     }
-    
     
     
    /**
