@@ -173,9 +173,9 @@ public class FaceautonymAction  extends BaseAction{
 				String appid = szjjToken.getName();
 				baseBean = faceautonymService.getdetectinfo(appid, token);
 				if (MsgCode.success.equals(baseBean.getCode())) {
-					Map<String, String> map = new HashMap<>();
+					Map<String, Object> map = new HashMap<>();
 					map.put("token", token);
-					map.put("detail", (String) baseBean.getData());
+					map.put("detail", baseBean.getData());
 					baseBean.setData(map);
 				}
 			}else{
