@@ -167,8 +167,9 @@ public class FaceautonymAction  extends BaseAction{
 		 try {
 			szjjToken = faceautonymService.querySzjjToken(identityCard);
 			if (szjjToken != null) {
-				baseBean.setCode(MsgCode.success);
-				baseBean.setData(szjjToken);
+				String token = szjjToken.getToken();
+				String appid = szjjToken.getName();
+				baseBean = faceautonymService.getdetectinfo(appid, token);
 			}else{
 				baseBean.setCode(MsgCode.businessError);
 				baseBean.setMsg("未查询到相关数据");
