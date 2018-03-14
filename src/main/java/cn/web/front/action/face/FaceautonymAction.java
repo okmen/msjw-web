@@ -1,6 +1,8 @@
 package cn.web.front.action.face;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -170,6 +172,12 @@ public class FaceautonymAction  extends BaseAction{
 				String token = szjjToken.getToken();
 				String appid = szjjToken.getName();
 				baseBean = faceautonymService.getdetectinfo(appid, token);
+				if (MsgCode.success.equals(baseBean.getCode())) {
+					Map<String, String> map = new HashMap<>();
+					map.put("token", token);
+					map.put("detail", (String) baseBean.getData());
+					baseBean.setData(map);
+				}
 			}else{
 				baseBean.setCode(MsgCode.businessError);
 				baseBean.setMsg("未查询到相关数据");
