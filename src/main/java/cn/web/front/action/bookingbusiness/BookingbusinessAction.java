@@ -75,7 +75,7 @@ public class BookingbusinessAction extends BaseAction {
 	 */
 	@RequestMapping("cancel")
 	public void cancel(String businessType, String bookerNumber, String mobile,String organizationName,
-			String appointmentDate,String appointmentTime,String openId,String businessTypeName) {
+			String appointmentDate,String appointmentTime,String openId,String businessTypeName,String sourceOfCertification) {
 		BaseBean baseBean = new BaseBean();
 		if (StringUtil.isBlank(businessType)) {
 			baseBean.setCode(MsgCode.paramsError);
@@ -151,35 +151,36 @@ public class BookingbusinessAction extends BaseAction {
 				tmap.put("remark", new TemplateDataModel().new Property("", "#212121"));
 				boolean flag = templateMessageService.sendMessage(openId, templateId, "", tmap);
 				logger.info("发送模板消息结果：" + flag);*/
-				
-				MessageChannelModel model = new MessageChannelModel();
-				model.setOpenid(openId);
-				if("1".equals(businessType)){//1-驾驶证业务
-					model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbhCx1GDBVM-D9RlY_RkA01E");
-				}else if("2".equals(businessType)){//2-机动车业务
-					model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIblH0oc9K9CXnemA0qAazPdI");
-				}
-				model.setResult_page_style_id("PMw9-nhDOOQuMzL7-cVZ3DqyaaLEvpIWsopaXE1qvC0");
-				model.setDeal_msg_style_id("PMw9-nhDOOQuMzL7-cVZ3CZoVDr0ojGdWvwZf7SZK6A");
-				model.setCard_style_id("");
-				model.setOrder_no(bookerNumber);
-				model.setUrl("");
-				Map<String, cn.message.model.wechat.MessageChannelModel.Property> map = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
-				map.put("first", new MessageChannelModel().new Property("您好，您的预约申请已取消，具体信息如下","#212121"));
-				map.put("businessType", new MessageChannelModel().new Property("1".equals(businessType)?"驾驶证业务":"机动车业务","#212121"));
-				map.put("business", new MessageChannelModel().new Property(businessTypeName,"#212121"));
-				map.put("order", new MessageChannelModel().new Property(bookerNumber,"#212121"));
-				map.put("time", new MessageChannelModel().new Property(appointmentDate +" "+ appointmentTime,"#212121"));
-				map.put("address", new MessageChannelModel().new Property(organizationName,"#212121"));
-				map.put("remark", new MessageChannelModel().new Property("","#212121"));
-				model.setData(map);
-				
-				BaseBean msgBean = templateMessageService.sendServiceMessage(model);
-				logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
-				
-				//发送成功
-				if("0".equals(msgBean.getCode())){
-					baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+				if ("C".equals(sourceOfCertification)) {
+					MessageChannelModel model = new MessageChannelModel();
+					model.setOpenid(openId);
+					if("1".equals(businessType)){//1-驾驶证业务
+						model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIbhCx1GDBVM-D9RlY_RkA01E");
+					}else if("2".equals(businessType)){//2-机动车业务
+						model.setBiz_template_id("s4ia2sLd4C-0IpkLLbGIblH0oc9K9CXnemA0qAazPdI");
+					}
+					model.setResult_page_style_id("PMw9-nhDOOQuMzL7-cVZ3DqyaaLEvpIWsopaXE1qvC0");
+					model.setDeal_msg_style_id("PMw9-nhDOOQuMzL7-cVZ3CZoVDr0ojGdWvwZf7SZK6A");
+					model.setCard_style_id("");
+					model.setOrder_no(bookerNumber);
+					model.setUrl("");
+					Map<String, cn.message.model.wechat.MessageChannelModel.Property> map = new HashMap<String, cn.message.model.wechat.MessageChannelModel.Property>();
+					map.put("first", new MessageChannelModel().new Property("您好，您的预约申请已取消，具体信息如下","#212121"));
+					map.put("businessType", new MessageChannelModel().new Property("1".equals(businessType)?"驾驶证业务":"机动车业务","#212121"));
+					map.put("business", new MessageChannelModel().new Property(businessTypeName,"#212121"));
+					map.put("order", new MessageChannelModel().new Property(bookerNumber,"#212121"));
+					map.put("time", new MessageChannelModel().new Property(appointmentDate +" "+ appointmentTime,"#212121"));
+					map.put("address", new MessageChannelModel().new Property(organizationName,"#212121"));
+					map.put("remark", new MessageChannelModel().new Property("","#212121"));
+					model.setData(map);
+					
+					BaseBean msgBean = templateMessageService.sendServiceMessage(model);
+					logger.info("发送模板消息结果：" + JSON.toJSONString(msgBean));
+					
+					//发送成功
+					if("0".equals(msgBean.getCode())){
+						baseBean.setMsg(msgBean.getData().toString());//结果评价页url设置在msg中
+					}
 				}
 				
 			}else{
