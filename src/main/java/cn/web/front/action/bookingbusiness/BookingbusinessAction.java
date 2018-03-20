@@ -909,6 +909,22 @@ public class BookingbusinessAction extends BaseAction {
 						logger.error("发送模板消息  失败===", e);
 					}
 				}
+				
+				//支付宝
+				if(MsgCode.success.equals(baseBean.getCode()) && "Z".equals(sourceOfCertification)){
+						String waterNumber = refBean.getData().toString();
+						String appTime = vo.getAppointmentDate() + " " + vo.getAppointmentTime();
+						//获取预约地点
+						if(StringUtil.isBlank(orgName)){
+							orgName = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getName();
+						}
+						//获取预约地址
+						if(StringUtil.isBlank(orgAddr)){
+							orgAddr = bookingBusinessService.findOrgByOrgId(vo.getOrgId()).getDescription();
+						}
+						BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, businessCode, waterNumber, platNumber, carTypeName, orgName, orgAddr, appointmentDate, appointmentTime, name);
+						baseBean.setData(bookingTemplateVo);
+				}
         	}else{
         		baseBean.setCode(MsgCode.businessError);
         		baseBean.setMsg(refBean.getData().toString());
@@ -1099,6 +1115,9 @@ public class BookingbusinessAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
+				}else if(sourceOfCertification.equals("Z")){
+					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ10, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
+					baseBean.setData(bookingTemplateVo);
 				}else{
 					baseBean.setData(waterNumber);
 				}
@@ -1292,6 +1311,9 @@ public class BookingbusinessAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
+				}else if(sourceOfCertification.equals("Z")){
+					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ11, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
+					baseBean.setData(bookingTemplateVo);
 				}else{
 					baseBean.setData(waterNumber);
 				}
@@ -1486,6 +1508,9 @@ public class BookingbusinessAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
+				}else if(sourceOfCertification.equals("Z")){
+					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ13, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
+					baseBean.setData(bookingTemplateVo);
 				}else{
 					baseBean.setData(waterNumber);
 				}
@@ -1680,6 +1705,9 @@ public class BookingbusinessAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
+				}else if(sourceOfCertification.equals("Z")){
+					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ17, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
+					baseBean.setData(bookingTemplateVo);
 				}else{
 					baseBean.setData(waterNumber);
 				}
@@ -1874,6 +1902,9 @@ public class BookingbusinessAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
+				}else if(sourceOfCertification.equals("Z")){
+					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ20, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
+					baseBean.setData(bookingTemplateVo);
 				}else{
 					baseBean.setData(waterNumber);
 				}
@@ -2039,6 +2070,9 @@ public class BookingbusinessAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
+				}else if(sourceOfCertification.equals("Z")){
+					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ21, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
+					baseBean.setData(bookingTemplateVo);
 				}else{
 					baseBean.setData(waterNumber);
 				}
@@ -2204,6 +2238,9 @@ public class BookingbusinessAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
+				}else if(sourceOfCertification.equals("Z")){
+					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ22, waterNumber, orgName, orgAddr, appointmentDate, appointmentTime, name);
+					baseBean.setData(bookingTemplateVo);
 				}else{
 					baseBean.setData(waterNumber);
 				}
@@ -2390,6 +2427,9 @@ public class BookingbusinessAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
+				}else if(sourceOfCertification.equals("Z")){
+					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createDriveInfo_ZJ16, refBean.getData().toString(), orgName, orgAddr, appointmentDate, appointmentTime, name);
+					baseBean.setData(bookingTemplateVo);
 				}
 			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
@@ -2589,6 +2629,9 @@ public class BookingbusinessAction extends BaseAction {
 				} catch (Exception e) {
 					logger.error("发送模板消息  失败===", e);
 				}
+			}else if(MsgCode.success.equals(baseBean.getCode()) && sourceOfCertification.equals("Z")){
+				BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createTemporaryLicenseVehicleInfo, baseBean.getData().toString(), orgName, orgAddr, vo.getAppointmentDate(), vo.getAppointmentTime(), vo.getName());
+				baseBean.setData(bookingTemplateVo);
 			}
 			
 		} catch (Exception e) {
@@ -2707,6 +2750,9 @@ public class BookingbusinessAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
+				}else if(MsgCode.success.equals(baseBean.getCode()) && sourceOfCertification.equals("Z")){
+					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD27, refBean.getData().toString(), platNumber, carTypeName, orgName, orgAddr, appointmentDate, appointmentTime, name);
+					baseBean.setData(bookingTemplateVo);
 				}
 			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
@@ -3115,6 +3161,9 @@ public class BookingbusinessAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
+				}else if(MsgCode.success.equals(baseBean.getCode()) && sourceOfCertification.equals("Z")){
+					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD41, refBean.getData().toString(), platNumber, carTypeName, orgName, orgAddr, appointmentDate, appointmentTime, name);
+					baseBean.setData(bookingTemplateVo);
 				}
 			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
@@ -3345,6 +3394,9 @@ public class BookingbusinessAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
+				}else if(MsgCode.success.equals(baseBean.getCode()) && sourceOfCertification.equals("Z")){
+					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD28, refBean.getData().toString(), platNumber, carTypeName, orgName, orgAddr, appointmentDate, appointmentTime, name);
+					baseBean.setData(bookingTemplateVo);
 				}
 			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
@@ -3473,6 +3525,9 @@ public class BookingbusinessAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
+				}else if(MsgCode.success.equals(baseBean.getCode()) && sourceOfCertification.equals("Z")){
+					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD29, refBean.getData().toString(), platNumber, carTypeName, orgName, orgAddr, appointmentDate, appointmentTime, name);
+					baseBean.setData(bookingTemplateVo);
 				}
 			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
@@ -3627,6 +3682,9 @@ public class BookingbusinessAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
+				}else if(MsgCode.success.equals(baseBean.getCode()) && sourceOfCertification.equals("Z")){
+					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD33, refBean.getData().toString(), platNumber, carTypeName, orgName, orgAddr, appointmentDate, appointmentTime, name);
+					baseBean.setData(bookingTemplateVo);
 				}
 			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
