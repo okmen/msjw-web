@@ -3846,7 +3846,11 @@ public class HandleserviceAction extends BaseAction {
  						logger.error("发送模板消息  失败===", e);
  					}
  				}
- 				
+ 				//支付宝
+ 				else if (sourceOfCertification.equals("Z")) {
+ 						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.createVehicleInspection, result, DateUtil2.date2str(new Date()));
+ 						baseBean.setData(handleTemplateVo);
+ 				}
  				//民生警务来源，模板推送
 				else if("M".equals(sourceOfCertification) && StringUtil.isNotBlank(openId)){
 					try {
