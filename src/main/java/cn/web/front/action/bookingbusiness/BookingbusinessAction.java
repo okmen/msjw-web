@@ -2883,6 +2883,11 @@ public class BookingbusinessAction extends BaseAction {
 					}
 				}
 				
+				else if(MsgCode.success.equals(baseBean.getCode()) && sourceOfCertification.equals("Z")){
+					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD37, refBean.getData().toString(), platNumber, carTypeName, orgName, orgAddr, appointmentDate, appointmentTime, name);
+					baseBean.setData(bookingTemplateVo);
+				}
+				
 				//民生警务来源，模板推送
 				else if("M".equals(sourceOfCertification) && StringUtil.isNotBlank(openId)){
 					try {
@@ -3035,6 +3040,9 @@ public class BookingbusinessAction extends BaseAction {
 					} catch (Exception e) {
 						logger.error("发送模板消息  失败===", e);
 					}
+				}else if(MsgCode.success.equals(baseBean.getCode()) && sourceOfCertification.equals("Z")){
+					BookingTemplateVo bookingTemplateVo = new BookingTemplateVo(2, BusinessType.createVehicleInfo_JD38, refBean.getData().toString(), platNumber, carTypeName, orgName, orgAddr, appointmentDate, appointmentTime, name);
+					baseBean.setData(bookingTemplateVo);
 				}
 			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
