@@ -722,7 +722,7 @@ public class BookingbusinessAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			if (StringUtil.isBlank(bookerName)) {
+			/*if (StringUtil.isBlank(bookerName)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("姓名不能为空!");
 				renderJSON(baseBean);
@@ -733,7 +733,7 @@ public class BookingbusinessAction extends BaseAction {
 				baseBean.setMsg("代办人（或本人）身份证号码不能为空!");
 				renderJSON(baseBean);
 				return;
-			}
+			}*/
 			if (StringUtil.isBlank(idNumber)) {
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("证件号码不能为空!");
@@ -813,7 +813,7 @@ public class BookingbusinessAction extends BaseAction {
 		try {
 			//校验参数
 			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
-					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
+					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber",
 					"bookerType","useCharater","msgNumber","bookerMobile","businessCode","businessName","carTypeName");
 			if(!bool) return;
 			
@@ -2684,7 +2684,7 @@ public class BookingbusinessAction extends BaseAction {
 		try {
 			//校验参数
 			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
-					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
+					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber",
 					"bookerType","useCharater","msgNumber","bookerMobile","carTypeName");
 			if(!bool) return;
 			
@@ -2814,7 +2814,7 @@ public class BookingbusinessAction extends BaseAction {
 		try {
 			//校验参数
 			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
-					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
+					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber",
 					"bookerType","useCharater","msgNumber","bookerMobile","carTypeName");
 			if(!bool) return;
 			
@@ -2973,7 +2973,7 @@ public class BookingbusinessAction extends BaseAction {
 		try {
 			//校验参数
 			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
-					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
+					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber",
 					"bookerType","useCharater","msgNumber","bookerMobile","carTypeName");
 			if(!bool) return;
 			
@@ -3103,7 +3103,7 @@ public class BookingbusinessAction extends BaseAction {
 		try {
 			//校验参数
 			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
-					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
+					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber",
 					"bookerType","useCharater","msgNumber","bookerMobile","carTypeName");
 			if(!bool) return;
 			
@@ -3309,7 +3309,7 @@ public class BookingbusinessAction extends BaseAction {
 		try {
 			//校验参数
 			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
-					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
+					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber",
 					"bookerType","useCharater","msgNumber","bookerMobile","carTypeName");
 			if(!bool) return;
 			
@@ -3467,7 +3467,7 @@ public class BookingbusinessAction extends BaseAction {
 		try {
 			//校验参数
 			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
-					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
+					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber",
 					"bookerType","useCharater","msgNumber","bookerMobile","carTypeName");
 			if(!bool) return;
 			
@@ -3597,7 +3597,7 @@ public class BookingbusinessAction extends BaseAction {
 		try {
 			//校验参数
 			boolean bool = checkParamNotNull(request,response,"orgId","businessTypeId","name","idTypeId","idNumber","mobile",
-					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber","bookerName","bookerIdNumber",
+					"appointmentDate","appointmentTime","carTypeId","carFrame","platNumber",
 					"bookerType","useCharater","msgNumber","bookerMobile","carTypeName");
 			if(!bool) return;
 			
