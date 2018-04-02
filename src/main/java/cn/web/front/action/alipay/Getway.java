@@ -123,16 +123,16 @@ public class Getway extends HttpServlet {
 		} finally {
 			response.setContentType("text/xml;charset=utf-8");
 			try {
-				/*responseMsg = AlipayBaseUtil.encryptAndSign(responseMsg,
+				responseMsg = AlipayBaseUtil.encryptAndSign(responseMsg,
 						AlipayServiceEnvConstants.ALIPAY_PUBLIC_KEY,
 						AlipayServiceEnvConstants.PRIVATE_KEY,
 						AlipayServiceEnvConstants.CHARSET, false, true,
-						AlipayServiceEnvConstants.SIGN_TYPE);*/
-				responseMsg = AlipayBaseUtil.encryptAndSign(responseMsg,
+						AlipayServiceEnvConstants.SIGN_TYPE);
+				/*responseMsg = AlipayBaseUtil.encryptAndSign(responseMsg,
 						AlipayServiceEnvConstants.ALIPAY_PUBLIC_KEY_TEST,
 						AlipayServiceEnvConstants.PRIVATE_KEY_TEST,
 						AlipayServiceEnvConstants.CHARSET_TEST, false, true,
-						AlipayServiceEnvConstants.SIGN_TYPE_TEST);
+						AlipayServiceEnvConstants.SIGN_TYPE_TEST);*/
 			} catch (AlipayApiException e) {
 				logger.info("alipay 加签异常", e);
 			}
