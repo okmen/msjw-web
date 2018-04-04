@@ -371,8 +371,8 @@ public class AlipayAction extends BaseAction {
 						JSONObject jsCardInfo = jsCardInfo(userBindAlipay, myDriverLicense, eCardImgBase64);
 						
 						//调支付宝sdk提交驾驶证信息
-						//BaseBean sendCardInfo = alipayService.sendCardInfoTest(jsCardInfo.toJSONString());//测试公众号
-						BaseBean sendCardInfo = alipayService.sendCardInfo(jsCardInfo.toJSONString());
+						BaseBean sendCardInfo = alipayService.sendCardInfoTest(jsCardInfo.toJSONString());//测试公众号
+						//BaseBean sendCardInfo = alipayService.sendCardInfo(jsCardInfo.toJSONString());
 						//提交失败
 						if(!MsgCode.success.equals(sendCardInfo.getCode())){
 							logger.info("【支付宝卡包】提交驾驶证信息失败，certNo=" + certNo + "，提交结果：" + JSON.toJSONString(sendCardInfo));
@@ -556,8 +556,8 @@ public class AlipayAction extends BaseAction {
 						JSONObject xsCardInfo = xsCardInfo(userBindAlipay, bindTheVehicleVo, eCardImgBase64);
 						
 						//调支付宝sdk提交行驶证信息
-						//BaseBean sendCardInfo = alipayService.sendCardInfoTest(xsCardInfo.toJSONString());//测试公众号
-						BaseBean sendCardInfo = alipayService.sendCardInfo(xsCardInfo.toJSONString());
+						BaseBean sendCardInfo = alipayService.sendCardInfoTest(xsCardInfo.toJSONString());//测试公众号
+						//BaseBean sendCardInfo = alipayService.sendCardInfo(xsCardInfo.toJSONString());
 						//提交失败
 						if(!MsgCode.success.equals(sendCardInfo.getCode())){
 							logger.info("【支付宝卡包】提交行驶证信息失败，certNo=" + certNo + "，提交结果：" + JSON.toJSONString(sendCardInfo));
