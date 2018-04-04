@@ -62,10 +62,24 @@ public class AlipayAction extends BaseAction {
 	public void isReceiveCard(HttpServletRequest request, HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();
 		
+		String certNo = request.getParameter("certNo");
+		String mobileNumber = request.getParameter("mobileNumber");
 		String userId = request.getParameter("openId");
 		String type = request.getParameter("type");//领取类型
 		String sourceOfCertification = request.getParameter("sourceOfCertification");
 		
+		if(StringUtils.isBlank(certNo)){
+			baseBean.setMsg("certNo 不能为空!");
+			baseBean.setCode(MsgCode.paramsError);
+			renderJSON(baseBean);
+			return;
+		}
+		if(StringUtils.isBlank(mobileNumber)){
+			baseBean.setMsg("mobileNumber 不能为空!");
+			baseBean.setCode(MsgCode.paramsError);
+			renderJSON(baseBean);
+			return;
+		}
 		if(StringUtils.isBlank(userId)){
     		baseBean.setMsg("openId 不能为空!");
     		baseBean.setCode(MsgCode.paramsError);
@@ -97,7 +111,7 @@ public class AlipayAction extends BaseAction {
     	}
 		
 		try {
-			//获取数据库的用户信息
+			/*//获取数据库的用户信息
 			UserBindAlipay userBindAlipay = accountService.queryUserBindAlipayByUserid(userId);
 			if(userBindAlipay == null){
 				logger.info("【支付宝卡包】用户授权异常，userId=" + userId);
@@ -109,7 +123,7 @@ public class AlipayAction extends BaseAction {
 			}
 			
 			String certNo = userBindAlipay.getIdCard();
-			String mobileNumber = userBindAlipay.getMobileNumber();
+			String mobileNumber = userBindAlipay.getMobileNumber();*/
 			
 			//查询认证基本信息
 			AuthenticationBasicInformationVo baseInfo = accountService.authenticationBasicInformationQuery(certNo, sourceOfCertification);
@@ -246,9 +260,30 @@ public class AlipayAction extends BaseAction {
 	public void receiveJsCard(HttpServletRequest request, HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();
 		
+		String certNo = request.getParameter("certNo");
+		String realName = request.getParameter("realName");
+		String mobileNumber = request.getParameter("mobileNumber");
 		String userId = request.getParameter("openId");
 		String sourceOfCertification = request.getParameter("sourceOfCertification");
 		
+		if(StringUtils.isBlank(certNo)){
+			baseBean.setMsg("certNo 不能为空!");
+			baseBean.setCode(MsgCode.paramsError);
+			renderJSON(baseBean);
+			return;
+		}
+		if(StringUtils.isBlank(realName)){
+			baseBean.setMsg("realName 不能为空!");
+			baseBean.setCode(MsgCode.paramsError);
+			renderJSON(baseBean);
+			return;
+		}
+		if(StringUtils.isBlank(mobileNumber)){
+			baseBean.setMsg("mobileNumber 不能为空!");
+			baseBean.setCode(MsgCode.paramsError);
+			renderJSON(baseBean);
+			return;
+		}
 		if(StringUtils.isBlank(userId)){
     		baseBean.setMsg("openId 不能为空!");
     		baseBean.setCode(MsgCode.paramsError);
@@ -263,7 +298,7 @@ public class AlipayAction extends BaseAction {
     	}
 		
 		try {
-			//获取数据库的用户信息
+			/*//获取数据库的用户信息
 			UserBindAlipay userBindAlipay = accountService.queryUserBindAlipayByUserid(userId);
 			//用户授权异常
 			if(userBindAlipay == null){
@@ -276,7 +311,7 @@ public class AlipayAction extends BaseAction {
 			
 			String certNo = userBindAlipay.getIdCard();
 			String realName = userBindAlipay.getRealName();
-			String mobileNumber = userBindAlipay.getMobileNumber();
+			String mobileNumber = userBindAlipay.getMobileNumber();*/
 			
 			//查询身份认证是否审核通过
 			/*List<IdentificationOfAuditResultsVo> auditResults = accountService.getIdentificationOfAuditResults(certNo, sourceOfCertification);
@@ -328,6 +363,11 @@ public class AlipayAction extends BaseAction {
 						
 						String eCardImgBase64 = eCardInfo.getElectronicDriverLicense();//证件图片base64
 						
+						UserBindAlipay userBindAlipay = new UserBindAlipay();
+						userBindAlipay.setUserId(userId);
+						userBindAlipay.setIdCard(certNo);
+						userBindAlipay.setRealName(realName);
+						userBindAlipay.setMobileNumber(mobileNumber);
 						JSONObject jsCardInfo = jsCardInfo(userBindAlipay, myDriverLicense, eCardImgBase64);
 						
 						//调支付宝sdk提交驾驶证信息
@@ -415,10 +455,31 @@ public class AlipayAction extends BaseAction {
 	public void receiveXsCard(HttpServletRequest request, HttpServletResponse response){
 		BaseBean baseBean = new BaseBean();
 		
+		String certNo = request.getParameter("certNo");
+		String realName = request.getParameter("realName");
+		String mobileNumber = request.getParameter("mobileNumber");
 		String userId = request.getParameter("openId");
 		//String gender = request.getParameter("gender");
 		String sourceOfCertification = request.getParameter("sourceOfCertification");
 		
+		if(StringUtils.isBlank(certNo)){
+			baseBean.setMsg("certNo 不能为空!");
+			baseBean.setCode(MsgCode.paramsError);
+			renderJSON(baseBean);
+			return;
+		}
+		if(StringUtils.isBlank(realName)){
+			baseBean.setMsg("realName 不能为空!");
+			baseBean.setCode(MsgCode.paramsError);
+			renderJSON(baseBean);
+			return;
+		}
+		if(StringUtils.isBlank(mobileNumber)){
+			baseBean.setMsg("mobileNumber 不能为空!");
+			baseBean.setCode(MsgCode.paramsError);
+			renderJSON(baseBean);
+			return;
+		}
 		if(StringUtils.isBlank(userId)){
     		baseBean.setMsg("openId 不能为空!");
     		baseBean.setCode(MsgCode.paramsError);
@@ -439,7 +500,7 @@ public class AlipayAction extends BaseAction {
     	}
 		
 		try {
-			//获取数据库的用户信息
+			/*//获取数据库的用户信息
 			UserBindAlipay userBindAlipay = accountService.queryUserBindAlipayByUserid(userId);
 			//用户授权异常
 			if(userBindAlipay == null){
@@ -452,7 +513,7 @@ public class AlipayAction extends BaseAction {
 			
 			String certNo = userBindAlipay.getIdCard();
 			String realName = userBindAlipay.getRealName();
-			String mobileNumber = userBindAlipay.getMobileNumber();
+			String mobileNumber = userBindAlipay.getMobileNumber();*/
 			
 			//是否已领取证件
 			int count = alipayService.queryReceiveCardCount(certNo, CardReceiveConstants.CARD_RECEIVE_TYPE_CAR);
@@ -487,6 +548,11 @@ public class AlipayAction extends BaseAction {
 					if(MsgCode.success.equals(eCardInfo.getCode())){
 						String eCardImgBase64 = eCardInfo.getElectronicDrivingLicense();//证件图片base64
 						
+						UserBindAlipay userBindAlipay = new UserBindAlipay();
+						userBindAlipay.setUserId(userId);
+						userBindAlipay.setIdCard(certNo);
+						userBindAlipay.setRealName(realName);
+						userBindAlipay.setMobileNumber(mobileNumber);
 						JSONObject xsCardInfo = xsCardInfo(userBindAlipay, bindTheVehicleVo, eCardImgBase64);
 						
 						//调支付宝sdk提交行驶证信息
