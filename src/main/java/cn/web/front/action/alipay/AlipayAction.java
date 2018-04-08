@@ -130,7 +130,7 @@ public class AlipayAction extends BaseAction {
 			if(baseInfo != null){
 				String zt = baseInfo.getZt();//用户状态
 				if("已激活".equals(zt)){
-					logger.info("【支付宝卡包】用户状态zt="+zt);
+					//logger.info("【支付宝卡包】用户状态zt="+zt);
 					//是否已领取证件
 					int count = alipayService.queryReceiveCardCount(certNo, type);
 					if(count > 0){
