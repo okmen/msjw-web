@@ -112,15 +112,15 @@ public class EastAppointmentAction extends BaseAction {
 	 * @throws Exception 
 	 */
     @RequestMapping("getNormalApptDistrictAndTime")
-    public void getNormalApptDistrictAndTime(String sourceOfCertification){
+    public void getNormalApptDistrictAndTime(String sourceOfCertification ,String apptDistrict){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
     	List<ApptDistrictAndTimeVo> list = new ArrayList<>();
-		//String[] apptDistricts = {"1", "2"};	//1-梅沙片区,2-大鹏片区
-		String apptDistrict = "1";	//暂时只做1-梅沙片区
+//		String[] apptDistricts = {"MSPQ", "DPPQ"};	//MSPQ-梅沙片区、DPPQ-大鹏片区
+		//String apptDistrict = "1";	//暂时只做1-梅沙片区
     	
 		try {
 			//查询可预约日期
-			BaseBean dateBean = activityService.getNormalApptDate(sourceOfCertification);
+			BaseBean dateBean = activityService.getNormalApptDate(sourceOfCertification,apptDistrict);
 			String code = dateBean.getCode();
 			
 			if(MsgCode.success.equals(code)){
@@ -141,7 +141,7 @@ public class EastAppointmentAction extends BaseAction {
 					}
 				}
 				
-				/*for (String apptDistrict : apptDistricts) {
+	/*			for (String apptDistrict : apptDistricts) {
 					for (String apptDate : apptDates) {
 						//根据预约日期获取配额信息
 						refBean = activityService.getQuotaInfoByApptDate(apptDate, apptDistrict, sourceOfCertification);
@@ -150,8 +150,8 @@ public class EastAppointmentAction extends BaseAction {
 							list.add(vo);	//封装片区及时间段信息
 						}
 					}
-				}*/
-				
+				}
+				*/
 				baseBean.setData(list);
 				baseBean.setCode(refBean.getCode());
 			}else{
@@ -168,6 +168,41 @@ public class EastAppointmentAction extends BaseAction {
 		logger.debug(JSON.toJSONString(baseBean));
     }
     
+    
+    /**
+	 * 获取预约场次及配额信息
+	 * @Description: TODO(获取预约场次及配额信息)
+	 * @param sourceOfCertification 获取来源
+	 * @throws Exception 
+	 */
+    @RequestMapping("getApptDistrictAndTime")
+    public void getApptDistrictAndTime(String sourceOfCertification ){
+    	BaseBean baseBean = new BaseBean();		//创建返回结果
+    	String  apptDistrict = "DPPQ";
+    	List<ApptDistrictAndTimeVo> list = new ArrayList<>();
+    	if(StringUtil.isBlank(sourceOfCertification)){
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("请求来源不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		if(StringUtil.isBlank(apptDistrict)){
+			baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("apptDistrict不能为空!");
+			renderJSON(baseBean);
+			return;
+		}
+		try {
+			//查询可预约日期
+			baseBean = activityService.getNormalApptDate(sourceOfCertification,apptDistrict);
+			logger.info("获取预约场次信息返回web数据:" + JSON.toJSONString(baseBean));
+		} catch (Exception e) {
+			logger.error("获取预约场次信息Action异常:" + e);
+			DealException(baseBean, e);
+		}
+		renderJSON(baseBean);
+		logger.debug(JSON.toJSONString(baseBean));
+    }
     /**
 	 * 个人预约信息写入
 	 * @Description: TODO(个人预约信息写入)
@@ -231,6 +266,45 @@ public class EastAppointmentAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
+			
+			
+			
+			if(StringUtil.isBlank(info.getCch())){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("场次号不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(info.getCfdd())){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("出发地点不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(info.getShi())){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("市不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(info.getQu())){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("区不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(info.getJiedao())){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("街道不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(info.getLuduan())){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("路段不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
 			if(StringUtil.isBlank(info.getApptDate()) || StringUtil.isBlank(info.getApptDistrict()) || StringUtil.isBlank(info.getApptInterval())){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("选择预约时间不能为空!");
@@ -243,7 +317,7 @@ public class EastAppointmentAction extends BaseAction {
     		int result = accountService.verificatioCode(info.getMobilePhone(), validateCode);
     		if(result == 0){
     			
-    			//预约的是上午
+    			/*//预约的是上午
     			if("1".equals(info.getApptInterval())){
     				//表示 "2017-06-10 12:00:00"
     				String strTwelve = info.getApptDate() + " " + "12:00:00";	//上午预约结束时间点
@@ -261,10 +335,13 @@ public class EastAppointmentAction extends BaseAction {
     		        	return;
     				}
     			}
-    			//预约下午
-    			else{
+    			//预约
+    			else if("2".equals(info.getApptInterval())){
     				baseBean = activityService.addNormalApptInfo(info, sourceOfCertification, openId);
-    			}
+    			}*/
+    			
+    			
+    			baseBean = activityService.addNormalApptInfo(info, sourceOfCertification, openId);
     			
     			String code = baseBean.getCode();	//状态码
     			if(MsgCode.success.equals(code)){//0000
@@ -450,72 +527,77 @@ public class EastAppointmentAction extends BaseAction {
 	 * @param sourceOfCertification 获取来源
 	 * @throws Exception 
 	 */
-    @RequestMapping("getTempApptDistrictAndTime")
-    public void getTempApptDistrictAndTime(String sourceOfCertification){
-    	BaseBean baseBean = new BaseBean();		//创建返回结果
-    	List<ApptDistrictAndTimeVo> list = new ArrayList<>();
-		//String[] apptDistricts = {"1", "2"};	//1-梅沙片区,2-大鹏片区
-		String apptDistrict = "1";	//暂时只做1-梅沙片区
-    	
-		try {
-			String curDate = DateUtil2.date2dayStr(new Date());	//当前日期	格式yyyy-MM-dd
-
-			//查询可预约日期
-			BaseBean dateBean = activityService.getNormalApptDate(sourceOfCertification);
-			String code = dateBean.getCode();
-			
-			if(MsgCode.success.equals(code)){//0000
-				String dateStr = dateBean.getData().toString();
-				String[] apptDates = dateStr.split(",");		//多个日期用逗号分隔	2017-06-10,2017-06-11
-				for (String apptDate : apptDates) {
-					//当前日期是节假日时,才查询显示
-					if(curDate.equals(apptDate)){
-						BaseBean refBean = null;
-						//for (String apptDistrict : apptDistricts) {	//暂时只有梅沙片区
-							//根据预约日期获取配额信息
-							refBean = activityService.getQuotaInfoByApptDate(apptDate, apptDistrict, sourceOfCertification);
-							if(MsgCode.success.equals(refBean.getCode())){
-								ApptDistrictAndTimeVo vo = (ApptDistrictAndTimeVo) refBean.getData();
-								//上午,下午设置
-								String strTwelve = apptDate + " " + "12:00:00";//可预约当天12点整,区别上,下午
-								Date dateTwelve = DateUtil2.str2date(strTwelve);
-								if(new Date().before(dateTwelve)){	//当前时间在当天12点之前
-									vo.setApptInterval("1");//1-上午
-								}else{								//12点之后
-									vo.setApptInterval("2");//2-下午
-								}
-								
-								list.add(vo);	//封装片区及时间段信息
-							}else{
-								renderJSON(refBean);
-								return;
-							}
-						//}
-						baseBean.setCode(refBean.getCode());
-						baseBean.setData(list);
-						renderJSON(baseBean);
-						return;
-					}
-				}
-				if(list.size() == 0 || baseBean.getData() == null){
-					baseBean.setCode(MsgCode.paramsError);
-					baseBean.setMsg("非节假日时段，无需预约！");
-					renderJSON(baseBean);
-					return;
-				}
-			}else{
-				baseBean.setCode(code);
-				baseBean.setMsg(dateBean.getMsg());
-			}
-			
-			logger.info("获取临时预约场次信息返回web数据:" + JSON.toJSONString(baseBean));
-		} catch (Exception e) {
-			logger.error("获取临时预约场次信息Action异常:" + e);
-			DealException(baseBean, e);
-		}
-		renderJSON(baseBean);
-		logger.debug(JSON.toJSONString(baseBean));
-    }
+//    @RequestMapping("getTempApptDistrictAndTime")
+//    public void getTempApptDistrictAndTime(String sourceOfCertification,String apptDistrict){
+//    	BaseBean baseBean = new BaseBean();		//创建返回结果
+//    	List<ApptDistrictAndTimeVo> list = new ArrayList<>();
+//    	//	String[] apptDistricts = {"MSPQ", "DPPQ"};	//MSPQ-梅沙片区、DPPQ-大鹏片区
+//		//String apptDistrict = "1";	//暂时只做1-梅沙片区
+//    	
+//		try {
+//			String curDate = DateUtil2.date2dayStr(new Date());	//当前日期	格式yyyy-MM-dd
+//
+//			//查询可预约日期
+//			BaseBean dateBean = activityService.getNormalApptDate(sourceOfCertification,apptDistrict);
+//			String code = dateBean.getCode();
+//			
+//			if(MsgCode.success.equals(code)){//0000
+//				String dateStr = dateBean.getData().toString();
+//				String[] apptDates = dateStr.split(",");		//多个日期用逗号分隔	2017-06-10,2017-06-11
+//				for (String apptDate : apptDates) {
+//					//当前日期是节假日时,才查询显示
+//					if(curDate.equals(apptDate)){
+//						BaseBean refBean = null;
+////						for (String apptDistrict : apptDistricts) {
+//							//根据预约日期获取配额信息
+//							refBean = activityService.getQuotaInfoByApptDate(apptDate, apptDistrict, sourceOfCertification);
+//							if(MsgCode.success.equals(refBean.getCode())){
+//								ApptDistrictAndTimeVo vo = (ApptDistrictAndTimeVo) refBean.getData();
+//								//上午,下午设置
+//								String strTwelve = apptDate + " " + "12:00:00";//可预约当天12点整,区别上,下午
+//								String str18 = apptDate + " " + "18:00:00";
+//								Date dateTwelve = DateUtil2.str2date(strTwelve);
+//								Date date18 = DateUtil2.str2date(str18);
+//								Date now = new Date();
+//								if(now.before(dateTwelve)){	//当前时间在当天12点之前
+//									vo.setApptInterval("1");//1-上午
+//								}else if(now.before(date18) && now.after(dateTwelve)){//12到18点
+//									vo.setApptInterval("2");//2-12到18点
+//								}else{
+//									vo.setApptInterval("3");//3-18到24点
+//								}
+//								
+//								list.add(vo);	//封装片区及时间段信息
+//							}else{
+//								renderJSON(refBean);
+//								return;
+//							}
+////						}
+//						baseBean.setCode(refBean.getCode());
+//						baseBean.setData(list);
+//						renderJSON(baseBean);
+//						return;
+//					}
+//				}
+//				if(list.size() == 0 || baseBean.getData() == null){
+//					baseBean.setCode(MsgCode.paramsError);
+//					baseBean.setMsg("非节假日时段，无需预约！");
+//					renderJSON(baseBean);
+//					return;
+//				}
+//			}else{
+//				baseBean.setCode(code);
+//				baseBean.setMsg(dateBean.getMsg());
+//			}
+//			
+//			logger.info("获取临时预约场次信息返回web数据:" + JSON.toJSONString(baseBean));
+//		} catch (Exception e) {
+//			logger.error("获取临时预约场次信息Action异常:" + e);
+//			DealException(baseBean, e);
+//		}
+//		renderJSON(baseBean);
+//		logger.debug(JSON.toJSONString(baseBean));
+//    }
     
     
     /**
@@ -579,6 +661,44 @@ public class EastAppointmentAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
+			
+			if(StringUtil.isBlank(info.getCch())){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("场次号不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(info.getCfdd())){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("出发地点不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(info.getShi())){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("市不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(info.getQu())){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("区不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(info.getJiedao())){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("街道不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			if(StringUtil.isBlank(info.getLuduan())){
+				baseBean.setCode(MsgCode.paramsError);
+				baseBean.setMsg("路段不能为空!");
+				renderJSON(baseBean);
+				return;
+			}
+			
 			if(StringUtil.isBlank(info.getApptDate()) || StringUtil.isBlank(info.getApptDistrict()) || StringUtil.isBlank(info.getApptInterval())){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("选择预约时间不能为空!");
