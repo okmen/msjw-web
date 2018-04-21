@@ -224,12 +224,12 @@ public class EastAppointmentAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(openId)){
+			/*if(StringUtil.isBlank(openId)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("openId不能为空!");
 				renderJSON(baseBean);
 				return;
-			}
+			}*/
 			if(StringUtil.isBlank(info.getPlateNo())){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("车牌号码不能为空!");
