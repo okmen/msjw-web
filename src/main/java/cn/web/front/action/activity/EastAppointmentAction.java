@@ -622,12 +622,12 @@ public class EastAppointmentAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(openId)){
+			/*if(StringUtil.isBlank(openId)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("opendId不能为空!");
 				renderJSON(baseBean);
 				return;
-			}
+			}*/
 			if(StringUtil.isBlank(info.getPlateNo())){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("车牌号码不能为空!");
@@ -665,12 +665,12 @@ public class EastAppointmentAction extends BaseAction {
 				return;
 			}
 			
-			if(StringUtil.isBlank(info.getCch())){
+		/*	if(StringUtil.isBlank(info.getCch())){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("场次号不能为空!");
 				renderJSON(baseBean);
 				return;
-			}
+			}*/
 			if(StringUtil.isBlank(info.getCfdd())){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("出发地点不能为空!");
@@ -695,13 +695,13 @@ public class EastAppointmentAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(info.getLuduan())){
+			/*if(StringUtil.isBlank(info.getLuduan())){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("路段不能为空!");
 				renderJSON(baseBean);
 				return;
-			}
-			
+			}*/
+			info.setApptDate(DateUtil.formatIso8601Day(new Date()));
 			if(StringUtil.isBlank(info.getApptDate()) || StringUtil.isBlank(info.getApptDistrict()) || StringUtil.isBlank(info.getApptInterval())){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("选择预约时间不能为空!");
