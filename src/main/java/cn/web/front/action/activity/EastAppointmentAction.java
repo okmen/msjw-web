@@ -219,13 +219,13 @@ public class EastAppointmentAction extends BaseAction {
     public void addNormalApptInfo(NormalApptInfoVo info, String validateCode, String sourceOfCertification, String openId,
     		HttpServletRequest request,HttpServletResponse response){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
-    	int nowHour = new Date().getHours();
-    	if (nowHour<8) {
-    		baseBean.setCode(MsgCode.businessError);
-			baseBean.setMsg("预约开放时间为08:00-24:00,请您耐心等待!");
-			renderJSON(baseBean);
-			return;
-		}
+//    	int nowHour = new Date().getHours();
+//    	if (nowHour<8) {
+//    		baseBean.setCode(MsgCode.businessError);
+//			baseBean.setMsg("预约开放时间为08:00-24:00,请您耐心等待!");
+//			renderJSON(baseBean);
+//			return;
+//		}
     	
 		try {
 			if(StringUtil.isBlank(sourceOfCertification)){
@@ -621,13 +621,13 @@ public class EastAppointmentAction extends BaseAction {
     @RequestMapping("addTempApptInfo")
     public void addTempApptInfo(NormalApptInfoVo info, String validateCode, String sourceOfCertification, String openId){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
-    	int nowHour = new Date().getHours();
-    	if (nowHour<8) {
-    		baseBean.setCode(MsgCode.businessError);
-			baseBean.setMsg("预约开放时间为08:00-24:00,请您耐心等待!");
-			renderJSON(baseBean);
-			return;
-		}
+//    	int nowHour = new Date().getHours();
+//    	if (nowHour<8) {
+//    		baseBean.setCode(MsgCode.businessError);
+//			baseBean.setMsg("预约开放时间为08:00-24:00,请您耐心等待!");
+//			renderJSON(baseBean);
+//			return;
+//		}
     	
 		try {
 			if(StringUtil.isBlank(sourceOfCertification)){
