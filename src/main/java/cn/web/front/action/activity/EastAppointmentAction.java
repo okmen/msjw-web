@@ -193,11 +193,11 @@ public class EastAppointmentAction extends BaseAction {
 			renderJSON(baseBean);
 			return;
 		}
-		String apptDate = DateUtil.formatIso8601Day(new Date());
+//		String apptDate = DateUtil.formatIso8601Day(new Date());
 //		String apptDate = "2018-04-22";
 		try {
 			//查询可预约日期
-			baseBean = activityService.getQuotaInfoByApptDate(apptDate, apptDistrict, sourceOfCertification);
+			baseBean = activityService.getNormalApptDate(sourceOfCertification, apptDistrict);
 			logger.info("获取预约场次信息返回web数据:" + JSON.toJSONString(baseBean));
 		} catch (Exception e) {
 			logger.error("获取预约场次信息Action异常:" + e);
