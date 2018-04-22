@@ -302,12 +302,12 @@ public class EastAppointmentAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(info.getLuduan())){
+			/*if(StringUtil.isBlank(info.getLuduan())){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("路段不能为空!");
 				renderJSON(baseBean);
 				return;
-			}
+			}*/
 			if(StringUtil.isBlank(info.getApptDate()) || StringUtil.isBlank(info.getApptDistrict()) || StringUtil.isBlank(info.getApptInterval())){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("选择预约时间不能为空!");
