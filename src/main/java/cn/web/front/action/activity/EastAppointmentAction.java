@@ -219,13 +219,13 @@ public class EastAppointmentAction extends BaseAction {
     public void addNormalApptInfo(NormalApptInfoVo info, String validateCode, String sourceOfCertification, String openId,
     		HttpServletRequest request,HttpServletResponse response){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
-//    	int nowHour = new Date().getHours();
-//    	if (nowHour<8) {
-//    		baseBean.setCode(MsgCode.businessError);
-//			baseBean.setMsg("预约开放时间为08:00-24:00,请您耐心等待!");
-//			renderJSON(baseBean);
-//			return;
-//		}
+    	int nowHour = new Date().getHours();
+    	if (nowHour<8) {
+    		baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("预约开放时间为08:00-24:00,请您耐心等待!");
+			renderJSON(baseBean);
+			return;
+		}
     	
 		try {
 			if(StringUtil.isBlank(sourceOfCertification)){
@@ -415,7 +415,7 @@ public class EastAppointmentAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(plateNo)){
+			/*if(StringUtil.isBlank(plateNo)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("车牌号码不能为空!");
 				renderJSON(baseBean);
@@ -432,7 +432,7 @@ public class EastAppointmentAction extends BaseAction {
 				baseBean.setMsg("车架后4位不能为空!");
 				renderJSON(baseBean);
 				return;
-			}
+			}*/
 			if(StringUtil.isBlank(mobilePhone)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("手机号码不能为空!");
@@ -502,12 +502,12 @@ public class EastAppointmentAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(cancelReason)){
+			/*if(StringUtil.isBlank(cancelReason)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("取消原因不能为空!");
 				renderJSON(baseBean);
 				return;
-			}
+			}*/
 			baseBean = activityService.cancelNormalApptInfo(apptId, cancelReason, sourceOfCertification);
 			
 			String code = baseBean.getCode();
@@ -621,13 +621,13 @@ public class EastAppointmentAction extends BaseAction {
     @RequestMapping("addTempApptInfo")
     public void addTempApptInfo(NormalApptInfoVo info, String validateCode, String sourceOfCertification, String openId){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
-//    	int nowHour = new Date().getHours();
-//    	if (nowHour<8) {
-//    		baseBean.setCode(MsgCode.businessError);
-//			baseBean.setMsg("预约开放时间为08:00-24:00,请您耐心等待!");
-//			renderJSON(baseBean);
-//			return;
-//		}
+    	int nowHour = new Date().getHours();
+    	if (nowHour<8) {
+    		baseBean.setCode(MsgCode.paramsError);
+			baseBean.setMsg("预约开放时间为08:00-24:00,请您耐心等待!");
+			renderJSON(baseBean);
+			return;
+		}
     	
 		try {
 			if(StringUtil.isBlank(sourceOfCertification)){
