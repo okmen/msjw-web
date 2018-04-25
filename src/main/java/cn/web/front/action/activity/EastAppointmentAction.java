@@ -638,7 +638,6 @@ public class EastAppointmentAction extends BaseAction {
 			}else{
 				info.setApptInterval("3");
 			}
-			{
 			if(StringUtil.isBlank(sourceOfCertification)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("请求来源不能为空!");
