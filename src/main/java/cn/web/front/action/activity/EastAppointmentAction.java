@@ -630,6 +630,15 @@ public class EastAppointmentAction extends BaseAction {
 		}
     	
 		try {
+			
+			if (nowHour < 12) {
+				info.setApptInterval("1");
+			}else if(nowHour < 18){
+				info.setApptInterval("2");
+			}else{
+				info.setApptInterval("3");
+			}
+			{
 			if(StringUtil.isBlank(sourceOfCertification)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("请求来源不能为空!");
@@ -651,12 +660,6 @@ public class EastAppointmentAction extends BaseAction {
 			if(StringUtil.isBlank(info.getPlateType())){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("号牌类型不能为空!");
-				renderJSON(baseBean);
-				return;
-			}
-			if(StringUtil.isBlank(info.getVehicleType())){
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("车辆类型不能为空!");
 				renderJSON(baseBean);
 				return;
 			}
