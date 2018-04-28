@@ -662,12 +662,6 @@ public class EastAppointmentAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			if(StringUtil.isBlank(info.getVinLastFour())){
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("车架号后四位不能为空!");
-				renderJSON(baseBean);
-				return;
-			}
 			if(StringUtil.isBlank(info.getMobilePhone())){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("手机号码不能为空!");

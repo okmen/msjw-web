@@ -42,7 +42,7 @@ import cn.web.front.support.BaseAction;
 @SuppressWarnings(value="all")
 public class EastHotelAppointmentAction extends BaseAction {
 
-/*	@Autowired
+	@Autowired
     @Qualifier("activityService")
     private IActivityService activityService;
 	
@@ -50,11 +50,11 @@ public class EastHotelAppointmentAction extends BaseAction {
 	@Qualifier("mobileMessageService")
 	private IMobileMessageService mobileMessageService;
 	
-	*//**
+	/**
 	 * 获取酒店分店信息
 	 * @Description: TODO(获取酒店分店信息)
 	 * @param agencyCode 组织机构代码或社会统一信用代码
-	 *//*
+	 */
     @RequestMapping("getHotelInfoByCode")
     public void getHotelInfoByCode(String agencyCode){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
@@ -76,13 +76,13 @@ public class EastHotelAppointmentAction extends BaseAction {
 		logger.debug(JSON.toJSONString(baseBean));
     }
 	
-    *//**
+    /**
 	 * 酒店分店登录
 	 * @Description: TODO(酒店分店登录)
 	 * @param vo 酒店信息
 	 * @param password 登录密码
 	 * @param sourceOfCertification 请求来源(可为空)
-	 *//*
+	 */
     @RequestMapping("loginViaHotel")
     public void loginViaHotel(HotelInfoVo vo, String password, String sourceOfCertification){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
@@ -117,12 +117,12 @@ public class EastHotelAppointmentAction extends BaseAction {
     	logger.debug(JSON.toJSONString(baseBean));
     }
     
-    *//**
+    /**
      * 获取酒店配额信息
      * @Description: TODO(获取酒店配额信息)
      * @param info 酒店信息
      * @param sourceOfCertification 请求来源
-     *//*
+     */
     @RequestMapping("getHotelApptDistrictAndTime")
     public void getHotelApptDistrictAndTime(HotelInfoVo info, String sourceOfCertification){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
@@ -144,7 +144,7 @@ public class EastHotelAppointmentAction extends BaseAction {
 			}
     		
     		//查询可预约日期
-    		BaseBean dateBean = activityService.getNormalApptDate(sourceOfCertification);
+    		BaseBean dateBean = activityService.getNormalApptDate(sourceOfCertification,apptDistrict);
     		
     		if(dateBean.getData() != null){
     			String dateStr = dateBean.getData().toString();
@@ -172,13 +172,13 @@ public class EastHotelAppointmentAction extends BaseAction {
     	logger.debug(JSON.toJSONString(baseBean));
     }
     
-    *//**
+    /**
 	 * 酒店预约信息写入
 	 * @Description: TODO(酒店预约信息写入)
 	 * @param agencyCode 组织机构代码
 	 * @param branchCode 分店编号
 	 * @param apptInfoList 预约信息集合
-	 *//*
+	 */
     @RequestMapping("addHotelApptInfo")
 	public void addHotelApptInfo(String agencyCode, String branchCode, String apptInfoList, String hotelName){
     	
@@ -262,22 +262,7 @@ public class EastHotelAppointmentAction extends BaseAction {
     			
     			//选取预约结果为成功,发送短信提醒
     			List<HotelApptResultVo> resultList= (List<HotelApptResultVo>) baseBean.getData();
-    			if(resultList != null && resultList.size() > 0){
-    				for (HotelApptResultVo resultVo : resultList) {
-    					if("1".equals(resultVo.getResult())){//预约结果 0-失败，1-成功
-    						//根据预约id查询预约信息
-    						BaseBean detailBean = activityService.getApptInfoDetailByApptId(resultVo.getApptId());
-    						ApptInfoDetailVo detail = (ApptInfoDetailVo) detailBean.getData();
-							String msgContent = MsgTemplate.getEastHotelApptSuccessMsgTemplate(hotelName, detail.getApptDate(), detail.getApptInterval(), detail.getApptDistrict());
-							boolean flag = mobileMessageService.sendMessage(detail.getMobilePhone(), msgContent);
-							if(flag){
-								logger.info("发送短信提醒成功:" + msgContent);
-							}else{
-								logger.info("发送短信提醒失败:" + msgContent);
-							}
-    					}
-    				}
-    			}
+
     		}
     		
     		
@@ -289,12 +274,12 @@ public class EastHotelAppointmentAction extends BaseAction {
     	logger.debug(JSON.toJSONString(baseBean));
 	}
     
-    *//**
+    /**
 	 * 获取酒店预约信息列表
 	 * @Description: TODO(获取酒店预约信息列表)
 	 * @param vo 酒店信息
 	 * @param apptDate 预约日期
-	 *//*
+	 */
     @RequestMapping("getHotelApptHistoryByDate")
     public void getHotelApptHistoryByDate(HotelInfoVo vo, String apptDate){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
@@ -302,7 +287,7 @@ public class EastHotelAppointmentAction extends BaseAction {
     	try {
     		//apptDate为空,默认查询最近可预约日期
     		if(StringUtils.isBlank(apptDate)){
-    			BaseBean dateBean = activityService.getNormalApptDate("C");
+    			BaseBean dateBean = activityService.getNormalApptDate("C","DPPQ");
     			if(MsgCode.success.equals(dateBean.getCode())){
     				String[] dates = dateBean.getData().toString().split(",");
     				if(dates != null && dates.length > 0){
@@ -328,13 +313,13 @@ public class EastHotelAppointmentAction extends BaseAction {
     	
     }
     
-    *//**
+    /**
 	 * 获取酒店预约信息根据查询类型
 	 * @Description: TODO(获取酒店预约信息根据查询类型)
 	 * @param apptInfo 预约信息
 	 * @param hotelInfo 酒店信息
 	 * @param queryType 查询类型 1:根据号牌号码查询，2:根据姓名查询，3:根据手机号码查询
-	 *//*
+	 */
     @RequestMapping("getHotelApptInfoByQueryType")
     public void getHotelApptInfoByQueryType(HotelApptInfoVo apptInfo, HotelInfoVo hotelInfo, String queryType){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
@@ -383,13 +368,13 @@ public class EastHotelAppointmentAction extends BaseAction {
     	
     }
 
-    *//**
+    /**
      * 取消酒店预约信息
      * @Description: TODO(取消酒店预约信息)
      * @param apptId 预约编号
      * @param cancelReason 取消原因
 	 * @param sourceOfCertification 请求来源
-	 *//*
+	 */
     @RequestMapping("cancelHotelApptInfo")
     public void cancelHotelApptInfo(String apptId, String cancelReason, String sourceOfCertification){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
@@ -431,12 +416,12 @@ public class EastHotelAppointmentAction extends BaseAction {
 		logger.debug(JSON.toJSONString(baseBean));
     }
     
-    *//**
+    /**
 	 * 酒店预约信息详情
 	 * @Description: TODO(酒店预约信息详情)
 	 * @param apptId 预约编号
 	 * @throws Exception 
-	 *//*
+	 */
     @RequestMapping("getApptInfoDetailByApptId")
     public void getApptInfoDetailByApptId(String apptId, HotelInfoVo info, String sourceOfCertification){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
@@ -479,5 +464,5 @@ public class EastHotelAppointmentAction extends BaseAction {
     	}
     	renderJSON(baseBean);
     	logger.debug(JSON.toJSONString(baseBean));
-    }*/
+    }
 }
