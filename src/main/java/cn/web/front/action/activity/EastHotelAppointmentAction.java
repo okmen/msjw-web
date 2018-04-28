@@ -94,12 +94,6 @@ public class EastHotelAppointmentAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-    		if(StringUtils.isBlank(vo.getBranchCode())){
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("分店编号不能为空!");
-				renderJSON(baseBean);
-				return;
-			}
     		if(StringUtils.isBlank(password)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg("登录密码不能为空!");
@@ -136,12 +130,7 @@ public class EastHotelAppointmentAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-    		if(StringUtils.isBlank(info.getBranchCode())){
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("分店编号不能为空!");
-				renderJSON(baseBean);
-				return;
-			}
+ 
     		
     		//查询可预约日期
     		BaseBean dateBean = activityService.getNormalApptDate(sourceOfCertification,apptDistrict);
@@ -191,13 +180,6 @@ public class EastHotelAppointmentAction extends BaseAction {
     			renderJSON(baseBean);
     			return;
     		}
-    		if(StringUtils.isBlank(hotelName)){
-    			baseBean.setCode(MsgCode.paramsError);
-    			baseBean.setMsg("酒店名称不能为空!");
-    			renderJSON(baseBean);
-    			return;
-    		}
-    		
     		List<HotelApptInfoVo> list = JSON.parseArray(apptInfoList, HotelApptInfoVo.class);
     		
     		if(list != null && list.size() > 0){
