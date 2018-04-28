@@ -1403,7 +1403,7 @@ public class IllegalAction extends BaseAction {
 				bean.setVehicleIdentifyNoLast4(bindTheVehicleVo.getBehindTheFrame4Digits());
 				carList.add(bean);
 				
-				if(bindTheVehicleVo.getNumberPlateNumber().equals(licensePlateNo)){
+				if(bindTheVehicleVo.getNumberPlateNumber()!=null&&bindTheVehicleVo.getNumberPlateNumber().equals(licensePlateNo)){
 					//打单前注册 
 					BaseBean result = illegalService.trafficIllegalClaimReg(cust, bean, openId, sourceOfCertification);
 					logger.info("注册结果："+result.getMsg());
