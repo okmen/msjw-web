@@ -381,12 +381,6 @@ public class EastHotelAppointmentAction extends BaseAction {
 				baseBean.setMsg("预约编号不能为空!");
 				renderJSON(baseBean);
 				return;
-			}
-			if(StringUtil.isBlank(cancelReason)){
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg("取消原因不能为空!");
-				renderJSON(baseBean);
-				return;
 			}else{
 				if(cancelReason.length() > 100){
 					baseBean.setCode(MsgCode.paramsError);
