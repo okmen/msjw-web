@@ -251,6 +251,9 @@ public class EastHotelAppointmentAction extends BaseAction {
     			baseBean = activityService.addHotelApptInfo(agencyCode, branchCode, list);
     			
     			//选取预约结果为成功,发送短信提醒
+    			/**
+    			 * 
+    			
     			List<HotelApptResultVo> resultList= (List<HotelApptResultVo>) baseBean.getData();
     			if(resultList != null && resultList.size() > 0){
     				for (HotelApptResultVo resultVo : resultList) {
@@ -267,7 +270,7 @@ public class EastHotelAppointmentAction extends BaseAction {
 							}
     					}
     				}
-    			}
+    			} */
 
     		}
     			
