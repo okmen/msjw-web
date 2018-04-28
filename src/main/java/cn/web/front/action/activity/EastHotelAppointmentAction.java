@@ -239,33 +239,38 @@ public class EastHotelAppointmentAction extends BaseAction {
     					renderJSON(baseBean);
     					return;
     				}
-    				
-    				String apptInterval = info.getApptInterval();
-    				//预约的是上午
-    				if("1".equals(apptInterval)){
-    					//表示 "2017-06-10 12:00:00"
-    					String strTwelve = info.getApptDate() + " " + "12:00:00";	//上午预约结束时间点
-    					//转化为date
-    					Date dateTwelve = DateUtil2.str2date(strTwelve);
-    					//预约时间在可预约当天12点整之后,不能预约上午
-    					if(new Date().after(dateTwelve)){
-    						baseBean.setCode(MsgCode.paramsError);
-    						baseBean.setMsg("车牌号为："+info.getPlateNo()+"，预约的上午时段已过，请选择其他时段！");
-    						renderJSON(baseBean);
-    						logger.info("预约时间在可预约当天12点整之后,不能预约上午");
-    						return;
-    					}
+    				if(StringUtils.isBlank(info.getApptInterval())){
+    					baseBean.setCode(MsgCode.paramsError);
+    					baseBean.setMsg(" 时间段不能为空!");
+    					renderJSON(baseBean);
+    					return;
     				}
+
     			}
     			
     			baseBean = activityService.addHotelApptInfo(agencyCode, branchCode, list);
     			
     			//选取预约结果为成功,发送短信提醒
     			List<HotelApptResultVo> resultList= (List<HotelApptResultVo>) baseBean.getData();
+    			if(resultList != null && resultList.size() > 0){
+    				for (HotelApptResultVo resultVo : resultList) {
+    					if("1".equals(resultVo.getResult())){//预约结果 0-失败，1-成功
+    						//根据预约id查询预约信息
+    						BaseBean detailBean = activityService.getApptInfoDetailByApptId(resultVo.getApptId());
+    						ApptInfoDetailVo detail = (ApptInfoDetailVo) detailBean.getData();
+							String msgContent = MsgTemplate.getEastHotelApptSuccessMsgTemplate(hotelName, detail.getApptDate(), detail.getApptInterval(), detail.getApptDistrict());
+							boolean flag = mobileMessageService.sendMessage(detail.getMobilePhone(), msgContent);
+							if(flag){
+								logger.info("发送短信提醒成功:" + msgContent);
+							}else{
+								logger.info("发送短信提醒失败:" + msgContent);
+							}
+    					}
+    				}
+    			}
 
     		}
-    		
-    		
+    			
     	} catch (Exception e) {
     		logger.error("酒店预约信息写入Action异常:" + e);
     		DealException(baseBean, e);
