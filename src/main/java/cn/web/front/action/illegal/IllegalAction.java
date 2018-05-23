@@ -1414,14 +1414,14 @@ public class IllegalAction extends BaseAction {
 			BaseBean result = illegalService.trafficIllegalClaimBefore(licensePlateNo, licensePlateType, mobilephone,
 					openId,sourceOfCertification);
 			String timeStamp=DateUtil.formatDateTimeWithSec(DateUtil2.str2date(illegalTime));
-			logger.info(timeStamp+"    illegalDesc");
+			logger.info(timeStamp);
 			if ("0000".equals(result.getCode())) {
 				List<IllegalInfoClaim> returnList=(List<IllegalInfoClaim>) JSON.parseArray(result.getData().toString(), IllegalInfoClaim.class);
 				// 拼接对象
 				for (IllegalInfoClaim bean : returnList) {
-					logger.info("匹配结果："+bean.getDealType().equals("1")+"--"+illegalDesc.contains(bean.getIllegalDesc())+"--"+illegalTime.equals(bean.getIllegalTime()));
 					//匹配单号
-					if (bean.getDealType().equals("1")&&illegalDesc.contains(bean.getIllegalDesc())&&illegalTime.equals(bean.getIllegalTime())) {					
+					if (bean.getDealType().equals("1")&&bean.getIllegalAddr().contains(illegalAddr)&&illegalDesc.contains(bean.getIllegalDesc())) {
+						logger.info(bean.getDealType().equals("1")+"--"+bean.getIllegalAddr().contains(illegalAddr)+"--"+illegalDesc.contains(bean.getIllegalDesc()));
 						base.setCode(MsgCode.success);
 						base.setMsg("查询匹配成功！");
 						base.setData(bean.getIllegalNo());
