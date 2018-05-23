@@ -1421,6 +1421,7 @@ public class IllegalAction extends BaseAction {
 				for (IllegalInfoClaim bean : returnList) {
 					//匹配单号
 					if (bean.getDealType().equals("1")&&illegalDesc.contains(bean.getIllegalDesc())&&illegalTime.equals(bean.getIllegalTime())) {
+						logger.info("匹配结果："+bean.getDealType().equals("1")+"--"+illegalDesc.contains(bean.getIllegalDesc())+"--"+illegalTime.equals(bean.getIllegalTime()));
 						base.setCode(MsgCode.success);
 						base.setMsg("查询匹配成功！");
 						base.setData(bean.getIllegalNo());
