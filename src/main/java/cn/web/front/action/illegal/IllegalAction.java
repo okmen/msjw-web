@@ -1420,7 +1420,7 @@ public class IllegalAction extends BaseAction {
 				// 拼接对象
 				for (IllegalInfoClaim bean : returnList) {
 					//匹配单号
-					if (bean.getDealType().equals("1")&&bean.getIllegalAddr().equals(illegalAddr)&&illegalDesc.contains(bean.getIllegalDesc())&&illegalTime.equals(bean.getIllegalTime())) {
+					if (bean.getDealType().equals("1")&&illegalDesc.contains(bean.getIllegalDesc())&&illegalTime.equals(bean.getIllegalTime())) {
 						base.setCode(MsgCode.success);
 						base.setMsg("查询匹配成功！");
 						base.setData(bean.getIllegalNo());
