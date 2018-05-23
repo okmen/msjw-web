@@ -1419,9 +1419,9 @@ public class IllegalAction extends BaseAction {
 				List<IllegalInfoClaim> returnList=(List<IllegalInfoClaim>) JSON.parseArray(result.getData().toString(), IllegalInfoClaim.class);
 				// 拼接对象
 				for (IllegalInfoClaim bean : returnList) {
+					logger.info(bean.getDealType().equals("1")+"--"+illegalAddr.contains(bean.getIllegalAddr())+"--"+illegalDesc.contains(bean.getIllegalDesc()));
 					//匹配单号
-					if (bean.getDealType().equals("1")&&bean.getIllegalAddr().contains(illegalAddr)&&illegalDesc.contains(bean.getIllegalDesc())) {
-						logger.info(bean.getDealType().equals("1")+"--"+bean.getIllegalAddr().contains(illegalAddr)+"--"+illegalDesc.contains(bean.getIllegalDesc()));
+					if (bean.getDealType().equals("1")&&illegalAddr.contains(bean.getIllegalAddr())&&illegalDesc.contains(bean.getIllegalDesc())) {					
 						base.setCode(MsgCode.success);
 						base.setMsg("查询匹配成功！");
 						base.setData(bean.getIllegalNo());
