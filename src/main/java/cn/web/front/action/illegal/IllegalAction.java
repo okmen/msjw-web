@@ -1414,7 +1414,7 @@ public class IllegalAction extends BaseAction {
 			BaseBean result = illegalService.trafficIllegalClaimBefore(licensePlateNo, licensePlateType, mobilephone,
 					openId,sourceOfCertification);
 			String timeStamp=DateUtil.formatDateTimeWithSec(DateUtil2.str2date(illegalTime));
-			logger.info(timeStamp);
+			logger.info(timeStamp+"    illegalDesc");
 			if ("0000".equals(result.getCode())) {
 				List<IllegalInfoClaim> returnList=(List<IllegalInfoClaim>) JSON.parseArray(result.getData().toString(), IllegalInfoClaim.class);
 				// 拼接对象
