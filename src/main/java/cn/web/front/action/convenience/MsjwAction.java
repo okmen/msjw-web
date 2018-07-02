@@ -13,6 +13,8 @@ import com.alibaba.fastjson.JSONObject;
 
 import cn.account.bean.vo.BrushFaceVo;
 import cn.account.service.IAccountService;
+import cn.convenience.bean.SzjjToken;
+import cn.convenience.service.IFaceautonymService;
 import cn.convenience.service.IMsjwService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.util.MsgCode;
@@ -40,6 +42,9 @@ public class MsjwAction extends BaseAction{
     @Qualifier("accountService")
     private IAccountService accountService;
     
+    @Autowired
+	@Qualifier("faceautonymService")
+	private IFaceautonymService faceautonymService;
     /**
      * 获取民生警务个人信息
      * @param identityCard 身份证号
@@ -101,15 +106,17 @@ public class MsjwAction extends BaseAction{
 			    			baseBean = msjwService.getMSJWinfo(identityId, sourceOfCertification);
 			    			//未注册星级用户,调用一键注册接口
 			    			if("0001".equals(baseBean.getCode())){
+			    				SzjjToken szjjToken = faceautonymService.querySzjjToken(identityId);
 			    				logger.info("【民生警务】警视通多合一接口返回结果： baseBean = " + net.sf.json.JSONObject.fromObject(baseBean));
 			    				BrushFaceVo bf = new BrushFaceVo();
-			    				bf.setIdentityCard(jsonObject.getString("identityId"));
+			    				bf.setIdentityCard(identityId);
 			    				bf.setMobilephone(jsonObject.getString("phone"));
 			    				bf.setName(jsonObject.getString("username"));
 			    				bf.setOpenId(openId);
 			    				bf.setPhoto6("");//图片为空
 			    				bf.setUserSource("M");//民生警务来源
 			    				bf.setCertificationType("4");//4-自然人
+			    				bf.setToken(szjjToken.getToken());
 			    				logger.info("【民生警务】刷脸一键注册接口请求参数： BrushFaceVo = " + bf);
 								baseBean = accountService.weChatBrushFaceAuthentication(bf);
 								logger.info("【民生警务】刷脸一键注册接口返回结果： baseBean = " + net.sf.json.JSONObject.fromObject(baseBean));
