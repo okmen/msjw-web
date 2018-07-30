@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -113,10 +114,12 @@ public class MsjwAction extends BaseAction{
 			    				bf.setMobilephone(jsonObject.getString("phone"));
 			    				bf.setName(jsonObject.getString("username"));
 			    				bf.setOpenId(openId);
-			    				bf.setPhoto6("");//图片为空
+			    				bf.setPhoto6("");//图片为空 — 当事人手持身份证图片
 			    				bf.setUserSource("M");//民生警务来源
 			    				bf.setCertificationType("4");//4-自然人
-			    				bf.setToken(szjjToken.getToken());
+								if (StringUtils.isNotEmpty(szjjToken.getToken())) {
+									bf.setToken(szjjToken.getToken());
+								}
 			    				logger.info("【民生警务】刷脸一键注册接口请求参数： BrushFaceVo = " + bf);
 								baseBean = accountService.weChatBrushFaceAuthentication(bf);
 								logger.info("【民生警务】刷脸一键注册接口返回结果： baseBean = " + net.sf.json.JSONObject.fromObject(baseBean));
