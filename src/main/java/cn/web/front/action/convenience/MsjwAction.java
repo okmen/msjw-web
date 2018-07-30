@@ -114,10 +114,10 @@ public class MsjwAction extends BaseAction{
 			    				bf.setMobilephone(jsonObject.getString("phone"));
 			    				bf.setName(jsonObject.getString("username"));
 			    				bf.setOpenId(openId);
-			    				bf.setPhoto6("");//图片为空 — 当事人手持身份证图片
-			    				bf.setUserSource("M");//民生警务来源
-			    				bf.setCertificationType("4");//4-自然人
-								if (StringUtils.isNotEmpty(szjjToken.getToken())) {
+			    				bf.setPhoto6(""); //图片为空 — 当事人手持身份证图片
+			    				bf.setUserSource("M"); //民生警务来源
+								bf.setCertificationType("4"); // 4-自然人
+								if (szjjToken != null) {
 									bf.setToken(szjjToken.getToken());
 								}
 			    				logger.info("【民生警务】刷脸一键注册接口请求参数： BrushFaceVo = " + bf);
