@@ -110,19 +110,16 @@ public class MsjwAction extends BaseAction{
 				    			if("0001".equals(baseBean.getCode())){
 				    				SzjjToken szjjToken = faceautonymService.querySzjjToken(identityId);
 				    				logger.info("【民生警务】警视通多合一接口返回结果： baseBean = " + net.sf.json.JSONObject.fromObject(baseBean));
-				    				logger.info("【民生警务】入參： jsonObject不为空 = " +jsonObject.toJSONString());
 				    				BrushFaceVo bf = new BrushFaceVo();
 				    				bf.setIdentityCard(identityId);
 				    				bf.setMobilephone(jsonObject.getString("phone"));
 				    				bf.setName(jsonObject.getString("username"));
-				    				logger.info("【民生警务】入參： jsonObject = " +jsonObject.toJSONString());
 				    				bf.setOpenId(openId);
 				    				bf.setPhoto6(""); //图片为空 — 当事人手持身份证图片
 				    				bf.setUserSource("M"); //民生警务来源
 									bf.setCertificationType("4"); // 4-自然人
 									if (szjjToken != null) {
 										bf.setToken(szjjToken.getToken());
-										logger.info("【民生警务】入參： szjjToken = " +szjjToken);
 									}
 				    				logger.info("【民生警务】刷脸一键注册接口请求参数： BrushFaceVo = " + bf);
 									baseBean = accountService.weChatBrushFaceAuthentication(bf);
