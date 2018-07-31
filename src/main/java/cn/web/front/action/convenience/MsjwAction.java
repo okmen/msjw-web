@@ -85,7 +85,6 @@ public class MsjwAction extends BaseAction{
 				for(int i = 0; i < jsonArray.size(); i++){
 					JSONObject jsonObject = jsonArray.getJSONObject(i);
 					if (jsonObject != null) {
-						logger.info("【民生警务】入參： jsonObject不为空 = " +jsonObject.toJSONString());
 						String loginType = jsonObject.getString("loginType");//个人用户信息(loginType=1)
 						if("1".equals(loginType)){//1-个人 2-企业
 							//authStatus 3-已认证
@@ -111,6 +110,7 @@ public class MsjwAction extends BaseAction{
 				    			if("0001".equals(baseBean.getCode())){
 				    				SzjjToken szjjToken = faceautonymService.querySzjjToken(identityId);
 				    				logger.info("【民生警务】警视通多合一接口返回结果： baseBean = " + net.sf.json.JSONObject.fromObject(baseBean));
+				    				logger.info("【民生警务】入參： jsonObject不为空 = " +jsonObject.toJSONString());
 				    				BrushFaceVo bf = new BrushFaceVo();
 				    				bf.setIdentityCard(identityId);
 				    				bf.setMobilephone(jsonObject.getString("phone"));
