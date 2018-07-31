@@ -84,47 +84,52 @@ public class MsjwAction extends BaseAction{
 	    		JSONArray jsonArray = json.getJSONArray("datas");
 				for(int i = 0; i < jsonArray.size(); i++){
 					JSONObject jsonObject = jsonArray.getJSONObject(i);
-					String loginType = jsonObject.getString("loginType");//个人用户信息(loginType=1)
-					if("1".equals(loginType)){//1-个人 2-企业
-						//authStatus 3-已认证
-						String authStatus = jsonObject.getString("authStatus");
-						if(!"3".equals(authStatus)){//未认证通过，返回状态
-							baseBean.setCode(MsgCode.businessError);
-							JSONObject authStatusMap = new JSONObject();
-							authStatusMap.put("authStatus", authStatus);
-				    		baseBean.setData(authStatusMap);
-				    		renderJSON(baseBean);
-				    		return;
+					if (jsonObject != null) {
+						logger.info("【民生警务】入參： jsonObject不为空 = " +jsonObject.toJSONString());
+						String loginType = jsonObject.getString("loginType");//个人用户信息(loginType=1)
+						if("1".equals(loginType)){//1-个人 2-企业
+							//authStatus 3-已认证
+							String authStatus = jsonObject.getString("authStatus");
+							if(!"3".equals(authStatus)){//未认证通过，返回状态
+								baseBean.setCode(MsgCode.businessError);
+								JSONObject authStatusMap = new JSONObject();
+								authStatusMap.put("authStatus", authStatus);
+					    		baseBean.setData(authStatusMap);
+					    		renderJSON(baseBean);
+					    		return;
+							}
+							
+							String identityId = jsonObject.getString("identityId");
+				    		if(StringUtil.isBlank(identityId)){
+				    			baseBean.setCode(MsgCode.businessError);
+					    		baseBean.setMsg("获取identityId为空！");
+					    		renderJSON(baseBean);
+					    		return;
+				    		}else{
+				    			baseBean = msjwService.getMSJWinfo(identityId, sourceOfCertification);
+				    			//未注册星级用户,调用一键注册接口
+				    			if("0001".equals(baseBean.getCode())){
+				    				SzjjToken szjjToken = faceautonymService.querySzjjToken(identityId);
+				    				logger.info("【民生警务】警视通多合一接口返回结果： baseBean = " + net.sf.json.JSONObject.fromObject(baseBean));
+				    				BrushFaceVo bf = new BrushFaceVo();
+				    				bf.setIdentityCard(identityId);
+				    				bf.setMobilephone(jsonObject.getString("phone"));
+				    				bf.setName(jsonObject.getString("username"));
+				    				logger.info("【民生警务】入參： jsonObject = " +jsonObject.toJSONString());
+				    				bf.setOpenId(openId);
+				    				bf.setPhoto6(""); //图片为空 — 当事人手持身份证图片
+				    				bf.setUserSource("M"); //民生警务来源
+									bf.setCertificationType("4"); // 4-自然人
+									if (szjjToken != null) {
+										bf.setToken(szjjToken.getToken());
+										logger.info("【民生警务】入參： szjjToken = " +szjjToken);
+									}
+				    				logger.info("【民生警务】刷脸一键注册接口请求参数： BrushFaceVo = " + bf);
+									baseBean = accountService.weChatBrushFaceAuthentication(bf);
+									logger.info("【民生警务】刷脸一键注册接口返回结果： baseBean = " + net.sf.json.JSONObject.fromObject(baseBean));
+				    			}
+				    		}
 						}
-						
-						String identityId = jsonObject.getString("identityId");
-			    		if(StringUtil.isBlank(identityId)){
-			    			baseBean.setCode(MsgCode.businessError);
-				    		baseBean.setMsg("获取identityId为空！");
-				    		renderJSON(baseBean);
-				    		return;
-			    		}else{
-			    			baseBean = msjwService.getMSJWinfo(identityId, sourceOfCertification);
-			    			//未注册星级用户,调用一键注册接口
-			    			if("0001".equals(baseBean.getCode())){
-			    				SzjjToken szjjToken = faceautonymService.querySzjjToken(identityId);
-			    				logger.info("【民生警务】警视通多合一接口返回结果： baseBean = " + net.sf.json.JSONObject.fromObject(baseBean));
-			    				BrushFaceVo bf = new BrushFaceVo();
-			    				bf.setIdentityCard(identityId);
-			    				bf.setMobilephone(jsonObject.getString("phone"));
-			    				bf.setName(jsonObject.getString("username"));
-			    				bf.setOpenId(openId);
-			    				bf.setPhoto6(""); //图片为空 — 当事人手持身份证图片
-			    				bf.setUserSource("M"); //民生警务来源
-								bf.setCertificationType("4"); // 4-自然人
-								if (szjjToken != null) {
-									bf.setToken(szjjToken.getToken());
-								}
-			    				logger.info("【民生警务】刷脸一键注册接口请求参数： BrushFaceVo = " + bf);
-								baseBean = accountService.weChatBrushFaceAuthentication(bf);
-								logger.info("【民生警务】刷脸一键注册接口返回结果： baseBean = " + net.sf.json.JSONObject.fromObject(baseBean));
-			    			}
-			    		}
 					}
 				}
 	    	}else{
