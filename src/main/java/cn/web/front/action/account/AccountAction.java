@@ -51,6 +51,8 @@ import cn.account.bean.vo.UnbindTheOtherDriverUseMyCarVo;
 import cn.account.bean.vo.UnbindVehicleVo;
 import cn.account.bean.vo.UserBasicVo;
 import cn.account.service.IAccountService;
+import cn.convenience.bean.MsjwApplyingBusinessVo;
+import cn.convenience.service.IMsjwService;
 import cn.file.service.IFileService;
 import cn.handle.bean.vo.HandleTemplateVo;
 import cn.handle.service.IHandleService;
@@ -120,6 +122,9 @@ public class AccountAction extends BaseAction {
     @Autowired
     @Qualifier("handleService")
     private IHandleService handleService;
+    @Autowired
+	@Qualifier("msjwService")
+	private IMsjwService msjwService;
 
     @RequestMapping(value = "get-wechat-userInfo-by-id")
     public ModelAndView getWechatUserInfoById(HttpServletRequest request) {
@@ -1721,7 +1726,7 @@ public class AccountAction extends BaseAction {
 	 * @param sourceOfCertification 来源方式
      */
     @RequestMapping("addSafeAccidentCredit")
-    public void addSafeAccidentCredit(String applyType, String applyName, String identityCard, String applyPhone, String sourceOfCertification){
+    public void addSafeAccidentCredit(String applyType, String applyName, String identityCard, String applyPhone, String sourceOfCertification,String openId){
     	BaseBean baseBean = new BaseBean();		//创建返回结果
 		
 		try {
@@ -1755,8 +1760,39 @@ public class AccountAction extends BaseAction {
 				renderJSON(baseBean);
 				return;
 			}
-			
-			baseBean = accountService.addSafeAccidentCredit(applyType, applyName, identityCard, applyPhone, sourceOfCertification);
+			Map<String, String> param=new HashMap<String, String>();
+			param.put("type", applyType);
+			param.put("name", applyName);
+			param.put("identitycard", identityCard);
+			param.put("phone", applyPhone);
+			param.put("sourceOfCertification", sourceOfCertification);
+			//提交申请
+			Map<String, String>resultpost=handleService.driverInformationSheetPrint(param);
+			String code=resultpost.get("code");
+			baseBean.setCode(code);
+        	baseBean.setMsg(resultpost.get("msg")); 
+			//新增到民生警务平台个人中心
+        	if("0000".equals(code)){
+        		//流水号
+        		String cid=resultpost.get("cid");
+				try {
+					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.applyCarTemporaryLicence,cid, DateUtil2.date2str(new Date()));
+					baseBean.setData(handleTemplateVo);
+					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+					
+					MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+					businessVo.setTylsbh(cid);
+					businessVo.setOpenid(openId);
+					businessVo.setEventname("驾驶人安全事故信用表申请");
+					businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+					businessVo.setJinduUrlWx(url);//进度查询跳转地址
+					msjwService.addApplyingBusiness(businessVo);
+				} catch (Exception e) {
+					logger.error("【信息单据-驾驶人安全事故信用表申请】", e);
+					e.printStackTrace();
+				}
+        	}
+//			baseBean = accountService.addSafeAccidentCredit(applyType, applyName, identityCard, applyPhone, sourceOfCertification);
 		} catch (Exception e) {
 			logger.error("提交驾驶人安全事故信用表申请Action异常:" + e);
 			DealException(baseBean, e);

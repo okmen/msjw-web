@@ -433,7 +433,7 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
             		//流水号
             		String cid=map.get("cid");
 					try {
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.applyCarTemporaryLicence, map.get("number"), DateUtil2.date2str(new Date()));
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.applyCarTemporaryLicence,cid, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
 						
@@ -501,6 +501,13 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
         		renderJSON(baseBean);
         		return;
         	}
+			String openId=request.getParameter("openId");
+			if(StringUtils.isBlank(openId)){
+        		baseBean.setMsg("openId 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
 			baseBean.setData("");
 	    	String applyType = "1";
     		Map<String, String> map = accountService.submitApplicationForDriverInformation(applyType,applyName, identityCard, applyPhone, sourceOfCertification);
@@ -509,6 +516,27 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
         		String msg = map.get("msg");
         		baseBean.setCode(code);
             	baseBean.setMsg(msg);
+            	if("0000".equals(code)){
+            		 
+            		try {
+            			String cid=map.get("cid");
+    					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.applyCarTemporaryLicence,cid, DateUtil2.date2str(new Date()));
+    					baseBean.setData(handleTemplateVo);
+    					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+    					
+    					MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+    					businessVo.setTylsbh(cid);
+    					businessVo.setOpenid(openId);
+    					businessVo.setEventname("驾驶人信息单申请");
+    					businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+    					businessVo.setJinduUrlWx(url);//进度查询跳转地址
+    					msjwService.addApplyingBusiness(businessVo);
+    				} catch (Exception e) {
+    					logger.error("【信息单据-驾驶人信息单】", e);
+    					e.printStackTrace();
+    				}
+            	}
+            	
         	}
 		} catch (Exception e) {
 			DealException(baseBean, e);
