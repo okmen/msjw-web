@@ -2,6 +2,7 @@ package cn.web.front.action.account;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,13 @@ import cn.account.bean.vo.AuthenticationBasicInformationVo;
 import cn.account.bean.vo.DriverLicenseInformationSheetVo;
 import cn.account.bean.vo.MotorVehicleInformationSheetVo;
 import cn.account.service.IAccountService;
+import cn.convenience.bean.MsjwApplyingBusinessVo;
+import cn.convenience.service.IMsjwService;
+import cn.handle.bean.vo.HandleTemplateVo;
+import cn.handle.service.IHandleService;
 import cn.sdk.bean.BaseBean;
+import cn.sdk.bean.BusinessType;
+import cn.sdk.util.DateUtil2;
 import cn.sdk.util.MsgCode;
 import cn.web.front.support.BaseAction;
 
@@ -39,6 +46,13 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
 	@Autowired
     @Qualifier("accountService")
     private IAccountService accountService;
+	
+	@Autowired
+    @Qualifier("handleService")
+    private IHandleService handleService;
+	@Autowired
+	@Qualifier("msjwService")
+	private IMsjwService msjwService;
 	
 	/**
 	 * 获取  机动车信息单 
@@ -399,6 +413,13 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
         		renderJSON(baseBean);
         		return;
         	}
+			String openId=request.getParameter("openId");
+			if(StringUtils.isBlank(openId)){
+        		baseBean.setMsg("openId 不能为空!");
+        		baseBean.setCode(MsgCode.paramsError);
+        		renderJSON(baseBean);
+        		return;
+        	}
 			baseBean.setData("");
 	    	String applyType = "2";
     		Map<String, String> map = accountService.submitApplicationForMotorVehicleInformation(applyType,applyName, identityCard, applyPhone,licensePlateNumber,plateType, sourceOfCertification);
@@ -407,6 +428,28 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
         		String msg = map.get("msg");
         		baseBean.setCode(code);
             	baseBean.setMsg(msg);
+            	//新增到民生警务平台个人中心
+            	if("0000".equals(code)){
+            		//流水号
+            		String cid=map.get("cid");
+					try {
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.applyCarTemporaryLicence, map.get("number"), DateUtil2.date2str(new Date()));
+						baseBean.setData(handleTemplateVo);
+						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
+						
+						MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
+						businessVo.setTylsbh(cid);
+						businessVo.setOpenid(openId);
+						businessVo.setEventname("机动车信息单打印申请");
+						businessVo.setApplyingUrlWx(url);//微信在办跳转地址
+						businessVo.setJinduUrlWx(url);//进度查询跳转地址
+						msjwService.addApplyingBusiness(businessVo);
+					} catch (Exception e) {
+						logger.error("【信息单据-机动车信息单打印申请】", e);
+						e.printStackTrace();
+					}
+            	}
+            	
         	}
 		} catch (Exception e) {
 			DealException(baseBean, e);

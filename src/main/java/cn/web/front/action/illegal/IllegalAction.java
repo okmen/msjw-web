@@ -1,9 +1,7 @@
 package cn.web.front.action.illegal;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +26,6 @@ import cn.illegal.bean.AppealInfoBack;
 import cn.illegal.bean.AppealInfoBean;
 import cn.illegal.bean.CarInfoBean;
 import cn.illegal.bean.CustInfoBean;
-import cn.illegal.bean.IllegalBusiness;
 import cn.illegal.bean.IllegalInfoBean;
 import cn.illegal.bean.IllegalInfoClaim;
 import cn.illegal.bean.IllegalInfoSheet;
@@ -48,7 +45,6 @@ import cn.sdk.util.MacUtil;
 import cn.sdk.util.MsgCode;
 import cn.sdk.util.StringUtil;
 import cn.web.front.support.BaseAction;
-import net.sf.json.JSONObject;
 /**
  * 违法处理
  * 
@@ -153,6 +149,8 @@ public class IllegalAction extends BaseAction {
 		} catch (Exception e) {
 			DealException(base, e);
 			logger.error("查询异常：", e);
+			base.setCode(MsgCode.webServiceCallError);
+			base.setMsg("暂时无法查询到相关信息！"); 
 		}
 		renderJSON(base);
 	}
@@ -235,6 +233,9 @@ public class IllegalAction extends BaseAction {
 		} catch (Exception e) {
 			DealException(base, e);
 			logger.error("查询异常：", e);
+			//给出友好错误提示
+			base.setCode(MsgCode.webServiceCallError);
+			base.setMsg("暂时无法查询到相关信息！"); 
 		}
 		renderJSON(base);
 	}
