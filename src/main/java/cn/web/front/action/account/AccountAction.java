@@ -1767,17 +1767,18 @@ public class AccountAction extends BaseAction {
 			param.put("phone", applyPhone);
 			param.put("sourceOfCertification", sourceOfCertification);
 			//提交申请
-			Map<String, String>resultpost=handleService.driverInformationSheetPrint(param);
-			String code=resultpost.get("code");
-			baseBean.setCode(code);
-        	baseBean.setMsg(resultpost.get("msg")); 
+//			Map<String, String>resultpost=handleService.driverInformationSheetPrint(param);
+			baseBean = accountService.addSafeAccidentCredit(applyType, applyName, identityCard, applyPhone, sourceOfCertification);
+			String code=baseBean.getCode();
+//			baseBean.setCode(code);
+//        	baseBean.setMsg(resultpost.get("msg")); 
 			//新增到民生警务平台个人中心
         	if("0000".equals(code)){
         		//流水号
-        		String cid=resultpost.get("cid");
+        		String cid=baseBean.getData().toString();
 				try {
 					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.applyCarTemporaryLicence,cid, DateUtil2.date2str(new Date()));
-					baseBean.setData(handleTemplateVo);
+//					baseBean.setData(handleTemplateVo);
 					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
 					
 					MsjwApplyingBusinessVo businessVo = new MsjwApplyingBusinessVo();
@@ -1792,7 +1793,7 @@ public class AccountAction extends BaseAction {
 					e.printStackTrace();
 				}
         	}
-//			baseBean = accountService.addSafeAccidentCredit(applyType, applyName, identityCard, applyPhone, sourceOfCertification);
+			baseBean = accountService.addSafeAccidentCredit(applyType, applyName, identityCard, applyPhone, sourceOfCertification);
 		} catch (Exception e) {
 			logger.error("提交驾驶人安全事故信用表申请Action异常:" + e);
 			DealException(baseBean, e);
