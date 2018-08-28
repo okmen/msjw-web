@@ -1777,7 +1777,7 @@ public class AccountAction extends BaseAction {
         		//流水号
         		String cid=baseBean.getData().toString();
 				try {
-					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.applyCarTemporaryLicence,cid, DateUtil2.date2str(new Date()));
+					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.printDriverSavecreditInformation,cid, DateUtil2.date2str(new Date()));
 //					baseBean.setData(handleTemplateVo);
 					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
 					

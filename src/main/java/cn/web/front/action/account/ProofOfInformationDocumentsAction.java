@@ -433,7 +433,7 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
             		//流水号
             		String cid=map.get("cid");
 					try {
-						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.applyCarTemporaryLicence,cid, DateUtil2.date2str(new Date()));
+						HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.printVehicleInformation,cid, DateUtil2.date2str(new Date()));
 						baseBean.setData(handleTemplateVo);
 						String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
 						
@@ -520,7 +520,7 @@ public class ProofOfInformationDocumentsAction extends BaseAction{
             		 
             		try {
             			String cid=map.get("cid");
-    					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.applyCarTemporaryLicence,cid, DateUtil2.date2str(new Date()));
+    					HandleTemplateVo handleTemplateVo = new HandleTemplateVo(1, BusinessType.printDriverInformation,cid, DateUtil2.date2str(new Date()));
     					baseBean.setData(handleTemplateVo);
     					String url = HandleTemplateVo.getUrl(handleTemplateVo,handleService.getMsjwTemplateSendUrl());
     					
